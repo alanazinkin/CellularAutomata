@@ -1,6 +1,6 @@
 ```
 # Cell Society Design Lab Discussion
-#### Names and NetIDs
+#### Tatum McKinnis, Angela Predolac, Alana Zinkin
 
 
 ### Simulations
