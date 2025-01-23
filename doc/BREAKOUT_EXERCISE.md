@@ -1,6 +1,6 @@
 # Breakout Abstractions Lab Discussion
 
-#### NAMEs
+#### NAMEs: Tatum McKinnis, Angela Predolac, Alana Zinkin
 
 ### Block
 
