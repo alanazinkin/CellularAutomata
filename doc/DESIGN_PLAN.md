@@ -83,7 +83,7 @@ Game flow: User input flows from SimulationView to Simulation, triggering update
 ## Use Cases
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
  * Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
-   and we call setState(cell) of the Cell class according to the return value of the countAliveNeighbors() method.
+   and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method.
 Use Case 2:
 ## Design Considerations
 
