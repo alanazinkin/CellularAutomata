@@ -30,10 +30,55 @@ At a high level, the program creates a robust and adaptable framework for simula
 
 ## User Interface
 
-
 ## Configuration File Format
 
 ## Design Details
+
+Model-View-Controller Separation:
+
+* The Model will be agnostic of the UI and will contain logic for updating cell states based on the simulation rules. The model will handle the grid structure and its evolution, but it will not concern itself with how the data is displayed to the user.
+* The View will be responsible for presenting the grid and simulation data. It will use JavaFX to render the grid and allow user interactions. It will listen for changes in the model and update the grid display accordingly.
+* The Controller will act as an intermediary, interpreting user actions and invoking corresponding methods on the model to update the state, and passing necessary data to the view.
+
+Model Classes (handle simulation logic and data): 
+
+Simulation: Abstract base class for all simulation types (Game of Life, Spreading Fire, etc.) defining common methods like step(), initialize(), etc. Specific implementations could be GameOfLifeSimulation, FireSimulation, etc.
+
+- Encapsulates simulation's rules, state transitions, and grid initialization. Works with Grid and Cell to update the simulation state.
+
+Cell: Represents each cell on the grid. Stores the state (alive, dead, burning, etc.) and possibly the row and column index as well as it computes the next state based on simulation rules and manages its transitions. Can have subclasses of different types of cells.
+
+- Works with Grid and is updated by Simulation.
+
+Grid: Represents the grid of cells. Manages a 2D array (or List of Lists) of Cell objects, holds grid size, and manages cell interactions based on the Simulation type.
+
+- Manages grid dimensions, neighbor computations, and state updates for cells. Interacts with Cell to retrieve and update individual states.
+
+State: Could use enums (or a constant class) for cell states (ALIVE, DEAD, BURNING, etc.) and this class could define state types.
+
+XML Parser: Read and parse the configuration XML file, extracting details like grid size, initial states, and simulation parameters.
+
+View Classes (User interface classes):
+
+SimulationView: Renders simulation state, updates display, and interacts with user actions
+
+GridView: Renders the grid of cells on the screen (should visually update when state of cells change)
+
+SimulationInfoPanel: Shows information like simulation title, author, description, parameters, etc.
+
+ControlPanel: Contains buttons for starting, pausing, and stopping the simulation. Includes sliders for speed control, a button for loading new simulations, etc.
+
+Controller Classes (Handle user interactions):
+
+SimulationController: Handles the start/pause/stop simulation actions. Listens for user interactions, like button presses, and interacts with Simulation model to run the specific Simulation.
+
+Maybe a GridController if Grid needs direct control (resetting or manipulating individual cells)
+
+Other helper/support classes:
+
+SimulationParameter: Holds specific parameters required for a specific simulation. This would centralize the management of parameters and pass them to the corresponding simulation class. Different simulations need different paramters that control the behavior of the simulation, like rate of fire spread, birth and death probabilities, etc. These parameters will influence how the simulation spreads over time.
+
+Game flow: User input flows from SimulationView to Simulation, triggering updates in the model. State updates are then computed in Simulation and propagate to Grid and Cell. Output displayed via SimulationView by rendering the updated Grid. 
 
 ## Use Cases
 
