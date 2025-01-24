@@ -40,7 +40,7 @@ Model-View-Controller Separation:
 * The View will be responsible for presenting the grid and simulation data. It will use JavaFX to render the grid and allow user interactions. It will listen for changes in the model and update the grid display accordingly.
 * The Controller will act as an intermediary, interpreting user actions and invoking corresponding methods on the model to update the state, and passing necessary data to the view.
 
-Model Classes (handle simulation logic and data): 
+Model Classes (handles simulation logic and data):
 
 Simulation: Abstract base class for all simulation types (Game of Life, Spreading Fire, etc.) defining common methods like step(), initialize(), etc. Specific implementations could be GameOfLifeSimulation, FireSimulation, etc.
 
