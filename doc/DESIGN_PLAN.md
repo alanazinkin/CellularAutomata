@@ -81,7 +81,10 @@ SimulationParameter: Holds specific parameters required for a specific simulatio
 Game flow: User input flows from SimulationView to Simulation, triggering updates in the model. State updates are then computed in Simulation and propagate to Grid and Cell. Output displayed via SimulationView by rendering the updated Grid. 
 
 ## Use Cases
-
+Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
+ * Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
+   and we call setState(cell) of the Cell class according to the return value of the countAliveNeighbors() method.
+Use Case 2:
 ## Design Considerations
 
 ## Team Responsibilities
