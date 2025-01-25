@@ -29,67 +29,122 @@ The architecture of the program emphasizes modularity and extensibility by adher
 At a high level, the program creates a robust and adaptable framework for simulating a variety of CA models, including Conway's Game of Life, Spreading of Fire, Schelling's Model of Segregation, and Wa-Tor World. The design separates concerns into modular components—such as grid management, rule execution, and user interaction—ensuring that each part of the program can be developed, tested, and extended independently while maintaining seamless integration and scalability.By focusing on high-level abstractions, this program is designed to be both versatile and user-friendly, catering to a wide range of users.
 
 ## User Interface
+
 - Alaan works on this part!
 
 ## Configuration File Format
+
 OH question?
 
-## Design Details
+## Design Overview and Details
 
-Model-View-Controller Separation:
+#### Design Overview:
 
-* The Model will be agnostic of the UI and will contain logic for updating cell states based on the simulation rules. The model will handle the grid structure and its evolution, but it will not concern itself with how the data is displayed to the user.
-* The View will be responsible for presenting the grid and simulation data. It will use JavaFX to render the grid and allow user interactions. It will listen for changes in the model and update the grid display accordingly.
-* The Controller will act as an intermediary, interpreting user actions and invoking corresponding methods on the model to update the state, and passing necessary data to the view.
+This design follows the Model-View-Controller (MVC) Pattern to separate the logic of the simulation, its visual representation, and user interactions. The abstractions created in the design are grouped into the Model, View, and Controller layers, each serving a specific function.
 
-Model Classes (handles simulation logic and data):
+Model Layer:
 
-Simulation: Abstract base class for all simulation types (Game of Life, Spreading Fire, etc.) defining common methods like step(), initialize(), etc. Specific implementations could be GameOfLifeSimulation, FireSimulation, etc.
+- Simulation: An abstract class that handles the simulation's core logic, including rules and state transitions. Different simulations will inherit from this class and implement their specific behavior.
+- Cell: Represents each cell in the grid, stores and manages the state of each cell, and computes the next state based on simulation rules.
+- Grid: Manages a 2D array or list of Cell objects, tracks the grid's dimensions and coordinates, updates cell states, and computes interactions between neighboring cells.
+- State: A class that holds all the possible states of the states. This can be implemented as an enum or constants class.
+- XML Parser: Reads and parses configuration XML files, extracting simulation parameters, grid sizes, and intial states.
 
-- Encapsulates simulation's rules, state transitions, and grid initialization. Works with Grid and Cell to update the simulation state.
+View Layer:
 
-Cell: Represents each cell on the grid. Stores the state (alive, dead, burning, etc.) and possibly the row and column index as well as it computes the next state based on simulation rules and manages its transitions. Can have subclasses of different types of cells.
+- SimulationView: Responsible for rendering the simulation. Listens for state changes in the model adn updates the grid display accordingly.
+- GridView: Specifcially handles the rendering of the grid of cells. When the state of the cells changes, this view ensures the grid is updated visually.
+- SimulationInfoPanel: Displays data such as the simulation's title, description, and parameters
+- ControlPanel: Provides buttons for controlling the simulation (start, pause, stop) and sliders to adjust simulation speed. Can also include an option to load new simulation configurations.
 
-- Works with Grid and is updated by Simulation.
+Controller Layer:
 
-Grid: Represents the grid of cells. Manages a 2D array (or List of Lists) of Cell objects, holds grid size, and manages cell interactions based on the Simulation type.
+- SimulationController: Manages the user's interactions with the simulation, invoking methods on the Simulation to update the state, and passes information to the view to render.
 
-- Manages grid dimensions, neighbor computations, and state updates for cells. Interacts with Cell to retrieve and update individual states.
+Helper Classes:
 
-State: Could use enums (or a constant class) for cell states (ALIVE, DEAD, BURNING, etc.) and this class could define state types.
+- SimulationParameter: Holds simulation-specific parameters (e.g., rate of fire spread). These parameters control the behavior of the simulation and are passed into the respective simulation class for execution.
 
-XML Parser: Read and parse the configuration XML file, extracting details like grid size, initial states, and simulation parameters.
+Collaboration between Modules:
 
-View Classes (User interface classes):
+- User input: The SimulationView captures user input, passing it to the SimulationController. Additionally, configuration files are read to initialize the simulation.
+- Model Update: The SimulationController communicates with the Simulation class to update the grid and cell states based on either user actions or the configuration file input.
+- View Update: After the model updates, the SimulationView re-renders the grid based on the new cell states, reflecting any changes due to user input or file-based initialization.
 
-SimulationView: Renders simulation state, updates display, and interacts with user actions
+#### Design Details
 
-GridView: Renders the grid of cells on the screen (should visually update when state of cells change)
+Model Classes:
 
-SimulationInfoPanel: Shows information like simulation title, author, description, parameters, etc.
+- Simulation:
+  - Functionality: Abstract base class for all simulation types. Defines essential methods like step() (updates simulation state) and intialize (sets up the initial state). Subclasses, such as GameOfLifeSimulation, implement their specific simulation rules
+  - Collaboration: Works with Grid and Cell classes to update the simulation state at each step. Does not expose the grid's internal data structure, instead Simulation interacts with Grid through methods that allow updates or queries on cell states (e.g., getCellState, setCellState, or getNeighbors()).
+  - Resources Needed: Needs access to Grid and the Cell objects for updating their states. Also needs to interact with Cell methods to compute the next state of each cell based on the simulation rules.
+- Cell:
+  - Functionality: Each cell in the grid has a state and can compute its next state based on the simulation rules. The cell transitions between states according to the simulation subclass logic.
+  - Collaboration: Interacts with Grid primarily by holding a reference to its position (row and column), whcih allows it to be identified within the grid. The Simulation class determines how the cell's state transitions, and the cell provides its current state to the Simulation for those calculations.
+  - Resources Needed: Each cell needs a reference to its position in the grid and it also requires a state to track its current status and compute the next state during each simulation step.
+- Grid:
+  - Functionality: Manages a collection of cell objects in a 2D array or list of lists. Maintains the grid's size and manages interactions between neighboring cells, like determining which cells need to be updated based on the simulation's rules. Triggers updates for individual cells' states by delegating that responsibility to the Simulation class.
+  - Collaboration: Interacts with Cell class to get or set the state of individual cells. Works closely with Simulation class, which updates the states of cells based on rules. Provides access to Cell objects in a way that abstracts away its internal structure and allows the Simulation to interact with them directly.
+  - Resources Needed: A data structure to store Cell objects.
+- State:
+  - Functionality: Implemented as an enum or constants class. Defines the possibile states of cells and ensures that the simulation uses consistent state values across different cells.
+  - Collaboration: Used by Cell to define the state of each cell.
+  - Resources Needed: No external resources are needed except for constants or enum values.
+- XML Parser:
+  - Functionality: Responsible for parsing XML files that define simulation configurations, including grid size, intial states of cells, adn any other parameters. Extracts these values and makes them available for the Simulation class to use.
+  - Collaboration: Works with the Simulation class to load configuration data and initialize the simulation.
+  - Resources Needed: Access to XML configuration files and possibly a reference to the SimulationParameter class
 
-ControlPanel: Contains buttons for starting, pausing, and stopping the simulation. Includes sliders for speed control, a button for loading new simulations, etc.
+View Classes
 
-Controller Classes (Handle user interactions):
+- SimulationView:
+  - Functionality: Renders the simulation state by listening for changes in the simulation and updating the grid display accordingly
+  - Collaboration: Interacts with SimulatioController to start, pause, or stop the simulation and with the Simulation class to update the display when the isulation state changes.
+  - Resources Needed: JavaFX components to render the grid and handle user input events
+- GridView
+  - Functionality: Specialized view for rendering the grid of cells. Ensures that when a cell's state changes, the corresponding part of the grid is visually updated.
+  - Collaboration: Works with SimulationView to update the grid and updates as the Simulation progresses
+  - Resources Needed: JavaFX UI components to visualize the grid cells.
+- SimulationInfoPanel:
+  - Functionality: Displays data like title, author, description, and parameters of the simulation
+  - Collaboration: Works with SimulationController to fetch and display relevant information about the simulation.
+  - Resources Needed: JavaFX components to display labels and text.
+- ControlPanel:
+  - Functionality: Provides user interface elements such as buttons for controlling the speed and sliders for adjusting the speed
+  - Collaboration: Works with SimulationController to pass user commands for simulation control
+  - Resources Needed: JavaFX UI components for buttons and sliders
 
-SimulationController: Handles the start/pause/stop simulation actions. Listens for user interactions, like button presses, and interacts with Simulation model to run the specific Simulation.
+Controller Classes:
 
-Maybe a GridController if Grid needs direct control (resetting or manipulating individual cells)
+- SimulationController:
+  - Functionality: Listens for user interactions (e.g., button presses to start, pause, or reset the simulation). Interacts with Simulation class to update the state based on these actions and communicates with the view to update the display.
+  - Collaboration: Coordinates the interaction between the Simulation, View, and user input
+  - Resources Needed: Access to Simulation model and SimulationView for updates
 
-Other helper/support classes:
+Helper Classes
 
-SimulationParameter: Holds specific parameters required for a specific simulation. This would centralize the management of parameters and pass them to the corresponding simulation class. Different simulations need different paramters that control the behavior of the simulation, like rate of fire spread, birth and death probabilities, etc. These parameters will influence how the simulation spreads over time.
+- SimulationParameter:
+  - Functionality: Centralizes the parameters needed by the Simulation. Makes the configuration data easily accessible and can be passed to the appropriate simulation class.
+  - Collaboration: Works with Simulation class to pass the necessary parameters for simulation behavior.
+  - Resources Needed: None
 
-Game flow: User input flows from SimulationView to Simulation, triggering updates in the model. State updates are then computed in Simulation and propagate to Grid and Cell. Output displayed via SimulationView by rendering the updated Grid. 
+#### Abstracting Implementation Details
+
+In the design, method signatures are carefully crafted to abstract away the differences between various implementations of the data structure, file format, and OpenJFX "grid" component. For example, the Simulation class defines general methods like step() and initialize() that perform simulation-related actions without specifying how they interact with the underlying grid structure. The grid's internal representation—whether it's a 2D array, list of lists, or another structure—is hidden from the rest of the system. Methods like getCellState(), setCellState(), and getNeighbors() allow interaction with the grid's cells without exposing the implementation details of how cells are stored or organized. Similarly, the XML Parser class defines generic methods for parsing simulation configuration files (e.g., parseConfig()) without making assumptions about the specific format or structure of the XML files. This approach ensures that the system can handle different file formats or data structures as long as they adhere to a common interface. For the OpenJFX grid component, the method signatures in the view (like updateGrid() or renderCell()) focus on high-level actions such as updating the display, without being tied to a particular implementation of the grid's visual representation in JavaFX. This abstraction ensures flexibility in the implementation while maintaining clear, reusable interfaces across different components of the simulation.
 
 ## Use Cases
+
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
- * Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
-   and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method.
-Use Case 2:
+
+* Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
+  and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method.
+  Use Case 2:
+
 ## Design Considerations
+
 1. Grid or no grid?
-2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells? 
+2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
 
 ## Team Responsibilities
 
