@@ -29,8 +29,10 @@ The architecture of the program emphasizes modularity and extensibility by adher
 At a high level, the program creates a robust and adaptable framework for simulating a variety of CA models, including Conway's Game of Life, Spreading of Fire, Schelling's Model of Segregation, and Wa-Tor World. The design separates concerns into modular components—such as grid management, rule execution, and user interaction—ensuring that each part of the program can be developed, tested, and extended independently while maintaining seamless integration and scalability.By focusing on high-level abstractions, this program is designed to be both versatile and user-friendly, catering to a wide range of users.
 
 ## User Interface
+- Alaan works on this part!
 
 ## Configuration File Format
+OH question?
 
 ## Design Details
 
@@ -86,6 +88,8 @@ Use Case 1: Apply the rules to a middle cell: set the next state of a cell to de
    and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method.
 Use Case 2:
 ## Design Considerations
+1. Grid or no grid?
+2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells? 
 
 ## Team Responsibilities
 
