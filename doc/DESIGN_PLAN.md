@@ -193,13 +193,30 @@ In the design, method signatures are carefully crafted to abstract away the diff
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
 
 * Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
-  and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method.
-  Use Case 2:
+  and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method
+
+Use Case 2: Apply the rules to an edge cell: set the next state of a cell to live by counting its number of neighbors using the Game of Life rules for a cell on the edge (i.e., with some of its neighbors missing)
+
+- The Simulation class calls the step() method. The step() method calls getNeighbors() on the Gird class to retrieve the neighboring cells of an edge Cell. The getNeighbors() method in the Grid class checks the edge conditions and calculates the neighbors the edge cell. Since it's an edge cell, getNeighbors() needs to account for the fact that some neighbors might be missing (e.g., no neighbors on the "out of bounds" side of the grid).The Simulation class computes the new state for the Cell (setting it to "live" based on its neighbors' states). In this case, if the edge cell has the right number of live neighbors, it may be set to "live" according to the Game of Life rules. The Simulation class uses setCellState() to update the cell state. SimulationView refreshes the visual grid to reflect the updated state.
 
 ## Design Considerations
 
 1. Grid or no grid?
 2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
+   1. Possible ideas: Cell-based updates (cell manages its own state update, checking its neighbors and updating accordingly without explicitly maintaining two grids; each cell amkes its decision about its next state based on the previous state and triggers an update after all cells have been evaluated), use two grids (current and previous; current holds the state of the cells that has just been updated or is being processed, previous hods that state of the cells from the previous iteration or generation; when you update the cells, you reference the previous grid to compute the new state of the cells, but the updates themselves happen on the current grid)
+
+
+
+
+#### Class and Method Design Choices
+
+The team chose to follow the Model-View-Controller (MVC) pattern to ensure separation of concerns and modularity in the design. This structure allows for clearer management of simulation logic, visual rendering, and user input, which is crucial for maintainability and flexibility.
+
+Model Layer: The core of the design revolves around the Simulation, Cell, Grid, State, and XML Parser classes. The Simulation class is abstract, allowing for different simulation types to be easily incorporated through subclassing. This approach avoids redundancy in the code and ensures that new simulations can be integrated smoothly. The Cell class represents each individual cell in the simulation, which keeps the simulation data encapsulated and manageable. The Grid class manages these cells in a 2D array, making it easier to perform operations like state updates or neighborhood checks.
+
+View Layer: The SimulationView, GridView, SimulationInfoPanel, and ControlPanel handle all aspects of user interaction and display. This separation ensures that changes to the user interface or the underlying simulation logic can be made independently without affecting the other. The SimulationView ensures the user sees the latest state of the simulation, and the ControlPanel gives the user the ability to control simulation parameters in real time.
+
+Controller Layer: The SimulationController is central to handling user interactions, acting as a mediator between the Model and View layers. It processes user inputs from the ControlPanel (e.g., start, pause, or reset simulation) and triggers corresponding actions in the Simulation class, which in turn updates the view.
 
 ## Team Responsibilities
 
