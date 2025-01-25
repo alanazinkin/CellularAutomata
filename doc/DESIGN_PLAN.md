@@ -133,6 +133,61 @@ Helper Classes
 
 In the design, method signatures are carefully crafted to abstract away the differences between various implementations of the data structure, file format, and OpenJFX "grid" component. For example, the Simulation class defines general methods like step() and initialize() that perform simulation-related actions without specifying how they interact with the underlying grid structure. The grid's internal representation—whether it's a 2D array, list of lists, or another structure—is hidden from the rest of the system. Methods like getCellState(), setCellState(), and getNeighbors() allow interaction with the grid's cells without exposing the implementation details of how cells are stored or organized. Similarly, the XML Parser class defines generic methods for parsing simulation configuration files (e.g., parseConfig()) without making assumptions about the specific format or structure of the XML files. This approach ensures that the system can handle different file formats or data structures as long as they adhere to a common interface. For the OpenJFX grid component, the method signatures in the view (like updateGrid() or renderCell()) focus on high-level actions such as updating the display, without being tied to a particular implementation of the grid's visual representation in JavaFX. This abstraction ensures flexibility in the implementation while maintaining clear, reusable interfaces across different components of the simulation.
 
+#### Picture of Relations Between Modeules
+
+```plaintext
+                           +---------------------+
+                           |  Simulation (Model)  |
+                           +---------------------+
+                           | - step()             |
+                           | - initialize()       |
+                           +-----------+---------+
+                                       |
+        +------------------------------+-------------------------+
+        |                                                     |
+        | communicates with                                      |
+        |                                                     |
++-------v---------+                                    +--------v-----------+
+|     Grid        |                                    |     XML Parser     |
+|   (Model)       |                                    |    (Model)         |
++-----------------+                                    +-------------------+
+| - getCellState()|                                    | - parseConfig()    |
+| - setCellState()|                                    +-------------------+
+| - getNeighbors()|
++-----------------+                                
+        |                                            
+        | interacts with                                  
+        |                                              
++-------v--------+             +---------------------+         +--------------------+
+|     Cell       |<----------->| SimulationController|<------->| SimulationView     |
+|    (Model)     |             |      (Controller)    |         |      (View)        |
++----------------+             +---------------------+         +--------------------+
+| - state        |             | - startSimulation()  |         | - updateGrid()      |
+| - nextState()  |             | - pauseSimulation()  |         +--------------------+
++----------------+             | - resetSimulation()  |                |
+        |                      +----------+----------+                |
+        |                                 |                          | interacts with
+        | interacts with                  |                          |
+        |                                 |                          |
++-------v--------+                      |                          |
+|     State      |<---------------------+                          |
+|    (Model)     |                      |                          |
++----------------+                      |                          |
+| - Enum/Consts  |                      |                          |
++----------------+                      |                          |
+        |                               |                          |
+        | interacts with                |                          |
+        |                               |                          |
++-------v--------+             +--------------------+             +---------------------+
+|  ControlPanel  |<----------->|  GridView (View)   |<----------->| SimulationInfoPanel |
+|     (View)     |             |       (View)       |             |      (View)          |
++----------------+             +--------------------+             +---------------------+
+| - userControl()|             | - renderGrid()      |             | - displayInfo()      |
+| - adjustSpeed()|             +--------------------+             +---------------------+
++----------------+
+```
+
+
 ## Use Cases
 
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
