@@ -208,6 +208,8 @@ Use Case 2: Apply the rules to an edge cell: set the next state of a cell to liv
 
 
 
+
+
 #### Class and Method Design Choices
 
 The team chose to follow the Model-View-Controller (MVC) pattern to ensure separation of concerns and modularity in the design. This structure allows for clearer management of simulation logic, visual rendering, and user input, which is crucial for maintainability and flexibility.
