@@ -4,19 +4,6 @@
 
 ### Names: Tatum McKinnis, Angela Predolac, Alana Zinkin
 
-#### Examples
-
-Here is a graphical look at my design:
-
-![This is cool, too bad you can't see it](images/online-shopping-uml-example.png "An initial UI")
-
-made from [a tool that generates UML from existing code](http://staruml.io/).
-
-Here is our amazing UI:
-
-![This is cool, too bad you can't see it](images/29-sketched-ui-wireframe.jpg "An alternate design")
-
-taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://onextrapixel.com/40-brilliant-examples-of-sketched-ui-wireframes-and-mock-ups/).
 
 ## Overview
 
@@ -30,7 +17,7 @@ At a high level, the program creates a robust and adaptable framework for simula
 
 ## User Interface
 
-- Alaan works on this part!
+![Our UI Prototype for Cellular Automata](images/UI_design.png "A potential UI for Cellular Automata")
 
 ## Configuration File Format
 
