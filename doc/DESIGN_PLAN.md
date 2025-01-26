@@ -199,7 +199,7 @@ Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch,
 
 Tatum's Use Case 1: Pause and Resume Simulation Execution
 
-- Scenario:
+- Scenario: This use case shows how the simulation can be paused (freezing the current state) and later resumed (continuing from the last frozen state).
 - Pausing the Simulation: The user presses the "Pause" button, and the simulation haults, preserving the current grid state.
   - The SimulationController calls Simulation.pauseExecution(), which stops the smulation (using a timer or loop). The UI is then updated to show that the simulation is paused.
 - Resuming the Simulation: The user presses the "Resume" button, and the simulation continues from the paused state.
@@ -207,6 +207,54 @@ Tatum's Use Case 1: Pause and Resume Simulation Execution
 
 Pseudocode for Tatum's Use Case 1:
 
+// SimulationController manages user input and controls simulation flow
+SimulationController:
+Method: pauseSimulation()
+// Inform the simulation to pause
+Simulation.pauseExecution()
+
+// Update the view to reflect the paused state
+SimulationView.displayPaused()
+
+Method: resumeSimulation()
+// Inform the simulation to resume execution
+Simulation.resumeExecution()
+
+// Update the view to reflect the resumed state
+SimulationView.displayResumed()
+
+
+// Simulation manages the execution and state transitions
+Simulation:
+Method: pauseExecution()
+// Stop the simulation timer or game loop
+Timer.stop()
+
+// Set a flag indicating that the simulation is paused
+Simulation.setPaused(true)
+
+Method: resumeExecution()
+// Resume the simulation timer or game loop
+Timer.start()
+
+// Set the flag to indicate the simulation is no longer paused
+Simulation.setPaused(false)
+
+Method: setPaused(pausedStatus)
+// Store the paused state
+this.paused = pausedStatus
+
+
+SimulationView:
+Method: displayPaused()
+// Change the UI to show the simulation is paused
+GridView.updateDisplayToPaused()
+ControlPanel.updateButtonState("Resume")
+
+Method: displayResumed()
+// Change the UI to show the simulation is running
+GridView.updateDisplayToRunning()
+ControlPanel.updateButtonState("Pause")
 
 ## Design Considerations
 
