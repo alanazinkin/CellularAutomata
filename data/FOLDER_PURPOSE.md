@@ -1,5 +1,3 @@
-# data
+# Data
 
-Put your example and user saved simulation configuration files here.
-
-This file is for informational purposes only and does not need to be modified.
+This folder contains all relevant XML data config files for the Cellular Automata Simulations.
