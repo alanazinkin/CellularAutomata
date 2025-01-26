@@ -141,10 +141,10 @@ In the design, method signatures are carefully crafted to abstract away the diff
 | - getCellState()|                                    | - parseConfig()    |
 | - setCellState()|                                    +-------------------+
 | - getNeighbors()|
-+-----------------+                              
-        |                                          
-        | interacts with                                
-        |                                            
++-----------------+                          
+        |                                      
+        | interacts with                            
+        |                                        
 +-------v--------+             +---------------------+         +--------------------+
 |     Cell       |<----------->| SimulationController|<------->| SimulationView     |
 |    (Model)     |             |      (Controller)    |         |      (View)        |
@@ -197,6 +197,17 @@ Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch,
 
 - The user will use the ControlPanel to select an input file to load the data from. The XML Parser will read the file and extract the value of probCatch, then pass it to SimulatioController. SimulatioController then calls the setParameter() method to update the value of probCatch. This is then updated in the SimulationParameter object of the active Fire Simulation class. Finally, SimulationView updates to display any visual changes as a result of setting this parameter.
 
+Tatum's Use Case 1: Pause and Resume Simulation Execution
+
+- Scenario:
+- Pausing the Simulation: The user presses the "Pause" button, and the simulation haults, preserving the current grid state.
+  - The SimulationController calls Simulation.pauseExecution(), which stops the smulation (using a timer or loop). The UI is then updated to show that the simulation is paused.
+- Resuming the Simulation: The user presses the "Resume" button, and the simulation continues from the paused state.
+  - The SimulationController calls Simulation.resumeExecution(), which restarts the simulation, and the UI is updated to show the resumed state.
+
+Pseudocode for Tatum's Use Case 1:
+
+
 ## Design Considerations
 
 1. Grid or no grid?
@@ -218,4 +229,9 @@ Controller Layer: The SimulationController is central to handling user interacti
 
 * Team Member #1
 * Team Member #2
-* Team Member #3
+* Team Member #3SimulationController:
+
+SimulationController:
+Method: pauseSimulation()
+Inform the simulation to pause
+Simulation.pauseExecution()
