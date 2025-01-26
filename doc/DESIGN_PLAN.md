@@ -194,6 +194,10 @@ Use Case 4: Switch simulations: load a new simulation from a data file, replacin
 
 - To switch simulations, the user would press a "Switch Simulation" button in the ControlPanel of the View layer. Next, the SimulatioController class would parse the XML file provided by the user or already in the data bank and notify View to change the display. The Simulation class will clear the current simulation and replace it with a new grid based on the provided XML file using the initialize() method. A new Grid will be created from the file and new Cells will be initialized. In SimulationView, the current grid will be cleared and replaced with a visualization of the new one. The visual representation of each cell will also be updated in GridView. The new simulation details will also be shown in SimulationInfoPanel. 
 
+Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in a data file
+
+- The user will use the ControlPanel to select an input file to load the data from. The XML Parser will read the file and extract the value of probCatch, then pass it to SimulatioController. SimulatioController then calls the setParameter() method to update the value of probCatch. This is then updated in the SimulationParameter object of the active Fire Simulation class. Finally, SimulationView updates to display any visual changes as a result of setting this parameter.
+
 ## Design Considerations
 
 1. Grid or no grid?
