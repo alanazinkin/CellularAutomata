@@ -189,6 +189,7 @@ Use Case 2: Apply the rules to an edge cell: set the next state of a cell to liv
 ## Design Considerations
 
 1. Grid or no grid?
+  1. Possible ideas: Representing a grid with a 2D-array but as a private instance variable in a GameState class is one idea; we wouldn't include a getGrid() method to keep this grid private. Another option is to have an implicit grid represented with an adjacency list of neighboring cells as an instance variable of each Cell object. This would avoid needing to even create a grid, but it may make it more difficult for visualization purposes.
 2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
    1. Possible ideas: Cell-based updates (cell manages its own state update, checking its neighbors and updating accordingly without explicitly maintaining two grids; each cell amkes its decision about its next state based on the previous state and triggers an update after all cells have been evaluated), use two grids (current and previous; current holds the state of the cells that has just been updated or is being processed, previous hods that state of the cells from the previous iteration or generation; when you update the cells, you reference the previous grid to compute the new state of the cells, but the updates themselves happen on the current grid)
 
