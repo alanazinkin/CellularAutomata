@@ -2,9 +2,10 @@
 <simulation>
   <type>Percolation</type>
   <title>Percolation Simulation</title>
+  <author>Alana Zinkin</author>
   <description>Simulates fluid flow through a porous material</description>
-  <width>20</width>
-  <height>15</height>
-  <initial_cell_states></initial_cell_states>
+  <width>5</width>
+  <height>5</height>
+  <initial_states>0 1 0 1 1 1 0 0 1 0 0 1 0 1 1 1 0 0 1 0 0 0 0 1 0</initial_states>
   <parameters></parameters>
 </simulation>

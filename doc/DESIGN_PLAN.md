@@ -23,7 +23,6 @@ At a high level, the program creates a robust and adaptable framework for simula
 * [Example 1](../data/ExampleSimulation1.xml)
 * [Example 2](../data/ExampleSimulation2.xml)
 
-
 ## Design Overview and Details
 
 #### Design Overview:

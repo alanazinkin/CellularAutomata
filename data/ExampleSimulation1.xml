@@ -2,9 +2,10 @@
 <simulation>
   <type>Game of Life</type>
   <title>Game of Life Simulation</title>
+  <author>Alana Zinkin</author>
   <description>A classic cellular automaton where cells on a grid live, die, or reproduce based on their neighbors</description>
-  <width>20</width>
-  <height>15</height>
-  <initial_cell_states></initial_cell_states>
+  <width>5</width>
+  <height>5</height>
+  <initial_states>0 1 1 1 1 0 1 0 0 1 0 1 1 1 1 0 1 0 0 1 1 1 1 1 1</initial_states>
   <parameters></parameters>
 </simulation>
