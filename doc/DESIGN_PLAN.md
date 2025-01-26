@@ -4,7 +4,6 @@
 
 ### Names: Tatum McKinnis, Angela Predolac, Alana Zinkin
 
-
 ## Overview
 
 The primary problem this program aims to solve is the lack of intuitive, flexible, and extensible tools for simulating and visualizing Cellular Automata (CA) models. Cellular Automata are powerful for studying complex systems, modeling natural phenomena, and exploring mathematical concepts. However, existing tools often fall short in modularity, customization, and user-friendliness, making it difficult for users to experiment with different CA models or extend the platform for new use cases. This program addresses these challenges by focusing on three key design goals: flexibility, user-friendliness, and modularity.
@@ -20,6 +19,7 @@ At a high level, the program creates a robust and adaptable framework for simula
 ![Our UI Prototype for Cellular Automata](images/UI_design.png "A potential UI for Cellular Automata")
 
 ## Configuration File Format
+
 * [Example 1](../data/ExampleSimulation1.xml)
 * [Example 2](../data/ExampleSimulation2.xml)
 
@@ -120,7 +120,7 @@ Helper Classes
 
 In the design, method signatures are carefully crafted to abstract away the differences between various implementations of the data structure, file format, and OpenJFX "grid" component. For example, the Simulation class defines general methods like step() and initialize() that perform simulation-related actions without specifying how they interact with the underlying grid structure. The grid's internal representation—whether it's a 2D array, list of lists, or another structure—is hidden from the rest of the system. Methods like getCellState(), setCellState(), and getNeighbors() allow interaction with the grid's cells without exposing the implementation details of how cells are stored or organized. Similarly, the XML Parser class defines generic methods for parsing simulation configuration files (e.g., parseConfig()) without making assumptions about the specific format or structure of the XML files. This approach ensures that the system can handle different file formats or data structures as long as they adhere to a common interface. For the OpenJFX grid component, the method signatures in the view (like updateGrid() or renderCell()) focus on high-level actions such as updating the display, without being tied to a particular implementation of the grid's visual representation in JavaFX. This abstraction ensures flexibility in the implementation while maintaining clear, reusable interfaces across different components of the simulation.
 
-#### Picture of Relations Between Modeules
+#### Picture of Relations Between Modules
 
 ```plaintext
                            +---------------------+
@@ -141,10 +141,10 @@ In the design, method signatures are carefully crafted to abstract away the diff
 | - getCellState()|                                    | - parseConfig()    |
 | - setCellState()|                                    +-------------------+
 | - getNeighbors()|
-+-----------------+                                
++-----------------+                              
+        |                                          
+        | interacts with                                
         |                                            
-        | interacts with                                  
-        |                                              
 +-------v--------+             +---------------------+         +--------------------+
 |     Cell       |<----------->| SimulationController|<------->| SimulationView     |
 |    (Model)     |             |      (Controller)    |         |      (View)        |
@@ -174,7 +174,6 @@ In the design, method signatures are carefully crafted to abstract away the diff
 +----------------+
 ```
 
-
 ## Use Cases
 
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
@@ -192,7 +191,7 @@ Use Case 3: Move to the next generation: update all cells in a simulation from t
 
 Use Case 4: Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
 
-- To switch simulations, the user would press a "Switch Simulation" button in the ControlPanel of the View layer. Next, the SimulatioController class would parse the XML file provided by the user or already in the data bank and notify View to change the display. The Simulation class will clear the current simulation and replace it with a new grid based on the provided XML file using the initialize() method. A new Grid will be created from the file and new Cells will be initialized. In SimulationView, the current grid will be cleared and replaced with a visualization of the new one. The visual representation of each cell will also be updated in GridView. The new simulation details will also be shown in SimulationInfoPanel. 
+- To switch simulations, the user would press a "Switch Simulation" button in the ControlPanel of the View layer. Next, the SimulatioController class would parse the XML file provided by the user or already in the data bank and notify View to change the display. The Simulation class will clear the current simulation and replace it with a new grid based on the provided XML file using the initialize() method. A new Grid will be created from the file and new Cells will be initialized. In SimulationView, the current grid will be cleared and replaced with a visualization of the new one. The visual representation of each cell will also be updated in GridView. The new simulation details will also be shown in SimulationInfoPanel.
 
 Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in a data file
 
@@ -201,13 +200,9 @@ Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch,
 ## Design Considerations
 
 1. Grid or no grid?
-  1. Possible ideas: Representing a grid with a 2D-array but as a private instance variable in a GameState class is one idea; we wouldn't include a getGrid() method to keep this grid private. Another option is to have an implicit grid represented with an adjacency list of neighboring cells as an instance variable of each Cell object. This would avoid needing to even create a grid, but it may make it more difficult for visualization purposes.
-2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
+2. Possible ideas: Representing a grid with a 2D-array but as a private instance variable in a GameState class is one idea; we wouldn't include a getGrid() method to keep this grid private. Another option is to have an implicit grid represented with an adjacency list of neighboring cells as an instance variable of each Cell object. This would avoid needing to even create a grid, but it may make it more difficult for visualization purposes.
+3. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
    1. Possible ideas: Cell-based updates (cell manages its own state update, checking its neighbors and updating accordingly without explicitly maintaining two grids; each cell amkes its decision about its next state based on the previous state and triggers an update after all cells have been evaluated), use two grids (current and previous; current holds the state of the cells that has just been updated or is being processed, previous hods that state of the cells from the previous iteration or generation; when you update the cells, you reference the previous grid to compute the new state of the cells, but the updates themselves happen on the current grid)
-
-
-
-
 
 #### Class and Method Design Choices
 
