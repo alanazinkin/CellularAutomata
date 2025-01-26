@@ -20,8 +20,9 @@ At a high level, the program creates a robust and adaptable framework for simula
 ![Our UI Prototype for Cellular Automata](images/UI_design.png "A potential UI for Cellular Automata")
 
 ## Configuration File Format
+* [Example 1](../data/ExampleSimulation1.xml)
+* [Example 2](../data/ExampleSimulation2.xml)
 
-OH question?
 
 ## Design Overview and Details
 
