@@ -186,6 +186,10 @@ Use Case 2: Apply the rules to an edge cell: set the next state of a cell to liv
 
 - The Simulation class calls the step() method. The step() method calls getNeighbors() on the Gird class to retrieve the neighboring cells of an edge Cell. The getNeighbors() method in the Grid class checks the edge conditions and calculates the neighbors the edge cell. Since it's an edge cell, getNeighbors() needs to account for the fact that some neighbors might be missing (e.g., no neighbors on the "out of bounds" side of the grid).The Simulation class computes the new state for the Cell (setting it to "live" based on its neighbors' states). In this case, if the edge cell has the right number of live neighbors, it may be set to "live" according to the Game of Life rules. The Simulation class uses setCellState() to update the cell state. SimulationView refreshes the visual grid to reflect the updated state.
 
+Use Case 3: Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically.
+
+- For each individual Cell object, we store the current state as well as the next state. When we call the updateState() method for each Cell, we accurately calculate the next state based on the current state and the current states of neighboring cells. This ensures that the next state of a cell does not impact neighboring cells until after all cells have been updated within the same round or generation of the simulation. When we call the step() method in the Simulation class, we iterate over each cell and call updateState() to calculate the next step. Then, at the very end we update the current state for each cell to be equal to the next state. This way, all cells will be updated at the same time. We then display this graphically by changing the cell's depiction based on whether they are alive or dead.
+
 ## Design Considerations
 
 1. Grid or no grid?
