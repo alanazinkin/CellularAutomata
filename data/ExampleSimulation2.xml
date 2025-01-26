@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Percolation</type>
+  <title>Percolation Simulation</title>
+  <description>Simulates fluid flow through a porous material</description>
+  <width>20</width>
+  <height>15</height>
+  <initial_cell_states></initial_cell_states>
+  <parameters></parameters>
+</simulation>

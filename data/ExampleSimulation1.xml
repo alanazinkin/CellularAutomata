@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Game of Life</type>
+  <title>Game of Life Simulation</title>
+  <description>A classic cellular automaton where cells on a grid live, die, or reproduce based on their neighbors</description>
+  <width>20</width>
+  <height>15</height>
+  <initial_cell_states></initial_cell_states>
+  <parameters></parameters>
+</simulation>
