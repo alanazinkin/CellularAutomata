@@ -190,6 +190,10 @@ Use Case 3: Move to the next generation: update all cells in a simulation from t
 
 - For each individual Cell object, we store the current state as well as the next state. When we call the updateState() method for each Cell, we accurately calculate the next state based on the current state and the current states of neighboring cells. This ensures that the next state of a cell does not impact neighboring cells until after all cells have been updated within the same round or generation of the simulation. When we call the step() method in the Simulation class, we iterate over each cell and call updateState() to calculate the next step. Then, at the very end we update the current state for each cell to be equal to the next state. This way, all cells will be updated at the same time. We then display this graphically by changing the cell's depiction based on whether they are alive or dead.
 
+Use Case 4: Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
+
+- To switch simulations, the user would press a "Switch Simulation" button in the ControlPanel of the View layer. Next, the SimulatioController class would parse the XML file provided by the user or already in the data bank and notify View to change the display. The Simulation class will clear the current simulation and replace it with a new grid based on the provided XML file using the initialize() method. A new Grid will be created from the file and new Cells will be initialized. In SimulationView, the current grid will be cleared and replaced with a visualization of the new one. The visual representation of each cell will also be updated in GridView. The new simulation details will also be shown in SimulationInfoPanel. 
+
 ## Design Considerations
 
 1. Grid or no grid?
