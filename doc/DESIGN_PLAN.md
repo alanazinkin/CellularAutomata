@@ -272,19 +272,18 @@ Scenario: This use case demonstrates how the user can speed up or slow down the 
 
 Pseudocode:
 
-// SimulationController manages user input and controls simulation flow
 SimulationController:
 Method: setSpeed(int speed)
-// receive user input from the slider display to increase the simulation speed
+* receive user input from the slider display to increase the simulation speed
 
 ControlPanel:
 Method: adjustSpeed(int speed)
-// update the slider to reflect the change
-// this can be done using a listener
+* update the slider to reflect the change
+* this can be done using a listener
 Method: slider.setSpeed(int speed)
 
 Simulation:
-// update the timer speed to reflect the new user input
+* update the timer speed to reflect the new user input
 Timer.setDelay(int speed)
 
 Alana's Use Case 2: Provide a mechanism to save the current state of the simulation. 
@@ -294,8 +293,9 @@ Alana's Use Case 2: Provide a mechanism to save the current state of the simulat
 Pseudocode:
 Generating the File Upon Clicking "Save":
 SimulationController
-// press the save button
 Method: saveSimulation()
+ * user presses the save button
+
 
 Grid
 Method: makeGridCopy()
@@ -314,11 +314,11 @@ Loading the File:
 
 Simulation
 Method: initialize()
-//Call initialize method to start a new simulation
+* Call initialize method to start a new simulation
 
 XML Parser
 Method: parseConfig(String xmlFilePath) where xmlFilePath = data/FOLDER/savedState_TIMESTAMP
-// Parse the newly generated XML file
+* Parse the newly generated XML file
 
 ## Design Considerations
 
