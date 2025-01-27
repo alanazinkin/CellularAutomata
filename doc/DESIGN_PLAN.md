@@ -264,6 +264,30 @@ Method: displayResumed()
 GridView.updateDisplayToRunning()
 ControlPanel.updateButtonState("Pause")
 
+
+Alana's Use Case 1:
+Scenario: This use case demonstrates how the user can speed up or slow down the simulation.
+- When the user slides the button to a higher number than it's current position, the simulation should speed up and display more frames per second
+- When the user slides the button to a lower number than it's current position, the simulation should slow down and display fewer frames per second
+
+Pseudocode:
+
+// SimulationController manages user input and controls simulation flow
+SimulationController:
+Method: setSpeed(int speed)
+// receive user input from the slider display to increase the simulation speed
+
+ControlPanel:
+Method: adjustSpeed(int speed)
+// update the slider to reflect the change
+// this can be done using a listener
+Method: slider.setSpeed(int speed)
+
+Simulation:
+// update the timer speed to reflect the new user input
+Timer.setDelay(int speed)
+
+
 ## Design Considerations
 
 1. Grid or no grid?
