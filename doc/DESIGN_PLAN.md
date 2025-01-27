@@ -343,11 +343,6 @@ Controller Layer: The SimulationController is central to handling user interacti
 
 ## Team Responsibilities
 
-* Team Member #1
-* Team Member #2
-* Team Member #3SimulationController:
-
-SimulationController:
-Method: pauseSimulation()
-Inform the simulation to pause
-Simulation.pauseExecution()
+* Team Member #1 (Alana Zinkin): Responsible for the View 
+* Team Member #2 (Tatum Mckinnis): Responsible for the Model
+* Team Member #3 (Angela Predolac): Responsible for the Controller 
