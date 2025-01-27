@@ -283,7 +283,7 @@ Method: adjustSpeed(int speed)
 Method: slider.setSpeed(int speed)
 
 Simulation:
-* update the timer speed to reflect the new user input
+* update the timer or game loop speed to reflect the new user input
 Timer.setDelay(int speed)
 
 Alana's Use Case 2: Provide a mechanism to save the current state of the simulation. 
