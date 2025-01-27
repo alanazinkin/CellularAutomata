@@ -29,8 +29,8 @@ Example descriptive information dialog box:
 
 ## Configuration File Format
 
-* [Example 1](../data/ExampleSimulation1.xml)
-* [Example 2](../data/ExampleSimulation2.xml)
+* [Example 1](../data/SpreadingFireExample.xml)
+* [Example 2](../data/GameOfLifeExample.xml)
 
 ## Design Overview and Details
 
