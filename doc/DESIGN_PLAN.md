@@ -16,7 +16,16 @@ At a high level, the program creates a robust and adaptable framework for simula
 
 ## User Interface
 
-![Our UI Prototype for Cellular Automata](images/UI_design.png "A potential UI for Cellular Automata")
+Example UI displaying simulation and relevant buttons:
+* Our UI will display the simulation itself according to the particular ruleset and will have both "start" and "pause" buttons to start and stop the simulation, respectively. It will also contain a "save" button, which will save the state of the simulation in an XML file. It will also contain a "reset" button to revert the simulation to its original state and a "Select Simulation" button to chose which type of simulation to load.
+
+![Cellular Automata Simulation Display UI Prototype](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
+
+Example descriptive information dialog box:
+* The dialog box will be used to display relevant simulation information, such as the simulation type, a description of the simulation, authors, color mappings for cells, and parameters (if they exist).
+
+![Cellular Automata Dialog Box UI Prototype](images/UI_dialog_box_example.png "A dialog box prototype to display relevant simulation information")
+
 
 ## Configuration File Format
 
@@ -40,7 +49,7 @@ Model Layer:
 View Layer:
 
 - SimulationView: Responsible for rendering the simulation. Listens for state changes in the model adn updates the grid display accordingly.
-- GridView: Specifcially handles the rendering of the grid of cells. When the state of the cells changes, this view ensures the grid is updated visually.
+- GridView: Specifically handles the rendering of the grid of cells. When the state of the cells changes, this view ensures the grid is updated visually.
 - SimulationInfoPanel: Displays data such as the simulation's title, description, and parameters
 - ControlPanel: Provides buttons for controlling the simulation (start, pause, stop) and sliders to adjust simulation speed. Can also include an option to load new simulation configurations.
 
@@ -178,8 +187,7 @@ In the design, method signatures are carefully crafted to abstract away the diff
 
 Use Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
 
-* Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead.
-  and we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method
+- Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead. Then we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method
 
 Use Case 2: Apply the rules to an edge cell: set the next state of a cell to live by counting its number of neighbors using the Game of Life rules for a cell on the edge (i.e., with some of its neighbors missing)
 
