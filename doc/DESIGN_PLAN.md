@@ -287,6 +287,38 @@ Simulation:
 // update the timer speed to reflect the new user input
 Timer.setDelay(int speed)
 
+Alana's Use Case 2: Provide a mechanism to save the current state of the simulation. 
+- When the user invokes this save mechanism (i.e., clicks the button), the current state of the simulation should be saved as an XML configuration file matching the XML configuration specification
+- When the user loads this XML file, the simulation should return to the exact state it was in when the file was saved.
+
+Pseudocode:
+Generating the File Upon Clicking "Save":
+SimulationController
+// press the save button
+Method: saveSimulation()
+
+Grid
+Method: makeGridCopy()
+Integer[][] gridCopy = grid.clone()
+
+XMLParser
+ generateFile(copyGrid)
+  * Initialize new DOM
+  * parseConfig(originalFile)
+  * convert 2D gridCopy to String
+  * set <initial_states> = String of gridCopy
+  * name file as savedState_TIMESTAMP
+  * save file as new file in current simulation data folder
+
+Loading the File:
+
+Simulation
+Method: initialize()
+//Call initialize method to start a new simulation
+
+XML Parser
+Method: parseConfig(String xmlFilePath) where xmlFilePath = data/FOLDER/savedState_TIMESTAMP
+// Parse the newly generated XML file
 
 ## Design Considerations
 
