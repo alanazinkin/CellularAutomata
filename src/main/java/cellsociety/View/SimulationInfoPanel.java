@@ -27,11 +27,44 @@ public class SimulationInfoPanel {
   /**
    * inputs to the simulation (ex: probCatch in Spreading Fire)
    */
-  private String parameters;
+  private List<List<String>> parameters;
   /**
    * key indicating what each color means for a given simulation
    */
   private List<String> stateColors;
+
+  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, List<String> stateColors) {
+    setType(type);
+    setTitle(title);
+    setAuthor(author);
+    setDescription(description);
+    setParameters(parameters);
+    setStateColors(stateColors);
+  }
+
+  private void setType(String type) {
+    this.type = type;
+  }
+
+  private void setTitle(String title) {
+    this.title = title;
+  }
+
+  private void setAuthor(String author) {
+    this.author = author;
+  }
+
+  private void setDescription(String description) {
+    this.description = description;
+  }
+
+  private void setParameters(List<List<String>> parameters) {
+    this.parameters = parameters;
+  }
+
+  private void setStateColors(List<String> stateColors) {
+    this.stateColors = stateColors;
+  }
 
 
 }
