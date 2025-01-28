@@ -464,6 +464,27 @@ Use Case 5: Set a simulation parameter: set the value of a parameter, probCatch,
 
 - The user will use the ControlPanel to select an input file to load the data from. The XML Parser will read the file and extract the value of probCatch, then pass it to SimulatioController. SimulatioController then calls the setParameter() method to update the value of probCatch. This is then updated in the SimulationParameter object of the active Fire Simulation class. Finally, SimulationView updates to display any visual changes as a result of setting this parameter.
 
+ControlPanel
+Method: selectSimulation()
+* user selects simulation type from dropdown list
+
+Simulation
+Method: initSimulation()
+
+XML Parser
+Method: parseConfig(String filePath, List<String> parameterList)
+* Within the parseConfig() method, we save the state of parameters from the parameter list in instance variables
+  * EX: int probCatch = file.getElementsByTagName(probCatch)
+  * return Fire(probCatch)
+
+SimulationInfoPanel
+Method: displayPanel()
+
+SimulationView
+Method: initSimulation(Fire)
+* pass the fire object with the probCatch parameter
+
+
 Tatum's Use Case 1: Pause and Resume Simulation Execution
 
 - Scenario: This use case shows how the simulation can be paused (freezing the current state) and later resumed (continuing from the last frozen state).
