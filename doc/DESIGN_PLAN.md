@@ -407,56 +407,6 @@ setCellColor(cell, DEAD_COLOR)
 Use Case 4: Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
 
 - To switch simulations, the user would press a "Switch Simulation" button in the ControlPanel of the View layer. Next, the SimulationController class would parse the XML file provided by the user or already in the data bank and notify View to change the display. The Simulation class will clear the current simulation and replace it with a new grid based on the provided XML file using the initialize() method. A new Grid will be created from the file and new Cells will be initialized. In SimulationView, the current grid will be cleared and replaced with a visualization of the new one. The visual representation of each cell will also be updated in GridView. The new simulation details will also be shown in SimulationInfoPanel.
-- The user selects the "Percolation" simulation type
-Pseudocode:
-SimulationController:
-Method: selectSimulationType()
-* user presses select simulation, which gives a dropdown list of the different simulation types
-* upon clicking "Percolation", the simulationFile = '/.../percolation1.xml'
-* the method will call:
-
-Simulation
-Method: endSimulation()
-Method: pauseSimulation()
-* timeline.pause()
-
-SimulationView
-Method: pauseDisplay()
-* stop updating the cell states
-
-Simulation
-Method: initializeSimulation()
-
-XML Parser
-Method: parseConfig(simulationFile)
-
-SimulationInfoPanel
-Method: displayPanel()
-
-SimulationView
-Method: initSimulation()
-
-GridView
-Method: renderGrid(initialCellStates)
-* Stage myGrid = new Stage()
-* colorCells()
-  * for each cell, color the cell according to its initial state
-
-Grid
-setCellState()
-* sets the state of the cells according to the XML initial states
-
-Cell
-Method: for each cell in grid: setState()
-* concrete setter for initializing the cell state
-
-SimulationController
-Method: playSimulation()
-* calls on the simulation to start the timeline
-
-Simulation
-Method: start()
-* Timeline.play()
 
 
 
