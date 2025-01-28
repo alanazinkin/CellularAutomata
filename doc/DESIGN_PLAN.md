@@ -17,15 +17,16 @@ At a high level, the program creates a robust and adaptable framework for simula
 ## User Interface
 
 Example UI displaying simulation and relevant buttons:
+
 * Our UI will display the simulation itself according to the particular ruleset and will have both "start" and "pause" buttons to start and stop the simulation, respectively. It will also contain a "save" button, which will save the state of the simulation in an XML file. It will also contain a "reset" button to revert the simulation to its original state and a "Select Simulation" button to chose which type of simulation to load.
 
 ![Cellular Automata Simulation Display UI Prototype](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
 
 Example descriptive information dialog box:
+
 * The dialog box will be used to display relevant simulation information, such as the simulation type, a description of the simulation, authors, color mappings for cells, and parameters (if they exist).
 
 ![Cellular Automata Dialog Box UI Prototype](images/UI_dialog_box_example.png "A dialog box prototype to display relevant simulation information")
-
 
 ## Configuration File Format
 
@@ -150,10 +151,10 @@ In the design, method signatures are carefully crafted to abstract away the diff
 | - getCellState()|                                    | - parseConfig()    |
 | - setCellState()|                                    +-------------------+
 | - getNeighbors()|
-+-----------------+                          
++-----------------+                        
+        |                                    
+        | interacts with                          
         |                                      
-        | interacts with                            
-        |                                        
 +-------v--------+             +---------------------+         +--------------------+
 |     Cell       |<----------->| SimulationController|<------->| SimulationView     |
 |    (Model)     |             |      (Controller)    |         |      (View)        |
@@ -189,13 +190,219 @@ Use Case 1: Apply the rules to a middle cell: set the next state of a cell to de
 
 - Within step() of the Simulation class, call updateState(cell) of the Grid class, which calls the countAliveNeighbors() method of Grid class, the getState(cell) method of the Cell class to check if it's alive or dead. In our use case, the cell would be dead. Then we call setNextState(cell) of the Cell class according to the game rules in the Simulation class which uses the return value of the countAliveNeighbors() method
 
+Pseudocode for Use case 1: 
+
+// Simulation Class: Step method updates the state of all cells in the grid
+Simulation:
+Method: step()
+// Loop through all cells in the grid
+for each cell in grid:
+// Apply updateState to each cell
+Grid.updateState(cell)
+
+// Grid Class: Update the state of a single cell based on its neighbors
+Grid:
+Method: updateState(Cell cell)
+// Count the number of alive neighbors for the current cell
+int aliveNeighbors = countAliveNeighbors(cell)
+
+// Get the current state of the cell (alive or dead)
+State currentState = cell.getState()
+
+// Apply the Game of Life rules based on the current state and neighbors
+if currentState == DEAD and aliveNeighbors == 3:
+// A dead cell with exactly 3 neighbors becomes alive
+cell.setNextState(ALIVE)
+else if currentState == ALIVE and (aliveNeighbors < 2 or aliveNeighbors > 3):
+// An alive cell with fewer than 2 or more than 3 neighbors becomes dead
+cell.setNextState(DEAD)
+else if currentState == ALIVE and (aliveNeighbors == 2 or aliveNeighbors == 3):
+// An alive cell with 2 or 3 neighbors stays alive
+cell.setNextState(ALIVE)
+else:
+// A dead cell with less than 3 neighbors stays dead
+cell.setNextState(DEAD)
+
+// Cell Class: Methods for getting and setting the state of a cell
+Cell:
+Method: getState()
+return this.state  // Return the current state (ALIVE or DEAD)
+
+Method: setNextState(State newState)
+this.nextState = newState  // Set the next state to be applied in the next generation
+
+Method: applyNextState()
+this.state = this.nextState  // Apply the next state to the cell
+
+// Grid Class: Count the number of alive neighbors for a given cell
+Grid:
+Method: countAliveNeighbors(Cell cell)
+int aliveNeighbors = 0
+// Get the position of the cell (row, column)
+int row = cell.getRow()
+int col = cell.getColumn()
+
+// Check the 8 neighboring cells around the current cell
+for each neighbor in getNeighbors(row, col):
+if neighbor.getState() == ALIVE:
+aliveNeighbors++
+return aliveNeighbors
+
 Use Case 2: Apply the rules to an edge cell: set the next state of a cell to live by counting its number of neighbors using the Game of Life rules for a cell on the edge (i.e., with some of its neighbors missing)
 
-- The Simulation class calls the step() method. The step() method calls getNeighbors() on the Gird class to retrieve the neighboring cells of an edge Cell. The getNeighbors() method in the Grid class checks the edge conditions and calculates the neighbors the edge cell. Since it's an edge cell, getNeighbors() needs to account for the fact that some neighbors might be missing (e.g., no neighbors on the "out of bounds" side of the grid).The Simulation class computes the new state for the Cell (setting it to "live" based on its neighbors' states). In this case, if the edge cell has the right number of live neighbors, it may be set to "live" according to the Game of Life rules. The Simulation class uses setCellState() to update the cell state. SimulationView refreshes the visual grid to reflect the updated state.
+- The Simulation class calls the step() method. The step() method calls getNeighbors() on the Grid class to retrieve the neighboring cells of an edge Cell. The getNeighbors() method in the Grid class checks the edge conditions and calculates the neighbors the edge cell. Since it's an edge cell, getNeighbors() needs to account for the fact that some neighbors might be missing (e.g., no neighbors on the "out of bounds" side of the grid).The Simulation class computes the new state for the Cell (setting it to "live" based on its neighbors' states). In this case, if the edge cell has the right number of live neighbors, it may be set to "live" according to the Game of Life rules. The Simulation class uses setCellState() to update the cell state. SimulationView refreshes the visual grid to reflect the updated state.
+
+Pseudocode for Use case 2:
+
+// Simulation Class: Step method updates the state of all cells in the grid
+Simulation:
+Method: step()
+// Loop through all cells in the grid
+for each cell in grid:
+// Apply updateState to each cell
+Grid.updateState(cell)
+
+// Grid Class: Update the state of a single cell based on its neighbors
+Grid:
+Method: updateState(Cell cell)
+// Get the neighboring cells of the current cell, considering edge conditions
+List<Cell> neighbors = getNeighbors(cell)
+
+// Count the number of alive neighbors for the current cell
+int aliveNeighbors = 0
+for each neighbor in neighbors:
+    if neighbor.getState() == ALIVE:
+        aliveNeighbors++
+
+// Get the current state of the cell (alive or dead)
+State currentState = cell.getState()
+
+// Apply the Game of Life rules based on the current state and neighbors
+if currentState == DEAD and aliveNeighbors == 3:
+    // A dead edge cell with exactly 3 neighbors becomes alive
+    cell.setNextState(ALIVE)
+else if currentState == ALIVE and (aliveNeighbors < 2 or aliveNeighbors > 3):
+    // An alive edge cell with fewer than 2 or more than 3 neighbors becomes dead
+    cell.setNextState(DEAD)
+else if currentState == ALIVE and (aliveNeighbors == 2 or aliveNeighbors == 3):
+    // An alive edge cell with 2 or 3 neighbors stays alive
+    cell.setNextState(ALIVE)
+else:
+    // A dead edge cell with less than 3 neighbors stays dead
+    cell.setNextState(DEAD)
+
+// Cell Class: Methods for getting and setting the state of a cell
+Cell:
+Method: getState()
+return this.state  // Return the current state (ALIVE or DEAD)
+
+Method: setNextState(State newState)
+this.nextState = newState  // Set the next state to be applied in the next generation
+
+Method: applyNextState()
+this.state = this.nextState  // Apply the next state to the cell
+
+// Grid Class: Get the neighbors of a cell, accounting for edge conditions
+Grid:
+Method: getNeighbors(Cell cell)
+List<Cell> neighbors = []
+// Get the position of the cell (row, column)
+int row = cell.getRow()
+int col = cell.getColumn()
+
+// Check the cells around the current cell (top, bottom, left, right, and diagonals)
+for each direction in DIRECTIONS:
+int neighborRow = row + direction.row
+int neighborCol = col + direction.col
+
+// If the neighbor is within bounds of the grid, add it to the neighbors list
+if neighborRow >= 0 and neighborRow < gridHeight and neighborCol >= 0 and neighborCol < gridWidth:
+    neighbors.add(grid[neighborRow][neighborCol])
+
+return neighbors
 
 Use Case 3: Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically.
 
 - For each individual Cell object, we store the current state as well as the next state. When we call the updateState() method for each Cell, we accurately calculate the next state based on the current state and the current states of neighboring cells. This ensures that the next state of a cell does not impact neighboring cells until after all cells have been updated within the same round or generation of the simulation. When we call the step() method in the Simulation class, we iterate over each cell and call updateState() to calculate the next step. Then, at the very end we update the current state for each cell to be equal to the next state. This way, all cells will be updated at the same time. We then display this graphically by changing the cell's depiction based on whether they are alive or dead.
+
+Pseudocode for Use case 3;
+
+// Simulation Class: Step method to update all cells to their next state and display the result
+Simulation:
+Method: step()
+// Loop through all cells in the grid and update their next state
+for each cell in grid:
+Grid.updateState(cell)
+
+// Once all cells have been updated, apply the next state to each cell
+for each cell in grid:
+    cell.applyNextState()
+
+// After all cells have updated their state, refresh the grid visually
+SimulationView.refreshGrid()
+
+// Grid Class: Update the state of a single cell based on its neighbors and the Game of Life rules
+Grid:
+Method: updateState(Cell cell)
+// Get the neighboring cells of the current cell
+List<Cell> neighbors = getNeighbors(cell)
+
+// Count the number of alive neighbors
+int aliveNeighbors = 0
+for each neighbor in neighbors:
+    if neighbor.getState() == ALIVE:
+        aliveNeighbors++
+
+// Get the current state of the cell (alive or dead)
+State currentState = cell.getState()
+
+// Apply the Game of Life rules to calculate the next state
+if currentState == DEAD and aliveNeighbors == 3:
+    // A dead cell with exactly 3 neighbors becomes alive
+    cell.setNextState(ALIVE)
+else if currentState == ALIVE and (aliveNeighbors < 2 or aliveNeighbors > 3):
+    // An alive cell with fewer than 2 or more than 3 neighbors dies
+    cell.setNextState(DEAD)
+else if currentState == ALIVE and (aliveNeighbors == 2 or aliveNeighbors == 3):
+    // An alive cell with 2 or 3 neighbors stays alive
+    cell.setNextState(ALIVE)
+else:
+    // A dead cell with less than 3 neighbors stays dead
+    cell.setNextState(DEAD)
+
+// Cell Class: Methods for getting and setting the state of a cell
+Cell:
+Method: getState()
+return this.state  // Return the current state (ALIVE or DEAD)
+
+Method: setNextState(State newState)
+this.nextState = newState  // Set the next state to be applied in the next generation
+
+Method: applyNextState()
+this.state = this.nextState  // Apply the next state to the cell
+
+// SimulationView Class: Refreshes the grid visually after all cells have been updated
+SimulationView:
+Method: refreshGrid()
+// Loop through each cell in the grid and update its visual representation
+for each cell in grid:
+if cell.getState() == ALIVE:
+// Display the cell as alive (e.g., in a vibrant color or filled in)
+updateCellDisplay(cell, ALIVE)
+else:
+// Display the cell as dead (e.g., in a default or empty color)
+updateCellDisplay(cell, DEAD)
+
+// Helper method to update the graphical representation of a cell
+Method: updateCellDisplay(Cell cell, State state)
+// Update the visual appearance of the cell (alive or dead)
+if state == ALIVE:
+// Set the cell display to "alive"
+setCellColor(cell, ALIVE_COLOR)
+else:
+// Set the cell display to "dead"
+setCellColor(cell, DEAD_COLOR)
+
 
 Use Case 4: Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
 
@@ -231,7 +438,6 @@ Simulation.resumeExecution()
 // Update the view to reflect the resumed state
 SimulationView.displayResumed()
 
-
 // Simulation manages the execution and state transitions
 Simulation:
 Method: pauseExecution()
@@ -252,7 +458,6 @@ Method: setPaused(pausedStatus)
 // Store the paused state
 this.paused = pausedStatus
 
-
 SimulationView:
 Method: displayPaused()
 // Change the UI to show the simulation is paused
@@ -264,9 +469,47 @@ Method: displayResumed()
 GridView.updateDisplayToRunning()
 ControlPanel.updateButtonState("Pause")
 
+Tatum's Use Case 2:
+
+Scenario: This use case allows the user to reset the simulation to its initial state.
+
+- Reset Action: The user presses the "reset" button, and the simulation reverts to the starting grid, clearing any changes or progress made during the simulation.
+- The SimulationController calls Simulation.reset() to restore the grid to its initial configuration, including resetting the cell states to their original values.
+- The SimulationView updates the visual display to match the reset state, showing the original grid and cell states (e.g., all cells dead or in an initial pattern)
+
+Pseudocode for Tatum's Use case 2: 
+
+// SimulationController manages user input and controls simulation flow
+SimulationController:
+Method: resetSimulation()
+// Inform the simulation to reset
+Simulation.reset()
+
+// Update the view to reflect the reset state
+SimulationView.updateResetView()
+
+// Simulation manages the execution and state transitions
+Simulation:
+Method: reset()
+// Reset the grid to its initial state (empty or predefined pattern)
+Grid.resetGrid()
+
+// Reset any necessary parameters (e.g., generation count, timers)
+Simulation.resetParameters()
+
+// Set a flag indicating that the simulation has been reset
+Simulation.setReset(true)
+
+SimulationView:
+Method: updateResetView()
+// Update the visual representation of the grid to the initial state
+GridView.updateDisplayToInitialState()
+ControlPanel.updateButtonState("Start")
+
 
 Alana's Use Case 1:
 Scenario: This use case demonstrates how the user can speed up or slow down the simulation.
+
 - When the user slides the button to a higher number than it's current position, the simulation should speed up and display more frames per second
 - When the user slides the button to a lower number than it's current position, the simulation should slow down and display fewer frames per second
 
@@ -274,19 +517,23 @@ Pseudocode:
 
 SimulationController:
 Method: setSpeed(int speed)
+
 * receive user input from the slider display to increase the simulation speed
 
 ControlPanel:
 Method: adjustSpeed(int speed)
+
 * update the slider to reflect the change
 * this can be done using a listener
-Method: slider.setSpeed(int speed)
+  Method: slider.setSpeed(int speed)
 
 Simulation:
-* update the timer or game loop speed to reflect the new user input
-Timer.setDelay(int speed)
 
-Alana's Use Case 2: Provide a mechanism to save the current state of the simulation. 
+* update the timer or game loop speed to reflect the new user input
+  Timer.setDelay(int speed)
+
+Alana's Use Case 2: Provide a mechanism to save the current state of the simulation.
+
 - When the user invokes this save mechanism (i.e., clicks the button), the current state of the simulation should be saved as an XML configuration file matching the XML configuration specification
 - When the user loads this XML file, the simulation should return to the exact state it was in when the file was saved.
 
@@ -294,40 +541,46 @@ Pseudocode:
 Generating the File Upon Clicking "Save":
 SimulationController
 Method: saveSimulation()
- * user presses the save button
 
+* user presses the save button
 
 Grid
 Method: makeGridCopy()
 Integer[][] gridCopy = grid.clone()
 
 XMLParser
- generateFile(copyGrid)
-  * Initialize new DOM
-  * parseConfig(originalFile)
-  * convert 2D gridCopy to String
-  * set <initial_states> = String of gridCopy
-  * name file as savedState_TIMESTAMP
-  * save file as new file in current simulation data folder
+generateFile(copyGrid)
+
+* Initialize new DOM
+* parseConfig(originalFile)
+* convert 2D gridCopy to String
+* set <initial_states> = String of gridCopy
+* name file as savedState_TIMESTAMP
+* save file as new file in current simulation data folder
 
 Loading the File:
 
 Simulation
 Method: initialize()
+
 * Call initialize method to start a new simulation
 
 XML Parser
 Method: parseConfig(String xmlFilePath) where xmlFilePath = data/FOLDER/savedState_TIMESTAMP
+
 * Parse the newly generated XML file
 
 ## Design Considerations
 
 1. Grid or no grid?
+
 * Possible ideas:
   * Representing a grid with a 2D-array but as a private instance variable in a GameState class is one idea; we wouldn't include a getGrid() method to keep this grid private.
   * Another option is to have an implicit grid represented with an adjacency list of neighboring cells as an instance variable of each Cell object. This would avoid needing to even create a grid, but it may make it more difficult for visualization purposes.
+
 2. How do we ensure that when we update the state of the cells, it is based on the previous generation and not the current generation of cells?
-* Possible ideas: 
+
+* Possible ideas:
   * Cell-based updates (cell manages its own state update, checking its neighbors and updating accordingly without explicitly maintaining two grids; each cell amkes its decision about its next state based on the previous state and triggers an update after all cells have been evaluated)
   * Use two grids (current and previous; current holds the state of the cells that has just been updated or is being processed, previous hods that state of the cells from the previous iteration or generation; when you update the cells, you reference the previous grid to compute the new state of the cells, but the updates themselves happen on the current grid)
 
@@ -343,6 +596,6 @@ Controller Layer: The SimulationController is central to handling user interacti
 
 ## Team Responsibilities
 
-* Team Member #1 (Alana Zinkin): Responsible for the View 
+* Team Member #1 (Alana Zinkin): Responsible for the View
 * Team Member #2 (Tatum Mckinnis): Responsible for the Model
-* Team Member #3 (Angela Predolac): Responsible for the Controller 
+* Team Member #3 (Angela Predolac): Responsible for the Controller
