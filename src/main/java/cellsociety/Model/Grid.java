@@ -48,7 +48,7 @@ public class Grid {
     if (row >= 0 && row < rows && col >= 0 && col < cols) {
       return cells[row][col];
     }
-    return null; // Handle out-of-bounds gracefully
+    return null;
   }
 
   /**
@@ -75,6 +75,24 @@ public class Grid {
   }
 
   /**
+   * Counts the number of active neighbors for a given cell.
+   * This can be useful for simulations like the Game of Life.
+   *
+   * @param row the row index of the target cell
+   * @param col the column index of the target cell
+   * @return the number of active neighbors
+   */
+  public int countActiveNeighbors(int row, int col) {
+    int activeCount = 0;
+    for (Cell neighbor : getNeighbors(row, col)) {
+      if (neighbor.getState() == State.ACTIVE) {
+        activeCount++;
+      }
+    }
+    return activeCount;
+  }
+
+  /**
    * Applies the next state to all cells in the grid.
    * This method iterates through all cells and updates their state
    * based on the precomputed next state.
@@ -86,5 +104,32 @@ public class Grid {
       }
     }
   }
+
+  /**
+   * Resets the grid to a new state, initializing all cells with the specified state.
+   *
+   * @param newState the state to reset all cells to
+   */
+  public void resetGrid(State newState) {
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        cells[r][c].setState(newState);
+        cells[r][c].resetNextState();
+      }
+    }
+  }
+
+  /**
+   * Prints the grid to the console. This is useful for debugging and visualization.
+   */
+  public void printGrid() {
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        System.out.print(cells[r][c].getState().toString().charAt(0) + " ");
+      }
+      System.out.println();
+    }
+  }
+
 }
 
