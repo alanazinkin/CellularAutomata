@@ -33,7 +33,7 @@ public class SimulationInfoPanel {
    */
   private String myAuthor;
   /**
-   * description of the simulation type
+   * explanation of the simulation type
    */
   private String myDescription;
   /**
@@ -63,30 +63,62 @@ public class SimulationInfoPanel {
     setStateColors(stateColors);
   }
 
+  /**
+   * set the type instance variable
+   * @param type type of simulation (ex: Fire, GameofLife, etc.)
+   */
   private void setType(String type) {
     myType = type;
   }
 
+  /**
+   * set title instance variable
+   * @param title full name of the simulation (ex: Spreading Fire, Game of Life, etc.)
+   */
   private void setTitle(String title) {
     myTitle = title;
   }
 
+  /**
+   * set author instance variable
+   * @param author creator of the XML file
+   */
   private void setAuthor(String author) {
     myAuthor = author;
   }
 
+  /**
+   * set description instance variable
+   * @param description explanation of the simulation type
+   */
   private void setDescription(String description) {
     myDescription = description;
   }
 
+  /**
+   * set the parameters instance variable
+   * @param parameters inputs to the simulation (ex: probCatch in Spreading Fire)
+   */
   private void setParameters(List<List<String>> parameters) {
     myParameters = parameters;
   }
 
+  /**
+   * set the stateColors instance variable
+   * @param stateColors a key that indicates the meaning of the color of each cell
+   */
   private void setStateColors(List<List<String>> stateColors) {
     myStateColors = stateColors;
   }
 
+  /**
+   * create a new display window to present relevant simulation information to user such as type of simulation, title,
+   * description, author, parameters, and state color mappings
+   * @param primaryStage JavaFX stage for holding all the elements
+   * @param title title of the border pane (what's displayed at the top of the window)
+   * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a BorderPane
+   * root as the root element
+   */
   public Scene createDisplayBox(Stage primaryStage, String title) {
     // create display box to hold relevant information
     primaryStage.setTitle(title);
@@ -103,6 +135,10 @@ public class SimulationInfoPanel {
     return scene;
   }
 
+  /**
+   * Adds all the relevant simulation information to the new scene
+   * @param vbox a vertical box pane that holds all the text elements
+   */
   private void addSimulationInformationToScene(VBox vbox) {
     addTextToScene(vbox, "Type: " + myType);
     addTextToScene(vbox, "Title: " + myTitle);
@@ -118,6 +154,11 @@ public class SimulationInfoPanel {
     }
   }
 
+  /**
+   * method for creating new text and setting the font, weight, and size
+   * @param text the text string to display
+   * @return the new Text object
+   */
   private Text createText(String text) {
     Text infoText = new Text(text);
     infoText.setTextAlignment(TextAlignment.CENTER);
@@ -125,6 +166,11 @@ public class SimulationInfoPanel {
     return infoText;
   }
 
+  /**
+   * adds a text element to a vertical box object
+   * @param vbox the vertical box pane
+   * @param text the text string to add to the pane
+   */
   private void addTextToScene(VBox vbox, String text) {
     vbox.getChildren().add(createText(text));
   }

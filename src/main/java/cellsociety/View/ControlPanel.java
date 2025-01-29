@@ -33,6 +33,11 @@ public class ControlPanel {
     makeButton("Pause", e -> myController.pauseSimulation());
   }
 
+  /**
+   * create and initialize a new button and add it to the Control Bar
+   * @param label of the button that is displayed to user
+   * @param handler is the action that occurs upon clicking button
+   */
   private void makeButton(String label, EventHandler<ActionEvent> handler) {
     Button button = new Button(label);
     button.setOnAction(handler);
