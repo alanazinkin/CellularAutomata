@@ -71,4 +71,24 @@ public class Cell {
   public void resetNextState() {
     this.nextState = this.state;
   }
+
+  /**
+   * Resets both the current state and next state to the specified state.
+   *
+   * @param state The state to reset both the current and next state to.
+   */
+  public void resetState(State state) {
+    this.state = state;
+    this.nextState = state;
+  }
+
+  /**
+   * Returns a string representation of the cell's current state.
+   *
+   * @return a string representing the state of the cell.
+   */
+  @Override
+  public String toString() {
+    return state.toString();
+  }
 }
