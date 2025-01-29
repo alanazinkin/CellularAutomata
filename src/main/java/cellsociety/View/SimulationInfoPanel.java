@@ -5,7 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -16,6 +19,7 @@ public class SimulationInfoPanel {
 
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
+  private static int TEXT_SIZE = 40;
   /**
    * type of simulation (ex: Fire, GameofLife, etc.)
    */
@@ -39,7 +43,7 @@ public class SimulationInfoPanel {
   /**
    * key indicating what each color means for a given simulation
    */
-  private List<String> myStateColors;
+  private List<List<String>> myStateColors;
 
   /**
    * constructor for creating a simulation information display
@@ -50,7 +54,7 @@ public class SimulationInfoPanel {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, List<String> stateColors) {
+  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, List<List<String>> stateColors) {
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -79,11 +83,11 @@ public class SimulationInfoPanel {
     myParameters = parameters;
   }
 
-  private void setStateColors(List<String> stateColors) {
+  private void setStateColors(List<List<String>> stateColors) {
     myStateColors = stateColors;
   }
 
-  private Scene createDisplayBox(Stage primaryStage, String title) {
+  public Scene createDisplayBox(Stage primaryStage, String title) {
     // create display box to hold relevant information
     primaryStage.setTitle(title);
     BorderPane root = new BorderPane();
@@ -91,7 +95,7 @@ public class SimulationInfoPanel {
     vbox.setAlignment(Pos.CENTER);
     root.setCenter(vbox);
     // add relevant text to scene
-    addSimulationInformationToScene(root);
+    addSimulationInformationToScene(vbox);
     // create and set the scene
     Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
     primaryStage.setScene(scene);
@@ -99,25 +103,30 @@ public class SimulationInfoPanel {
     return scene;
   }
 
-  private void addSimulationInformationToScene(BorderPane root) {
-    addTextToScene(root, "Type: " + myType);
-    addTextToScene(root, "Title: " + myTitle);
-    addTextToScene(root, "Author: " + myAuthor);
-    addTextToScene(root, "Description: " + myDescription);
-    addTextToScene(root, "Parameters:");
+  private void addSimulationInformationToScene(VBox vbox) {
+    addTextToScene(vbox, "Type: " + myType);
+    addTextToScene(vbox, "Title: " + myTitle);
+    addTextToScene(vbox, "Author: " + myAuthor);
+    addTextToScene(vbox, "Description: " + myDescription);
+    addTextToScene(vbox, "Parameters: ");
     for (List<String> params : myParameters) {
-      addTextToScene(root, params.getFirst() + params.get(1));
+      addTextToScene(vbox, params.get(0) + ": " + params.get(1));
     }
-    addTextToScene(root, "StateColors: " + myStateColors);
+    addTextToScene(vbox, "StateColors: ");
+    for (List<String> stateColor : myStateColors) {
+      addTextToScene(vbox, stateColor.get(0) + ": " + stateColor.get(1));
+    }
   }
 
   private Text createText(String text) {
-    return new Text(text);
+    Text infoText = new Text(text);
+    infoText.setTextAlignment(TextAlignment.CENTER);
+    infoText.setFont(Font.font("Verdana", FontWeight.BOLD, TEXT_SIZE));
+    return infoText;
   }
 
-  private void addTextToScene(BorderPane root, String text) {
-    root.getChildren().add(createText(text));
+  private void addTextToScene(VBox vbox, String text) {
+    vbox.getChildren().add(createText(text));
   }
-
 
 }

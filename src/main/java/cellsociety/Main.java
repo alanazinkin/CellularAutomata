@@ -1,7 +1,11 @@
 package cellsociety;
 
+import cellsociety.View.SimulationInfoPanel;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
