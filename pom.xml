@@ -10,6 +10,23 @@
         <project.build.java.version>21</project.build.java.version>
     </properties>
 
+    <!-- Add the dependencies section -->
+    <dependencies>
+        <!-- JUnit 5 dependency for testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <!-- compiles project source code using correct version and flags -->
@@ -26,3 +43,4 @@
         </plugins>
     </build>
 </project>
+
