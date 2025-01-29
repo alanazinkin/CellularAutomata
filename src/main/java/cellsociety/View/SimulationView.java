@@ -2,6 +2,7 @@ package cellsociety.View;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class SimulationView {
@@ -20,5 +21,9 @@ public class SimulationView {
     primaryStage.setScene(myScene);
     primaryStage.show();
     return myScene;
+  }
+
+  public BorderPane getRoot() {
+    return myRoot;
   }
 }
