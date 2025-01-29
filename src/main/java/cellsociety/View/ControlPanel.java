@@ -1,9 +1,12 @@
 package cellsociety.View;
 
 import cellsociety.Controller.SimulationController;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -31,6 +34,10 @@ public class ControlPanel {
     // add buttons to Control Bar
     makeButton("Start", e -> myController.startSimulation());
     makeButton("Pause", e -> myController.pauseSimulation());
+    makeButton("Reset", e -> myController.resetSimulation());
+    makeButton("Save", e -> myController.saveSimulation());
+    List<String> simulationTypes = getSimulationTypes();
+    makeComboBox("Select Simulation Type", e -> myController.selectSimulation(), simulationTypes);
   }
 
   /**
@@ -42,6 +49,26 @@ public class ControlPanel {
     Button button = new Button(label);
     button.setOnAction(handler);
     myControlBar.getChildren().add(button);
+  }
+
+  private void makeComboBox(String label, EventHandler<ActionEvent> handler, List<String> simulationTypeOptions) {
+    ComboBox<String> simulationTypes = new ComboBox<>();
+    simulationTypes.setPromptText(label);
+    for (String option : simulationTypeOptions) {
+      simulationTypes.getItems().add(option);
+    }
+    simulationTypes.setOnAction(handler);
+    myControlBar.getChildren().add(simulationTypes);
+  }
+
+  private List<String> getSimulationTypes(){
+    List<String> simulationTypes = new ArrayList<>();
+    simulationTypes.add("Game of Life");
+    simulationTypes.add("Wa-Tor World");
+    simulationTypes.add("Spreading of Fire");
+    simulationTypes.add("Percolation");
+    simulationTypes.add("Schelling State");
+    return simulationTypes;
   }
 
 }
