@@ -1,3 +1,5 @@
+package Model;
+
 /**
  * Represents an abstract simulation that operates on a {@link Grid}.
  * This class provides a framework for simulations by defining methods
