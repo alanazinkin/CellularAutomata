@@ -1,4 +1,4 @@
-package Model.State;
+package Model;
 
 /**
  * Interface representing a state in a grid-based simulation.
@@ -8,7 +8,7 @@ package Model.State;
  * should implement this interface to ensure consistency and shared functionality.
  * </p>
  */
-public interface State {
+public interface StateInterface {
 
   /**
    * Returns the state value as a string.
