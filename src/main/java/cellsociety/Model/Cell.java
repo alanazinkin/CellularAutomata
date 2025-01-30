@@ -1,32 +1,45 @@
 package cellsociety.Model;
 
+
+import Model.State.FireState;
+import Model.State.GameOfLifeState;
+import Model.State.PercolationState;
+import Model.State.SchellingState;
+import Model.State.WaTorWorldState;
+
 /**
- * Represents a cell that holds a state, which can be one of the following:
+ * Represents a cell that holds a state, which can vary depending on the simulation.
+ * The state can be one of the following:
  * <ul>
- *   <li>{@link State#EMPTY}</li>
- *   <li>{@link State#FILLED}</li>
- *   <li>{@link State#ACTIVE}</li>
+ *   <li>In Conway's Game of Life: {@link GameOfLifeState#ALIVE}, {@link GameOfLifeState#DEAD}</li>
+ *   <li>In the Percolation simulation: {@link PercolationState#OPEN}, {@link PercolationState#BLOCKED}</li>
+ *   <li>In the Fire simulation: {@link FireState#TREE}, {@link FireState#BURNING}, {@link FireState#BURNT}, {@link FireState#EMPTY}</li>
+ *   <li>In Schelling's Model of Segregation: {@link SchellingState#AGENT}, {@link SchellingState#EMPTY_CELL}</li>
+ *   <li>In the Wa-Tor World simulation: {@link WaTorWorldState#FISH}, {@link WaTorWorldState#SHARK}, {@link WaTorWorldState#EMPTY}</li>
  * </ul>
- * This class provides methods to get and set the state of the cell.
+ * This class provides methods to get and set the state of the cell. The specific states depend
+ * on the simulation being used, and the behavior of the cell is determined by its current state
+ * within that simulation.
  */
+
 public class Cell {
 
   /**
    * The state of the cell.
    */
-  private State state;
+  private StateInterface state;
 
   /**
    * The next state to which the cell will transition.
    */
-  private State nextState;
+  private StateInterface nextState;
 
   /**
    * Constructs a new {@code Cell} with the specified initial state.
    *
    * @param state The initial state of the cell.
    */
-  public Cell(State state) {
+  public Cell(StateInterface state) {
     this.state = state;
     this.nextState = state;
   }
@@ -36,7 +49,7 @@ public class Cell {
    *
    * @return the state of the cell.
    */
-  public State getState() {
+  public StateInterface getState() {
     return state;
   }
 
@@ -45,7 +58,7 @@ public class Cell {
    *
    * @param state The new state to set for the cell.
    */
-  public void setState(State state) {
+  public void setState(StateInterface state) {
     this.state = state;
   }
 
@@ -54,7 +67,7 @@ public class Cell {
    *
    * @param nextState The new next state for the cell.
    */
-  public void setNextState(State nextState) {
+  public void setNextState(StateInterface nextState) {
     this.nextState = nextState;
   }
 
@@ -77,7 +90,7 @@ public class Cell {
    *
    * @param state The state to reset both the current and next state to.
    */
-  public void resetState(State state) {
+  public void resetState(StateInterface state) {
     this.state = state;
     this.nextState = state;
   }
