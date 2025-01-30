@@ -1,8 +1,8 @@
-package Model.Simulations;
-import Model.Simulation;
-import Model.Grid;
-import Model.Cell;
-import Model.State.GameOfLifeState;
+package cellsociety.Model.Simulations;
+import cellsociety.Model.Simulation;
+import cellsociety.Model.Grid;
+import cellsociety.Model.Cell;
+import cellsociety.Model.State.GameOfLifeState;
 import java.util.List;
 
 /**
