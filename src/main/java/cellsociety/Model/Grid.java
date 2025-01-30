@@ -1,5 +1,8 @@
+package Model;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Represents a 2D grid of {@link Cell} objects used in a simulation.
@@ -25,7 +28,7 @@ public class Grid {
    * @param cols         the number of columns in the grid
    * @param defaultState the initial state assigned to all cells
    */
-  public Grid(int rows, int cols, State defaultState) {
+  public Grid(int rows, int cols, StateInterface defaultState) {
     this.rows = rows;
     this.cols = cols;
     cells = new Cell[rows][cols];
@@ -82,15 +85,15 @@ public class Grid {
    * @param col the column index of the target cell
    * @return the number of active neighbors
    */
-  public int countActiveNeighbors(int row, int col) {
-    int activeCount = 0;
-    for (Cell neighbor : getNeighbors(row, col)) {
-      if (neighbor.getState() == State.ACTIVE) {
-        activeCount++;
-      }
-    }
-    return activeCount;
-  }
+//  public int countActiveNeighbors(int row, int col) {
+//    int activeCount = 0;
+//    for (Cell neighbor : getNeighbors(row, col)) {
+//      if (neighbor.getState() == StateInterface.ACTIVE) {
+//        activeCount++;
+//      }
+//    }
+//    return activeCount;
+//  }
 
   /**
    * Applies the next state to all cells in the grid.
@@ -110,7 +113,7 @@ public class Grid {
    *
    * @param newState the state to reset all cells to
    */
-  public void resetGrid(State newState) {
+  public void resetGrid(StateInterface newState) {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         cells[r][c].setState(newState);
