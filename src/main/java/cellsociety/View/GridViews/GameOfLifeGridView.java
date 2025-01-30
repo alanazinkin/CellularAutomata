@@ -21,12 +21,12 @@ public class GameOfLifeGridView extends GridView {
   private static final int NUM_COLUMNS = 10;
 
   private BorderPane myRoot;
-  private Map<String, Color> myStateMap;
+  private Map<GameOfLifeState, Color> myStateMap;
   private List<Shape> myCells;
 
 
-  public GameOfLifeGridView(Grid myGrid) {
-    super(myGrid);
+  public GameOfLifeGridView() {
+    super();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class GameOfLifeGridView extends GridView {
     myRoot.setCenter(hBox);
     initializeStateMap();
     myCells = new ArrayList<>();
-    Grid myGrid = new Grid(NUM_ROWS, NUM_COLUMNS, GameOfLifeState.ALIVE);
+    myGrid = new Grid(NUM_ROWS, NUM_COLUMNS, GameOfLifeState.ALIVE);
     for(int i = 0; i < myGrid.getRows(); i ++) {
       for (int j = 0; j < myGrid.getCols(); j ++) {
         Cell cell = myGrid.getCell(i, j);
@@ -50,8 +50,8 @@ public class GameOfLifeGridView extends GridView {
 
   public void initializeStateMap() {
     myStateMap = new HashMap<>();
-    myStateMap.put("alive", Color.BLACK);
-    myStateMap.put("dead", Color.WHITE);
+    myStateMap.put(GameOfLifeState.ALIVE, Color.BLACK);
+    myStateMap.put(GameOfLifeState.DEAD, Color.WHITE);
   }
 
   public void updateCellColors() {
