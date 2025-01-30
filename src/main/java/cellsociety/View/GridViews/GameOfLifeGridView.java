@@ -1,8 +1,8 @@
-package cellsociety.View.GridViews;
+package View.GridViews;
 
-import cellsociety.Model.Cell;
-import cellsociety.Model.Grid;
-import cellsociety.Model.State.GameOfLifeState;
+import Model.Cell;
+import Model.Grid;
+import Model.State.GameOfLifeState;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,7 @@ public class GameOfLifeGridView extends GridView {
     for(int i = 0; i < myGrid.getRows(); i ++) {
       for (int j = 0; j < myGrid.getCols(); j ++) {
         Cell cell = myGrid.getCell(i, j);
-        GameOfLifeState state = cell.getState();
+        GameOfLifeState state = (GameOfLifeState) cell.getState();
         Rectangle rectCell = new Rectangle(CELL_WIDTH, CELL_HEIGHT, myStateMap.get(state));
         myCells.add(rectCell);
         hBox.getChildren().add(rectCell);
@@ -58,7 +58,7 @@ public class GameOfLifeGridView extends GridView {
     for(int i = 0; i < myGrid.getRows(); i ++) {
       for (int j = 0; j < myGrid.getCols(); j ++) {
         Cell cell = myGrid.getCell(i, j);
-        GameOfLifeState state = cell.getState();
+        GameOfLifeState state = (GameOfLifeState) cell.getState();
         Shape myCell = myCells.get(cellCount);
         myCell.setFill(myStateMap.get(state));
         cellCount++;

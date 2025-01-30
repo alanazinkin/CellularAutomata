@@ -1,6 +1,6 @@
-package cellsociety.View.GridViews;
+package View.GridViews;
 
-import cellsociety.Model.Grid;
+import Model.Grid;
 
 public abstract class GridView {
   protected Grid myGrid;
