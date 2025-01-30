@@ -1,3 +1,4 @@
+import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import org.junit.Before;
 import org.junit.Test;

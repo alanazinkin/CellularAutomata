@@ -1,4 +1,4 @@
-package Model;
+package cellsociety.Model;
 
 /**
  * Represents a cell that holds a state, which can be one of the following:

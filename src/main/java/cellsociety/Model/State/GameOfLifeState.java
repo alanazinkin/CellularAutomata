@@ -1,3 +1,5 @@
+package cellsociety.Model.State;
+
 /**
     * Enum representing the states for Conway's Game of Life simulation.
     * <p>

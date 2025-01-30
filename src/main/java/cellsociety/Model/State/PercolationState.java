@@ -1,3 +1,4 @@
+package cellsociety.Model.State;
 /**
  * Enum representing the states for the Percolation simulation.
  * <p>

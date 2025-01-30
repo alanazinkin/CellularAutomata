@@ -1,4 +1,4 @@
-package Model.State;
+package cellsociety.Model.State;
 
 /**
  * Interface representing a state in a grid-based simulation.
