@@ -1,4 +1,4 @@
-package cellsociety.Model;
+package Model;
 
 
 import Model.State.FireState;
