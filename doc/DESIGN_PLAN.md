@@ -30,8 +30,8 @@ Example descriptive information dialog box:
 
 ## Configuration File Format
 
-* [Example 1](../data/SpreadingFireExample.xml)
-* [Example 2](../data/GameOfLifeExample.xml)
+* [Example 1](../data/GameOfLife.xml)
+* [Example 2](../data/SpreadingFire.xml)
 
 ## Design Overview and Details
 
