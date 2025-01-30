@@ -2,8 +2,6 @@ package cellsociety.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import Model.StateInterface;
-
 
 /**
  * Represents a 2D grid of {@link Cell} objects used in a simulation.

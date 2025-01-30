@@ -1,8 +1,8 @@
 package cellsociety.View.GridViews;
 
-import Model.Cell;
-import Model.Grid;
-import Model.State.GameOfLifeState;
+import cellsociety.Model.Cell;
+import cellsociety.Model.Grid;
+import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
 import java.util.ArrayList;
 import java.util.HashMap;
