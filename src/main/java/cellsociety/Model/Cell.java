@@ -1,11 +1,11 @@
-package Model;
+package cellsociety.Model;
 
 
-import Model.State.FireState;
-import Model.State.GameOfLifeState;
-import Model.State.PercolationState;
-import Model.State.SchellingState;
-import Model.State.WaTorWorldState;
+import cellsociety.Model.State.FireState;
+import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.State.PercolationState;
+import cellsociety.Model.State.SchellingState;
+import cellsociety.Model.State.WaTorWorldState;
 
 /**
  * Represents a cell that holds a state, which can vary depending on the simulation.

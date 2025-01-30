@@ -1,4 +1,4 @@
-package Model;
+package cellsociety.Model;
 
 /**
  * Represents an abstract simulation that operates on a {@link Grid}.

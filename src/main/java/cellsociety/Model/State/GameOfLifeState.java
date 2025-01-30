@@ -1,6 +1,5 @@
-package Model.State;
-
-import Model.StateInterface;
+package cellsociety.Model.State;
+import cellsociety.Model.StateInterface;
 
 /**
  * Enum representing the states for Conway's Game of Life simulation.
