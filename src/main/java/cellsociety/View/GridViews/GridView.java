@@ -1,4 +1,4 @@
-package View.GridViews;
+package cellsociety.View.GridViews;
 
 import Model.Grid;
 

@@ -1,7 +1,8 @@
-package Model;
+package cellsociety.Model;
 
 
 import Model.State.FireState;
+import Model.StateInterface;
 import Model.State.GameOfLifeState;
 import Model.State.PercolationState;
 import Model.State.SchellingState;
