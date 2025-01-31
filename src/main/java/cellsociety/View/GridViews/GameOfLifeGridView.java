@@ -33,10 +33,17 @@ public class GameOfLifeGridView extends GridView {
   private List<Shape> myCells;
 
 
+  /**
+   * construct a new instance of GameOfLifeGridView
+   */
   public GameOfLifeGridView() {
     super();
   }
 
+  /**
+   *
+   * @param myRoot
+   */
   @Override
   public void createGridDisplay(BorderPane myRoot) {
     GridPane gridPane = new GridPane();
@@ -44,12 +51,15 @@ public class GameOfLifeGridView extends GridView {
     initializeStateMap();
     myCells = new ArrayList<>();
     myGrid = new Grid(NUM_ROWS, NUM_COLUMNS, GameOfLifeState.ALIVE);
+    renderGrid(gridPane);
+  }
+
+  private void renderGrid(GridPane gridPane) {
     for(int i = 0; i < myGrid.getRows(); i ++) {
       for (int j = 0; j < myGrid.getCols(); j ++) {
         Cell cell = myGrid.getCell(i, j);
         GameOfLifeState cellState = (GameOfLifeState) cell.getState();
         Rectangle rectCell = new Rectangle(CELL_WIDTH, CELL_HEIGHT, myStateMap.get(cellState));
-        System.out.println(myStateMap.get(cellState));
         myCells.add(rectCell);
         gridPane.add(rectCell, i * CELL_WIDTH, j * CELL_HEIGHT);
       }

@@ -12,6 +12,12 @@ public class SimulationView {
   private Scene myScene;
   private BorderPane myRoot;
 
+  /**
+   * Creates a new main pane to hold the grid view and control bar.
+   * @param primaryStage holds all main panes and views for simulation except the Simulation Information
+   * @param title name of the new stage that is displayed to the user
+   * @return myScene
+   */
   public Scene createSimulationWindow(Stage primaryStage, String title) {
     primaryStage.setTitle(title);
     myRoot = new BorderPane();
@@ -26,6 +32,11 @@ public class SimulationView {
     return myScene;
   }
 
+  /**
+   * Retrieves the root of the scene. Primarily used to add/ remove objects later on with root.getChildren().add()
+   * or root.getChildren().remove()
+   * @return BorderPane myRoot
+   */
   public BorderPane getRoot() {
     return myRoot;
   }

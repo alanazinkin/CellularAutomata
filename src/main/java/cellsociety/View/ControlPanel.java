@@ -25,14 +25,21 @@ public class ControlPanel {
   private SimulationController myController;
   private VBox mySliderBar;
 
+  /**
+   * construct a new Control Panel. Initializes the controller object by default.
+   * This prevents a possible exception from occuring.
+   */
   public ControlPanel() {
     initializeControls();
   }
 
+  /**
+   * instantiate myController object
+   */
   public void initializeControls() {
-    // instantiate myController
     myController = new SimulationController();
   }
+
   /**
    * create control bar GUI to allow users to start, pause, save, and select the type of simulation
    * @param root of the scene
@@ -62,9 +69,14 @@ public class ControlPanel {
     makeSlider("Speed");
   }
 
+  /**
+   * make a new slider with Text label centered above it
+   * @param label text label displayed to user describing slider
+   */
   private void makeSlider(String label) {
     Text myLabel = new Text(label);
     mySliderBar.getChildren().add(myLabel);
+    // make slider
     Slider slider = new Slider(0, 100, 50);
     slider.setPrefWidth(100);
     slider.setSnapToTicks(true);
@@ -72,6 +84,7 @@ public class ControlPanel {
     slider.setShowTickMarks(true);
     slider.setBlockIncrement(25);
     slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .75);
+    // add slider to slider bar
     mySliderBar.getChildren().add(slider);
   }
 
@@ -86,6 +99,12 @@ public class ControlPanel {
     myControlBar.getChildren().add(button);
   }
 
+  /**
+   * create and initialize a new combo box and add it to the Control Bar
+   * @param label combo nox button label
+   * @param handler action event to occur
+   * @param simulationTypeOptions combo box drop down options to select
+   */
   private void makeComboBox(String label, EventHandler<ActionEvent> handler, List<String> simulationTypeOptions) {
     ComboBox<String> simulationTypes = new ComboBox<>();
     simulationTypes.setPromptText(label);
@@ -96,6 +115,11 @@ public class ControlPanel {
     myControlBar.getChildren().add(simulationTypes);
   }
 
+  //TODO: remove method once real one is created
+  /**
+   * method for testing
+   * @return
+   */
   private List<String> getSimulationTypes(){
     List<String> simulationTypes = new ArrayList<>();
     simulationTypes.add("Game of Life");
