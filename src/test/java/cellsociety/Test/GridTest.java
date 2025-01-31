@@ -1,8 +1,8 @@
 package cellsociety.Test;
 
-import Model.Cell;
-import Model.State.GameOfLifeState;
-import Model.Grid;import org.junit.jupiter.api.Test;
+import cellsociety.Model.Cell;
+import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.Grid;import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.List;
@@ -83,7 +83,7 @@ public class GridTest {
    * Verifies that the correct number of ALIVE neighbors is counted for a given cell.
    */
   @Test
-  public void testCountALIVENeighbors() {
+  public void testCountAliveNeighbors() {
 
     grid.getCell(1, 1).setState(GameOfLifeState.ALIVE);
     grid.getCell(2, 2).setState(GameOfLifeState.ALIVE);
