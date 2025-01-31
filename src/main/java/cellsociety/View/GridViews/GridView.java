@@ -1,13 +1,13 @@
 package cellsociety.View.GridViews;
 
-import Model.Grid;
+import cellsociety.Model.Grid;
+import javafx.scene.layout.BorderPane;
 
 public abstract class GridView {
   protected Grid myGrid;
 
-  public GridView(Grid grid) {
-    myGrid = grid;
+  public GridView() {
   }
 
-  public abstract void createGridDisplay();
+  public abstract void createGridDisplay(BorderPane myRoot);
 }

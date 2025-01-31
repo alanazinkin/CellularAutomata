@@ -3,7 +3,6 @@ package cellsociety.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Represents a 2D grid of {@link Cell} objects used in a simulation.
  * The grid maintains a fixed number of rows and columns and provides
