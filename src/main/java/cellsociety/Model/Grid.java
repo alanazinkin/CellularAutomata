@@ -77,24 +77,6 @@ public class Grid {
   }
 
   /**
-   * Counts the number of active neighbors for a given cell.
-   * This can be useful for simulations like the Game of Life.
-   *
-   * @param row the row index of the target cell
-   * @param col the column index of the target cell
-   * @return the number of active neighbors
-   */
-//  public int countActiveNeighbors(int row, int col) {
-//    int activeCount = 0;
-//    for (Cell neighbor : getNeighbors(row, col)) {
-//      if (neighbor.getState() == StateInterface.ACTIVE) {
-//        activeCount++;
-//      }
-//    }
-//    return activeCount;
-//  }
-
-  /**
    * Applies the next state to all cells in the grid.
    * This method iterates through all cells and updates their state
    * based on the precomputed next state.
