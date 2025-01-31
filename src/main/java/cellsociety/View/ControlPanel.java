@@ -7,10 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 /**
  * This class creates the buttons and components of the control panel,
@@ -21,7 +23,16 @@ public class ControlPanel {
   private static final int CONTROL_BAR_HEIGHT = 60;
   private HBox myControlBar;
   private SimulationController myController;
+  private VBox mySliderBar;
 
+  public ControlPanel() {
+    initializeControls();
+  }
+
+  public void initializeControls() {
+    // instantiate myController
+    myController = new SimulationController();
+  }
   /**
    * create control bar GUI to allow users to start, pause, save, and select the type of simulation
    * @param root of the scene
@@ -32,8 +43,6 @@ public class ControlPanel {
     root.setTop(myControlBar);
     myControlBar.setAlignment(Pos.CENTER);
     myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
-    // instantiate myController
-    myController = new SimulationController();
     // add buttons to Control Bar
     makeButton("Start", e -> myController.startSimulation());
     makeButton("Pause", e -> myController.pauseSimulation());
@@ -41,6 +50,29 @@ public class ControlPanel {
     makeButton("Save", e -> myController.saveSimulation());
     List<String> simulationTypes = getSimulationTypes();
     makeComboBox("Select Simulation Type", e -> myController.selectSimulation(), simulationTypes);
+  }
+
+  private void makeSliderBar(BorderPane root) {
+    // instantiate mySliderBar
+    mySliderBar = new VBox(5);
+    root.setBottom(mySliderBar);
+    mySliderBar.setAlignment(Pos.CENTER);
+    mySliderBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
+    // make speed slider
+    makeSlider("Speed");
+  }
+
+  private void makeSlider(String label) {
+    Text myLabel = new Text(label);
+    mySliderBar.getChildren().add(myLabel);
+    Slider slider = new Slider(0, 100, 50);
+    slider.setPrefWidth(100);
+    slider.setSnapToTicks(true);
+    slider.setShowTickLabels(true);
+    slider.setShowTickMarks(true);
+    slider.setBlockIncrement(25);
+    slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .75);
+    mySliderBar.getChildren().add(slider);
   }
 
   /**

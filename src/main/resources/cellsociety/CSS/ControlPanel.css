@@ -37,3 +37,13 @@
   -fx-font-size: 14pt;
   -fx-font-family: "Trebuchet MS";
 }
+
+.slider {
+  -fx-background-color: #FFFFFF;
+}
+
+.slider .track {
+  -fx-background-color: #155a73;
+  -fx-background-insets: 0;
+  -fx-background-radius: 5px;
+}
