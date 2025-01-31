@@ -67,14 +67,25 @@ public class Grid {
     int[] dCol = {-1, 0, 1, -1, 1, -1, 0, 1};
     List<Cell> neighbors = new ArrayList<>();
 
+    // Iterate through all 8 possible neighbor directions
     for (int i = 0; i < dRow.length; i++) {
-      Cell neighbor = getCell(row + dRow[i], col + dCol[i]);
-      if (neighbor != null) {
-        neighbors.add(neighbor);
+      int neighborRow = row + dRow[i];
+      int neighborCol = col + dCol[i];
+
+      // Ensure the neighbor position is within bounds of the grid
+      if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
+        Cell neighbor = getCell(neighborRow, neighborCol);
+        if (neighbor != null) {
+          neighbors.add(neighbor);
+        }
       }
     }
+
     return neighbors;
   }
+
+
+
 
   /**
    * Applies the next state to all cells in the grid.
