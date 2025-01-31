@@ -2,7 +2,7 @@ package cellsociety.Model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.State.MockState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,21 +18,21 @@ import org.junit.jupiter.api.Test;
 class CellTest {
 
   private Cell cell;
-  private StateInterface aliveState;
-  private StateInterface deadState;
+  private MockState stateOne;
+  private MockState stateTwo;
 
   /**
    * Sets up the test environment before each test method.
    * <p>
-   * Initializes a new {@code Cell} object with an {@link GameOfLifeState#ALIVE} state, and
-   * creates the states for alive and dead states that will be used in the tests.
+   * Initializes a new {@code Cell} object with a {@link MockState#STATE_ONE} state, and
+   * creates the states for STATE_ONE and STATE_TWO that will be used in the tests.
    * </p>
    */
   @BeforeEach
   void setUp() {
-    aliveState = GameOfLifeState.ALIVE;
-    deadState = GameOfLifeState.DEAD;
-    cell = new Cell(aliveState);
+    stateOne = MockState.STATE_ONE;
+    stateTwo = MockState.STATE_TWO;
+    cell = new Cell(stateOne);
   }
 
   /**
@@ -44,7 +44,7 @@ class CellTest {
    */
   @Test
   void getState() {
-    assertEquals(aliveState, cell.getState(), "Cell state should be ALIVE");
+    assertEquals(stateOne, cell.getState(), "Cell state should be STATE_ONE");
   }
 
   /**
@@ -55,8 +55,8 @@ class CellTest {
    */
   @Test
   void setState() {
-    cell.setState(deadState);
-    assertEquals(deadState, cell.getState(), "Cell state should be DEAD after setting it");
+    cell.setState(stateTwo);
+    assertEquals(stateTwo, cell.getState(), "Cell state should be STATE_TWO after setting it");
   }
 
   /**
@@ -81,9 +81,9 @@ class CellTest {
    */
   @Test
   void setNextState() {
-    cell.setNextState(deadState);
+    cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(deadState, cell.getState(), "Cell should transition to DEAD after next state is applied");
+    assertEquals(stateTwo, cell.getState(), "Cell should transition to STATE_TWO after next state is applied");
   }
 
   /**
@@ -108,9 +108,9 @@ class CellTest {
    */
   @Test
   void applyNextState() {
-    cell.setNextState(deadState);
+    cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(deadState, cell.getState(), "Cell should change to DEAD after applying the next state");
+    assertEquals(stateTwo, cell.getState(), "Cell should change to STATE_TWO after applying the next state");
   }
 
   /**
@@ -121,9 +121,9 @@ class CellTest {
    */
   @Test
   void applyNextStateToChangeState() {
-    cell.setNextState(GameOfLifeState.DEAD);
+    cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(GameOfLifeState.DEAD, cell.getState(), "Cell state should match next state after applying it");
+    assertEquals(stateTwo, cell.getState(), "Cell state should match next state after applying it");
   }
 
   /**
@@ -135,9 +135,9 @@ class CellTest {
    */
   @Test
   void resetNextState() {
-    cell.setNextState(deadState);
+    cell.setNextState(stateTwo);
     cell.resetNextState();
-    assertEquals(aliveState, cell.getState(), "Next state should reset to current state");
+    assertEquals(stateOne, cell.getState(), "Next state should reset to current state");
   }
 
   /**
@@ -149,9 +149,9 @@ class CellTest {
    */
   @Test
   void resetNextStateMaintainsConsistency() {
-    cell.setNextState(deadState);
+    cell.setNextState(stateTwo);
     cell.resetNextState();
-    assertEquals(aliveState, cell.getState(), "Next state reset should maintain current state consistency");
+    assertEquals(stateOne, cell.getState(), "Next state reset should maintain current state consistency");
   }
 
   /**
@@ -163,8 +163,8 @@ class CellTest {
    */
   @Test
   void resetState() {
-    cell.resetState(deadState);
-    assertEquals(deadState, cell.getState(), "Reset state should set both current and next state to DEAD");
+    cell.resetState(stateTwo);
+    assertEquals(stateTwo, cell.getState(), "Reset state should set both current and next state to STATE_TWO");
   }
 
   /**
@@ -176,8 +176,8 @@ class CellTest {
    */
   @Test
   void resetStateWithDifferentState() {
-    cell.resetState(GameOfLifeState.DEAD);
-    assertEquals(GameOfLifeState.DEAD, cell.getState(), "Resetting state should update both current and next state");
+    cell.resetState(stateTwo);
+    assertEquals(stateTwo, cell.getState(), "Resetting state should update both current and next state");
   }
 
   /**
@@ -189,7 +189,7 @@ class CellTest {
    */
   @Test
   void toStringReturnsStateValue() {
-    assertEquals(aliveState.toString(), cell.toString(), "toString should return the string representation of the current state");
+    assertEquals(stateOne.toString(), cell.toString(), "toString should return the string representation of the current state");
   }
 
   /**
@@ -201,8 +201,9 @@ class CellTest {
    */
   @Test
   void getNextState() {
-    cell.setNextState(deadState);
-    assertEquals(deadState, cell.getNextState(), "getNextState should return the next state of the cell");
+    cell.setNextState(stateTwo);
+    assertEquals(stateTwo, cell.getNextState(), "getNextState should return the next state of the cell");
   }
 }
+
 
