@@ -41,7 +41,7 @@ public class GameOfLifeGridView extends GridView {
   }
 
   /**
-   *
+   * creates a new pane to hold the grid and instantiates myCells and myGrid
    * @param myRoot
    */
   @Override
@@ -54,6 +54,10 @@ public class GameOfLifeGridView extends GridView {
     renderGrid(gridPane);
   }
 
+  /**
+   * renders the grid by looping through all the cells in teh grid and setting their color based on their state
+   * @param gridPane pane that holds all the cell shapes
+   */
   private void renderGrid(GridPane gridPane) {
     for(int i = 0; i < myGrid.getRows(); i ++) {
       for (int j = 0; j < myGrid.getCols(); j ++) {
@@ -66,12 +70,18 @@ public class GameOfLifeGridView extends GridView {
     }
   }
 
+  /**
+   * creates state map and color mappings
+   */
   public void initializeStateMap() {
     myStateMap = new HashMap<>();
     myStateMap.put(GameOfLifeState.ALIVE, Color.BLACK);
     myStateMap.put(GameOfLifeState.DEAD, Color.WHITE);
   }
 
+  /**
+   * updates the colors of all the cells in the grid according to all cells' current state
+   */
   public void updateCellColors() {
     int cellCount = 0;
     for(int i = 0; i < myGrid.getRows(); i ++) {
