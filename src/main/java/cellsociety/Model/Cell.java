@@ -1,11 +1,6 @@
 package cellsociety.Model;
 
-
-import cellsociety.Model.State.FireState;
-import cellsociety.Model.State.GameOfLifeState;
-import cellsociety.Model.State.PercolationState;
-import cellsociety.Model.State.SchellingState;
-import cellsociety.Model.State.WaTorWorldState;
+import cellsociety.Model.State.*;
 
 /**
  * Represents a cell that holds a state, which can vary depending on the simulation.
@@ -21,25 +16,21 @@ import cellsociety.Model.State.WaTorWorldState;
  * on the simulation being used, and the behavior of the cell is determined by its current state
  * within that simulation.
  */
-
 public class Cell {
 
-  /**
-   * The state of the cell.
-   */
   private StateInterface state;
-
-  /**
-   * The next state to which the cell will transition.
-   */
   private StateInterface nextState;
 
   /**
    * Constructs a new {@code Cell} with the specified initial state.
    *
-   * @param state The initial state of the cell.
+   * @param state The initial state of the cell. Must not be null.
+   * @throws IllegalArgumentException if the provided state is null
    */
   public Cell(StateInterface state) {
+    if (state == null) {
+      throw new IllegalArgumentException("Initial state cannot be null");
+    }
     this.state = state;
     this.nextState = state;
   }
@@ -56,19 +47,36 @@ public class Cell {
   /**
    * Sets a new state for the cell.
    *
-   * @param state The new state to set for the cell.
+   * @param state The new state to set for the cell. Must not be null.
+   * @throws IllegalArgumentException if the provided state is null
    */
   public void setState(StateInterface state) {
+    if (state == null) {
+      throw new IllegalArgumentException("State cannot be null");
+    }
     this.state = state;
   }
 
   /**
    * Sets the next state for the cell, which will be applied in the next generation.
    *
-   * @param nextState The new next state for the cell.
+   * @param nextState The new next state for the cell. Must not be null.
+   * @throws IllegalArgumentException if the provided next state is null
    */
   public void setNextState(StateInterface nextState) {
+    if (nextState == null) {
+      throw new IllegalArgumentException("Next state cannot be null");
+    }
     this.nextState = nextState;
+  }
+
+  /**
+   * Returns the next state of the cell.
+   *
+   * @return the next state of the cell.
+   */
+  public StateInterface getNextState() {
+    return nextState;
   }
 
   /**
@@ -88,9 +96,13 @@ public class Cell {
   /**
    * Resets both the current state and next state to the specified state.
    *
-   * @param state The state to reset both the current and next state to.
+   * @param state The state to reset both the current and next state to. Must not be null.
+   * @throws IllegalArgumentException if the provided state is null
    */
   public void resetState(StateInterface state) {
+    if (state == null) {
+      throw new IllegalArgumentException("State cannot be null");
+    }
     this.state = state;
     this.nextState = state;
   }
@@ -105,3 +117,5 @@ public class Cell {
     return state.toString();
   }
 }
+
+
