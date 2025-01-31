@@ -20,6 +20,9 @@ public class SimulationView {
     myScene = new Scene(myRoot, SIMULATION_WIDTH, SIMULATION_HEIGHT);
     primaryStage.setScene(myScene);
     primaryStage.show();
+    // add CSS files
+    myScene.getStylesheets().add(getClass().getResource("SimulationView.css").toExternalForm());
+    myScene.getStylesheets().add(getClass().getResource("ControlPanel.css").toExternalForm());
     return myScene;
   }
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
@@ -17,8 +18,8 @@ import javafx.scene.layout.Pane;
  * a button to save an XML file of the current state of the simulation.
  */
 public class ControlPanel {
-
-  private Pane myControlBar;
+  private static final int CONTROL_BAR_HEIGHT = 60;
+  private HBox myControlBar;
   private SimulationController myController;
 
   /**
@@ -29,6 +30,8 @@ public class ControlPanel {
     // make a new HBox and set it in the top of the border pane
     myControlBar = new HBox();
     root.setTop(myControlBar);
+    myControlBar.setAlignment(Pos.CENTER);
+    myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
     // instantiate myController
     myController = new SimulationController();
     // add buttons to Control Bar
