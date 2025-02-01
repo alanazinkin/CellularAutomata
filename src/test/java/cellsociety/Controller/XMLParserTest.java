@@ -24,5 +24,5 @@ class XMLParserTest {
         assertEquals(5, simulationConfig.getHeight());
         assertArrayEquals(initialStates, simulationConfig.getInitialStates());
     }
-    
+
 }

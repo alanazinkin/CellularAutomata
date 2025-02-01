@@ -4,9 +4,21 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.*;
 import java.io.*;
 
-
+/**
+ * Parser for reading and validating Game of Life simulation configuration files in XML format.
+ * This class handles parsing of simulation parameters, grid dimensions, and initial states
+ * from an XML file and provides validation of the configuration.
+ */
 public class XMLParser {
 
+    /**
+     * Parses an XML file containing Game of Life simulation configuration.
+     *
+     * @param filePath Path to the XML configuration file to be parsed
+     * @return SimulationConfig object containing the parsed configuration
+     * @throws Exception if there are errors reading the file, parsing the XML,
+     *         or converting values to the expected types
+     */
     public SimulationConfig parseXMLFile(String filePath) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -32,10 +44,30 @@ public class XMLParser {
                 initialStates, parameters);
     }
 
+    /**
+     * Helper method to extract the content of an XML element by its tag name.
+     *
+     * @param doc The XML document being parsed
+     * @param tagName The name of the XML tag whose content should be retrieved
+     * @return The text content of the first element matching the tag name
+     */
     private String getElementContent(Document doc, String tagName) {
         return doc.getElementsByTagName(tagName).item(0).getTextContent();
     }
 
+    /**
+     * Validates a simulation configuration to ensure it meets the requirements
+     * for a Game of Life simulation.
+     *
+     * Performs the following validations:
+     * - Ensures all cell states are either 0 (DEAD) or 1 (ALIVE)
+     * - Verifies the simulation type is "Game of Life"
+     * - Confirms grid dimensions are positive numbers
+     *
+     * @param config The SimulationConfig object to validate
+     * @throws IllegalArgumentException if any validation check fails, with a message
+     *         describing the specific validation error
+     */
     public void validateConfig(SimulationConfig config) throws IllegalArgumentException {
 
         for (int state : config.getInitialStates()) {
