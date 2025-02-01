@@ -27,7 +27,7 @@ public class XMLParser {
         }
 
         SimulationParameter parameters = new SimulationParameter();
-        
+
         return new SimulationConfig(type, title, author, description, width, height,
                 initialStates, parameters);
     }
