@@ -36,4 +36,23 @@ public class XMLParser {
         return doc.getElementsByTagName(tagName).item(0).getTextContent();
     }
 
+    public void validateConfig(SimulationConfig config) throws IllegalArgumentException {
+
+        for (int state : config.getInitialStates()) {
+            if (state != 0 && state != 1) {
+                throw new IllegalArgumentException("Invalid state value found: " + state +
+                        ". Game of Life only accepts 0 (DEAD) or 1 (ALIVE)");
+            }
+        }
+
+        if (!"Game of Life".equals(config.getType())) {
+            throw new IllegalArgumentException("Invalid simulation type. Expected 'Game of Life', found: " +
+                    config.getType());
+        }
+        
+        if (config.getWidth() <= 0 || config.getHeight() <= 0) {
+            throw new IllegalArgumentException("Grid dimensions must be positive");
+        }
+    }
+
 }
