@@ -2,6 +2,7 @@ package cellsociety.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import cellsociety.Model.StateInterface;
 
 /**
  * Represents a 2D grid of {@link Cell} objects used in a simulation.
@@ -26,8 +27,16 @@ public class Grid {
    * @param rows         the number of rows in the grid
    * @param cols         the number of columns in the grid
    * @param defaultState the initial state assigned to all cells
+   * @throws IllegalArgumentException if either {@code rows} or {@code cols} is negative
+   * @throws NullPointerException if {@code defaultState} is {@code null}
    */
   public Grid(int rows, int cols, StateInterface defaultState) {
+    if (rows < 0 || cols < 0) {
+      throw new IllegalArgumentException("Grid dimensions cannot be negative: " + rows + "x" + cols);
+    }
+    if (defaultState == null) {
+      throw new NullPointerException("defaultState cannot be null");
+    }
     this.rows = rows;
     this.cols = cols;
     cells = new Cell[rows][cols];
@@ -37,6 +46,7 @@ public class Grid {
       }
     }
   }
+
 
   /**
    * Retrieves the cell at the specified row and column.
@@ -56,23 +66,29 @@ public class Grid {
   /**
    * Retrieves the neighboring cells of the specified cell at (row, col).
    * Neighbors are determined using the eight surrounding positions in the grid.
-   * Out-of-bounds positions are ignored.
+   * If the provided indices are out of bounds, an {@code ArrayIndexOutOfBoundsException} is thrown.
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
    * @return a list of neighboring {@code Cell} objects
+   * @throws ArrayIndexOutOfBoundsException if {@code row} or {@code col} is out of bounds
    */
   public List<Cell> getNeighbors(int row, int col) {
+    // Throw an exception if the starting indices are invalid.
+    if (row < 0 || row >= rows || col < 0 || col >= cols) {
+      throw new ArrayIndexOutOfBoundsException("Indices (" + row + "," + col + ") out of bounds");
+    }
+
     int[] dRow = {-1, -1, -1, 0, 0, 1, 1, 1};
     int[] dCol = {-1, 0, 1, -1, 1, -1, 0, 1};
     List<Cell> neighbors = new ArrayList<>();
 
-    // Iterate through all 8 possible neighbor directions
+    // Iterate through all 8 possible neighbor directions.
     for (int i = 0; i < dRow.length; i++) {
       int neighborRow = row + dRow[i];
       int neighborCol = col + dCol[i];
 
-      // Ensure the neighbor position is within bounds of the grid
+      // Ensure the neighbor position is within bounds of the grid.
       if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
         Cell neighbor = getCell(neighborRow, neighborCol);
         if (neighbor != null) {
@@ -80,21 +96,22 @@ public class Grid {
         }
       }
     }
-
     return neighbors;
   }
-
-
-
 
   /**
    * Applies the next state to all cells in the grid.
    * This method iterates through all cells and updates their state
    * based on the precomputed next state.
+   *
+   * @throws NullPointerException if any cell is {@code null} or if any cell's next state is {@code null}
    */
   public void applyNextStates() {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
+        if (cells[r][c] == null) {
+          throw new NullPointerException("Cell at (" + r + "," + c + ") is null");
+        }
         cells[r][c].applyNextState();
       }
     }
@@ -104,8 +121,12 @@ public class Grid {
    * Resets the grid to a new state, initializing all cells with the specified state.
    *
    * @param newState the state to reset all cells to
+   * @throws NullPointerException if {@code newState} is {@code null}
    */
   public void resetGrid(StateInterface newState) {
+    if (newState == null) {
+      throw new NullPointerException("newState cannot be null");
+    }
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         cells[r][c].setState(newState);
@@ -126,13 +147,23 @@ public class Grid {
     }
   }
 
+  /**
+   * Returns the number of rows in the grid.
+   *
+   * @return the number of rows
+   */
   public int getRows() {
     return rows;
   }
 
+  /**
+   * Returns the number of columns in the grid.
+   *
+   * @return the number of columns
+   */
   public int getCols() {
     return cols;
   }
-
 }
+
 
