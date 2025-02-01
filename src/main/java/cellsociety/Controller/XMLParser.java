@@ -49,7 +49,7 @@ public class XMLParser {
             throw new IllegalArgumentException("Invalid simulation type. Expected 'Game of Life', found: " +
                     config.getType());
         }
-        
+
         if (config.getWidth() <= 0 || config.getHeight() <= 0) {
             throw new IllegalArgumentException("Grid dimensions must be positive");
         }
