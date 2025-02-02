@@ -15,11 +15,9 @@ public class SimulationView {
   /**
    * Creates a new main pane to hold the grid view and control bar.
    * @param primaryStage holds all main panes and views for simulation except the Simulation Information
-   * @param title name of the new stage that is displayed to the user
    * @return myScene
    */
-  public Scene createSimulationWindow(Stage primaryStage, String title) {
-    primaryStage.setTitle(title);
+  public Scene createSimulationWindow(Stage primaryStage) {
     myRoot = new BorderPane();
     // add relevant text to scene
     // create and set the scene
@@ -27,8 +25,8 @@ public class SimulationView {
     primaryStage.setScene(myScene);
     primaryStage.show();
     // add CSS files
-    myScene.getStylesheets().add(getClass().getResource("SimulationView.css").toExternalForm());
-    myScene.getStylesheets().add(getClass().getResource("ControlPanel.css").toExternalForm());
+    myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
+    myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
     return myScene;
   }
 

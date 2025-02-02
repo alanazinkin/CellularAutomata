@@ -7,6 +7,7 @@ import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
+import cellsociety.View.SimulationView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,20 +16,22 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
 
 public class GameOfLifeGridView extends GridView {
+  private static final int SLIDER_BAR_HEIGHT = 150;
   private static final int NUM_ROWS = 10;
   private static final int NUM_COLUMNS = 10;
   private static final int CELL_WIDTH = SIMULATION_WIDTH / NUM_COLUMNS;
-  private static final int CELL_HEIGHT = SIMULATION_HEIGHT / NUM_ROWS;
+  private static final int CELL_HEIGHT = (SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT) / NUM_ROWS;
 
-  private BorderPane myRoot;
   private Map<GameOfLifeState, Color> myStateMap;
   private List<Shape> myCells;
 

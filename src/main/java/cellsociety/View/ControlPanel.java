@@ -59,7 +59,7 @@ public class ControlPanel {
     makeComboBox("Select Simulation Type", e -> myController.selectSimulation(), simulationTypes);
   }
 
-  private void makeSliderBar(BorderPane root) {
+  public void makeSliderBar(BorderPane root) {
     // instantiate mySliderBar
     mySliderBar = new VBox(5);
     root.setBottom(mySliderBar);
