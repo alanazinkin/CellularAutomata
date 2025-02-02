@@ -105,7 +105,6 @@ public class Schelling extends Simulation {
               int destRow = chosen[0];
               int destCol = chosen[1];
               moves.add(new Move(row, col, destRow, destCol, agentGroup));
-
               removeEmptyCell(emptyCells, destRow, destCol);
             }
           }
@@ -126,13 +125,16 @@ public class Schelling extends Simulation {
 
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
-        Cell cell = (Cell) grid.getCell(row, col);
+        Cell cell = grid.getCell(row, col);
         if (cell.getNextState().equals(cell.getState())) {
           cell.setNextState(cell.getState());
         }
       }
     }
+
+    grid.applyNextStates();
   }
+
 
 
     /**
