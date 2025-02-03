@@ -8,7 +8,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-  private static final String FILE_PATH = "data/GameOfLife.xml";
+  private static final String FILE_PATH = "data/GOL1.xml";
 
   /**
    * entry point of simulation
