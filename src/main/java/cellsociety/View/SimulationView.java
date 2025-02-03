@@ -2,10 +2,13 @@ package cellsociety.View;
 
 import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Simulation;
+import cellsociety.Model.StateInterface;
 import cellsociety.View.GridViews.GameOfLifeGridView;
 import java.util.ArrayList;
+import java.util.Map;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class SimulationView {
@@ -15,7 +18,7 @@ public class SimulationView {
   private Scene myScene;
   private BorderPane myRoot;
 
-  public void initView(Stage primaryStage, SimulationConfig simConfig, Simulation simulation, SimulationView simView) {
+  public void initView(Stage primaryStage, SimulationConfig simConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap) {
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         simConfig.getType(),
@@ -34,7 +37,7 @@ public class SimulationView {
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
     GameOfLifeGridView myGridView = new GameOfLifeGridView();
-    myGridView.createGridDisplay(simView.getRoot());
+    myGridView.createGridDisplay(simView.getRoot(), stateMap);
   }
 
   /**

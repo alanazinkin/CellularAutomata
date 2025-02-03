@@ -54,7 +54,7 @@ public class SimulationConfig {
         initializeStage(primaryStage);
         Simulation simulation = new GameOfLife(new Grid(width, height, GameOfLifeState.ALIVE));
         SimulationView mySimView = new SimulationView();
-        mySimView.initView(primaryStage, simulationConfig, simulation, mySimView);
+        mySimView.initView(primaryStage, simulationConfig, simulation, mySimView, simulation.getStateMap());
     }
 
     public String getType() { return type; }
