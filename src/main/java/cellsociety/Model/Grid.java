@@ -2,7 +2,6 @@ package cellsociety.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import cellsociety.Model.StateInterface;
 
 /**
  * Represents a 2D grid of {@link Cell} objects used in a simulation.
@@ -83,12 +82,9 @@ public class Grid {
     int[] dCol = {-1, 0, 1, -1, 1, -1, 0, 1};
     List<Cell> neighbors = new ArrayList<>();
 
-    // Iterate through all 8 possible neighbor directions.
     for (int i = 0; i < dRow.length; i++) {
       int neighborRow = row + dRow[i];
       int neighborCol = col + dCol[i];
-
-      // Ensure the neighbor position is within bounds of the grid.
       if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
         Cell neighbor = getCell(neighborRow, neighborCol);
         if (neighbor != null) {
@@ -134,6 +130,27 @@ public class Grid {
       }
     }
   }
+
+  /**
+   * Replaces the cell at the specified row and column with the provided cell.
+   * This method allows controlled modification of individual cells without exposing
+   * the entire internal cell array.
+   *
+   * @param row  the row index of the cell to replace
+   * @param col  the column index of the cell to replace
+   * @param cell the new {@code Cell} to be placed at the specified location
+   * @throws IllegalArgumentException if the specified row or column is out of bounds or if cell is null
+   */
+  public void setCellAt(int row, int col, Cell cell) {
+    if (row < 0 || row >= rows || col < 0 || col >= cols) {
+      throw new IllegalArgumentException("Invalid row or column: (" + row + "," + col + ")");
+    }
+    if (cell == null) {
+      throw new IllegalArgumentException("Cell cannot be null");
+    }
+    cells[row][col] = cell;
+  }
+
 
   /**
    * Prints the grid to the console. This is useful for debugging and visualization.
