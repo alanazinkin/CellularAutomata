@@ -27,7 +27,7 @@ public abstract class Simulation {
    */
   public Simulation(Grid grid) {
     this.grid = grid;
-    stateMap = initializeStateMap();
+    this.stateMap = initializeStateMap();
 
   }
 
