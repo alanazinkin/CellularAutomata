@@ -31,7 +31,7 @@ Example descriptive information dialog box:
 ## Configuration File Format
 
 * [Example 1](../data/GameOfLife/GOL1.xml)
-* [Example 2](../data/SpreadingFire.xml)
+* [Example 2](../data/SpreadingFire/SF1.xml)
 
 ## Design Overview and Details
 
