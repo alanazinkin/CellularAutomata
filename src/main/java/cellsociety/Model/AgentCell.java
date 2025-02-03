@@ -1,13 +1,10 @@
 package cellsociety.Model;
 
-import cellsociety.Model.StateInterface;
-
 /**
  * A cell specialized for Schelling's simulation that holds an agent group identifier.
  */
 public class AgentCell extends Cell {
 
-  // Holds the agent's group identifier.
   private int agentGroup;
 
   /**
