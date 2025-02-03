@@ -27,6 +27,17 @@ public class SimulationConfig {
     private Map<String, String> parameters;
     private Map<StateInterface, Color> colorMap;
 
+    /**
+     * Simulation Configuration constructor method
+     * @param type type of simulation (ex: Fire, GameofLife, etc.)
+     * @param title title full name of the simulation (ex: Spreading Fire, Game of Life, etc.)
+     * @param author creator of the XML file
+     * @param description description explanation of the simulation type
+     * @param width number of rows of cells
+     * @param height number of columns of cells
+     * @param initialStates starting cell states
+     * @param parameters inputs to the simulation (ex: probCatch in Spreading Fire)
+     */
     public SimulationConfig(String type, String title, String author, String description,
                             int width, int height, int[] initialStates, Map<String, String> parameters) {
         this.type = type;
@@ -39,6 +50,10 @@ public class SimulationConfig {
         this.parameters = parameters;
     }
 
+    /**
+     * set the JavaFX stage for the application
+     * @param primaryStage main stage onto which all elements are added
+     */
     public void initializeStage(Stage primaryStage) {
         Group root = new Group();
         Scene myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.WHITE);
