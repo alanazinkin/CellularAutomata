@@ -1,8 +1,13 @@
 package cellsociety.Controller;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.*;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Parser for reading and validating Game of Life simulation configuration files in XML format.
@@ -38,10 +43,32 @@ public class XMLParser {
             initialStates[i] = Integer.parseInt(statesStr[i]);
         }
 
-        SimulationParameter parameters = new SimulationParameter();
+        Map<String, String> parameters = parseParameters(document);
 
         return new SimulationConfig(type, title, author, description, width, height,
                 initialStates, parameters);
+    }
+
+    /**
+     * Extracts parameters from the XML file and stores them in a map.
+     *
+     * @param document The XML document being parsed
+     * @return A map of parameter names to their values
+     */
+    private Map<String, String> parseParameters(Document document) {
+        Map<String, String> parameters = new HashMap<>();
+        NodeList paramNodes = document.getElementsByTagName("parameters");
+        if (paramNodes.getLength() > 0) {
+            Node parametersNode = paramNodes.item(0);
+            NodeList paramList = parametersNode.getChildNodes();
+            for (int i = 0; i < paramList.getLength(); i++) {
+                Node param = paramList.item(i);
+                if (param.getNodeType() == Node.ELEMENT_NODE) {
+                    parameters.put(param.getNodeName(), param.getTextContent());
+                }
+            }
+        }
+        return parameters;
     }
 
     /**

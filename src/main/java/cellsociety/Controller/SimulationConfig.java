@@ -24,11 +24,11 @@ public class SimulationConfig {
     private int width;
     private int height;
     private int[] initialStates;
-    private SimulationParameter parameter;
+    private Map<String, String> parameters;
     private Map<StateInterface, Color> colorMap;
 
     public SimulationConfig(String type, String title, String author, String description,
-                            int width, int height, int[] initialStates, SimulationParameter parameter) {
+                            int width, int height, int[] initialStates, Map<String, String> parameters) {
         this.type = type;
         this.title = title;
         this.author = author;
@@ -36,7 +36,7 @@ public class SimulationConfig {
         this.width = width;
         this.height = height;
         this.initialStates = initialStates;
-        this.parameter = parameter;
+        this.parameters = parameters;
     }
 
     public void initializeStage(Stage primaryStage) {
@@ -64,6 +64,6 @@ public class SimulationConfig {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int[] getInitialStates() { return initialStates; }
-    public SimulationParameter getParameter() { return parameter; }
+    public Map<String, String> getParameter() { return parameters; }
 
 }
