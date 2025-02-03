@@ -4,7 +4,11 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.PercolationState;
 
+import cellsociety.Model.StateInterface;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javafx.scene.paint.Color;
 
 /**
  * A simulation of percolation that models fluid flow through a porous medium.
@@ -38,6 +42,15 @@ public class Percolation extends Simulation {
    */
   public Percolation(Grid grid) {
     super(grid);
+  }
+
+  @Override
+  public Map<StateInterface, Color> initializeStateMap() {
+    stateMap = new HashMap<>();
+    stateMap.put(PercolationState.OPEN, Color.WHITE);
+    stateMap.put(PercolationState.PERCOLATED, Color.LIGHTBLUE);
+    stateMap.put(PercolationState.BLOCKED, Color.BLACK);
+    return stateMap;
   }
 
   /**
