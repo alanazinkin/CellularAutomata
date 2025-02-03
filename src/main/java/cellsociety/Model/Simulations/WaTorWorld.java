@@ -4,8 +4,11 @@ import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.WaTorWorldState;
+import cellsociety.Model.StateInterface;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javafx.scene.paint.Color;
 
 /**
  * Implements the Wa-Tor World simulation rules for a predator–prey ecosystem.
@@ -79,6 +82,11 @@ public class WaTorWorld extends Simulation {
         }
       }
     }
+  }
+
+  @Override
+  public Map<StateInterface, Color> initializeStateMap() {
+    return Map.of();
   }
 
   /**
