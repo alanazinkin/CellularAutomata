@@ -1,8 +1,11 @@
 package cellsociety.View;
 
+import cellsociety.Controller.SimulationConfig;
+import cellsociety.Model.Simulation;
+import cellsociety.View.GridViews.GameOfLifeGridView;
+import java.util.ArrayList;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class SimulationView {
@@ -11,6 +14,28 @@ public class SimulationView {
 
   private Scene myScene;
   private BorderPane myRoot;
+
+  public void initView(Stage primaryStage, SimulationConfig simConfig, Simulation simulation, SimulationView simView) {
+    // make simulation information pop-up window
+    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
+        simConfig.getType(),
+        simConfig.getTitle(),
+        simConfig.getAuthor(),
+        simConfig.getDescription(),
+        //TODO: change to the real parameters from XML file
+        new ArrayList<>(),
+        simulation.getStateMap()
+    );
+    mySimInfoDisplay.createDisplayBox(new Stage(), "Simulation Information");
+    createSimulationWindow(primaryStage);
+    // make control panel
+    ControlPanel myControlPanel = new ControlPanel();
+    myControlPanel.makeControlBar(simView.getRoot());
+    myControlPanel.makeSliderBar(simView.getRoot());
+    // create Grid
+    GameOfLifeGridView myGridView = new GameOfLifeGridView();
+    myGridView.createGridDisplay(simView.getRoot());
+  }
 
   /**
    * Creates a new main pane to hold the grid view and control bar.

@@ -2,7 +2,6 @@ package cellsociety.View;
 
 import cellsociety.Model.StateColor;
 import cellsociety.Model.StateInterface;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.geometry.Pos;
@@ -14,14 +13,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 
 /**
  * This class creates a display window that informs the user of relevant simulation information
  * such as its type, name, author, description, state colors, and relevant parameters
  */
-public class SimulationInfoPanel {
+public class SimulationInfoDisplay {
 
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
@@ -60,7 +58,7 @@ public class SimulationInfoPanel {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, Map<StateInterface, Color> stateColors) {
+  public SimulationInfoDisplay(String type, String title, String author, String description, List<List<String>> parameters, Map<StateInterface, Color> stateColors) {
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -169,7 +167,7 @@ public class SimulationInfoPanel {
     Text infoText = new Text(text);
     infoText.setTextAlignment(TextAlignment.CENTER);
     infoText.setFont(Font.font("Verdana", FontWeight.BOLD, TEXT_SIZE));
-    infoText.setWrappingWidth(SCREEN_WIDTH * .5);
+    infoText.setWrappingWidth(SCREEN_WIDTH * .75);
     return infoText;
   }
 
