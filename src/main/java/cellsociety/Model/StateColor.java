@@ -1,10 +1,10 @@
-package cellsociety.Model.State;
+package cellsociety.Model;
 
 import java.lang.reflect.Field;
 import javafx.scene.paint.Color;
 
 public class StateColor {
-  
+
   // generated using ChatGPT
   public String getColor(Color color) {
     for (Field field : Color.class.getFields()) {
