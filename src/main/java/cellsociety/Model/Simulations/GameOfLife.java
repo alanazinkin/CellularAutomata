@@ -40,7 +40,6 @@ public class GameOfLife extends Simulation {
             liveNeighbors++;
           }
         }
-
         if (cell.getState() == GameOfLifeState.ALIVE) {
           if (liveNeighbors < 2 || liveNeighbors > 3) {
             cell.setNextState(GameOfLifeState.DEAD);
@@ -50,8 +49,11 @@ public class GameOfLife extends Simulation {
         } else {
           if (liveNeighbors == 3) {
             cell.setNextState(GameOfLifeState.ALIVE);
+          } else {
+            cell.setNextState(GameOfLifeState.DEAD);
           }
         }
+
       }
     }
   }
