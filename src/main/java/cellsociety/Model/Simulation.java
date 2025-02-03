@@ -1,5 +1,10 @@
 package cellsociety.Model;
 
+import cellsociety.Model.State.GameOfLifeState;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.scene.paint.Color;
+
 /**
  * Represents an abstract simulation that operates on a {@link Grid}.
  * This class provides a framework for simulations by defining methods
@@ -13,6 +18,7 @@ public abstract class Simulation {
    * The grid on which the simulation operates.
    */
   protected Grid grid;
+  protected Map<StateInterface, Color> stateMap;
 
   /**
    * Constructs a new {@code Simulation} instance with the specified grid.
@@ -21,7 +27,11 @@ public abstract class Simulation {
    */
   public Simulation(Grid grid) {
     this.grid = grid;
+    stateMap = initializeStateMap();
+
   }
+
+  public abstract Map<StateInterface, Color> initializeStateMap();
 
   /**
    * Applies the specific rules of the simulation.
@@ -43,6 +53,10 @@ public abstract class Simulation {
   public void step() {
     applyRules();
     grid.applyNextStates();
+  }
+
+  public Map<StateInterface, Color> getStateMap() {
+    return stateMap;
   }
 }
 

@@ -3,7 +3,11 @@ import cellsociety.Model.Simulation;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Cell;
 import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.StateInterface;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javafx.scene.paint.Color;
 
 /**
  * Represents the Game of Life simulation.
@@ -50,5 +54,16 @@ public class GameOfLife extends Simulation {
         }
       }
     }
+  }
+
+  /**
+   * creates state map and color mappings
+   */
+  @Override
+  public Map<StateInterface, Color> initializeStateMap() {
+    stateMap = new HashMap<>();
+    stateMap.put(GameOfLifeState.ALIVE, Color.BLACK);
+    stateMap.put(GameOfLifeState.DEAD, Color.WHITE);
+    return stateMap;
   }
 }

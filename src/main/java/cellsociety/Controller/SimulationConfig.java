@@ -1,11 +1,12 @@
 package cellsociety.Controller;
 
-import cellsociety.View.ControlPanel;
-import cellsociety.View.GridViews.GameOfLifeGridView;
-import cellsociety.View.SimulationInfoPanel;
+import cellsociety.Model.Grid;
+import cellsociety.Model.Simulation;
+import cellsociety.Model.Simulations.GameOfLife;
+import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.StateInterface;
 import cellsociety.View.SimulationView;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -24,6 +25,7 @@ public class SimulationConfig {
     private int height;
     private int[] initialStates;
     private SimulationParameter parameter;
+    private Map<StateInterface, Color> colorMap;
 
     public SimulationConfig(String type, String title, String author, String description,
                             int width, int height, int[] initialStates, SimulationParameter parameter) {
@@ -48,29 +50,11 @@ public class SimulationConfig {
     /**
      * wrapper method is the starting point of the simulation
      */
-    public void initSimulation(Stage primaryStage) {
-        //TODO: get rid of dummy data and pull from XML file
-        List<List<String>> parameters = new ArrayList<>();
-        ArrayList<String> firstParameter = new ArrayList<>();
-        firstParameter.add("probCatch");
-        firstParameter.add("0.5");
-        parameters.add(firstParameter);
-        List<List<String>> stateColors = new ArrayList<>();
-        List<String> firstState = new ArrayList<>();
-        firstState.add("dead");
-        firstState.add("blue");
-        stateColors.add(firstState);
-        SimulationInfoPanel mySimInfoPanel = new SimulationInfoPanel("Fire", "Catching Fire", "alana", "this sim...", parameters, stateColors);
-        Stage window = new Stage();
-        mySimInfoPanel.createDisplayBox(window, "myInfoBox");
+    public void init(Stage primaryStage, SimulationConfig simulationConfig) {
+        initializeStage(primaryStage);
+        Simulation simulation = new GameOfLife(new Grid(width, height, GameOfLifeState.ALIVE));
         SimulationView mySimView = new SimulationView();
-        mySimView.createSimulationWindow(primaryStage);
-        ControlPanel myControlPanel = new ControlPanel();
-        myControlPanel.makeControlBar(mySimView.getRoot());
-        myControlPanel.makeSliderBar(mySimView.getRoot());
-        // create Grid
-        GameOfLifeGridView myGridView = new GameOfLifeGridView();
-        myGridView.createGridDisplay(mySimView.getRoot());
+        mySimView.initView(primaryStage, simulationConfig, simulation, mySimView);
     }
 
     public String getType() { return type; }
