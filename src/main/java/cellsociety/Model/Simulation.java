@@ -1,16 +1,14 @@
 package cellsociety.Model;
-
-import cellsociety.Model.State.GameOfLifeState;
-import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
  * Represents an abstract simulation that operates on a {@link Grid}.
- * This class provides a framework for simulations by defining methods
- * to apply simulation-specific rules and update the grid states.
- * Subclasses must implement the {@link #applyRules()} method to define
+ * <p>
+ * This class provides a framework for simulations by defining methods to apply simulation-specific rules
+ * and update the grid states. Subclasses must implement the {@link #applyRules()} method to define
  * the specific rules of the simulation.
+ * </p>
  */
 public abstract class Simulation {
 
@@ -18,6 +16,15 @@ public abstract class Simulation {
    * The grid on which the simulation operates.
    */
   protected Grid grid;
+
+  /**
+   * A mapping of simulation states to their corresponding display colors.
+   * <p>
+   * This map is used to translate each cell's state into a visual color when rendering the simulation.
+   * The map is initialized by the {@link #initializeStateMap()} method during construction and can be
+   * retrieved using the {@link #getStateMap()} method.
+   * </p>
+   */
   protected Map<StateInterface, Color> stateMap;
 
   /**
@@ -28,35 +35,53 @@ public abstract class Simulation {
   public Simulation(Grid grid) {
     this.grid = grid;
     this.stateMap = initializeStateMap();
-
   }
 
+  /**
+   * Initializes the mapping of simulation states to their corresponding display colors.
+   * <p>
+   * Subclasses must implement this method to provide a complete mapping for the specific simulation.
+   * </p>
+   *
+   * @return a {@code Map} where keys are simulation states and values are their display colors
+   */
   public abstract Map<StateInterface, Color> initializeStateMap();
 
   /**
    * Applies the specific rules of the simulation.
-   * This method must be implemented by subclasses to define
-   * how the grid's state is updated according to the rules of the simulation.
+   * <p>
+   * This method must be implemented by subclasses to define how the grid's state is updated
+   * according to the rules of the simulation.
+   * </p>
    */
   public abstract void applyRules();
 
   /**
-   * Performs a single step of the simulation by applying the rules and
-   * updating the grid to reflect the next state.
-   *
+   * Performs a single step of the simulation by applying the rules and updating the grid.
+   * <p>
    * The process involves:
    * <ol>
    *   <li>Calling {@link #applyRules()} to calculate the new states.</li>
    *   <li>Invoking {@link Grid#applyNextStates()} to update the grid with the calculated states.</li>
    * </ol>
+   * </p>
    */
   public void step() {
     applyRules();
     grid.applyNextStates();
   }
 
+  /**
+   * Returns the mapping of simulation states to their corresponding display colors.
+   * <p>
+   * This state map is used to visually render the simulation grid by translating each cell's state into a color.
+   * </p>
+   *
+   * @return a {@code Map} where the keys are simulation states and the values are the colors associated with them
+   */
   public Map<StateInterface, Color> getStateMap() {
     return stateMap;
   }
 }
+
 
