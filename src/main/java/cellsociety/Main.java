@@ -3,12 +3,12 @@ package cellsociety;
 import static javafx.application.Application.launch;
 
 import cellsociety.Controller.SimulationConfig;
+import cellsociety.Controller.SimulationController;
 import cellsociety.Controller.XMLParser;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-  private static final String FILE_PATH = "data/GameOfLife/GOL1.xml";
 
   /**
    * entry point of simulation
@@ -20,9 +20,8 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
-    XMLParser xmlParser = new XMLParser();
-    SimulationConfig mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
-    mySimulationConfig.init(primaryStage, mySimulationConfig);
+    SimulationController myController = new SimulationController();
+    myController.init(primaryStage);
   }
 
   public static void main(String[] args) {

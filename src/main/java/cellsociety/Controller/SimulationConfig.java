@@ -47,15 +47,6 @@ public class SimulationConfig {
         primaryStage.show();
     }
 
-    /**
-     * wrapper method is the starting point of the simulation
-     */
-    public void init(Stage primaryStage, SimulationConfig simulationConfig) {
-        initializeStage(primaryStage);
-        Simulation simulation = new GameOfLife(new Grid(width, height, GameOfLifeState.ALIVE));
-        SimulationView mySimView = new SimulationView();
-        mySimView.initView(primaryStage, simulationConfig, simulation, mySimView, simulation.getStateMap());
-    }
 
     public String getType() { return type; }
     public String getTitle() { return title; }
