@@ -52,7 +52,7 @@ public class Schelling extends Simulation {
     int sourceCol;
     int destRow;
     int destCol;
-    int agentGroup; // the group identifier carried by the agent
+    int agentGroup;
 
     Move(int sourceRow, int sourceCol, int destRow, int destCol, int agentGroup) {
       this.sourceRow = sourceRow;

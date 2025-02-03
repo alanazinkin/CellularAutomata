@@ -9,6 +9,10 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+<<<<<<< Updated upstream
+=======
+  private static final String FILE_PATH = "data/GameOfLife/GOL1.xml";
+>>>>>>> Stashed changes
 
   /**
    * entry point of simulation

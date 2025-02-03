@@ -107,13 +107,11 @@ public class Fire extends Simulation {
               cell.setNextState(FireState.TREE);
             }
             else {
-              // Remain in the same state.
               cell.setNextState(currentState);
             }
             break;
 
           default:
-            // If an unexpected state is encountered, keep the current state.
             cell.setNextState(currentState);
             break;
         }
