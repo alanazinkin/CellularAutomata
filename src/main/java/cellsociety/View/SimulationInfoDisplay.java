@@ -1,14 +1,20 @@
 package cellsociety.View;
 
+import cellsociety.Model.StateColor;
+import cellsociety.Model.StateInterface;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 
 /**
@@ -19,7 +25,7 @@ public class SimulationInfoPanel {
 
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
-  private static int TEXT_SIZE = 40;
+  private static int TEXT_SIZE = 25;
   /**
    * type of simulation (ex: Fire, GameofLife, etc.)
    */
@@ -43,7 +49,7 @@ public class SimulationInfoPanel {
   /**
    * key indicating what each color means for a given simulation
    */
-  private List<List<String>> myStateColors;
+  private Map<StateInterface, Color> myStateColors;
 
   /**
    * constructor for creating a simulation information display
@@ -54,7 +60,7 @@ public class SimulationInfoPanel {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, List<List<String>> stateColors) {
+  public SimulationInfoPanel(String type, String title, String author, String description, List<List<String>> parameters, Map<StateInterface, Color> stateColors) {
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -107,21 +113,21 @@ public class SimulationInfoPanel {
    * set the stateColors instance variable
    * @param stateColors a key that indicates the meaning of the color of each cell
    */
-  private void setStateColors(List<List<String>> stateColors) {
+  private void setStateColors(Map<StateInterface, Color> stateColors) {
     myStateColors = stateColors;
   }
 
   /**
    * create a new display window to present relevant simulation information to user such as type of simulation, title,
    * description, author, parameters, and state color mappings
-   * @param primaryStage JavaFX stage for holding all the elements
+   * @param stage JavaFX stage for holding all the elements
    * @param title title of the border pane (what's displayed at the top of the window)
    * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a BorderPane
    * root as the root element
    */
-  public Scene createDisplayBox(Stage primaryStage, String title) {
+  public void createDisplayBox(Stage stage, String title) {
     // create display box to hold relevant information
-    primaryStage.setTitle(title);
+    stage.setTitle(title);
     BorderPane root = new BorderPane();
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
@@ -130,9 +136,8 @@ public class SimulationInfoPanel {
     addSimulationInformationToScene(vbox);
     // create and set the scene
     Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-    primaryStage.setScene(scene);
-    primaryStage.show();
-    return scene;
+    stage.setScene(scene);
+    stage.show();
   }
 
   /**
@@ -149,8 +154,9 @@ public class SimulationInfoPanel {
       addTextToScene(vbox, params.get(0) + ": " + params.get(1));
     }
     addTextToScene(vbox, "StateColors: ");
-    for (List<String> stateColor : myStateColors) {
-      addTextToScene(vbox, stateColor.get(0) + ": " + stateColor.get(1));
+    StateColor standardColors = new StateColor();
+    for (StateInterface state : myStateColors.keySet()) {
+      addTextToScene(vbox, state.getStateValue() + ": " + standardColors.getColor(myStateColors.get(state)));
     }
   }
 
@@ -163,6 +169,7 @@ public class SimulationInfoPanel {
     Text infoText = new Text(text);
     infoText.setTextAlignment(TextAlignment.CENTER);
     infoText.setFont(Font.font("Verdana", FontWeight.BOLD, TEXT_SIZE));
+    infoText.setWrappingWidth(SCREEN_WIDTH * .5);
     return infoText;
   }
 

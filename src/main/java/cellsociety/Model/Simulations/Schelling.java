@@ -4,10 +4,14 @@ import cellsociety.Model.AgentCell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.SchellingState;
+import cellsociety.Model.StateInterface;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import cellsociety.Model.Cell;
+import javafx.scene.paint.Color;
 
 /**
  * Implementation of Schelling's Model of Segregation using AgentCell.
@@ -57,6 +61,14 @@ public class Schelling extends Simulation {
       this.destCol = destCol;
       this.agentGroup = agentGroup;
     }
+  }
+
+  @Override
+  public Map<StateInterface, Color> initializeStateMap() {
+    stateMap = new HashMap<>();
+    stateMap.put(SchellingState.AGENT, Color.RED);
+    stateMap.put(SchellingState.EMPTY_CELL, Color.BLUE);
+    return stateMap;
   }
 
   /**

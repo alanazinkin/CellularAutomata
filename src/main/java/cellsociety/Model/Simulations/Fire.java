@@ -4,8 +4,12 @@ import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.FireState;
+import cellsociety.Model.StateInterface;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import javafx.scene.paint.Color;
 
 /**
  * Simulation class for the Spreading of Fire.
@@ -40,6 +44,16 @@ public class Fire extends Simulation {
     this.p = p;
     this.f = f;
     this.random = new Random();
+  }
+
+  @Override
+  public Map<StateInterface, Color> initializeStateMap() {
+    stateMap = new HashMap<>();
+    stateMap.put(FireState.TREE, Color.GREEN);
+    stateMap.put(FireState.BURNING, Color.RED);
+    stateMap.put(FireState.BURNT, Color.BROWN);
+    stateMap.put(FireState.EMPTY, Color.WHITE);
+    return stateMap;
   }
 
   /**
