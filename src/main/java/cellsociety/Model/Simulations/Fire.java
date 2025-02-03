@@ -77,7 +77,6 @@ public class Fire extends Simulation {
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         Cell cell = grid.getCell(row, col);
-        // Cast the cell's current state to a FireState.
         FireState currentState = (FireState) cell.getState();
 
         switch (currentState) {
