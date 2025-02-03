@@ -18,6 +18,14 @@ public class SimulationView {
   private Scene myScene;
   private BorderPane myRoot;
 
+  /**
+   * entry point for adding all views to application
+   * @param primaryStage main stage onto which all elements are added
+   * @param simConfig the simulation configuration containing all information about the exact simulation file
+   * @param simulation the simulation model
+   * @param simView the simulation view object
+   * @param stateMap data structure mapping cell states to visual colors in the simulation grid
+   */
   public void initView(Stage primaryStage, SimulationConfig simConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap) {
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
