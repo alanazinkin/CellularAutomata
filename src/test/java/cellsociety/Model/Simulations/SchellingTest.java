@@ -6,22 +6,20 @@ import cellsociety.Model.AgentCell;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.SchellingState;
-import java.lang.reflect.Field;
 import org.junit.jupiter.api.Test;
 
 public class SchellingTest {
 
   /**
-   * Helper method to replace the Grid's internal cells array with our own.
+   * Helper method to replace a cell in the grid using the public API.
    *
-   * @param grid the Grid whose cells field will be replaced
-   * @param cells the new 2D Cell array to use in the grid
-   * @throws Exception if reflection fails
+   * @param grid the grid whose cell will be replaced
+   * @param row the row index of the cell to replace
+   * @param col the column index of the cell to replace
+   * @param cell the new cell to insert at the specified location
    */
-  private void setGridCells(Grid grid, Cell[][] cells) throws Exception {
-    Field field = Grid.class.getDeclaredField("cells");
-    field.setAccessible(true);
-    field.set(grid, cells);
+  private void replaceCell(Grid grid, int row, int col, Cell cell) {
+    grid.setCellAt(row, col, cell);
   }
 
   /**
@@ -29,13 +27,11 @@ public class SchellingTest {
    * The agent should remain unchanged.
    */
   @Test
-  public void testApplyRules_NoUnsatisfiedAgents() throws Exception {
+  public void testApplyRules_NoUnsatisfiedAgents() {
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
 
-    AgentCell[][] cells = new AgentCell[1][1];
-    cells[0][0] = new AgentCell(SchellingState.AGENT, 1);
-
-    setGridCells(grid, cells);
+    AgentCell testCell = new AgentCell(SchellingState.AGENT, 1);
+    replaceCell(grid, 0, 0, testCell);
 
     Schelling simulation = new Schelling(grid, 0.5);
     simulation.applyRules();
@@ -56,21 +52,18 @@ public class SchellingTest {
    *   (1,0) and (1,1): Empty cells (group -1)
    */
   @Test
-  public void testApplyRules_UnsatisfiedAgentMoves() throws Exception {
-    // Create a 2×2 grid.
+  public void testApplyRules_UnsatisfiedAgentMoves() {
     Grid grid = new Grid(2, 2, SchellingState.EMPTY_CELL);
 
-    // Prepare a 2×2 array of AgentCell objects.
-    AgentCell[][] cells = new AgentCell[2][2];
-    // (0,0): Agent group 1 (unsatisfied because neighbor is in a different group)
-    cells[0][0] = new AgentCell(SchellingState.AGENT, 1);
-    // (0,1): Agent group 2
-    cells[0][1] = new AgentCell(SchellingState.AGENT, 2);
-    // (1,0) and (1,1): Empty cells (group -1)
-    cells[1][0] = new AgentCell(SchellingState.EMPTY_CELL, -1);
-    cells[1][1] = new AgentCell(SchellingState.EMPTY_CELL, -1);
+    AgentCell agentCell1 = new AgentCell(SchellingState.AGENT, 1); // unsatisfied
+    AgentCell agentCell2 = new AgentCell(SchellingState.AGENT, 2);
+    AgentCell emptyCell1 = new AgentCell(SchellingState.EMPTY_CELL, -1);
+    AgentCell emptyCell2 = new AgentCell(SchellingState.EMPTY_CELL, -1);
 
-    setGridCells(grid, cells);
+    replaceCell(grid, 0, 0, agentCell1);
+    replaceCell(grid, 0, 1, agentCell2);
+    replaceCell(grid, 1, 0, emptyCell1);
+    replaceCell(grid, 1, 1, emptyCell2);
 
     Schelling simulation = new Schelling(grid, 0.5);
     simulation.applyRules();
@@ -103,16 +96,15 @@ public class SchellingTest {
    * applyRules() should throw a ClassCastException.
    */
   @Test
-  public void testApplyRules_InvalidCellType_ThrowsException() throws Exception {
+  public void testApplyRules_InvalidCellType_ThrowsException() {
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
 
-    Cell[][] cells = new Cell[1][1];
-    cells[0][0] = new Cell(SchellingState.AGENT);
-
-    setGridCells(grid, cells);
+    Cell invalidCell = new Cell(SchellingState.AGENT);
+    replaceCell(grid, 0, 0, invalidCell);
 
     Schelling simulation = new Schelling(grid, 0.5);
     assertThrows(ClassCastException.class, simulation::applyRules,
         "applyRules() should throw ClassCastException when a cell is not an AgentCell.");
   }
 }
+
