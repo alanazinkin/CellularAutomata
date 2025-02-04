@@ -37,20 +37,4 @@ public class GameOfLifeGridView extends GridView {
     renderGrid(stateMap);
   }
 
-  /**
-   * updates the colors of all the cells in the grid according to all cells' current state
-   * @param stateMap data structure mapping cell states to visual colors in the simulation grid
-   */
-  public void updateCellColors(Map<StateInterface, Color> stateMap) {
-    int cellCount = 0;
-    for(int i = 0; i < myGrid.getRows(); i ++) {
-      for (int j = 0; j < myGrid.getCols(); j ++) {
-        Cell cell = myGrid.getCell(i, j);
-        GameOfLifeState state = (GameOfLifeState) cell.getState();
-        Shape myCell = myCells.get(cellCount);
-        myCell.setFill(stateMap.get(state));
-        cellCount++;
-      }
-    }
-  }
 }
