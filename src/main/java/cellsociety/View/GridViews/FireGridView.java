@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
 
 public class FireGridView extends GridView {
 
-  public FireGridView(SimulationConfig simulationConfig) {
-    super(simulationConfig);
+  public FireGridView(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
   }
 
   @Override
@@ -26,4 +26,7 @@ public class FireGridView extends GridView {
     myCells = new ArrayList<>();
     myGrid = new Grid(simulationConfig.getWidth(), simulationConfig.getHeight(), FireState.EMPTY);
     renderGrid(stateMap);
-  }}
+  }
+
+
+}

@@ -1,6 +1,7 @@
 package cellsociety.View;
 
 import cellsociety.Controller.SimulationConfig;
+import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.StateInterface;
 import cellsociety.View.GridViews.GameOfLifeGridView;
@@ -20,13 +21,14 @@ public class SimulationView {
 
   /**
    * entry point for adding all views to application
+   *
    * @param primaryStage main stage onto which all elements are added
    * @param simulationConfig the simulation configuration containing all information about the exact simulation file
    * @param simulation the simulation model
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap) {
+  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid) {
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         simulationConfig.getType(),
@@ -44,7 +46,7 @@ public class SimulationView {
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
-    GameOfLifeGridView myGridView = new GameOfLifeGridView(simulationConfig);
+    GameOfLifeGridView myGridView = new GameOfLifeGridView(simulationConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), simulationConfig, stateMap);
   }
 

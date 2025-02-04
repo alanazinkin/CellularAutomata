@@ -1,11 +1,14 @@
 package cellsociety.View;
 
+import cellsociety.Controller.FileRetriever;
 import cellsociety.Controller.SimulationController;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
@@ -24,6 +27,7 @@ public class ControlPanel {
   private HBox myControlBar;
   private SimulationController myController;
   private VBox mySliderBar;
+  private FileRetriever myFileRetriever;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default.
@@ -31,13 +35,15 @@ public class ControlPanel {
    */
   public ControlPanel() {
     initializeControls();
+    initializeFileRetriever();
   }
 
-  /**
-   * instantiate myController object
-   */
-  public void initializeControls() {
+  private void initializeControls() {
     myController = new SimulationController();
+  }
+
+  private void initializeFileRetriever() {
+    myFileRetriever = new FileRetriever();
   }
 
   /**
@@ -55,7 +61,7 @@ public class ControlPanel {
     makeButton("Pause", e -> myController.pauseSimulation());
     makeButton("Reset", e -> myController.resetSimulation());
     makeButton("Save", e -> myController.saveSimulation());
-    List<String> simulationTypes = getSimulationTypes();
+    List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     makeComboBox("Select Simulation Type", e -> myController.selectSimulation(), simulationTypes);
   }
 
@@ -99,35 +105,45 @@ public class ControlPanel {
     myControlBar.getChildren().add(button);
   }
 
-  /**
-   * create and initialize a new combo box and add it to the Control Bar
-   * @param label combo nox button label
-   * @param handler action event to occur
-   * @param simulationTypeOptions combo box drop down options to select
-   */
   private void makeComboBox(String label, EventHandler<ActionEvent> handler, List<String> simulationTypeOptions) {
     ComboBox<String> simulationTypes = new ComboBox<>();
     simulationTypes.setPromptText(label);
-    for (String option : simulationTypeOptions) {
-      simulationTypes.getItems().add(option);
-    }
+    simulationTypes.getItems().addAll(simulationTypeOptions);
     simulationTypes.setOnAction(handler);
-    myControlBar.getChildren().add(simulationTypes);
+
+    ComboBox<String> configFileComboBox = new ComboBox<>();
+    configFileComboBox.setPromptText("Select Config File");
+
+    // Update available files when simulation type is selected
+    makeSimulationFileComboBox(simulationTypes, configFileComboBox);
+
+    myControlBar.getChildren().addAll(simulationTypes, configFileComboBox);
   }
 
-  //TODO: remove method once real one is created
-  /**
-   * method for testing
-   * @return
-   */
-  private List<String> getSimulationTypes(){
-    List<String> simulationTypes = new ArrayList<>();
-    simulationTypes.add("Game of Life");
-    simulationTypes.add("Wa-Tor World");
-    simulationTypes.add("Spreading of Fire");
-    simulationTypes.add("Percolation");
-    simulationTypes.add("Schelling State");
-    return simulationTypes;
+  private void makeSimulationFileComboBox(ComboBox<String> simulationTypes, ComboBox<String> configFileComboBox) {
+    simulationTypes.valueProperty().addListener((obs, oldValue, simulationType) -> {
+      if (simulationType == null) {
+        configFileComboBox.getItems().clear();
+        configFileComboBox.setDisable(true);
+      }
+      else {
+        try {
+          Collection<String> fileNames = myFileRetriever.getFileNames(simulationType);
+          configFileComboBox.getItems().setAll(fileNames);
+          configFileComboBox.setDisable(false);
+        } catch (FileNotFoundException e) {
+          displayAlert(simulationType);
+          configFileComboBox.getItems().clear();
+          configFileComboBox.setDisable(true);
+        }
+      }
+    });
   }
 
+  private static void displayAlert(String simulationType) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setContentText("No files to run for " + simulationType + ". " + "Select a different simulation type.");
+    alert.showAndWait();
+  }
 }

@@ -11,9 +11,7 @@ import cellsociety.Model.StateInterface;
 import java.util.ArrayList;
 import java.util.Map;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class GameOfLifeGridView extends GridView {
@@ -21,13 +19,12 @@ public class GameOfLifeGridView extends GridView {
   /**
    * construct a new instance of GameOfLifeGridView
    */
-  public GameOfLifeGridView(SimulationConfig simulationConfig) {
-    super(simulationConfig);
+  public GameOfLifeGridView(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
   }
 
   /**
    * creates a new pane to hold the grid and instantiates myCells and myGrid
-   *
    * @param myRoot
    */
   @Override
@@ -35,8 +32,8 @@ public class GameOfLifeGridView extends GridView {
     myRoot.setCenter(gridPane);
     gridPane.setMaxWidth(SIMULATION_WIDTH);
     gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
+    gridPane.setGridLinesVisible(true);
     myCells = new ArrayList<>();
-    myGrid = new Grid(simulationConfig.getWidth(), simulationConfig.getHeight(), GameOfLifeState.ALIVE);
     renderGrid(stateMap);
   }
 
