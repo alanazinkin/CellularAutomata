@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Simulation class for the Spreading of Fire.
- *
+ * <p>
  * This simulation models a forest fire according to the following rules:
  * <ul>
  *   <li>A burning cell turns into a burnt cell.</li>
@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
  *   <li>A tree ignites spontaneously with probability f even if no neighbor is burning.</li>
  *   <li>An empty or burnt cell fills with a tree with probability p.</li>
  * </ul>
- *
+ * <p>
  * The parameters p and f control tree growth and lightning strikes, respectively.
  */
 public class Fire extends Simulation {
@@ -40,8 +40,8 @@ public class Fire extends Simulation {
    * Constructs a Fire simulation with the specified grid and parameters.
    *
    * @param grid the grid on which the simulation is run
-   * @param p the probability that an empty cell grows a tree
-   * @param f the probability that a tree spontaneously catches fire
+   * @param p    the probability that an empty cell grows a tree
+   * @param f    the probability that a tree spontaneously catches fire
    */
   public Fire(Grid grid, double p, double f) {
     super(grid);
@@ -62,18 +62,17 @@ public class Fire extends Simulation {
 
   /**
    * Applies the rules of the fire simulation to each cell in the grid.
-   *
-   * For each cell:
+   * <p>
+   * The rules are as follows:
    * <ul>
-   *   <li>If the cell is BURNING, it becomes BURNT.</li>
-   *   <li>If the cell is a TREE:
+   *   <li>If a cell is BURNING, it becomes BURNT.</li>
+   *   <li>If a cell is a TREE:
    *     <ul>
-   *       <li>If at least one neighbor is BURNING, the tree will burn.</li>
-   *       <li>Otherwise, it may spontaneously catch fire with probability f.</li>
-   *       <li>If neither condition holds, it remains a TREE.</li>
+   *       <li>If at least one neighbor is BURNING, it catches fire.</li>
+   *       <li>Otherwise, it may spontaneously ignite with probability f.</li>
    *     </ul>
    *   </li>
-   *   <li>If the cell is EMPTY or BURNT, it may regrow a TREE with probability p.</li>
+   *   <li>If a cell is EMPTY or BURNT, it may regrow into a TREE with probability p.</li>
    * </ul>
    */
   @Override
@@ -85,37 +84,14 @@ public class Fire extends Simulation {
 
         switch (currentState) {
           case BURNING:
-            // Rule 1: A burning cell turns into a burnt cell.
             cell.setNextState(FireState.BURNT);
             break;
-
           case TREE:
-            // Rule 2: A tree will catch fire if at least one neighbor is burning.
-            if (hasBurningNeighbor(row, col)) {
-              cell.setNextState(FireState.BURNING);
-            }
-            // Rule 3: A tree may spontaneously ignite with probability f.
-            else if (random.nextDouble() < f) {
-              cell.setNextState(FireState.BURNING);
-            }
-            else {
-              cell.setNextState(FireState.TREE);
-            }
+            cell.setNextState(getNextTreeState(row, col));
             break;
-
           case EMPTY:
           case BURNT:
-            // Rule 4: An empty or burnt cell fills with a tree with probability p.
-            if (random.nextDouble() < p) {
-              cell.setNextState(FireState.TREE);
-            }
-            else {
-              cell.setNextState(currentState);
-            }
-            break;
-
-          default:
-            cell.setNextState(currentState);
+            cell.setNextState(probabilityEvent(p) ? FireState.TREE : currentState);
             break;
         }
       }
@@ -123,10 +99,37 @@ public class Fire extends Simulation {
   }
 
   /**
-   * Checks whether any of the neighbors of the cell at (row, col) are burning.
+   * Determines the next state of a TREE cell based on fire spreading rules.
    *
-   * This method assumes that grid.getNeighbors(row, col) returns a collection
-   * of neighboring cells.
+   * @param row the row index of the cell
+   * @param col the column index of the cell
+   * @return FireState.BURNING if the tree catches fire, otherwise FireState.TREE
+   */
+  private FireState getNextTreeState(int row, int col) {
+    if (hasBurningNeighbor(row, col)) {
+      return FireState.BURNING;
+    }
+    if (probabilityEvent(f)) {
+      return FireState.BURNING;
+    }
+    return FireState.TREE;
+  }
+
+  /**
+   * Determines whether an event occurs based on the given probability.
+   *
+   * @param probability the probability (between 0 and 1) of the event occurring
+   * @return true if the event occurs, false otherwise
+   */
+  private boolean probabilityEvent(double probability) {
+    return random.nextDouble() < probability;
+  }
+
+  /**
+   * Checks whether any of the neighbors of the cell at (row, col) are burning.
+   * <p>
+   * This method assumes that grid.getNeighbors(row, col) returns a collection of neighboring
+   * cells.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
