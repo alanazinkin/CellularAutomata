@@ -11,23 +11,29 @@ import javafx.stage.Stage;
 public class SimulationController {
   private static final String FILE_PATH = "data/GameOfLife/GOL1.xml";
   private SimulationConfig mySimulationConfig;
+  private Simulation mySimulation;
+  private SimulationView mySimView;
 
   public SimulationController() {}
 
   /**
-   * wrapper method is the starting point of the simulation
+   * Initializes the simulation by parsing the configuration file, setting up the model,
+   * and initializing the view.
+   *
+   * @param primaryStage The primary stage for the JavaFX application.
+   * @throws Exception If there is an error during initialization.
    */
   public void init(Stage primaryStage) throws Exception {
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
     mySimulationConfig.initializeStage(primaryStage);
-    Simulation simulation = new GameOfLife(
+    mySimulation = new GameOfLife(
         new Grid(mySimulationConfig.getWidth(),
             mySimulationConfig.getHeight(),
             GameOfLifeState.ALIVE)
     );
-    SimulationView mySimView = new SimulationView();
-    mySimView.initView(primaryStage, mySimulationConfig, simulation, mySimView, simulation.getStateMap());
+    mySimView = new SimulationView();
+    mySimView.initView(primaryStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap());
   }
 
   public void startSimulation() {System.out.println("Starting Simulation");}
