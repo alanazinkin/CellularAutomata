@@ -8,7 +8,7 @@ import cellsociety.Model.StateInterface;
  * or dead based on the number of neighbors it has in each generation.
  * </p>
  * <p>
- * This enum implements the {@link Model.StateInterface} interface to maintain consistency across
+ * This enum implements the {@link cellsociety.Model.StateInterface} interface to maintain consistency across
  * various state enums used in grid-based simulations.
  * </p>
  */

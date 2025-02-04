@@ -27,10 +27,14 @@ import javafx.scene.paint.Color;
 public class Fire extends Simulation {
 
   // Probability that an empty cell regrows a tree.
-  private double p;
+  private final double p;
   // Probability that a tree spontaneously ignites.
-  private double f;
+  private final double f;
   private Random random;
+  private static final Color TREE_COLOR = Color.GREEN;
+  private static final Color BURNING_COLOR = Color.RED;
+  private static final Color BURNT_COLOR = Color.BROWN;
+  private static final Color EMPTY_COLOR = Color.WHITE;
 
   /**
    * Constructs a Fire simulation with the specified grid and parameters.
@@ -49,10 +53,10 @@ public class Fire extends Simulation {
   @Override
   public Map<StateInterface, Color> initializeStateMap() {
     stateMap = new HashMap<>();
-    stateMap.put(FireState.TREE, Color.GREEN);
-    stateMap.put(FireState.BURNING, Color.RED);
-    stateMap.put(FireState.BURNT, Color.BROWN);
-    stateMap.put(FireState.EMPTY, Color.WHITE);
+    stateMap.put(FireState.TREE, TREE_COLOR);
+    stateMap.put(FireState.BURNING, BURNING_COLOR);
+    stateMap.put(FireState.BURNT, BURNT_COLOR);
+    stateMap.put(FireState.EMPTY, EMPTY_COLOR);
     return stateMap;
   }
 
@@ -122,7 +126,7 @@ public class Fire extends Simulation {
    * Checks whether any of the neighbors of the cell at (row, col) are burning.
    *
    * This method assumes that grid.getNeighbors(row, col) returns a collection
-   * of neighboring cells (using, for example, the von Neumann neighborhood).
+   * of neighboring cells.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
