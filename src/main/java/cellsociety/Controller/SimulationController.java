@@ -5,7 +5,6 @@ import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.GameOfLife;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.SimulationView;
-import java.util.concurrent.ExecutionException;
 import javafx.stage.Stage;
 
 public class SimulationController {
@@ -13,6 +12,7 @@ public class SimulationController {
   private SimulationConfig mySimulationConfig;
   private Simulation mySimulation;
   private SimulationView mySimView;
+  private Grid myGrid;
 
   public SimulationController() {}
 
@@ -27,13 +27,10 @@ public class SimulationController {
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
     mySimulationConfig.initializeStage(primaryStage);
-    mySimulation = new GameOfLife(
-        new Grid(mySimulationConfig.getWidth(),
-            mySimulationConfig.getHeight(),
-            GameOfLifeState.ALIVE)
-    );
+    myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
+    mySimulation = new GameOfLife(myGrid);
     mySimView = new SimulationView();
-    mySimView.initView(primaryStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap());
+    mySimView.initView(primaryStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap(), myGrid);
   }
 
   public void startSimulation() {System.out.println("Starting Simulation");}
