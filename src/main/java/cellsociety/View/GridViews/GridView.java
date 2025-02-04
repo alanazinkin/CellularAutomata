@@ -50,4 +50,21 @@ public abstract class GridView {
       }
     }
   }
+
+  /**
+   * updates the colors of all the cells in the grid according to all cells' current state
+   * @param stateMap data structure mapping cell states to visual colors in the simulation grid
+   */
+  public void updateCellColors(Map<StateInterface, Color> stateMap) {
+    int cellCount = 0;
+    for(int i = 0; i < numRows; i ++) {
+      for (int j = 0; j < numCols; j ++) {
+        Cell cell = myGrid.getCell(i, j);
+        StateInterface state =  cell.getState();
+        Shape myCell = myCells.get(cellCount);
+        myCell.setFill(stateMap.get(state));
+        cellCount++;
+      }
+    }
+  }
 }
