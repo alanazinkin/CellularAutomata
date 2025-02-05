@@ -3,23 +3,24 @@ package cellsociety.Controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 public class FileRetriever {
-
+  private static final List<String> SIMULATION_TYPES = List.of(
+      "Game of Life",
+      "Spreading of Fire",
+      "Percolation",
+      "Wa-Tor World",
+      "Schelling State"
+  );
   /**
    * creates list of different simulation types
    * @return list of all the different simulation types
    */
   public List<String> getSimulationTypes() {
-    return List.of(
-        "Game of Life",
-        "Spreading of Fire",
-        "Percolation",
-        "Wa-Tor World",
-        "Schelling State"
-    );
+    return SIMULATION_TYPES;
   }
 
   /**
@@ -47,8 +48,7 @@ public class FileRetriever {
       case "Schelling State": folderExtension = "/SchellingState"; break;
       case "Wa-Tor World": folderExtension = "/WaTorWorld"; break;
       // potential point of abuse! Handle edge case:
-      default: System.err.println("Error: no files found for " + simulationType);
-        return new ArrayList<>();
+      default: throw new FileNotFoundException("No files found for " + simulationType);
     }
     return getFilesInFolder(basePath + folderExtension);
   }
@@ -60,7 +60,11 @@ public class FileRetriever {
       throw new FileNotFoundException(folderPath);
     }
     File[] files = folder.listFiles();
-    return files != null ? List.of(files) : new ArrayList<>();
+    if (files == null) { // Prevents NullPointerException
+      return new ArrayList<>();
+    }
+    Arrays.sort(files); // Sort only if not null
+    return new ArrayList<>(List.of(files));
   }
 
 }
