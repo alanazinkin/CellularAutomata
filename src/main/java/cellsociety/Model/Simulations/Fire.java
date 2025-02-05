@@ -37,14 +37,35 @@ public class Fire extends Simulation {
   private static final Color EMPTY_COLOR = Color.WHITE;
 
   /**
+   * Helper method to validate the grid before passing it to the superclass constructor.
+   *
+   * @param grid the grid to check
+   * @return the grid if it is not null
+   * @throws IllegalArgumentException if grid is null
+   */
+  private static Grid checkGrid(Grid grid) {
+    if (grid == null) {
+      throw new IllegalArgumentException("Grid cannot be null");
+    }
+    return grid;
+  }
+
+  /**
    * Constructs a Fire simulation with the specified grid and parameters.
    *
    * @param grid the grid on which the simulation is run
-   * @param p    the probability that an empty cell grows a tree
-   * @param f    the probability that a tree spontaneously catches fire
+   * @param p    the probability that an empty cell grows a tree (must be between 0 and 1)
+   * @param f    the probability that a tree spontaneously catches fire (must be between 0 and 1)
+   * @throws IllegalArgumentException if grid is null or if p or f are not in the interval [0, 1]
    */
   public Fire(Grid grid, double p, double f) {
-    super(grid);
+    super(checkGrid(grid)); // Ensures grid is not null before passing it to the superclass.
+    if (p < 0 || p > 1) {
+      throw new IllegalArgumentException("Regrowth probability must be between 0 and 1.");
+    }
+    if (f < 0 || f > 1) {
+      throw new IllegalArgumentException("Ignition probability must be between 0 and 1.");
+    }
     this.p = p;
     this.f = f;
     this.random = new Random();
@@ -146,3 +167,5 @@ public class Fire extends Simulation {
     return false;
   }
 }
+
+
