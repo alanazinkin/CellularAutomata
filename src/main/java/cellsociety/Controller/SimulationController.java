@@ -13,6 +13,7 @@ public class SimulationController {
   private Simulation mySimulation;
   private SimulationView mySimView;
   private Grid myGrid;
+  private boolean isPaused = false;
 
   public SimulationController() {}
 
@@ -33,13 +34,42 @@ public class SimulationController {
     mySimView.initView(primaryStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap(), myGrid);
   }
 
-  public void startSimulation() {System.out.println("Starting Simulation");}
+  public void startSimulation() {
+    if (isPaused) {
+      isPaused = false;
+    }
+    System.out.println("Starting Simulation");
+    runSimulationLoop();
+  }
+
+  private void runSimulationLoop() {
+    new Thread(() -> {
+      while (!isPaused) {
+        mySimulation.step();
+        updateView();
+        try {
+          Thread.sleep(200); // Adjust the delay to control simulation speed
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }).start();
+  }
 
   public void pauseSimulation() {
+    if (!isPaused) {
+      isPaused = true;
+    }
     System.out.println("Pausing Simulation");
   }
 
   public void resetSimulation() {
+    mySimulation = new GameOfLife(
+            new Grid(mySimulationConfig.getWidth(),
+                    mySimulationConfig.getHeight(),
+                    GameOfLifeState.ALIVE)
+    );
+    updateView();
     System.out.println("Resetting Simulation");
   }
 
@@ -50,4 +80,10 @@ public class SimulationController {
   public void selectSimulation() {
     System.out.println("Selecting Simulation");
   }
+
+  public void updateView() {
+    mySimView.getRoot().getChildren().clear(); // Clear the current view
+    mySimView.initView(new Stage(), mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap(), myGrid);
+  }
+
 }
