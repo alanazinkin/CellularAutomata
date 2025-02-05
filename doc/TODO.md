@@ -2,7 +2,7 @@ Alana Goals:
 
 1. Grid Rendering Correctly - DONE
 2. Allow user to select config file from dropdown list - DONE
-3. Test 
+3. Test
 
 Tatum Goals:
 
@@ -20,7 +20,6 @@ Tatum Goals:
    5. Spreading of Fire Simulation - DONE
    6. Schelling’s Model of Segregation Simulation - DONE
    7. Wa-Tor World Simulation - DONE
-7. Get Main class working -
 
 Angela Goals:
 
