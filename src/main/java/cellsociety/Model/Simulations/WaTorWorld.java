@@ -18,10 +18,10 @@ import javafx.scene.paint.Color;
  * applying the following rules:
  * </p>
  * <ul>
- *   <li><b>Fish:</b> At each chronon a fish moves randomly to an adjacent empty cell.
+ *   <li><b>Fish:</b> At each point in time a fish moves randomly to an adjacent empty cell.
  *       If it has survived at least {@code fishBreedTime} steps, it reproduces as it moves,
  *       leaving behind a new fish with its breeding timer reset.</li>
- *   <li><b>Sharks:</b> At each chronon a shark first looks for adjacent fish.
+ *   <li><b>Sharks:</b> At each point in time a shark first looks for adjacent fish.
  *       If one is found it moves there, eats the fish (gaining energy),
  *       and otherwise it will move (if possible) to an empty cell.
  *       Every step the shark loses one unit of energy; if its energy reaches zero,
@@ -31,21 +31,27 @@ import javafx.scene.paint.Color;
  */
 public class WaTorWorld extends Simulation {
 
+  private static final int DIRECTIONS_COUNT = 4;
+  private static final int[] DIRECTION_ROW_OFFSETS = {-1, 0, 1, 0};
+  private static final int[] DIRECTION_COL_OFFSETS = {0, 1, 0, -1};
+
+  private static final int SHARK_ENERGY_DECAY = 1;
+
   private final int fishBreedTime;
   private final int sharkBreedTime;
   private final int sharkInitialEnergy;
   private final int sharkEnergyGain;
 
-  private int[][] breedCounter;
-  private int[][] sharkEnergy;
+  private final int[][] breedCounter;
+  private final int[][] sharkEnergy;
 
   private final int rows;
   private final int cols;
 
   /**
-   * Constructs a Wa-TorWorldSimulation with the specified grid and simulation parameters.
+   * Constructs a Wa-TorWorld simulation with the specified grid and parameters.
    *
-   * @param grid                the Grid on which the simulation runs
+   * @param grid                the grid on which the simulation runs
    * @param fishBreedTime       number of chronons a fish must survive before reproducing
    * @param sharkBreedTime      number of chronons a shark must survive before reproducing
    * @param sharkInitialEnergy  the initial energy for a shark when it is created
@@ -61,8 +67,8 @@ public class WaTorWorld extends Simulation {
     this.sharkInitialEnergy = sharkInitialEnergy;
     this.sharkEnergyGain = sharkEnergyGain;
 
-    breedCounter = new int[rows][cols];
-    sharkEnergy = new int[rows][cols];
+    this.breedCounter = new int[rows][cols];
+    this.sharkEnergy = new int[rows][cols];
 
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
@@ -85,14 +91,14 @@ public class WaTorWorld extends Simulation {
   /**
    * Applies one chronon (time step) of the Wa-Tor simulation.
    * <p>
-   * The method loops through every cell and processes fish and shark actions according
-   * to the simulation rules. A boolean array is used to ensure that each creature only
-   * moves once per chronon.
+   * Loops through every cell and processes fish and shark actions according
+   * to the simulation rules. A boolean array is used to ensure that each creature
+   * only moves once per chronon.
    * </p>
    */
   @Override
   public void applyRules() {
-    boolean[][] moved = new boolean[rows][cols];
+    final boolean[][] moved = new boolean[rows][cols];
 
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
@@ -106,7 +112,7 @@ public class WaTorWorld extends Simulation {
         } else if (state == WaTorWorldState.SHARK) {
           processShark(r, c, moved);
         } else {
-          grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
+          setEmpty(r, c);
           moved[r][c] = true;
         }
       }
@@ -116,32 +122,33 @@ public class WaTorWorld extends Simulation {
   /**
    * Processes the actions of a fish located at (r, c).
    *
-   * @param r     row index of the fish
-   * @param c     column index of the fish
-   * @param moved boolean grid tracking cells already updated in this chronon
+   * @param r      row index of the fish
+   * @param c      column index of the fish
+   * @param moved  boolean grid tracking cells already updated in this chronon
    */
   private void processFish(int r, int c, boolean[][] moved) {
-    int currentBreed = breedCounter[r][c] + 1;
-    List<int[]> emptyNeighbors = getNeighborPositions(r, c, WaTorWorldState.EMPTY, moved);
+    final int newBreedCount = breedCounter[r][c] + 1;
+    final List<int[]> emptyNeighbors = getNeighborPositions(r, c, WaTorWorldState.EMPTY, moved);
+
     if (!emptyNeighbors.isEmpty()) {
-      int[] pos = randomChoice(emptyNeighbors);
-      int newR = pos[0];
-      int newC = pos[1];
-      if (currentBreed >= fishBreedTime) {
-        grid.getCell(r, c).setNextState(WaTorWorldState.FISH);
-        breedCounter[r][c] = 0;
-        grid.getCell(newR, newC).setNextState(WaTorWorldState.FISH);
-        breedCounter[newR][newC] = 0;
+      final int[] newPos = randomChoice(emptyNeighbors);
+      final int newR = newPos[0];
+      final int newC = newPos[1];
+
+      if (newBreedCount >= fishBreedTime) {
+        // Reproduce: leave behind a fish in the current cell and place a new fish in the neighbor.
+        setFish(r, c, 0);
+        setFish(newR, newC, 0);
       } else {
-        grid.getCell(newR, newC).setNextState(WaTorWorldState.FISH);
-        breedCounter[newR][newC] = currentBreed;
-        grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
+        // Move: place the fish in the neighbor cell and mark the current cell as empty.
+        setFish(newR, newC, newBreedCount);
+        setEmpty(r, c);
       }
       moved[r][c] = true;
       moved[newR][newC] = true;
     } else {
-      grid.getCell(r, c).setNextState(WaTorWorldState.FISH);
-      breedCounter[r][c] = currentBreed;
+      // No available move; update breeding counter.
+      setFish(r, c, newBreedCount);
       moved[r][c] = true;
     }
   }
@@ -149,68 +156,60 @@ public class WaTorWorld extends Simulation {
   /**
    * Processes the actions of a shark located at (r, c).
    *
-   * @param r     row index of the shark
-   * @param c     column index of the shark
-   * @param moved boolean grid tracking cells already updated in this chronon
+   * @param r      row index of the shark
+   * @param c      column index of the shark
+   * @param moved  boolean grid tracking cells already updated in this chronon
    */
   private void processShark(int r, int c, boolean[][] moved) {
-    int currentBreed = breedCounter[r][c] + 1;
-    int currentEnergy = sharkEnergy[r][c] - 1;
+    final int newBreedCount = breedCounter[r][c] + 1;
+    int newEnergy = sharkEnergy[r][c] - SHARK_ENERGY_DECAY;
 
-    if (currentEnergy <= 0) {
-      grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
-      sharkEnergy[r][c] = 0;
+    if (newEnergy <= 0) {
+      setEmpty(r, c);
       breedCounter[r][c] = 0;
+      sharkEnergy[r][c] = 0;
       moved[r][c] = true;
       return;
     }
 
-    List<int[]> fishNeighbors = getNeighborPositions(r, c, WaTorWorldState.FISH, moved);
+    final List<int[]> fishNeighbors = getNeighborPositions(r, c, WaTorWorldState.FISH, moved);
     if (!fishNeighbors.isEmpty()) {
-      int[] pos = randomChoice(fishNeighbors);
-      int newR = pos[0];
-      int newC = pos[1];
-      currentEnergy += sharkEnergyGain;
-      if (currentBreed >= sharkBreedTime) {
-        grid.getCell(r, c).setNextState(WaTorWorldState.SHARK);
-        breedCounter[r][c] = 0;
-        sharkEnergy[r][c] = sharkInitialEnergy;
-        grid.getCell(newR, newC).setNextState(WaTorWorldState.SHARK);
-        breedCounter[newR][newC] = 0;
-        sharkEnergy[newR][newC] = currentEnergy;
+      final int[] newPos = randomChoice(fishNeighbors);
+      final int newR = newPos[0];
+      final int newC = newPos[1];
+      newEnergy += sharkEnergyGain;
+
+      if (newBreedCount >= sharkBreedTime) {
+        // Reproduce: leave a new shark in the current cell with reset energy.
+        setShark(r, c, 0, sharkInitialEnergy);
+        // Move to the new cell with the current energy.
+        setShark(newR, newC, 0, newEnergy);
       } else {
-        grid.getCell(newR, newC).setNextState(WaTorWorldState.SHARK);
-        breedCounter[newR][newC] = currentBreed;
-        sharkEnergy[newR][newC] = currentEnergy;
-        grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
+        // Move: place the shark in the neighbor cell.
+        setShark(newR, newC, newBreedCount, newEnergy);
+        setEmpty(r, c);
       }
       moved[r][c] = true;
       moved[newR][newC] = true;
     } else {
-      List<int[]> emptyNeighbors = getNeighborPositions(r, c, WaTorWorldState.EMPTY, moved);
+      final List<int[]> emptyNeighbors = getNeighborPositions(r, c, WaTorWorldState.EMPTY, moved);
       if (!emptyNeighbors.isEmpty()) {
-        int[] pos = randomChoice(emptyNeighbors);
-        int newR = pos[0];
-        int newC = pos[1];
-        if (currentBreed >= sharkBreedTime) {
-          grid.getCell(r, c).setNextState(WaTorWorldState.SHARK);
-          breedCounter[r][c] = 0;
-          sharkEnergy[r][c] = sharkInitialEnergy;
-          grid.getCell(newR, newC).setNextState(WaTorWorldState.SHARK);
-          breedCounter[newR][newC] = 0;
-          sharkEnergy[newR][newC] = currentEnergy;
+        final int[] newPos = randomChoice(emptyNeighbors);
+        final int newR = newPos[0];
+        final int newC = newPos[1];
+
+        if (newBreedCount >= sharkBreedTime) {
+          setShark(r, c, 0, sharkInitialEnergy);
+          setShark(newR, newC, 0, newEnergy);
         } else {
-          grid.getCell(newR, newC).setNextState(WaTorWorldState.SHARK);
-          breedCounter[newR][newC] = currentBreed;
-          sharkEnergy[newR][newC] = currentEnergy;
-          grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
+          setShark(newR, newC, newBreedCount, newEnergy);
+          setEmpty(r, c);
         }
         moved[r][c] = true;
         moved[newR][newC] = true;
       } else {
-        grid.getCell(r, c).setNextState(WaTorWorldState.SHARK);
-        breedCounter[r][c] = currentBreed;
-        sharkEnergy[r][c] = currentEnergy;
+        // No available move; update the shark's breeding counter and energy.
+        setShark(r, c, newBreedCount, newEnergy);
         moved[r][c] = true;
       }
     }
@@ -218,22 +217,20 @@ public class WaTorWorld extends Simulation {
 
   /**
    * Returns a list of neighbor positions (using toroidal wrap–around) around (r, c)
-   * that currently have the specified target state and have not been moved yet.
+   * that currently have the specified target state and have not been updated yet.
    *
    * @param r           row index of the current cell
    * @param c           column index of the current cell
-   * @param targetState the state required in the neighbor cell
-   * @param moved       boolean grid tracking whether a cell has been updated this step
+   * @param targetState the required state for the neighbor cell
+   * @param moved       boolean grid tracking whether a cell has been updated in this chronon
    * @return a list of {row, col} pairs for matching neighbors
    */
   private List<int[]> getNeighborPositions(int r, int c, WaTorWorldState targetState, boolean[][] moved) {
-    List<int[]> neighbors = new ArrayList<>();
-    int[] dr = {-1, 0, 1, 0};
-    int[] dc = {0, 1, 0, -1};
+    final List<int[]> neighbors = new ArrayList<>();
 
-    for (int i = 0; i < dr.length; i++) {
-      int nr = (r + dr[i] + rows) % rows;
-      int nc = (c + dc[i] + cols) % cols;
+    for (int i = 0; i < DIRECTIONS_COUNT; i++) {
+      final int nr = (r + DIRECTION_ROW_OFFSETS[i] + rows) % rows;
+      final int nc = (c + DIRECTION_COL_OFFSETS[i] + cols) % cols;
       if (!moved[nr][nc] && grid.getCell(nr, nc).getState() == targetState) {
         neighbors.add(new int[]{nr, nc});
       }
@@ -242,14 +239,51 @@ public class WaTorWorld extends Simulation {
   }
 
   /**
-   * Utility method to randomly choose one element from a list.
+   * Utility method to randomly choose one element from a non-empty list of positions.
    *
-   * @param list a non–empty list of integer arrays (each representing a position)
-   * @return a randomly selected position (as an int[2] array)
+   * @param positions a non-empty list of {row, col} pairs
+   * @return a randomly selected position as an int[2] array
    */
-  private int[] randomChoice(List<int[]> list) {
-    int index = (int) (Math.random() * list.size());
-    return list.get(index);
+  private int[] randomChoice(List<int[]> positions) {
+    final int randomIndex = (int) (Math.random() * positions.size());
+    return positions.get(randomIndex);
+  }
+
+  /**
+   * Sets the cell at (r, c) to the FISH state and updates its breeding counter.
+   *
+   * @param r          row index of the cell
+   * @param c          column index of the cell
+   * @param breedValue the breeding counter value to set
+   */
+  private void setFish(int r, int c, int breedValue) {
+    grid.getCell(r, c).setNextState(WaTorWorldState.FISH);
+    breedCounter[r][c] = breedValue;
+  }
+
+  /**
+   * Sets the cell at (r, c) to the SHARK state and updates its breeding counter and energy.
+   *
+   * @param r          row index of the cell
+   * @param c          column index of the cell
+   * @param breedValue the breeding counter value to set
+   * @param energy     the shark's energy value to set
+   */
+  private void setShark(int r, int c, int breedValue, int energy) {
+    grid.getCell(r, c).setNextState(WaTorWorldState.SHARK);
+    breedCounter[r][c] = breedValue;
+    sharkEnergy[r][c] = energy;
+  }
+
+  /**
+   * Sets the cell at (r, c) to the EMPTY state.
+   *
+   * @param r row index of the cell
+   * @param c column index of the cell
+   */
+  private void setEmpty(int r, int c) {
+    grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
   }
 }
+
 
