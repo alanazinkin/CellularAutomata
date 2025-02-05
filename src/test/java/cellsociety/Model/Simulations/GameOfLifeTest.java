@@ -8,10 +8,6 @@ import cellsociety.Model.State.GameOfLifeState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Combined JUnit tests (both model and negative tests) for the GameOfLife simulation.
  *
