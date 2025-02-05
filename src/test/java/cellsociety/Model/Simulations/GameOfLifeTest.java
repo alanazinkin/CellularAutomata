@@ -56,13 +56,11 @@ public class GameOfLifeTest {
    */
   @Test
   public void testApplyRules_LiveCellDies_Underpopulation() {
-    // Set center cell to ALIVE; all other cells remain DEAD.
     Cell center = grid.getCell(1, 1);
     center.setState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 
-    // The center cell should be scheduled to become DEAD.
     assertEquals(GameOfLifeState.DEAD, center.getNextState(),
         "A live cell with 0 live neighbors should die (underpopulation).");
   }
