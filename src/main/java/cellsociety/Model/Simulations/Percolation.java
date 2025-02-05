@@ -43,7 +43,6 @@ public class Percolation extends Simulation {
    */
   public Percolation(Grid grid, double percolationProbability) {
     super(grid);
-    // Explicit check to ensure grid is not null, throwing IllegalArgumentException if it is.
     if (grid == null) {
       throw new IllegalArgumentException("Grid cannot be null");
     }
@@ -122,7 +121,7 @@ public class Percolation extends Simulation {
    * @return true if a generated random number is less than percolationProbability; false otherwise
    */
   private boolean shouldPercolate() {
-    final double randomValue = Math.random();  // Generates a value in [0, RANDOM_MAX)
+    final double randomValue = Math.random();
     return randomValue < percolationProbability;
   }
 }
