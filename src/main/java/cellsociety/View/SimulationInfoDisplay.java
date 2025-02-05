@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * This class creates a display window that informs the user of relevant simulation information
  * such as its type, name, author, description, state colors, and relevant parameters
  */
-public class SimulationInfoDisplay {
+public class  SimulationInfoDisplay {
 
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
