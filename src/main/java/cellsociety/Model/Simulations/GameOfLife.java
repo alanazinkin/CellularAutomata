@@ -1,4 +1,5 @@
 package cellsociety.Model.Simulations;
+
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Cell;
@@ -14,6 +15,15 @@ import javafx.scene.paint.Color;
  * The rules of the Game of Life are applied to each cell in the grid.
  */
 public class GameOfLife extends Simulation {
+
+  // Named constant values for the rules of the Game of Life
+  private static final int MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 2;
+  private static final int MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 3;
+  private static final int EXACT_LIVE_NEIGHBORS_FOR_BIRTH = 3;
+
+  // Named constant values for the cell colors
+  private static final Color ALIVE_COLOR = Color.BLACK;
+  private static final Color DEAD_COLOR = Color.WHITE;
 
   /**
    * Constructs a new Game of Life simulation with the specified grid.
@@ -34,38 +44,64 @@ public class GameOfLife extends Simulation {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
         List<Cell> neighbors = grid.getNeighbors(r, c);
-        int liveNeighbors = 0;
-        for (Cell neighbor : neighbors) {
-          if (neighbor.getState() == GameOfLifeState.ALIVE) {
-            liveNeighbors++;
-          }
-        }
-        if (cell.getState() == GameOfLifeState.ALIVE) {
-          if (liveNeighbors < 2 || liveNeighbors > 3) {
-            cell.setNextState(GameOfLifeState.DEAD);
-          } else {
-            cell.setNextState(GameOfLifeState.ALIVE);
-          }
-        } else {
-          if (liveNeighbors == 3) {
-            cell.setNextState(GameOfLifeState.ALIVE);
-          } else {
-            cell.setNextState(GameOfLifeState.DEAD);
-          }
-        }
-
+        int liveNeighbors = countLiveNeighbors(neighbors);
+        GameOfLifeState nextState = determineNextState((GameOfLifeState) cell.getState(), liveNeighbors);
+        cell.setNextState(nextState);
       }
     }
   }
 
   /**
-   * creates state map and color mappings
+   * Counts the number of live neighbors in the provided list of cells.
+   *
+   * @param neighbors the list of neighboring cells
+   * @return the count of live neighbors
+   */
+  private int countLiveNeighbors(List<Cell> neighbors) {
+    int liveCount = 0;
+    for (Cell neighbor : neighbors) {
+      if (neighbor.getState() == GameOfLifeState.ALIVE) {
+        liveCount++;
+      }
+    }
+    return liveCount;
+  }
+
+  /**
+   * Determines the next state of a cell based on its current state and the number of live neighbors.
+   *
+   * @param currentState the current state of the cell
+   * @param liveNeighbors the number of live neighboring cells
+   * @return the next state of the cell
+   */
+  private GameOfLifeState determineNextState(GameOfLifeState currentState, int liveNeighbors) {
+    if (currentState == GameOfLifeState.ALIVE) {
+      if (liveNeighbors < MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL ||
+          liveNeighbors > MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL) {
+        return GameOfLifeState.DEAD;
+      } else {
+        return GameOfLifeState.ALIVE;
+      }
+    } else {
+      if (liveNeighbors == EXACT_LIVE_NEIGHBORS_FOR_BIRTH) {
+        return GameOfLifeState.ALIVE;
+      } else {
+        return GameOfLifeState.DEAD;
+      }
+    }
+  }
+
+  /**
+   * Creates the state map and color mappings.
+   *
+   * @return the state-to-color map
    */
   @Override
   public Map<StateInterface, Color> initializeStateMap() {
     stateMap = new HashMap<>();
-    stateMap.put(GameOfLifeState.ALIVE, Color.BLACK);
-    stateMap.put(GameOfLifeState.DEAD, Color.WHITE);
+    stateMap.put(GameOfLifeState.ALIVE, ALIVE_COLOR);
+    stateMap.put(GameOfLifeState.DEAD, DEAD_COLOR);
     return stateMap;
   }
 }
+
