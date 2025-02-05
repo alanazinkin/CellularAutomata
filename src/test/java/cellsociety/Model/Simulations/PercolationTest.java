@@ -119,7 +119,7 @@ class PercolationTest {
   }
 
   /////////////////
-  // NEGATIVE TESTS for Percolation
+  // NEGATIVE TESTS
   /////////////////
 
   /**
