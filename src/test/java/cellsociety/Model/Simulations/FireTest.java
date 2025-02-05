@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
  */
 class FireTest {
 
-  // We will use a 3x3 grid for testing.
   private Grid grid;
 
   /**
@@ -38,7 +37,6 @@ class FireTest {
    */
   @BeforeEach
   void setUp() {
-    // Create a 3x3 grid with all cells initialized to EMPTY.
     grid = new Grid(3, 3, FireState.EMPTY);
   }
 
@@ -52,11 +50,9 @@ class FireTest {
    */
   @Test
   void testApplyRules_BurningCellBecomesBurnt() {
-    // Set the center cell to BURNING.
     Cell center = grid.getCell(1, 1);
     center.setState(FireState.BURNING);
 
-    // Set all other cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!(row == 1 && col == 1)) {
@@ -65,11 +61,9 @@ class FireTest {
       }
     }
 
-    // Use probabilities that disable spontaneous ignition and regrowth.
     Fire fireSim = new Fire(grid, 0.0, 0.0);
     fireSim.applyRules();
 
-    // The burning cell should be scheduled to become BURNT.
     StateInterface nextState = center.getNextState();
     assertEquals(FireState.BURNT, nextState, "A burning cell did not become burnt as expected.");
   }
@@ -84,15 +78,12 @@ class FireTest {
    */
   @Test
   void testApplyRules_TreeWithBurningNeighbor() {
-    // Set the center cell to TREE.
     Cell center = grid.getCell(1, 1);
     center.setState(FireState.TREE);
 
-    // Set one neighbor (left cell at (1,0)) to BURNING.
     Cell leftNeighbor = grid.getCell(1, 0);
     leftNeighbor.setState(FireState.BURNING);
 
-    // Ensure all other cells are TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 1 && col == 0))) {
@@ -101,11 +92,9 @@ class FireTest {
       }
     }
 
-    // Use p = 0 and f = 0 to avoid spontaneous ignition or regrowth.
     Fire fireSim = new Fire(grid, 0.0, 0.0);
     fireSim.applyRules();
 
-    // The tree with a burning neighbor should be scheduled to become BURNING.
     StateInterface nextState = center.getNextState();
     assertEquals(FireState.BURNING, nextState, "A tree with a burning neighbor did not ignite.");
   }
@@ -119,22 +108,18 @@ class FireTest {
    */
   @Test
   void testApplyRules_TreeSpontaneousIgnition() {
-    // Set the center cell to TREE.
     Cell center = grid.getCell(1, 1);
     center.setState(FireState.TREE);
 
-    // Set all cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         grid.getCell(row, col).setState(FireState.TREE);
       }
     }
 
-    // Use f = 1 to force spontaneous ignition.
     Fire fireSim = new Fire(grid, 0.0, 1.0);
     fireSim.applyRules();
 
-    // The tree should ignite spontaneously.
     StateInterface nextState = center.getNextState();
     assertEquals(FireState.BURNING, nextState, "A tree did not spontaneously ignite when f = 1.");
   }
@@ -148,15 +133,12 @@ class FireTest {
    */
   @Test
   void testApplyRules_EmptyCellGrowsTree() {
-    // Set the center cell to EMPTY.
     Cell center = grid.getCell(1, 1);
     center.setState(FireState.EMPTY);
 
-    // Use p = 1 so that the empty cell always regrows a tree.
     Fire fireSim = new Fire(grid, 1.0, 0.0);
     fireSim.applyRules();
 
-    // The empty cell should be scheduled to become TREE.
     StateInterface nextState = center.getNextState();
     assertEquals(FireState.TREE, nextState, "An empty cell did not grow a tree when p = 1.");
   }
@@ -171,15 +153,12 @@ class FireTest {
    */
   @Test
   void testStep_UpdatesCurrentStates() {
-    // Set the center cell to TREE.
     Cell center = grid.getCell(1, 1);
     center.setState(FireState.TREE);
 
-    // Set a neighbor (top cell at (0,1)) to BURNING.
     Cell topNeighbor = grid.getCell(0, 1);
     topNeighbor.setState(FireState.BURNING);
 
-    // Ensure all other cells are TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 0 && col == 1))) {
@@ -188,14 +167,10 @@ class FireTest {
       }
     }
 
-    // Use probabilities that disable spontaneous ignition or regrowth.
     Fire fireSim = new Fire(grid, 0.0, 0.0);
-    // Call step(), which internally calls applyRules() and then grid.applyNextStates().
     fireSim.step();
 
-    // After stepping, the burning neighbor should have become BURNT.
     assertEquals(FireState.BURNT, topNeighbor.getState(), "A burning neighbor did not become burnt after step().");
-    // And the tree with a burning neighbor should have become BURNING.
     assertEquals(FireState.BURNING, center.getState(), "A tree with a burning neighbor did not ignite after step().");
   }
 
@@ -209,15 +184,12 @@ class FireTest {
    */
   @Test
   void testApplyRules_EdgeCellNeighborDetection() {
-    // Set an edge cell (0,0) to BURNING.
     Cell edgeCell = grid.getCell(0, 0);
     edgeCell.setState(FireState.BURNING);
 
-    // Set the adjacent cell (0,1) to TREE.
     Cell neighborCell = grid.getCell(0, 1);
     neighborCell.setState(FireState.TREE);
 
-    // Set all other cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 0 && col == 0) || (row == 0 && col == 1))) {
@@ -226,12 +198,54 @@ class FireTest {
       }
     }
 
-    // Use p = 0 and f = 0 to avoid unintended state changes.
     Fire fireSim = new Fire(grid, 0.0, 0.0);
     fireSim.applyRules();
 
-    // The neighbor cell should be scheduled to become BURNING.
     assertEquals(FireState.BURNING, neighborCell.getNextState(), "The edge cell's neighbor did not ignite.");
   }
+
+  /////////////////
+  // NEGATIVE TESTS
+  /////////////////
+
+  /**
+   * Negative test to verify that constructing a Fire simulation with a null grid
+   * throws an IllegalArgumentException.
+   */
+  @Test
+  void testFireConstructorNullGrid() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Fire(null, 0.5, 0.5);
+    }, "Constructing a Fire simulation with a null grid should throw an IllegalArgumentException.");
+  }
+
+  /**
+   * Negative test to verify that constructing a Fire simulation with an invalid regrowth probability (p)
+   * (e.g., negative or greater than 1) throws an IllegalArgumentException.
+   */
+  @Test
+  void testFireConstructorInvalidRegrowthProbability() {
+    assertAll("Invalid regrowth probabilities",
+        () -> assertThrows(IllegalArgumentException.class, () -> new Fire(grid, -0.1, 0.5),
+            "A negative regrowth probability should throw an IllegalArgumentException."),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Fire(grid, 1.1, 0.5),
+            "A regrowth probability greater than 1 should throw an IllegalArgumentException.")
+    );
+  }
+
+  /**
+   * Negative test to verify that constructing a Fire simulation with an invalid ignition probability (f)
+   * (e.g., negative or greater than 1) throws an IllegalArgumentException.
+   */
+  @Test
+  void testFireConstructorInvalidIgnitionProbability() {
+    assertAll("Invalid ignition probabilities",
+        () -> assertThrows(IllegalArgumentException.class, () -> new Fire(grid, 0.5, -0.1),
+            "A negative ignition probability should throw an IllegalArgumentException."),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Fire(grid, 0.5, 1.1),
+            "An ignition probability greater than 1 should throw an IllegalArgumentException.")
+    );
+  }
 }
+
 

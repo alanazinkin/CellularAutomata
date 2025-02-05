@@ -1,7 +1,8 @@
 Alana Goals:
 
-1. Grid Rendering Correctly
-2. UpdateGrid() --> gameOfLife Simulation
+1. Grid Rendering Correctly - DONE
+2. Allow user to select config file from dropdown list - DONE
+3. Test 
 
 Tatum Goals:
 

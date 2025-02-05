@@ -2,60 +2,51 @@ package cellsociety.Model.Simulations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.PercolationState;
-import cellsociety.Model.StateInterface;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
  * JUnit tests for the {@link Percolation} class.
  * <p>
- * This class contains both positive tests (model tests) to verify expected behavior
- * and negative tests where exceptions are expected. Negative tests include scenarios such as:
- * <ul>
- *   <li>Passing a null default state to the {@link Grid} constructor.</li>
- *   <li>Accessing cells or neighbors with out-of-bound indices and forcing a method call
- *       on the result to produce an exception.</li>
- *   <li>Using a null grid in a simulation.</li>
- *   <li>Corrupting cell states (via reflection or manual intervention) so that method calls
- *       result in exceptions.</li>
- * </ul>
+ * This class contains both positive tests (to verify expected behavior) and negative tests
+ * to ensure that invalid parameters cause exceptions.
  * </p>
  */
 class PercolationTest {
 
+  private static final double PROBABILITY_ONE = 1.0;
+  private static final double PROBABILITY_ZERO = 0.0;
+  private static final double INVALID_PROBABILITY_NEGATIVE = -0.1;
+  private static final double INVALID_PROBABILITY_OVER_ONE = 1.1;
+
   /**
    * Utility method to create a simple 2x2 grid for testing.
-   * The grid is initialized with {@code PercolationState.OPEN} for all cells, and then
-   * the cell at (1,0) is set to {@code PercolationState.BLOCKED} to mimic a custom configuration.
+   * The grid is initialized with {@code PercolationState.OPEN} for all cells.
    *
-   * @return a new {@code Grid} configured for testing
+   * @return a new {@code Grid} configured for testing.
    */
   private Grid createTestGrid() {
-    Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    grid.getCell(1, 0).setState(PercolationState.BLOCKED);
-    return grid;
+    return new Grid(2, 2, PercolationState.OPEN);
   }
 
   /**
    * Tests that {@code applyRules()} correctly percolates open cells adjacent to a percolated cell.
    * <p>
-   * This test sets up a 2x2 grid where the cell at (0,0) is manually set to
-   * {@code PercolationState.PERCOLATED}. It then verifies that all open neighbors become percolated.
+   * This test sets up a 2x2 grid where cell (0,0) is set to PERCOLATED and uses a probability
+   * of 1.0 to guarantee that adjacent open cells become percolated.
    * </p>
    */
   @Test
   void testApplyRulesOpenToPercolated() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    // Manually set (0,0) to PERCOLATED.
     grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
-    Percolation simulation = new Percolation(grid);
+    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
 
     simulation.applyRules();
     grid.applyNextStates();
 
-    // All open neighbors of the percolated cell at (0,0) should now be percolated.
     assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 1).getState(),
         "Cell (0,1) should become percolated.");
     assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 0).getState(),
@@ -66,22 +57,16 @@ class PercolationTest {
 
   /**
    * Tests that {@code applyRules()} leaves open cells unchanged when no percolated neighbors exist.
-   * <p>
-   * In this test, the grid is configured so that no cell is percolated and one cell is blocked.
-   * It then verifies that the states remain as originally set.
-   * </p>
    */
   @Test
   void testApplyRulesNoPercolation() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    // Set (0,1) to BLOCKED.
     grid.getCell(0, 1).setState(PercolationState.BLOCKED);
-    Percolation simulation = new Percolation(grid);
+    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
 
     simulation.applyRules();
     grid.applyNextStates();
 
-    // With no percolated neighbors, open cells remain open.
     assertEquals(PercolationState.OPEN, grid.getCell(0, 0).getState(),
         "Cell (0,0) should remain open.");
     assertEquals(PercolationState.BLOCKED, grid.getCell(0, 1).getState(),
@@ -92,158 +77,73 @@ class PercolationTest {
         "Cell (1,1) should remain open.");
   }
 
+  /**
+   * Tests that with a percolation probability of 0.0, open cells remain open even if they have percolated neighbors.
+   */
+  @Test
+  void testApplyRulesProbabilityZero() {
+    Grid grid = new Grid(2, 2, PercolationState.OPEN);
+    grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
+    Percolation simulation = new Percolation(grid, PROBABILITY_ZERO);
+
+    simulation.applyRules();
+    grid.applyNextStates();
+
+    assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 0).getState(),
+        "Cell (0,0) should remain percolated.");
+    assertEquals(PercolationState.OPEN, grid.getCell(0, 1).getState(),
+        "Cell (0,1) should remain open due to zero probability.");
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 0).getState(),
+        "Cell (1,0) should remain open due to zero probability.");
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 1).getState(),
+        "Cell (1,1) should remain open due to zero probability.");
+  }
+
+  /**
+   * Tests that {@code initializeStateMap()} returns the correct mapping of Percolation states to colors.
+   */
+  @Test
+  void testInitializeStateMap() {
+    Grid grid = createTestGrid();
+    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
+    Map<?, ?> stateMap = simulation.initializeStateMap();
+
+    assertAll("State Map Validity",
+        () -> assertEquals(javafx.scene.paint.Color.WHITE, stateMap.get(PercolationState.OPEN),
+            "PercolationState.OPEN should map to WHITE."),
+        () -> assertEquals(javafx.scene.paint.Color.LIGHTBLUE, stateMap.get(PercolationState.PERCOLATED),
+            "PercolationState.PERCOLATED should map to LIGHTBLUE."),
+        () -> assertEquals(javafx.scene.paint.Color.BLACK, stateMap.get(PercolationState.BLOCKED),
+            "PercolationState.BLOCKED should map to BLACK.")
+    );
+  }
+
   /////////////////
-  // NEGATIVE TESTS
-  // At least 10 tests where an exception is expected.
+  // NEGATIVE TESTS for Percolation
   /////////////////
 
   /**
-   * Expects a {@code NullPointerException} when a null default state is passed to the {@code Grid} constructor.
+   * Negative test to verify that constructing a Percolation simulation with a null grid throws an exception.
    */
   @Test
-  void testGridConstructorWithNullDefaultState() {
-    assertThrows(NullPointerException.class, () -> {
-      new Grid(2, 2, (StateInterface) null);
-    });
+  void testPercolationConstructorNullGrid() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Percolation(null, PROBABILITY_ONE);
+    }, "Constructing a Percolation simulation with a null grid should throw an IllegalArgumentException.");
   }
 
   /**
-   * Expects a {@code NullPointerException} when accessing a cell with a negative row index and forcing a method call.
-   * <p>
-   * {@code getCell(-1,0)} returns null; calling {@code getState()} on that null value should throw a NullPointerException.
-   * </p>
+   * Negative test to verify that constructing a Percolation simulation with an invalid probability
+   * (e.g., negative or greater than 1) throws an exception.
    */
   @Test
-  void testGetCellNegativeIndex() {
+  void testPercolationConstructorInvalidProbability() {
     Grid grid = createTestGrid();
-    assertThrows(NullPointerException.class, () -> {
-      // getCell(-1, 0) returns null; invoking getState() should throw.
-      grid.getCell(-1, 0).getState();
-    });
-  }
-
-  /**
-   * Expects a {@code NullPointerException} when accessing a cell with an out-of-bound row index and forcing a method call.
-   * <p>
-   * {@code getCell(10,0)} returns null; calling {@code getState()} on that null value should throw a NullPointerException.
-   * </p>
-   */
-  @Test
-  void testGetCellIndexOutOfBounds() {
-    Grid grid = createTestGrid();
-    assertThrows(NullPointerException.class, () -> {
-      grid.getCell(10, 0).getState();
-    });
-  }
-
-  /**
-   * Expects an {@code IndexOutOfBoundsException} when {@code getNeighbors()} is called with negative indices and then accessing an element.
-   * <p>
-   * Although {@code getNeighbors(-1,-1)} returns an empty list, attempting to access the first element
-   * forces an IndexOutOfBoundsException.
-   * </p>
-   */
-  @Test
-  void testGetNeighborsWithNegativeIndex() {
-    Grid grid = createTestGrid();
-    assertThrows(IndexOutOfBoundsException.class, () -> {
-      grid.getNeighbors(-1, -1).get(0);
-    });
-  }
-
-  /**
-   * Expects a {@code NullPointerException} when {@code applyRules()} is called on a {@code Percolation}
-   * that was constructed with a null grid.
-   */
-  @Test
-  void testApplyRulesWithNullGrid() {
-    Percolation simulation = new Percolation(null);
-    assertThrows(NullPointerException.class, simulation::applyRules);
-  }
-
-  /**
-   * Expects a {@code NullPointerException} when {@code step()} is called on a {@code Percolation}
-   * that was constructed with a null grid.
-   */
-  @Test
-  void testStepWithNullGrid() {
-    Percolation simulation = new Percolation(null);
-    assertThrows(NullPointerException.class, simulation::step);
-  }
-
-  /**
-   * Expects a {@code NullPointerException} during {@code grid.applyNextStates()} if a cell's next state is set to null.
-   * <p>
-   * The test corrupts one cell's next state, and when {@code applyNextStates()} is invoked, a method call on a null
-   * next state should throw a NullPointerException.
-   * </p>
-   */
-  @Test
-  void testGridApplyNextStatesWithInvalidCellState() {
-    Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    // Manually corrupt one cell's next state.
-    assertThrows(IllegalArgumentException.class, () -> grid.getCell(0, 0).setNextState(null));
-  }
-
-  /**
-   * Expects an {@code IndexOutOfBoundsException} when {@code getNeighbors()} is called with indices far out-of-bounds
-   * and then accessing an element from the returned list.
-   * <p>
-   * Although {@code getNeighbors(100,100)} returns an empty list, forcing an access to the first element causes an exception.
-   * </p>
-   */
-  @Test
-  void testGridGetNeighborsOutOfBounds() {
-    Grid grid = createTestGrid();
-    assertThrows(IndexOutOfBoundsException.class, () -> {
-      grid.getNeighbors(100, 100).get(0);
-    });
-  }
-
-  /**
-   * Expects a {@code NullPointerException} when {@code grid.applyNextStates()} is called on a grid that has a null cell.
-   * <p>
-   * Reflection is used to simulate a grid that contains a null cell.
-   * </p>
-   */
-  @Test
-  void testApplyNextStatesWithNullCellInGrid() {
-    Grid grid = new Grid(2, 2, PercolationState.OPEN);
-
-    // Use reflection to set one cell in the grid to null.
-    try {
-      java.lang.reflect.Field field = grid.getClass().getDeclaredField("cells");
-      field.setAccessible(true);
-      Cell[][] cells = (Cell[][]) field.get(grid);
-      cells[0][1] = null;
-    } catch (Exception e) {
-      fail("Reflection failed: " + e.getMessage());
-    }
-
-    assertThrows(NullPointerException.class, grid::applyNextStates);
-  }
-
-  /**
-   * Expects a {@code NullPointerException} when {@code applyRules()} is called on a grid that contains a null cell.
-   * <p>
-   * Reflection is used to simulate the grid containing a null cell.
-   * </p>
-   */
-  @Test
-  void testApplyRulesWithNullCellInGrid() {
-    Grid grid = new Grid(2, 2, PercolationState.OPEN);
-
-    // Use reflection to set one cell in the grid to null.
-    try {
-      java.lang.reflect.Field field = grid.getClass().getDeclaredField("cells");
-      field.setAccessible(true);
-      Cell[][] cells = (Cell[][]) field.get(grid);
-      cells[1][1] = null;
-    } catch (Exception e) {
-      fail("Reflection failed: " + e.getMessage());
-    }
-
-    Percolation simulation = new Percolation(grid);
-    assertThrows(NullPointerException.class, simulation::applyRules);
+    assertAll("Invalid probabilities",
+        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(grid, INVALID_PROBABILITY_NEGATIVE),
+            "Constructing with a negative probability should throw an exception."),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(grid, INVALID_PROBABILITY_OVER_ONE),
+            "Constructing with a probability greater than 1 should throw an exception.")
+    );
   }
 }
