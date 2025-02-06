@@ -45,6 +45,38 @@ public class Grid {
       }
     }
   }
+  /**
+   * Sets the initial state of the grid's cells based on the provided configuration.
+   * The configuration should be provided as a two-dimensional list where each inner
+   * list represents a row of initial cell states. The dimensions of the configuration
+   * must match the grid's dimensions.
+   *
+   * @param initialStates a two-dimensional list of {@code StateInterface} objects,
+   *                      representing the initial states for each cell in the grid
+   * @throws IllegalArgumentException if the configuration dimensions do not match the grid's dimensions
+   * @throws NullPointerException if any state in the configuration is {@code null}
+   */
+  public void setInitialStates(List<List<StateInterface>> initialStates) {
+    if (initialStates.size() != rows) {
+      throw new IllegalArgumentException("Configuration rows (" + initialStates.size() +
+          ") do not match grid rows (" + rows + ").");
+    }
+    for (int r = 0; r < rows; r++) {
+      List<StateInterface> rowStates = initialStates.get(r);
+      if (rowStates.size() != cols) {
+        throw new IllegalArgumentException("Configuration columns (" + rowStates.size() +
+            ") in row " + r + " do not match grid columns (" + cols + ").");
+      }
+      for (int c = 0; c < cols; c++) {
+        StateInterface state = rowStates.get(c);
+        if (state == null) {
+          throw new NullPointerException("State at configuration position (" + r + "," + c + ") is null.");
+        }
+        cells[r][c].setState(state);
+        cells[r][c].resetNextState();
+      }
+    }
+  }
 
 
   /**
