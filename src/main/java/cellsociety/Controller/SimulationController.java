@@ -4,6 +4,7 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.GameOfLife;
 import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -17,6 +18,7 @@ public class SimulationController {
   private Simulation mySimulation;
   private SimulationView mySimView;
   private Grid myGrid;
+  private GridView myGridView;
   private boolean isPaused = false;
   private AnimationTimer simulationTimer;
   private long lastUpdate = 0;
