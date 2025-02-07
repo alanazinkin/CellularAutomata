@@ -1,5 +1,6 @@
 package cellsociety.Model.Simulations;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
@@ -41,8 +42,8 @@ public class Percolation extends Simulation {
    *                               must be between 0 and 1 inclusive.
    * @throws IllegalArgumentException if the grid is null or the percolationProbability is not in [0, 1]
    */
-  public Percolation(Grid grid, double percolationProbability) {
-    super(grid);
+  public Percolation(SimulationConfig simulationConfig, Grid grid, double percolationProbability) {
+    super(simulationConfig, grid);
     if (grid == null) {
       throw new IllegalArgumentException("Grid cannot be null");
     }
@@ -52,12 +53,26 @@ public class Percolation extends Simulation {
     this.percolationProbability = percolationProbability;
   }
 
+  /**
+   * Initializes the color map for Percolation simulation.
+   *
+   * @return the map of integer states to simulation states.
+   */
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    Map<StateInterface, Color> stateMap = new HashMap<>();
-    stateMap.put(PercolationState.OPEN, OPEN_COLOR);
-    stateMap.put(PercolationState.PERCOLATED, PERCOLATED_COLOR);
-    stateMap.put(PercolationState.BLOCKED, BLOCKED_COLOR);
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> colorMap = new HashMap<>();
+    colorMap.put(PercolationState.OPEN, OPEN_COLOR);
+    colorMap.put(PercolationState.PERCOLATED, PERCOLATED_COLOR);
+    colorMap.put(PercolationState.BLOCKED, BLOCKED_COLOR);
+    return colorMap;
+  }
+
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, PercolationState.OPEN);
+    stateMap.put(1, PercolationState.PERCOLATED);
+    stateMap.put(2, PercolationState.BLOCKED);
     return stateMap;
   }
 
@@ -71,12 +86,12 @@ public class Percolation extends Simulation {
    */
   @Override
   public void applyRules() {
-    final int numRows = grid.getRows();
-    final int numCols = grid.getCols();
+    final int numRows = getGrid().getRows();
+    final int numCols = getGrid().getCols();
 
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
-        Cell cell = grid.getCell(row, col);
+        Cell cell = getGrid().getCell(row, col);
         PercolationState currentState = (PercolationState) cell.getState();
 
         if (isStaticState(currentState)) {
@@ -106,7 +121,7 @@ public class Percolation extends Simulation {
    * @return {@link PercolationState#PERCOLATED} if the cell percolates; {@link PercolationState#OPEN} otherwise
    */
   private PercolationState determineNextStateForOpenCell(int row, int col) {
-    List<Cell> neighbors = grid.getNeighbors(row, col);
+    List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
       if (neighbor.getState() == PercolationState.PERCOLATED && shouldPercolate()) {
         return PercolationState.PERCOLATED;

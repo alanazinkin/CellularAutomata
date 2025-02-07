@@ -38,7 +38,7 @@ public class SimulationController {
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
     mySimulationConfig.initializeStage(primaryStage);
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    mySimulation = new GameOfLife(myGrid);
+    mySimulation = new GameOfLife(mySimulationConfig, myGrid);
     mySimView = new SimulationView();
     initializeView(primaryStage);
     setupSimulationTimer();
@@ -71,7 +71,7 @@ public class SimulationController {
   public void resetSimulation() {
     pauseSimulation();
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    mySimulation = new GameOfLife(myGrid);
+    mySimulation = new GameOfLife(mySimulationConfig, myGrid);
     updateView();
     System.out.println("Resetting Simulation");
   }
@@ -99,7 +99,7 @@ public class SimulationController {
   private void updateView() {
     Stage currentStage = (Stage) mySimView.getRoot().getScene().getWindow();
     mySimView.getRoot().getChildren().clear();
-    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getStateMap(), myGrid);
+    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getColorMap(), myGrid);
   }
 
   /**
@@ -148,7 +148,7 @@ public class SimulationController {
             mySimulationConfig,
             mySimulation,
             mySimView,
-            mySimulation.getStateMap(),
+            mySimulation.getColorMap(),
             myGrid
     );
   }

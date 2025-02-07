@@ -1,10 +1,6 @@
 package cellsociety;
 
-import static javafx.application.Application.launch;
-
-import cellsociety.Controller.SimulationConfig;
 import cellsociety.Controller.SimulationController;
-import cellsociety.Controller.XMLParser;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -19,6 +15,10 @@ public class Main extends Application {
     myController.init(primaryStage);
   }
 
+  /**
+   * Main method that launches the program application
+   * @param args
+   */
   public static void main(String[] args) {
     launch(args);
   }

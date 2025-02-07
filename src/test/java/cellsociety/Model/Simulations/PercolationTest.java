@@ -106,7 +106,7 @@ class PercolationTest {
   void testInitializeStateMap() {
     Grid grid = createTestGrid();
     Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
-    Map<?, ?> stateMap = simulation.initializeStateMap();
+    Map<?, ?> stateMap = simulation.initializeColorMap();
 
     assertAll("State Map Validity",
         () -> assertEquals(javafx.scene.paint.Color.WHITE, stateMap.get(PercolationState.OPEN),

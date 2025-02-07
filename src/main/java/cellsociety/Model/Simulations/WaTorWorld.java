@@ -1,11 +1,13 @@
 package cellsociety.Model.Simulations;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.WaTorWorldState;
 import cellsociety.Model.StateInterface;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -57,9 +59,9 @@ public class WaTorWorld extends Simulation {
    * @param sharkInitialEnergy  the initial energy for a shark when it is created
    * @param sharkEnergyGain     the energy a shark gains by eating a fish
    */
-  public WaTorWorld(Grid grid, int fishBreedTime, int sharkBreedTime,
+  public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime, int sharkBreedTime,
       int sharkInitialEnergy, int sharkEnergyGain) {
-    super(grid);
+    super(simulationConfig, grid);
     this.rows = grid.getRows();
     this.cols = grid.getCols();
     this.fishBreedTime = fishBreedTime;
@@ -83,9 +85,32 @@ public class WaTorWorld extends Simulation {
     }
   }
 
+  /**
+   * Initializes the color map for Wa-Tor World simulation.
+   *
+   * @return the map of simulation interface states to colors.
+   */
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    return Map.of();
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> colorMap = new HashMap<>();
+    colorMap.put(WaTorWorldState.FISH, Color.ORANGE);
+    colorMap.put(WaTorWorldState.SHARK, Color.GRAY);
+    colorMap.put(WaTorWorldState.EMPTY, Color.LIGHTBLUE);
+    return colorMap;
+  }
+
+  /**
+   * Initializes the state map for Wa-Tor World simulation.
+   *
+   * @return the map of integer states to simulation states.
+   */
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, WaTorWorldState.EMPTY);
+    stateMap.put(1, WaTorWorldState.FISH);
+    stateMap.put(2, WaTorWorldState.SHARK);
+    return stateMap;
   }
 
   /**
@@ -105,7 +130,7 @@ public class WaTorWorld extends Simulation {
         if (moved[r][c]) {
           continue;
         }
-        Cell cell = grid.getCell(r, c);
+        Cell cell = getGrid().getCell(r, c);
         WaTorWorldState state = (WaTorWorldState) cell.getState();
         if (state == WaTorWorldState.FISH) {
           processFish(r, c, moved);
@@ -231,7 +256,7 @@ public class WaTorWorld extends Simulation {
     for (int i = 0; i < DIRECTIONS_COUNT; i++) {
       final int nr = (r + DIRECTION_ROW_OFFSETS[i] + rows) % rows;
       final int nc = (c + DIRECTION_COL_OFFSETS[i] + cols) % cols;
-      if (!moved[nr][nc] && grid.getCell(nr, nc).getState() == targetState) {
+      if (!moved[nr][nc] && getGrid().getCell(nr, nc).getState() == targetState) {
         neighbors.add(new int[]{nr, nc});
       }
     }
@@ -257,7 +282,7 @@ public class WaTorWorld extends Simulation {
    * @param breedValue the breeding counter value to set
    */
   private void setFish(int r, int c, int breedValue) {
-    grid.getCell(r, c).setNextState(WaTorWorldState.FISH);
+    getGrid().getCell(r, c).setNextState(WaTorWorldState.FISH);
     breedCounter[r][c] = breedValue;
   }
 
@@ -270,7 +295,7 @@ public class WaTorWorld extends Simulation {
    * @param energy     the shark's energy value to set
    */
   private void setShark(int r, int c, int breedValue, int energy) {
-    grid.getCell(r, c).setNextState(WaTorWorldState.SHARK);
+    getGrid().getCell(r, c).setNextState(WaTorWorldState.SHARK);
     breedCounter[r][c] = breedValue;
     sharkEnergy[r][c] = energy;
   }
@@ -282,7 +307,7 @@ public class WaTorWorld extends Simulation {
    * @param c column index of the cell
    */
   private void setEmpty(int r, int c) {
-    grid.getCell(r, c).setNextState(WaTorWorldState.EMPTY);
+    getGrid().getCell(r, c).setNextState(WaTorWorldState.EMPTY);
   }
 }
 

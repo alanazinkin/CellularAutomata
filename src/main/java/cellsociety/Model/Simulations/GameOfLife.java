@@ -1,5 +1,6 @@
 package cellsociety.Model.Simulations;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Cell;
@@ -30,8 +31,8 @@ public class GameOfLife extends Simulation {
    *
    * @param grid the {@code Grid} object representing the simulation space
    */
-  public GameOfLife(Grid grid) {
-    super(grid);
+  public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
   }
 
   /**
@@ -40,10 +41,10 @@ public class GameOfLife extends Simulation {
    */
   @Override
   public void applyRules() {
-    for (int r = 0; r < grid.getRows(); r++) {
-      for (int c = 0; c < grid.getCols(); c++) {
-        Cell cell = grid.getCell(r, c);
-        List<Cell> neighbors = grid.getNeighbors(r, c);
+    for (int r = 0; r < getGrid().getRows(); r++) {
+      for (int c = 0; c < getGrid().getCols(); c++) {
+        Cell cell = getGrid().getCell(r, c);
+        List<Cell> neighbors = getGrid().getNeighbors(r, c);
         int liveNeighbors = countLiveNeighbors(neighbors);
         GameOfLifeState nextState = determineNextState((GameOfLifeState) cell.getState(), liveNeighbors);
         cell.setNextState(nextState);
@@ -97,10 +98,23 @@ public class GameOfLife extends Simulation {
    * @return the state-to-color map
    */
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    stateMap = new HashMap<>();
-    stateMap.put(GameOfLifeState.ALIVE, ALIVE_COLOR);
-    stateMap.put(GameOfLifeState.DEAD, DEAD_COLOR);
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> colorMap = new HashMap<>();
+    colorMap.put(GameOfLifeState.ALIVE, ALIVE_COLOR);
+    colorMap.put(GameOfLifeState.DEAD, DEAD_COLOR);
+    return colorMap;
+  }
+
+  /**
+   * Initializes the color map for Game Of Life simulation.
+   *
+   * @return the map of integer states to simulation states.
+   */
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, GameOfLifeState.DEAD);
+    stateMap.put(1, GameOfLifeState.ALIVE);
     return stateMap;
   }
 }

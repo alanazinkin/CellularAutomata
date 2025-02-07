@@ -1,5 +1,6 @@
 package cellsociety.Model.Simulations;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
@@ -58,8 +59,8 @@ public class Fire extends Simulation {
    * @param f    the probability that a tree spontaneously catches fire (must be between 0 and 1)
    * @throws IllegalArgumentException if grid is null or if p or f are not in the interval [0, 1]
    */
-  public Fire(Grid grid, double p, double f) {
-    super(checkGrid(grid)); // Ensures grid is not null before passing it to the superclass.
+  public Fire(SimulationConfig simulationConfig, Grid grid, double p, double f) {
+    super(simulationConfig, checkGrid(grid)); // Ensures grid is not null before passing it to the superclass.
     if (p < 0 || p > 1) {
       throw new IllegalArgumentException("Regrowth probability must be between 0 and 1.");
     }
@@ -72,12 +73,22 @@ public class Fire extends Simulation {
   }
 
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    stateMap = new HashMap<>();
-    stateMap.put(FireState.TREE, TREE_COLOR);
-    stateMap.put(FireState.BURNING, BURNING_COLOR);
-    stateMap.put(FireState.BURNT, BURNT_COLOR);
-    stateMap.put(FireState.EMPTY, EMPTY_COLOR);
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> colorMap = new HashMap<>();
+    colorMap.put(FireState.TREE, TREE_COLOR);
+    colorMap.put(FireState.BURNING, BURNING_COLOR);
+    colorMap.put(FireState.BURNT, BURNT_COLOR);
+    colorMap.put(FireState.EMPTY, EMPTY_COLOR);
+    return colorMap;
+  }
+
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, FireState.EMPTY);
+    stateMap.put(1, FireState.TREE);
+    stateMap.put(2, FireState.BURNING);
+    stateMap.put(3, FireState.BURNT);
     return stateMap;
   }
 
@@ -98,9 +109,9 @@ public class Fire extends Simulation {
    */
   @Override
   public void applyRules() {
-    for (int row = 0; row < grid.getRows(); row++) {
-      for (int col = 0; col < grid.getCols(); col++) {
-        Cell cell = grid.getCell(row, col);
+    for (int row = 0; row < getGrid().getRows(); row++) {
+      for (int col = 0; col < getGrid().getCols(); col++) {
+        Cell cell = getGrid().getCell(row, col);
         FireState currentState = (FireState) cell.getState();
 
         switch (currentState) {
@@ -157,7 +168,7 @@ public class Fire extends Simulation {
    * @return true if at least one neighbor is in the BURNING state; false otherwise
    */
   private boolean hasBurningNeighbor(int row, int col) {
-    Collection<Cell> neighbors = grid.getNeighbors(row, col);
+    Collection<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
       FireState neighborState = (FireState) neighbor.getState();
       if (neighborState == FireState.BURNING) {
