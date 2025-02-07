@@ -26,9 +26,11 @@ public class GameOfLife extends Simulation {
   private static final Color ALIVE_COLOR = Color.BLACK;
   private static final Color DEAD_COLOR = Color.WHITE;
 
+
   /**
-   * Constructs a new Game of Life simulation with the specified grid.
+   * Constructs a new Game of Life simulation with the specified configuration and grid.
    *
+   * @param simulationConfig the configuration settings for the simulation
    * @param grid the {@code Grid} object representing the simulation space
    */
   public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
