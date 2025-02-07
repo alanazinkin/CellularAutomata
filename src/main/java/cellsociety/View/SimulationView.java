@@ -8,6 +8,7 @@ import cellsociety.View.GridViews.FireGridView;
 import cellsociety.View.GridViews.GameOfLifeGridView;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -16,9 +17,12 @@ import javafx.stage.Stage;
 public class SimulationView {
   public static final int SIMULATION_WIDTH = 1000;
   public static final int SIMULATION_HEIGHT = 800;
+  // use Java's dot notation, like with import, for properties files
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
 
   private Scene myScene;
   private BorderPane myRoot;
+  private ResourceBundle myResources;
 
   /**
    * entry point for adding all views to application
@@ -29,7 +33,9 @@ public class SimulationView {
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid) {
+  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language) {
+    // get resource bundle
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         simulationConfig.getType(),
@@ -37,12 +43,13 @@ public class SimulationView {
         simulationConfig.getAuthor(),
         simulationConfig.getDescription(),
         simulationConfig.getParameter(),
-        simulation.getColorMap()
+        simulation.getColorMap(),
+        language
     );
-    mySimInfoDisplay.createDisplayBox(new Stage(), "Simulation Information");
+    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"));
     createSimulationWindow(primaryStage);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel();
+    ControlPanel myControlPanel = new ControlPanel("English");
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid

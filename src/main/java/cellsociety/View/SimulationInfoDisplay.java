@@ -4,6 +4,7 @@ import cellsociety.Model.StateColor;
 import cellsociety.Model.StateInterface;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +25,8 @@ public class  SimulationInfoDisplay {
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
   private static int TEXT_SIZE = 25;
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
+
   /**
    * type of simulation (ex: Fire, GameofLife, etc.)
    */
@@ -49,6 +52,8 @@ public class  SimulationInfoDisplay {
    */
   private Map<StateInterface, Color> myStateColors;
 
+  private ResourceBundle myResources;
+
   /**
    * constructor for creating a simulation information display
    * @param type of simulation
@@ -58,7 +63,8 @@ public class  SimulationInfoDisplay {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, String> parameters, Map<StateInterface, Color> stateColors) {
+  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, String> parameters, Map<StateInterface, Color> stateColors, String language) {
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -143,19 +149,19 @@ public class  SimulationInfoDisplay {
    * @param vbox a vertical box pane that holds all the text elements
    */
   private void addSimulationInformationToScene(VBox vbox) {
-    addTextToScene(vbox, "Type: " + myType);
-    addTextToScene(vbox, "Title: " + myTitle);
-    addTextToScene(vbox, "Author: " + myAuthor);
-    addTextToScene(vbox, "Description: " + myDescription);
-    addTextToScene(vbox, "Parameters: ");
+    addTextToScene(vbox, myResources.getString("Type") + myType);
+    addTextToScene(vbox, myResources.getString("Title") + myTitle);
+    addTextToScene(vbox, myResources.getString("Author") + myAuthor);
+    addTextToScene(vbox, myResources.getString("Description") + myDescription);
+    addTextToScene(vbox, myResources.getString("Parameters"));
     // Case when there are no parameters to the method
     if (myParameters.isEmpty()) {
-      addTextToScene(vbox, "None");
+      addTextToScene(vbox, myResources.getString("None"));
     }
     for (String param : myParameters.keySet()) {
       addTextToScene(vbox, param + ": " + myParameters.get(param));
     }
-    addTextToScene(vbox, "StateColors: ");
+    addTextToScene(vbox, myResources.getString("StateColors") + " ");
     StateColor standardColors = new StateColor();
     for (StateInterface state : myStateColors.keySet()) {
       addTextToScene(vbox, state.getStateValue() + ": " + standardColors.getColor(myStateColors.get(state)));
