@@ -78,21 +78,21 @@ public class Grid {
     }
   }
 
-
   /**
-   * Retrieves the cell at the specified row and column.
-   * If the requested position is out of bounds, {@code null} is returned.
+   * Retrieves the cell at the specified row and column in the grid.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
-   * @return the {@code Cell} at the specified position, or {@code null} if out of bounds
+   * @return the {@code Cell} at the specified row and column
+   * @throws IndexOutOfBoundsException if the row or column indices are out of bounds
    */
   public Cell getCell(int row, int col) {
-    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-      return cells[row][col];
+    if (row < 0 || row >= getRows() || col < 0 || col >= getCols()) {
+      throw new IndexOutOfBoundsException("Invalid cell indices: row=" + row + ", col=" + col);
     }
-    return null;
+    return cells[row][col];
   }
+
 
   /**
    * Retrieves the neighboring cells of the specified cell at (row, col).
