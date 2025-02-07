@@ -18,15 +18,5 @@ public class FireGridView extends GridView {
     super(simulationConfig, grid);
   }
 
-  @Override
-  public void createGridDisplay(BorderPane myRoot, SimulationConfig simulationConfig, Map<StateInterface, Color> stateMap) {
-    myRoot.setCenter(gridPane);
-    gridPane.setMaxWidth(SIMULATION_WIDTH);
-    gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
-    myCells = new ArrayList<>();
-    myGrid = new Grid(simulationConfig.getWidth(), simulationConfig.getHeight(), FireState.EMPTY);
-    renderGrid(stateMap);
-  }
-
 
 }

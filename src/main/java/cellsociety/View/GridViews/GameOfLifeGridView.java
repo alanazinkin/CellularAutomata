@@ -23,18 +23,4 @@ public class GameOfLifeGridView extends GridView {
     super(simulationConfig, grid);
   }
 
-  /**
-   * creates a new pane to hold the grid and instantiates myCells and myGrid
-   * @param myRoot
-   */
-  @Override
-  public void createGridDisplay(BorderPane myRoot, SimulationConfig simulationConfig, Map<StateInterface, Color> stateMap) {
-    myRoot.setCenter(gridPane);
-    gridPane.setMaxWidth(SIMULATION_WIDTH);
-    gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
-    gridPane.setGridLinesVisible(true);
-    myCells = new ArrayList<>();
-    renderGrid(stateMap);
-  }
-
 }

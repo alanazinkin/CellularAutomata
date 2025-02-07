@@ -7,6 +7,7 @@ import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.StateInterface;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.layout.BorderPane;
@@ -35,7 +36,18 @@ public abstract class GridView {
     gridPane = new GridPane();
   }
 
-  public abstract void createGridDisplay(BorderPane myRoot, SimulationConfig simulationConfig, Map<StateInterface, Color> stateMap);
+  /**
+   * creates a new pane to hold the grid and instantiates myCells and myGrid
+   * @param myRoot
+   */
+  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, Color> stateMap) {
+    myRoot.setCenter(gridPane);
+    gridPane.setMaxWidth(SIMULATION_WIDTH);
+    gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
+    gridPane.setGridLinesVisible(true);
+    myCells = new ArrayList<>();
+    renderGrid(stateMap);
+  }
 
   public void renderGrid(Map<StateInterface, Color> stateMap) {
     for(int i = 0; i < numRows; i ++) {
