@@ -109,6 +109,9 @@ public abstract class Simulation {
         if (grid.getCell(r, c) == null) {
           throw new NullPointerException("Cell at (" + r + "," + c + ") is null");
         }
+        if (stateMap == null) {
+          throw new NullPointerException("State map is null");
+        }
         grid.getCell(r, c).setState(stateMap.get(simulationConfig.getInitialStates()[cellCount]));
         cellCount++;
       }

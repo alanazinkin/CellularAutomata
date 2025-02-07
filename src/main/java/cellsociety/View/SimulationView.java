@@ -4,6 +4,7 @@ import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.StateInterface;
+import cellsociety.View.GridViews.FireGridView;
 import cellsociety.View.GridViews.GameOfLifeGridView;
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,8 +36,7 @@ public class SimulationView {
         simulationConfig.getTitle(),
         simulationConfig.getAuthor(),
         simulationConfig.getDescription(),
-        //TODO: change to the real parameters from XML file
-        new ArrayList<>(),
+        simulationConfig.getParameter(),
         simulation.getColorMap()
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), "Simulation Information");
@@ -46,8 +46,8 @@ public class SimulationView {
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
-    GameOfLifeGridView myGridView = new GameOfLifeGridView(simulationConfig, grid);
-    myGridView.createGridDisplay(simView.getRoot(), simulationConfig, stateMap);
+    FireGridView myGridView = new FireGridView(simulationConfig, grid);
+    myGridView.createGridDisplay(simView.getRoot(), stateMap);
   }
 
   /**

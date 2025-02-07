@@ -43,7 +43,7 @@ public class  SimulationInfoDisplay {
   /**
    * inputs to the simulation (ex: probCatch in Spreading Fire)
    */
-  private List<List<String>> myParameters;
+  private Map<String, String> myParameters;
   /**
    * key indicating what each color means for a given simulation
    */
@@ -58,7 +58,7 @@ public class  SimulationInfoDisplay {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoDisplay(String type, String title, String author, String description, List<List<String>> parameters, Map<StateInterface, Color> stateColors) {
+  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, String> parameters, Map<StateInterface, Color> stateColors) {
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -103,7 +103,7 @@ public class  SimulationInfoDisplay {
    * set the parameters instance variable
    * @param parameters inputs to the simulation (ex: probCatch in Spreading Fire)
    */
-  private void setParameters(List<List<String>> parameters) {
+  private void setParameters(Map<String, String> parameters) {
     myParameters = parameters;
   }
 
@@ -148,8 +148,12 @@ public class  SimulationInfoDisplay {
     addTextToScene(vbox, "Author: " + myAuthor);
     addTextToScene(vbox, "Description: " + myDescription);
     addTextToScene(vbox, "Parameters: ");
-    for (List<String> params : myParameters) {
-      addTextToScene(vbox, params.get(0) + ": " + params.get(1));
+    // Case when there are no parameters to the method
+    if (myParameters.isEmpty()) {
+      addTextToScene(vbox, "None");
+    }
+    for (String param : myParameters.keySet()) {
+      addTextToScene(vbox, param + ": " + myParameters.get(param));
     }
     addTextToScene(vbox, "StateColors: ");
     StateColor standardColors = new StateColor();

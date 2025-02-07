@@ -2,6 +2,7 @@ package cellsociety.Controller;
 
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
+import cellsociety.Model.Simulations.Fire;
 import cellsociety.Model.Simulations.GameOfLife;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
@@ -11,7 +12,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class SimulationController {
-  private static final String FILE_PATH = "data/GameOfLife/GOL1.xml";
+  private static final String FILE_PATH = "data/SpreadingFire/SF1.xml";
   private static final long FRAME_INTERVAL = 200_000_000L;
 
   private SimulationConfig mySimulationConfig;
@@ -38,7 +39,7 @@ public class SimulationController {
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
     mySimulationConfig.initializeStage(primaryStage);
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    mySimulation = new GameOfLife(mySimulationConfig, myGrid);
+    mySimulation = new Fire(mySimulationConfig, myGrid, .5, .4);
     mySimView = new SimulationView();
     initializeView(primaryStage);
     setupSimulationTimer();
