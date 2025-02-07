@@ -146,7 +146,7 @@ public class SimulationController {
   private void updateView() {
     Stage currentStage = (Stage) mySimView.getRoot().getScene().getWindow();
     mySimView.getRoot().getChildren().clear();
-    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getColorMap(), myGrid);
+    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getColorMap(), myGrid, "English");
   }
 
   /**

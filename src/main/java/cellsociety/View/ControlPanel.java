@@ -5,6 +5,7 @@ import cellsociety.Controller.SimulationController;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -24,16 +25,20 @@ import javafx.scene.text.Text;
  */
 public class ControlPanel {
   private static final int CONTROL_BAR_HEIGHT = 60;
+  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
+
   private HBox myControlBar;
   private SimulationController myController;
   private VBox mySliderBar;
   private FileRetriever myFileRetriever;
+  private ResourceBundle myResources;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default.
    * This prevents a possible exception from occuring.
    */
-  public ControlPanel() {
+  public ControlPanel(String language) {
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     initializeControls();
     initializeFileRetriever();
   }
@@ -57,12 +62,12 @@ public class ControlPanel {
     myControlBar.setAlignment(Pos.CENTER);
     myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
     // add buttons to Control Bar
-    makeButton("Start", e -> myController.startSimulation());
-    makeButton("Pause", e -> myController.pauseSimulation());
-    makeButton("Reset", e -> myController.resetSimulation());
-    makeButton("Save", e -> myController.saveSimulation());
+    makeButton(myResources.getString("Start"), e -> myController.startSimulation());
+    makeButton(myResources.getString("Pause"), e -> myController.pauseSimulation());
+    makeButton(myResources.getString("Reset"), e -> myController.resetSimulation());
+    makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
-    makeComboBox("Select Simulation Type", e -> myController.selectSimulation(), simulationTypes);
+    makeComboBox(myResources.getString("SelectSim"), e -> myController.selectSimulation(), simulationTypes);
   }
 
   public void makeSliderBar(BorderPane root) {
@@ -72,7 +77,7 @@ public class ControlPanel {
     mySliderBar.setAlignment(Pos.CENTER);
     mySliderBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
     // make speed slider
-    makeSlider("Speed");
+    makeSlider(myResources.getString("Speed"));
   }
 
   /**
@@ -121,7 +126,7 @@ public class ControlPanel {
     simulationTypes.setOnAction(handler);
 
     ComboBox<String> configFileComboBox = new ComboBox<>();
-    configFileComboBox.setPromptText("Select Config File");
+    configFileComboBox.setPromptText(myResources.getString("ConfigFile"));
 
     // Update available files when simulation type is selected
     makeSimulationFileComboBox(simulationTypes, configFileComboBox);
@@ -149,10 +154,10 @@ public class ControlPanel {
     });
   }
 
-  private static void displayAlert(String simulationType) {
+  private void displayAlert(String simulationType) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setContentText("No files to run for " + simulationType + ". " + "Select a different simulation type.");
+    alert.setTitle(myResources.getString("Error"));
+    alert.setContentText(myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
     alert.showAndWait();
   }
 }
