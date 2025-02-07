@@ -42,7 +42,7 @@ public class SimulationView {
         simulationConfig.getTitle(),
         simulationConfig.getAuthor(),
         simulationConfig.getDescription(),
-        simulationConfig.getParameter(),
+        simulationConfig.getParameters(),
         simulation.getColorMap(),
         language
     );

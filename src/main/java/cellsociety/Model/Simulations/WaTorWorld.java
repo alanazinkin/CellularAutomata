@@ -51,13 +51,14 @@ public class WaTorWorld extends Simulation {
   private final int cols;
 
   /**
-   * Constructs a Wa-TorWorld simulation with the specified grid and parameters.
+   * Constructs a Wa-TorWorld simulation with the specified configuration, grid, and parameters.
    *
-   * @param grid                the grid on which the simulation runs
-   * @param fishBreedTime       number of chronons a fish must survive before reproducing
-   * @param sharkBreedTime      number of chronons a shark must survive before reproducing
-   * @param sharkInitialEnergy  the initial energy for a shark when it is created
-   * @param sharkEnergyGain     the energy a shark gains by eating a fish
+   * @param simulationConfig the configuration settings for the simulation
+   * @param grid the grid on which the simulation runs
+   * @param fishBreedTime number of chronons a fish must survive before reproducing
+   * @param sharkBreedTime number of chronons a shark must survive before reproducing
+   * @param sharkInitialEnergy the initial energy for a shark when it is created
+   * @param sharkEnergyGain the energy a shark gains by eating a fish
    */
   public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime, int sharkBreedTime,
       int sharkInitialEnergy, int sharkEnergyGain) {
@@ -84,7 +85,6 @@ public class WaTorWorld extends Simulation {
       }
     }
   }
-
   /**
    * Initializes the color map for Wa-Tor World simulation.
    *

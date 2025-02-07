@@ -2,7 +2,7 @@ package cellsociety.View;
 
 import cellsociety.Model.StateColor;
 import cellsociety.Model.StateInterface;
-import java.util.List;
+
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.geometry.Pos;
@@ -46,7 +46,7 @@ public class  SimulationInfoDisplay {
   /**
    * inputs to the simulation (ex: probCatch in Spreading Fire)
    */
-  private Map<String, String> myParameters;
+  private Map<String, Double> myParameters;
   /**
    * key indicating what each color means for a given simulation
    */
@@ -63,7 +63,8 @@ public class  SimulationInfoDisplay {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, String> parameters, Map<StateInterface, Color> stateColors, String language) {
+
+  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, Color> stateColors, String language) {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     setType(type);
     setTitle(title);
@@ -109,7 +110,7 @@ public class  SimulationInfoDisplay {
    * set the parameters instance variable
    * @param parameters inputs to the simulation (ex: probCatch in Spreading Fire)
    */
-  private void setParameters(Map<String, String> parameters) {
+  private void setParameters(Map<String, Double> parameters) {
     myParameters = parameters;
   }
 

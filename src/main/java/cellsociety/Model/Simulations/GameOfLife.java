@@ -27,12 +27,16 @@ public class GameOfLife extends Simulation {
   private static final Color DEAD_COLOR = Color.WHITE;
 
   /**
-   * Constructs a new Game of Life simulation with the specified grid.
+   * Constructs a new Game of Life simulation with the specified configuration and grid.
    *
+   * @param simulationConfig the configuration settings for the simulation
    * @param grid the {@code Grid} object representing the simulation space
    */
   public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
+    if (simulationConfig == null || grid == null) {
+      throw new NullPointerException("SimulationConfig and Grid cannot be null.");
+    }
   }
 
   /**
@@ -76,6 +80,9 @@ public class GameOfLife extends Simulation {
    * @return the next state of the cell
    */
   private GameOfLifeState determineNextState(GameOfLifeState currentState, int liveNeighbors) {
+    if (currentState == null) {
+      throw new IllegalArgumentException("Cell state cannot be null");
+    }
     if (currentState == GameOfLifeState.ALIVE) {
       if (liveNeighbors < MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL ||
           liveNeighbors > MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL) {
@@ -106,7 +113,7 @@ public class GameOfLife extends Simulation {
   }
 
   /**
-   * Initializes the color map for Game Of Life simulation.
+   * Initializes the state map for the Game Of Life simulation.
    *
    * @return the map of integer states to simulation states.
    */
@@ -118,4 +125,5 @@ public class GameOfLife extends Simulation {
     return stateMap;
   }
 }
+
 

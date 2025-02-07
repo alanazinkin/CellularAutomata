@@ -1,48 +1,52 @@
 package cellsociety.Model.Simulations;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.WaTorWorldState;
+import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * JUnit test class for WaTorWorld simulation.
- *
- * <p>
- * These tests cover the behavior of fish and sharks in the simulation,
- * including movement, reproduction, starvation, and eating. Because the
- * simulation uses randomness, controlled initial states are set up on small (3x3)
- * grids to ensure deterministic behavior in each test case.
- * </p>
- *
- * <p>
- * The test class includes both positive and negative test cases to validate
- * proper functioning and exception handling of the simulation.
- * </p>
+ * JUnit test class for the WaTorWorld simulation.
+ * Naming convention: [UnitOfWork_StateUnderTest_ExpectedBehavior]
  */
 class WaTorWorldTest {
 
   private Grid grid;
+  private SimulationConfig simConfig;
 
   /**
-   * Initializes a 3x3 grid with empty states before each test.
+   * Initializes a 3×3 grid with EMPTY states and a SimulationConfig before each test.
    */
   @BeforeEach
   void setupGrid() {
     grid = new Grid(3, 3, WaTorWorldState.EMPTY);
+    simConfig = new SimulationConfig(
+        "WaTorWorld",
+        "WaTorWorld Simulation",
+        "Test Author",
+        "Testing WaTorWorld simulation",
+        3, 3,
+        new int[9],
+        new HashMap<>()
+    );
   }
 
   /**
-   * Tests that a fish moves without reproducing when its breed time has not been reached.
+   * step: Fish movement without reproduction.
+   * Input: A fish is placed at (1,1) with a breed time of 3 (not reached).
+   * Expected: After one step, the fish moves so that exactly one fish exists and its original cell becomes empty.
    */
   @Test
-  void testFishMovementWithoutReproduction() {
+  void step_FishMovementWithoutReproduction_FishCountOneAndOriginEmpty() {
     grid.getCell(1, 1).setState(WaTorWorldState.FISH);
     int fishBreedTime = 3;
     int sharkBreedTime = 3, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -53,14 +57,16 @@ class WaTorWorldTest {
   }
 
   /**
-   * Tests that a fish reproduces when its breed time has been reached.
+   * step: Fish reproduction when breed time is reached.
+   * Input: A fish is placed at (1,1) with a breed time of 1.
+   * Expected: After one step, reproduction occurs so that there are two fish.
    */
   @Test
-  void testFishReproductionWhenBreedTimeReached() {
+  void step_FishReproductionWhenBreedTimeReached_FishCountEqualsTwo() {
     grid.getCell(1, 1).setState(WaTorWorldState.FISH);
     int fishBreedTime = 1;
     int sharkBreedTime = 3, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -69,13 +75,15 @@ class WaTorWorldTest {
   }
 
   /**
-   * Tests that a shark dies due to starvation when its energy reaches zero.
+   * step: Shark death due to starvation.
+   * Input: A shark is placed at (1,1) with an initial energy of 1.
+   * Expected: After one step, the shark dies of starvation and the cell becomes empty.
    */
   @Test
-  void testSharkDeathDueToStarvation() {
+  void step_SharkDeathDueToStarvation_CellBecomesEmpty() {
     grid.getCell(1, 1).setState(WaTorWorldState.SHARK);
     int fishBreedTime = 3, sharkBreedTime = 3, sharkInitialEnergy = 1, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -84,14 +92,17 @@ class WaTorWorldTest {
   }
 
   /**
-   * Tests that a shark eats a fish and reproduces when its breed time is reached.
+   * step: Shark eats a fish and reproduces.
+   * Input: A shark is placed at (1,1) and a fish at (1,2) with shark breed time 1.
+   * Expected: After one step, the shark eats the fish and reproduction occurs so that there are two sharks,
+   * and the cell originally containing the fish now holds a shark.
    */
   @Test
-  void testSharkEatsFishAndReproduces() {
+  void step_SharkEatsFishAndReproduces_SharkCountEqualsTwoAndPreyCellConverted() {
     grid.getCell(1, 1).setState(WaTorWorldState.SHARK);
     grid.getCell(1, 2).setState(WaTorWorldState.FISH);
     int fishBreedTime = 3, sharkBreedTime = 1, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -101,15 +112,14 @@ class WaTorWorldTest {
         "The fish cell should now contain a shark");
   }
 
-  // ----- Negative Tests -----
-
   /**
-   * Tests that the constructor throws a NullPointerException when given a null grid.
+   * WaTorWorldConstructor: Passing a null grid should throw a NullPointerException.
+   * Input: Null grid.
    */
   @Test
-  void testConstructorWithNullGridThrowsException() {
+  void WaTorWorldConstructor_NullGrid_ThrowsNullPointerException() {
     Exception exception = assertThrows(NullPointerException.class, () -> {
-      new WaTorWorld(null, 3, 3, 5, 2);
+      new WaTorWorld(simConfig, null, 3, 3, 5, 2);
     });
     assertNotNull(exception.getMessage(), "Exception message should not be null");
   }
@@ -135,5 +145,3 @@ class WaTorWorldTest {
     return count;
   }
 }
-
-

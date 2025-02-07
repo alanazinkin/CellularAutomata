@@ -45,22 +45,54 @@ public class Grid {
       }
     }
   }
-
+  /**
+   * Sets the initial state of the grid's cells based on the provided configuration.
+   * The configuration should be provided as a two-dimensional list where each inner
+   * list represents a row of initial cell states. The dimensions of the configuration
+   * must match the grid's dimensions.
+   *
+   * @param initialStates a two-dimensional list of {@code StateInterface} objects,
+   *                      representing the initial states for each cell in the grid
+   * @throws IllegalArgumentException if the configuration dimensions do not match the grid's dimensions
+   * @throws NullPointerException if any state in the configuration is {@code null}
+   */
+  public void setInitialStates(List<List<StateInterface>> initialStates) {
+    if (initialStates.size() != rows) {
+      throw new IllegalArgumentException("Configuration rows (" + initialStates.size() +
+          ") do not match grid rows (" + rows + ").");
+    }
+    for (int r = 0; r < rows; r++) {
+      List<StateInterface> rowStates = initialStates.get(r);
+      if (rowStates.size() != cols) {
+        throw new IllegalArgumentException("Configuration columns (" + rowStates.size() +
+            ") in row " + r + " do not match grid columns (" + cols + ").");
+      }
+      for (int c = 0; c < cols; c++) {
+        StateInterface state = rowStates.get(c);
+        if (state == null) {
+          throw new NullPointerException("State at configuration position (" + r + "," + c + ") is null.");
+        }
+        cells[r][c].setState(state);
+        cells[r][c].resetNextState();
+      }
+    }
+  }
 
   /**
-   * Retrieves the cell at the specified row and column.
-   * If the requested position is out of bounds, {@code null} is returned.
+   * Retrieves the cell at the specified row and column in the grid.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
-   * @return the {@code Cell} at the specified position, or {@code null} if out of bounds
+   * @return the {@code Cell} at the specified row and column
+   * @throws IndexOutOfBoundsException if the row or column indices are out of bounds
    */
   public Cell getCell(int row, int col) {
-    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-      return cells[row][col];
+    if (row < 0 || row >= getRows() || col < 0 || col >= getCols()) {
+      throw new IndexOutOfBoundsException("Invalid cell indices: row=" + row + ", col=" + col);
     }
-    return null;
+    return cells[row][col];
   }
+
 
   /**
    * Retrieves the neighboring cells of the specified cell at (row, col).

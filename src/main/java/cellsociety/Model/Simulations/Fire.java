@@ -52,8 +52,9 @@ public class Fire extends Simulation {
   }
 
   /**
-   * Constructs a Fire simulation with the specified grid and parameters.
+   * Constructs a Fire simulation with the specified configuration, grid, and parameters.
    *
+   * @param simulationConfig the configuration settings for the simulation
    * @param grid the grid on which the simulation is run
    * @param p    the probability that an empty cell grows a tree (must be between 0 and 1)
    * @param f    the probability that a tree spontaneously catches fire (must be between 0 and 1)

@@ -37,8 +37,9 @@ public class Schelling extends Simulation {
   private final Random random;
 
   /**
-   * Constructs a new Schelling simulation with the specified grid and tolerance threshold.
+   * Constructs a new Schelling simulation with the specified configuration, grid, and tolerance threshold.
    *
+   * @param simulationConfig the configuration settings for the simulation
    * @param grid the simulation grid (populated with AgentCell instances)
    * @param tolerance the minimum fraction of same-group neighbors required for satisfaction
    */

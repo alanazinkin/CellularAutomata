@@ -24,7 +24,7 @@ public class SimulationConfig {
     private int width;
     private int height;
     private int[] initialStates;
-    private Map<String, String> parameters;
+    private Map<String, Double> parameters;
     private Map<StateInterface, Color> colorMap;
 
     /**
@@ -39,7 +39,7 @@ public class SimulationConfig {
      * @param parameters inputs to the simulation (ex: probCatch in Spreading Fire)
      */
     public SimulationConfig(String type, String title, String author, String description,
-                            int width, int height, int[] initialStates, Map<String, String> parameters) {
+                            int width, int height, int[] initialStates, Map<String, Double> parameters) {
         this.type = type;
         this.title = title;
         this.author = author;
@@ -70,6 +70,6 @@ public class SimulationConfig {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int[] getInitialStates() { return initialStates; }
-    public Map<String, String> getParameter() { return parameters; }
+    public Map<String, Double> getParameters() { return parameters; }
 
 }

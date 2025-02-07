@@ -35,8 +35,9 @@ public class Percolation extends Simulation {
   private final double percolationProbability;
 
   /**
-   * Constructs a new Percolation simulation on the specified grid with the given percolation probability.
+   * Constructs a new Percolation simulation with the specified configuration, grid, and percolation probability.
    *
+   * @param simulationConfig the configuration settings for the simulation
    * @param grid the grid on which the percolation simulation is performed
    * @param percolationProbability the probability that an open cell percolates when adjacent to a percolated cell;
    *                               must be between 0 and 1 inclusive.
