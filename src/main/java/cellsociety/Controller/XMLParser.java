@@ -1,6 +1,7 @@
 package cellsociety.Controller;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -43,7 +44,7 @@ public class XMLParser {
             initialStates[i] = Integer.parseInt(statesStr[i]);
         }
 
-        Map<String, String> parameters = parseParameters(document);
+        Map<String, Double> parameters = parseParameters(document);
 
         return new SimulationConfig(type, title, author, description, width, height,
                 initialStates, parameters);
@@ -52,22 +53,29 @@ public class XMLParser {
     /**
      * Extracts parameters from the XML file and stores them in a map.
      *
-     * @param document The XML document being parsed
+     * @param doc The XML document being parsed
      * @return A map of parameter names to their values
+     * @throws IllegalArgumentException if a parameter value cannot be parsed as a double
      */
-    private Map<String, String> parseParameters(Document document) {
-        Map<String, String> parameters = new HashMap<>();
-        NodeList paramNodes = document.getElementsByTagName("parameters");
-        if (paramNodes.getLength() > 0) {
-            Node parametersNode = paramNodes.item(0);
-            NodeList paramList = parametersNode.getChildNodes();
-            for (int i = 0; i < paramList.getLength(); i++) {
-                Node param = paramList.item(i);
-                if (param.getNodeType() == Node.ELEMENT_NODE) {
-                    parameters.put(param.getNodeName(), param.getTextContent());
-                }
+    private Map<String, Double> parseParameters(Document doc) {
+        Map<String, Double> parameters = new HashMap<>();
+        NodeList paramNodes = doc.getElementsByTagName("parameter");
+
+        for (int i = 0; i < paramNodes.getLength(); i++) {
+            Element paramElement = (Element) paramNodes.item(i);
+            String name = paramElement.getAttribute("name");
+            String valueStr = paramElement.getAttribute("value");
+
+            try {
+                double value = Double.parseDouble(valueStr);
+                parameters.put(name, value);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                        String.format("Parameter '%s' has invalid numerical value: %s", name, valueStr)
+                );
             }
         }
+
         return parameters;
     }
 

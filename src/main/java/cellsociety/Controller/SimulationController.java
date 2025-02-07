@@ -2,8 +2,7 @@ package cellsociety.Controller;
 
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
-import cellsociety.Model.Simulations.Fire;
-import cellsociety.Model.Simulations.GameOfLife;
+import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
@@ -39,10 +38,48 @@ public class SimulationController {
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
     mySimulationConfig.initializeStage(primaryStage);
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    mySimulation = new Fire(mySimulationConfig, myGrid, .5, .4);
+    initializeSimulationType();
     mySimView = new SimulationView();
     initializeView(primaryStage);
     setupSimulationTimer();
+  }
+
+  /**
+   * Initializes the simulation based on the type specified in the configuration.
+   * Uses a switch statement to determine which simulation to create.
+   */
+  private void initializeSimulationType() {
+    String simulationType = mySimulationConfig.getType();
+    mySimulation = createSimulation(simulationType);
+
+    if (mySimulation == null) {
+      throw new IllegalArgumentException("Invalid simulation type: " + simulationType);
+    }
+  }
+
+  /**
+   * Creates and returns a specific simulation instance based on the given type.
+   *
+   * @param simulationType The type of simulation to create
+   * @return A new instance of the specified simulation type
+   */
+  private Simulation createSimulation(String simulationType) {
+    switch (simulationType.toLowerCase()) {
+      case "gameoflife":
+        return new GameOfLife(mySimulationConfig, myGrid);
+      case "fire":
+        return new Fire(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0), mySimulationConfig.getParameters().get(1));
+      case "percolation":
+        return new Percolation(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0));
+      case "schelling":
+        return new Schelling(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0));
+        /*
+      case "watoworld":
+        return new WaTorWorld(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0), mySimulationConfig.getParameters().get(1), mySimulationConfig.getParameters().get(2), mySimulationConfig.getParameters().get(3));
+      */
+      default:
+        return null;
+    }
   }
 
   /**
