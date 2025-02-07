@@ -2,17 +2,17 @@ package cellsociety.Model.Simulations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.PercolationState;
+import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 
 /**
  * JUnit tests for the {@link Percolation} class.
- * <p>
- * This class contains both positive tests (to verify expected behavior) and negative tests
- * to ensure that invalid parameters cause exceptions.
- * </p>
+ * Naming convention: [UnitOfWork_StateUnderTest_ExpectedBehavior]
  */
 class PercolationTest {
 
@@ -22,31 +22,44 @@ class PercolationTest {
   private static final double INVALID_PROBABILITY_OVER_ONE = 1.1;
 
   /**
-   * Utility method to create a simple 2x2 grid for testing.
+   * Creates a simple 2x2 grid for testing.
    * The grid is initialized with {@code PercolationState.OPEN} for all cells.
-   *
-   * @return a new {@code Grid} configured for testing.
    */
   private Grid createTestGrid() {
     return new Grid(2, 2, PercolationState.OPEN);
   }
 
   /**
-   * Tests that {@code applyRules()} correctly percolates open cells adjacent to a percolated cell.
-   * <p>
-   * This test sets up a 2x2 grid where cell (0,0) is set to PERCOLATED and uses a probability
-   * of 1.0 to guarantee that adjacent open cells become percolated.
-   * </p>
+   * Creates a SimulationConfig instance for Percolation simulation tests.
+   * Dummy values are provided for type, title, author, description, dimensions, initialStates, and parameters.
+   */
+  private SimulationConfig createSimulationConfigForPercolation() {
+    return new SimulationConfig(
+        "Percolation",
+        "Percolation Simulation",
+        "Test Author",
+        "Testing Percolation simulation",
+        2, 2,
+        new int[4],
+        new HashMap<>()
+    );
+  }
+
+  /**
+   * applyRules: Open cells adjacent to a percolated cell become percolated with probability 1.
+   * Input: Cell (0,0) is set to PERCOLATED and probability is set to 1.0.
    */
   @Test
-  void testApplyRulesOpenToPercolated() {
-    Grid grid = new Grid(2, 2, PercolationState.OPEN);
+  void applyRules_OpenCellWithPercolatedNeighbor_BecomesPercolated() {
+    Grid grid = createTestGrid();
     grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
-    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
+    Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
 
     simulation.applyRules();
     grid.applyNextStates();
 
+    // All adjacent cells should become percolated due to propagation.
     assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 1).getState(),
         "Cell (0,1) should become percolated.");
     assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 0).getState(),
@@ -56,13 +69,15 @@ class PercolationTest {
   }
 
   /**
-   * Tests that {@code applyRules()} leaves open cells unchanged when no percolated neighbors exist.
+   * applyRules: Open cells remain unchanged if no percolated neighbor exists.
+   * Input: The grid contains no percolated neighbor for cell (0,0) (and one cell is BLOCKED).
    */
   @Test
-  void testApplyRulesNoPercolation() {
+  void applyRules_OpenCellsWithoutPercolatedNeighbor_RemainUnchanged() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
     grid.getCell(0, 1).setState(PercolationState.BLOCKED);
-    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
+    Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
 
     simulation.applyRules();
     grid.applyNextStates();
@@ -78,13 +93,15 @@ class PercolationTest {
   }
 
   /**
-   * Tests that with a percolation probability of 0.0, open cells remain open even if they have percolated neighbors.
+   * applyRules: With a percolation probability of 0, even cells with a percolated neighbor remain unchanged.
+   * Input: Cell (0,0) is set to PERCOLATED but the probability is 0.0.
    */
   @Test
-  void testApplyRulesProbabilityZero() {
+  void applyRules_WithProbabilityZero_OpenCellsRemainOpen() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
     grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
-    Percolation simulation = new Percolation(grid, PROBABILITY_ZERO);
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
+    Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ZERO);
 
     simulation.applyRules();
     grid.applyNextStates();
@@ -100,50 +117,52 @@ class PercolationTest {
   }
 
   /**
-   * Tests that {@code initializeStateMap()} returns the correct mapping of Percolation states to colors.
+   * initializeColorMap: Returns the correct mapping of Percolation states to colors.
+   * Input: A grid with default state OPEN.
    */
   @Test
-  void testInitializeStateMap() {
+  void initializeColorMap_StateMappingIsCorrect() {
     Grid grid = createTestGrid();
-    Percolation simulation = new Percolation(grid, PROBABILITY_ONE);
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
+    Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
     Map<?, ?> stateMap = simulation.initializeColorMap();
 
     assertAll("State Map Validity",
-        () -> assertEquals(javafx.scene.paint.Color.WHITE, stateMap.get(PercolationState.OPEN),
+        () -> assertEquals(Color.WHITE, stateMap.get(PercolationState.OPEN),
             "PercolationState.OPEN should map to WHITE."),
-        () -> assertEquals(javafx.scene.paint.Color.LIGHTBLUE, stateMap.get(PercolationState.PERCOLATED),
+        () -> assertEquals(Color.LIGHTBLUE, stateMap.get(PercolationState.PERCOLATED),
             "PercolationState.PERCOLATED should map to LIGHTBLUE."),
-        () -> assertEquals(javafx.scene.paint.Color.BLACK, stateMap.get(PercolationState.BLOCKED),
+        () -> assertEquals(Color.BLACK, stateMap.get(PercolationState.BLOCKED),
             "PercolationState.BLOCKED should map to BLACK.")
     );
   }
 
-  /////////////////
-  // NEGATIVE TESTS
-  /////////////////
-
   /**
-   * Negative test to verify that constructing a Percolation simulation with a null grid throws an exception.
+   * PercolationConstructor: Constructing with a null grid should throw an IllegalArgumentException.
+   * Input: Null grid.
    */
   @Test
-  void testPercolationConstructorNullGrid() {
+  void PercolationConstructor_NullGrid_ThrowsIllegalArgumentException() {
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
     assertThrows(IllegalArgumentException.class, () -> {
-      new Percolation(null, PROBABILITY_ONE);
+      new Percolation(simConfig, null, PROBABILITY_ONE);
     }, "Constructing a Percolation simulation with a null grid should throw an IllegalArgumentException.");
   }
 
   /**
-   * Negative test to verify that constructing a Percolation simulation with an invalid probability
-   * (e.g., negative or greater than 1) throws an exception.
+   * PercolationConstructor: Constructing with an invalid probability should throw an IllegalArgumentException.
+   * Input: Negative probability and probability greater than 1.
    */
   @Test
-  void testPercolationConstructorInvalidProbability() {
+  void PercolationConstructor_InvalidProbability_ThrowsIllegalArgumentException() {
     Grid grid = createTestGrid();
+    SimulationConfig simConfig = createSimulationConfigForPercolation();
     assertAll("Invalid probabilities",
-        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(grid, INVALID_PROBABILITY_NEGATIVE),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(simConfig, grid, INVALID_PROBABILITY_NEGATIVE),
             "Constructing with a negative probability should throw an exception."),
-        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(grid, INVALID_PROBABILITY_OVER_ONE),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Percolation(simConfig, grid, INVALID_PROBABILITY_OVER_ONE),
             "Constructing with a probability greater than 1 should throw an exception.")
     );
   }
 }
+
