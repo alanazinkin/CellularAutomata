@@ -72,8 +72,8 @@ public class Fire extends Simulation {
   }
 
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    stateMap = new HashMap<>();
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> stateMap = new HashMap<>();
     stateMap.put(FireState.TREE, TREE_COLOR);
     stateMap.put(FireState.BURNING, BURNING_COLOR);
     stateMap.put(FireState.BURNT, BURNT_COLOR);
@@ -98,9 +98,9 @@ public class Fire extends Simulation {
    */
   @Override
   public void applyRules() {
-    for (int row = 0; row < grid.getRows(); row++) {
-      for (int col = 0; col < grid.getCols(); col++) {
-        Cell cell = grid.getCell(row, col);
+    for (int row = 0; row < getGrid().getRows(); row++) {
+      for (int col = 0; col < getGrid().getCols(); col++) {
+        Cell cell = getGrid().getCell(row, col);
         FireState currentState = (FireState) cell.getState();
 
         switch (currentState) {
@@ -157,7 +157,7 @@ public class Fire extends Simulation {
    * @return true if at least one neighbor is in the BURNING state; false otherwise
    */
   private boolean hasBurningNeighbor(int row, int col) {
-    Collection<Cell> neighbors = grid.getNeighbors(row, col);
+    Collection<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
       FireState neighborState = (FireState) neighbor.getState();
       if (neighborState == FireState.BURNING) {

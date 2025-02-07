@@ -15,17 +15,19 @@ public abstract class Simulation {
   /**
    * The grid on which the simulation operates.
    */
-  protected Grid grid;
+  private Grid grid;
 
   /**
    * A mapping of simulation states to their corresponding display colors.
    * <p>
    * This map is used to translate each cell's state into a visual color when rendering the simulation.
-   * The map is initialized by the {@link #initializeStateMap()} method during construction and can be
-   * retrieved using the {@link #getStateMap()} method.
+   * The map is initialized by the {@link #initializeColorMap()} method during construction and can be
+   * retrieved using the {@link #getColorMap()} method.
    * </p>
    */
-  protected Map<StateInterface, Color> stateMap;
+  private Map<StateInterface, Color> colorMap;
+
+
 
   /**
    * Constructs a new {@code Simulation} instance with the specified grid.
@@ -34,7 +36,15 @@ public abstract class Simulation {
    */
   public Simulation(Grid grid) {
     this.grid = grid;
-    this.stateMap = initializeStateMap();
+    this.colorMap = initializeColorMap();
+  }
+
+  /**
+   * method is used to retrieve grid instance variable for subclasses
+   * @return Grid instance variable
+   */
+  protected Grid getGrid() {
+    return grid;
   }
 
   /**
@@ -45,7 +55,7 @@ public abstract class Simulation {
    *
    * @return a {@code Map} where keys are simulation states and values are their display colors
    */
-  public abstract Map<StateInterface, Color> initializeStateMap();
+  public abstract Map<StateInterface, Color> initializeColorMap();
 
   /**
    * Applies the specific rules of the simulation.
@@ -79,8 +89,8 @@ public abstract class Simulation {
    *
    * @return a {@code Map} where the keys are simulation states and the values are the colors associated with them
    */
-  public Map<StateInterface, Color> getStateMap() {
-    return stateMap;
+  public Map<StateInterface, Color> getColorMap() {
+    return colorMap;
   }
 }
 

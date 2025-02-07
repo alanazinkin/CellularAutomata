@@ -53,7 +53,7 @@ public class Percolation extends Simulation {
   }
 
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
+  public Map<StateInterface, Color> initializeColorMap() {
     Map<StateInterface, Color> stateMap = new HashMap<>();
     stateMap.put(PercolationState.OPEN, OPEN_COLOR);
     stateMap.put(PercolationState.PERCOLATED, PERCOLATED_COLOR);
@@ -71,12 +71,12 @@ public class Percolation extends Simulation {
    */
   @Override
   public void applyRules() {
-    final int numRows = grid.getRows();
-    final int numCols = grid.getCols();
+    final int numRows = getGrid().getRows();
+    final int numCols = getGrid().getCols();
 
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
-        Cell cell = grid.getCell(row, col);
+        Cell cell = getGrid().getCell(row, col);
         PercolationState currentState = (PercolationState) cell.getState();
 
         if (isStaticState(currentState)) {
@@ -106,7 +106,7 @@ public class Percolation extends Simulation {
    * @return {@link PercolationState#PERCOLATED} if the cell percolates; {@link PercolationState#OPEN} otherwise
    */
   private PercolationState determineNextStateForOpenCell(int row, int col) {
-    List<Cell> neighbors = grid.getNeighbors(row, col);
+    List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
       if (neighbor.getState() == PercolationState.PERCOLATED && shouldPercolate()) {
         return PercolationState.PERCOLATED;

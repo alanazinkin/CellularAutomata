@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.plaf.nimbus.State;
 
 /**
  * Implementation of Schelling's Model of Segregation using AgentCell.
@@ -72,8 +73,8 @@ public class Schelling extends Simulation {
    * @return the map of simulation states to colors.
    */
   @Override
-  public Map<StateInterface, Color> initializeStateMap() {
-    stateMap = new HashMap<>();
+  public Map<StateInterface, Color> initializeColorMap() {
+    Map<StateInterface, Color> stateMap = new HashMap<>();
     stateMap.put(SchellingState.AGENT, AGENT_COLOR);
     stateMap.put(SchellingState.EMPTY_CELL, EMPTY_CELL_COLOR);
     return stateMap;
@@ -93,15 +94,15 @@ public class Schelling extends Simulation {
    */
   @Override
   public void applyRules() {
-    final int numRows = grid.getRows();
-    final int numCols = grid.getCols();
+    final int numRows = getGrid().getRows();
+    final int numCols = getGrid().getCols();
 
     List<Move> moves = new ArrayList<>();
     List<int[]> emptyCells = getEmptyCells(numRows, numCols);
 
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
-        AgentCell cell = (AgentCell) grid.getCell(row, col);
+        AgentCell cell = (AgentCell) getGrid().getCell(row, col);
         if (cell.getState() == SchellingState.AGENT) {
           int agentGroup = cell.getAgentGroup();
           if (!isAgentSatisfied(row, col, agentGroup)) {
@@ -117,7 +118,7 @@ public class Schelling extends Simulation {
     }
 
     executeMoves(moves);
-    grid.applyNextStates();
+    getGrid().applyNextStates();
   }
 
   /**
@@ -131,7 +132,7 @@ public class Schelling extends Simulation {
     List<int[]> emptyCells = new ArrayList<>();
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
-        AgentCell cell = (AgentCell) grid.getCell(row, col);
+        AgentCell cell = (AgentCell) getGrid().getCell(row, col);
         if (cell.getState() == SchellingState.EMPTY_CELL) {
           emptyCells.add(new int[]{row, col});
         }
@@ -165,12 +166,12 @@ public class Schelling extends Simulation {
    */
   private void executeMoves(List<Move> moves) {
     for (Move move : moves) {
-      AgentCell sourceCell = (AgentCell) grid.getCell(move.sourceRow, move.sourceCol);
+      AgentCell sourceCell = (AgentCell) getGrid().getCell(move.sourceRow, move.sourceCol);
       sourceCell.setNextState(SchellingState.EMPTY_CELL);
       sourceCell.setAgentGroup(EMPTY_AGENT_GROUP);
     }
     for (Move move : moves) {
-      AgentCell destCell = (AgentCell) grid.getCell(move.destRow, move.destCol);
+      AgentCell destCell = (AgentCell) getGrid().getCell(move.destRow, move.destCol);
       destCell.setNextState(SchellingState.AGENT);
       destCell.setAgentGroup(move.agentGroup);
     }
@@ -227,7 +228,7 @@ public class Schelling extends Simulation {
    */
   private List<AgentCell> getAgentNeighbors(int row, int col) {
     List<AgentCell> agentNeighbors = new ArrayList<>();
-    List<Cell> neighbors = grid.getNeighbors(row, col);
+    List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell cell : neighbors) {
       agentNeighbors.add((AgentCell) cell);
     }
