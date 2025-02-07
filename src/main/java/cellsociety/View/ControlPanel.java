@@ -83,15 +83,24 @@ public class ControlPanel {
     Text myLabel = new Text(label);
     mySliderBar.getChildren().add(myLabel);
     // make slider
-    Slider slider = new Slider(0, 100, 50);
+    Slider slider = new Slider(0.1, 5, 1);
     slider.setPrefWidth(100);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
-    slider.setBlockIncrement(25);
+    slider.setMajorTickUnit(1.0);
+    slider.setMinorTickCount(9);
+    slider.setBlockIncrement(0.1);
     slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .75);
+    makeSliderAdjustToSpeed(slider);
     // add slider to slider bar
     mySliderBar.getChildren().add(slider);
+  }
+
+  private void makeSliderAdjustToSpeed(Slider slider) {
+    slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+      myController.setSimulationSpeed(newValue.doubleValue());
+    });
   }
 
   /**
