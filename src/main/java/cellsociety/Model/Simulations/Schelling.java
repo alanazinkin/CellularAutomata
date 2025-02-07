@@ -1,5 +1,6 @@
 package cellsociety.Model.Simulations;
 
+import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.AgentCell;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javax.swing.plaf.nimbus.State;
 
 /**
  * Implementation of Schelling's Model of Segregation using AgentCell.
@@ -42,8 +42,8 @@ public class Schelling extends Simulation {
    * @param grid the simulation grid (populated with AgentCell instances)
    * @param tolerance the minimum fraction of same-group neighbors required for satisfaction
    */
-  public Schelling(Grid grid, double tolerance) {
-    super(grid);
+  public Schelling(SimulationConfig simulationConfig, Grid grid, double tolerance) {
+    super(simulationConfig, grid);
     this.tolerance = tolerance;
     this.random = new Random();
   }
@@ -68,15 +68,28 @@ public class Schelling extends Simulation {
   }
 
   /**
-   * Initializes the state map for Schelling simulation.
+   * Initializes the color map for Schelling simulation.
    *
    * @return the map of simulation states to colors.
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> stateMap = new HashMap<>();
-    stateMap.put(SchellingState.AGENT, AGENT_COLOR);
-    stateMap.put(SchellingState.EMPTY_CELL, EMPTY_CELL_COLOR);
+    Map<StateInterface, Color> colorMap = new HashMap<>();
+    colorMap.put(SchellingState.AGENT, AGENT_COLOR);
+    colorMap.put(SchellingState.EMPTY_CELL, EMPTY_CELL_COLOR);
+    return colorMap;
+  }
+
+  /**
+   * Initializes the state map for Schelling simulation.
+   *
+   * @return the map of simulation states to colors.
+   */
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, SchellingState.EMPTY_CELL);
+    stateMap.put(1, SchellingState.AGENT);
     return stateMap;
   }
 
