@@ -24,6 +24,11 @@ public class SimulationController {
   private long lastUpdate = 0;
   private double simulationSpeed = 1.0;
 
+  private static final double DEFAULT_FIRE_PROB = 0.5;
+  private static final double DEFAULT_TREE_PROB = 0.4;
+  private static final double DEFAULT_SATISFACTION = 0.3;
+  private static final double DEFAULT_PERCOLATION_PROB = 0.5;
+
   public SimulationController() {}
 
   /**
@@ -65,14 +70,18 @@ public class SimulationController {
    */
   private Simulation createSimulation(String simulationType) {
     switch (simulationType.toLowerCase()) {
-      case "gameoflife":
+      case "game of life":
         return new GameOfLife(mySimulationConfig, myGrid);
-      case "fire":
-        return new Fire(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0), mySimulationConfig.getParameters().get(1));
+      case "spreading of fire":
+        double fireProb = mySimulationConfig.getParameters().getOrDefault("fireProb", DEFAULT_FIRE_PROB);
+        double treeProb = mySimulationConfig.getParameters().getOrDefault("treeProb", DEFAULT_TREE_PROB);
+        return new Fire(mySimulationConfig, myGrid, fireProb, treeProb);
       case "percolation":
-        return new Percolation(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0));
+        double percolationProb = mySimulationConfig.getParameters().getOrDefault("percolationProb", DEFAULT_PERCOLATION_PROB);
+        return new Percolation(mySimulationConfig, myGrid, percolationProb);
       case "schelling":
-        return new Schelling(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0));
+        double satisfaction = mySimulationConfig.getParameters().getOrDefault("satisfaction", DEFAULT_SATISFACTION);
+        return new Schelling(mySimulationConfig, myGrid, satisfaction);
         /*
       case "watoworld":
         return new WaTorWorld(mySimulationConfig, myGrid, mySimulationConfig.getParameters().get(0), mySimulationConfig.getParameters().get(1), mySimulationConfig.getParameters().get(2), mySimulationConfig.getParameters().get(3));
