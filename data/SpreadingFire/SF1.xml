@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <simulation>
-  <type>Spreading of Fire</type>
-  <title>Spreading of Fire Simulation</title>
-  <author>Alana Zinkin</author>
-  <description>This simulation models a forest fire, where trees catch fire and burn based on neighboring cells</description>
-  <width>5</width>
-  <height>5</height>
-  <!-- 0 : EMPTY
-       1 : TREE
-       2 : BURNING -->
-  <initial_states>0 1 0 1 2 1 0 0 1 0 0 1 0 2 1 1 0 2 1 0 0 0 0 1 0</initial_states>
-  <parameters>
-    <probCatch>0.5</probCatch>
-  </parameters>
+<type>Spreading of Fire</type>
+<title>Basic Center Fire Spread</title>
+<author>Angela Predolac</author>
+<description>This simulation models a forest fire, where trees catch fire and burn based on neighboring cells</description>
+<width>5</width>
+<height>5</height>
+<parameter name="fireProb" value="0.7"/>
+<parameter name="treeProb" value="0.9"/>
+  <!-- 0 : EMPTY      1 : TREE      2 : BURNING -->
+  <initial_states>
+    1 1 1 1 1
+    1 1 2 1 1
+    1 1 1 1 1
+    1 1 1 1 1
+    1 1 1 1 1
+  </initial_states>
 </simulation>

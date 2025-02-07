@@ -28,6 +28,13 @@ public class SimulationConfig {
     private Map<StateInterface, Color> colorMap;
 
     /**
+     * Default constructor for XML parsing
+     */
+    public SimulationConfig() {
+        // Default constructor needed for XML parsing
+    }
+
+    /**
      * Simulation Configuration constructor method
      * @param type type of simulation (ex: Fire, GameofLife, etc.)
      * @param title title full name of the simulation (ex: Spreading Fire, Game of Life, etc.)
@@ -72,4 +79,35 @@ public class SimulationConfig {
     public int[] getInitialStates() { return initialStates; }
     public Map<String, Double> getParameters() { return parameters; }
 
+    public void setSimulationType(String type) {
+        this.type = type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setWidth(int i) {
+        width = i;
+    }
+
+    public void setHeight(int i) {
+        height = i;
+    }
+
+    public void setParameters(Map<String, Double> stringDoubleMap) {
+        parameters = stringDoubleMap;
+    }
+
+    public void setInitialStates(int[] initialStates) {
+        this.initialStates = initialStates;
+    }
 }

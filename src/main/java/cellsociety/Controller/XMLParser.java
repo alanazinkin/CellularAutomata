@@ -31,31 +31,66 @@ public class XMLParser {
         Document document = builder.parse(new File(filePath));
         document.getDocumentElement().normalize();
 
-        String type = getElementContent(document, "type");
-        String title = getElementContent(document, "title");
-        String author = getElementContent(document, "author");
-        String description = getElementContent(document, "description");
-        int width = Integer.parseInt(getElementContent(document, "width"));
-        int height = Integer.parseInt(getElementContent(document, "height"));
+        SimulationConfig config = new SimulationConfig();
 
-        String[] statesStr = getElementContent(document, "initial_states").split("\\s+");
-        int[] initialStates = new int[statesStr.length];
-        for (int i = 0; i < statesStr.length; i++) {
-            initialStates[i] = Integer.parseInt(statesStr[i]);
+        config.setSimulationType(getElementContent(document, "type"));
+        config.setTitle(getElementContent(document, "title"));
+        config.setAuthor(getElementContent(document, "author"));
+        config.setDescription(getElementContent(document, "description"));
+
+        String widthStr = getElementContent(document, "width");
+        String heightStr = getElementContent(document, "height");
+        if (widthStr == null || heightStr == null || widthStr.isEmpty() || heightStr.isEmpty()) {
+            throw new IllegalArgumentException("Width and height must be specified in the configuration");
+        }
+        config.setWidth(Integer.parseInt(widthStr.trim()));
+        config.setHeight(Integer.parseInt(heightStr.trim()));
+
+        config.setParameters(parseParameters(document));
+
+        String initialStatesStr = getElementContent(document, "initial_states");
+        if (initialStatesStr == null || initialStatesStr.isEmpty()) {
+            throw new IllegalArgumentException("Initial states must be specified in the configuration");
         }
 
-        Map<String, Double> parameters = parseParameters(document);
+        int[] initialStates = parseInitialStates(initialStatesStr);
+        config.setInitialStates(initialStates);
 
-        return new SimulationConfig(type, title, author, description, width, height,
-                initialStates, parameters);
+        return config;
     }
 
     /**
-     * Extracts parameters from the XML file and stores them in a map.
+     * Parses the initial states string into an array of integers
      *
-     * @param doc The XML document being parsed
-     * @return A map of parameter names to their values
-     * @throws IllegalArgumentException if a parameter value cannot be parsed as a double
+     * @param statesStr The string containing space-separated state values
+     * @return Array of integer state values
+     */
+    private int[] parseInitialStates(String statesStr) {
+        // Remove leading/trailing whitespace and split on any whitespace (space or newline)
+        String[] values = statesStr.trim().split("\\s+");
+        int[] states = new int[values.length];
+
+        for (int i = 0; i < values.length; i++) {
+            if (!values[i].isEmpty()) {
+                try {
+                    states[i] = Integer.parseInt(values[i].trim());
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid state value: " + values[i]);
+                }
+            } else {
+                throw new IllegalArgumentException("Empty state value found in position " + i);
+            }
+        }
+
+        return states;
+    }
+
+
+    /**
+     * Parses parameter values from the XML configuration
+     *
+     * @param doc The XML document
+     * @return Map of parameter names to their double values
      */
     private Map<String, Double> parseParameters(Document doc) {
         Map<String, Double> parameters = new HashMap<>();
