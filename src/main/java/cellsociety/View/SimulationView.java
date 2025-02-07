@@ -35,8 +35,7 @@ public class SimulationView {
         simulationConfig.getTitle(),
         simulationConfig.getAuthor(),
         simulationConfig.getDescription(),
-        //TODO: change to the real parameters from XML file
-        new ArrayList<>(),
+        simulationConfig.getParameter(),
         simulation.getColorMap()
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), "Simulation Information");
