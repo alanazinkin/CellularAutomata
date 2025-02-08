@@ -28,7 +28,7 @@ class FileRetrieverTest {
   @Test
   void getSimulationTypes_WhenSimulationIsReal_AssertEquals() throws FileNotFoundException {
     String realSimType = "Game of Life";
-    assertEquals(List.of("GOL1.xml", "GOL2.xml", "GOL3.xml", "GOL4.xml", "GOL5.xml"), fileRetriever.getFileNames(realSimType));
+    assertEquals(List.of("GliderPattern.xml", "EdgeBlinker.xml", "EdgeBlock.xml", "ToadOscillator.xml", "RandomizedLargeGrid.xml"), fileRetriever.getFileNames(realSimType));
   }
 
   /**

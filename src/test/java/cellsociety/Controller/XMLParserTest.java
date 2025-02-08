@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class XMLParserTest {
 
-    String filepath = "data/GameOfLife/GOL1.xml";
+    String filepath = "data/GameOfLife/GliderPattern.xml";
     XMLParser xmlParser = new XMLParser();
     SimulationConfig simulationConfig = xmlParser.parseXMLFile(filepath);
     int[] initialStates = {0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1};

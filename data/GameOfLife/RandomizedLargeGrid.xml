@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Game of Life</type>
+    <title>Randomized Large Grid</title>
+    <author>Angela Predolac</author>
+    <description>A larger grid with a random spread of living and dead cells.</description>
+    <width>10</width>
+    <height>10</height>
+    <!-- 0 : DEAD      1 : ALIVE -->
+    <initial_states>
+        0 1 0 0 1 0 0 1 0 0
+        1 0 1 0 0 1 0 1 0 0
+        0 0 1 1 0 0 1 0 1 0
+        0 1 0 0 1 0 1 0 0 1
+        1 0 1 0 0 1 0 1 0 0
+        0 0 1 1 0 0 1 0 1 0
+        0 1 0 0 1 0 1 0 0 1
+        1 0 1 0 0 1 0 1 0 0
+        0 0 1 1 0 0 1 0 1 0
+        0 1 0 0 1 0 1 0 0 1
+    </initial_states>
+</simulation>
