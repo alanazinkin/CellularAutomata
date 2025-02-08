@@ -5,8 +5,6 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.StateInterface;
 import cellsociety.View.GridViews.FireGridView;
-import cellsociety.View.GridViews.GameOfLifeGridView;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
@@ -49,7 +47,7 @@ public class SimulationView {
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"));
     createSimulationWindow(primaryStage);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel("English");
+    ControlPanel myControlPanel = new ControlPanel(language);
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
@@ -83,4 +81,10 @@ public class SimulationView {
   public BorderPane getRoot() {
     return myRoot;
   }
+
+  /**
+   * method that allows access to the simulation view class' resource bundle for a specific language
+   * @return Resource Bundle for a user-selected language
+   */
+  public ResourceBundle getResources() {return myResources;}
 }
