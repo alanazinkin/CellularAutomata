@@ -25,8 +25,6 @@ class FireTest {
    */
   @BeforeEach
   void setUp() {
-    // Create a SimulationConfig with type "Fire", title, author, description, grid dimensions,
-    // an initialStates array (9 elements for a 3x3 grid) and an empty parameters map.
     simulationConfig = new SimulationConfig(
         "Fire",
         "Fire Simulation",
@@ -75,7 +73,6 @@ class FireTest {
     Cell leftNeighbor = grid.getCell(1, 0);
     leftNeighbor.setState(FireState.BURNING);
 
-    // Set all other cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 1 && col == 0))) {
@@ -139,7 +136,6 @@ class FireTest {
     Cell topNeighbor = grid.getCell(0, 1);
     topNeighbor.setState(FireState.BURNING);
 
-    // Set all other cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 0 && col == 1))) {
@@ -167,7 +163,6 @@ class FireTest {
     Cell neighborCell = grid.getCell(0, 1);
     neighborCell.setState(FireState.TREE);
 
-    // Set all other cells to TREE.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 0 && col == 0) || (row == 0 && col == 1))) {
