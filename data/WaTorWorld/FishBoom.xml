@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Wa-Tor World</type>
+    <title>Fish Boom</title>
+    <author>Angela Predolac</author>
+    <description>Few sharks mean the fish population will explode.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="fishReproductionTime" value="2"/>
+    <parameter name="sharkReproductionTime" value="6"/>
+    <parameter name="sharkStarvationTime" value="4"/>
+    <initial_states>
+        1 1 1 1 1 1
+        1 1 1 0 1 1
+        1 1 1 1 1 1
+        1 1 0 1 1 1
+        1 1 1 1 1 1
+        2 0 0 0 0 2
+    </initial_states>
+</simulation>

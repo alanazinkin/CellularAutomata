@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Wa-Tor World</type>
+    <title>Sparse Population</title>
+    <author>Angela Predolac</author>
+    <description>Sharks and fish are randomly scattered with many empty spaces.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="fishReproductionTime" value="4"/>
+    <parameter name="sharkReproductionTime" value="6"/>
+    <parameter name="sharkStarvationTime" value="3"/>
+    <initial_states>
+        0 1 0 2 0 0
+        1 0 0 0 2 0
+        0 0 1 0 0 2
+        2 0 0 1 0 0
+        0 2 0 0 0 1
+        0 0 2 0 1 0
+    </initial_states>
+</simulation>

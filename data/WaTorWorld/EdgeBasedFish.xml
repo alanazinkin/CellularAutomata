@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Wa-Tor World</type>
+    <title>Edge-Based Fish</title>
+    <author>Angela Predolac</author>
+    <description>Fish start along the edges, testing their ability to spread inward.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="fishReproductionTime" value="2"/>
+    <parameter name="sharkReproductionTime" value="5"/>
+    <parameter name="sharkStarvationTime" value="3"/>
+    <initial_states>
+        1 1 1 1 1 1
+        1 0 0 0 0 1
+        1 0 2 2 0 1
+        1 0 2 2 0 1
+        1 0 0 0 0 1
+        1 1 1 1 1 1
+    </initial_states>
+</simulation>
