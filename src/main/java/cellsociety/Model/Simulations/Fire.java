@@ -27,9 +27,7 @@ import java.util.Collection;
  */
 public class Fire extends Simulation {
 
-  // Probability that an empty cell regrows a tree.
   private final double p;
-  // Probability that a tree spontaneously ignites.
   private final double f;
   private Random random;
   private static final Color TREE_COLOR = Color.GREEN;
@@ -58,7 +56,20 @@ public class Fire extends Simulation {
     this.f = f;
     this.random = new Random();
   }
-
+  /**
+   * Initializes a map that associates each state in the fire simulation with its corresponding color.
+   * This method creates a mapping between {@link StateInterface} states and {@link Color} values.
+   *
+   * The states include:
+   * <ul>
+   *     <li>{@link FireState#TREE} - Color for trees.</li>
+   *     <li>{@link FireState#BURNING} - Color for burning trees.</li>
+   *     <li>{@link FireState#BURNT} - Color for burnt trees.</li>
+   *     <li>{@link FireState#EMPTY} - Color for empty spaces.</li>
+   * </ul>
+   *
+   * @return A {@link Map} that associates each fire state with a corresponding color.
+   */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
     Map<StateInterface, Color> colorMap = new HashMap<>();
@@ -68,7 +79,21 @@ public class Fire extends Simulation {
     colorMap.put(FireState.EMPTY, EMPTY_COLOR);
     return colorMap;
   }
-
+  /**
+   * Initializes a map that associates integer values with corresponding fire states.
+   * This method creates a mapping between integer keys and {@link StateInterface} values,
+   * representing different states in the fire simulation.
+   *
+   * The mapping is as follows:
+   * <ul>
+   *     <li>0 - {@link FireState#EMPTY} (Empty space)</li>
+   *     <li>1 - {@link FireState#TREE} (Tree state)</li>
+   *     <li>2 - {@link FireState#BURNING} (Burning tree state)</li>
+   *     <li>3 - {@link FireState#BURNT} (Burnt tree state)</li>
+   * </ul>
+   *
+   * @return A {@link Map} that associates integers with their corresponding fire states.
+   */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
     Map<Integer, StateInterface> stateMap = new HashMap<>();
@@ -98,10 +123,8 @@ public class Fire extends Simulation {
   public void applyRules() {
     int numRows = getGrid().getRows();
     int numCols = getGrid().getCols();
-    // Create a temporary array to hold computed next states.
     StateInterface[][] nextStates = new StateInterface[numRows][numCols];
 
-    // First pass: compute next state for each cell using only the current state.
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         Cell cell = getGrid().getCell(row, col);
@@ -122,7 +145,6 @@ public class Fire extends Simulation {
         }
       }
     }
-    // Second pass: write computed next states into each cell.
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         getGrid().getCell(row, col).setNextState(nextStates[row][col]);
@@ -186,9 +208,7 @@ public class Fire extends Simulation {
    */
   @Override
   public void step() {
-    // First, compute the next state for every cell.
     applyRules();
-    // Then, commit the computed next state for each cell and reset its next state.
     for (int row = 0; row < getGrid().getRows(); row++) {
       for (int col = 0; col < getGrid().getCols(); col++) {
         Cell cell = getGrid().getCell(row, col);
