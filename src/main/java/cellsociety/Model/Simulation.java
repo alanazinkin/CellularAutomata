@@ -38,13 +38,23 @@ public abstract class Simulation {
    * </p>
    */
   private Map<Integer, StateInterface> stateMap;
+
   /**
-   * Constructs a new {@code Simulation} instance with the specified grid.
+   * Constructs a new {@code Simulation} instance with the specified grid and simulation configuration.
+   * <p>
+   * This constructor initializes the simulation by setting up the grid, mapping states to colors, and
+   * applying the initial configuration. The grid must not be {@code null}; otherwise, an exception is thrown.
+   * </p>
    *
-   * @param simulationConfig the {@code SimulationConfig} object holding all the simulation information
-   * @param grid             the {@code Grid} object representing the simulation space
+   * @param simulationConfig the {@code SimulationConfig} object holding all the simulation information,
+   *                         including initial states and parameters.
+   * @param grid             the {@code Grid} object representing the simulation space.
+   * @throws IllegalArgumentException if the provided grid is {@code null}.
    */
   public Simulation(SimulationConfig simulationConfig, Grid grid) {
+    if (grid == null) {
+      throw new IllegalArgumentException("Grid cannot be null");
+    }
     this.grid = grid;
     this.colorMap = initializeColorMap();
     this.stateMap = initializeStateMap();
@@ -98,7 +108,26 @@ public abstract class Simulation {
     applyRules();
     grid.applyNextStates();
   }
-
+  /**
+   * Initializes the grid's cell states based on the provided simulation configuration.
+   * <p>
+   * This method iterates over each cell in the grid and sets its state according to the corresponding
+   * value in the simulation configuration's initial states array. The integer value from the configuration
+   * is mapped to a {@code StateInterface} using the simulation's state map. Only cells whose current state
+   * equals the grid's default state are updated, allowing previously modified cells to remain unchanged.
+   * </p>
+   * <p>
+   * The method will throw a {@code NullPointerException} in the following cases:
+   * <ul>
+   *   <li>If the initial states array from the configuration is empty.</li>
+   *   <li>If any cell in the grid is {@code null}.</li>
+   *   <li>If the state map is {@code null}.</li>
+   * </ul>
+   * </p>
+   *
+   * @param simulationConfig the simulation configuration containing the initial states for the grid
+   * @throws NullPointerException if the initial states array is empty, a grid cell is null, or the state map is null
+   */
   private void initializeGrid(SimulationConfig simulationConfig) {
     int cellCount = 0;
     if (simulationConfig.getInitialStates().length == 0) {
@@ -112,7 +141,10 @@ public abstract class Simulation {
         if (stateMap == null) {
           throw new NullPointerException("State map is null");
         }
-        grid.getCell(r, c).setState(stateMap.get(simulationConfig.getInitialStates()[cellCount]));
+        StateInterface newState = stateMap.get(simulationConfig.getInitialStates()[cellCount]);
+        if (grid.getCell(r, c).getState().equals(grid.getDefaultState())) {
+          grid.getCell(r, c).setState(newState);
+        }
         cellCount++;
       }
     }
