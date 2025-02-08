@@ -64,6 +64,7 @@ public class ControlPanel {
     // add buttons to Control Bar
     makeButton(myResources.getString("Start"), e -> myController.startSimulation());
     makeButton(myResources.getString("Pause"), e -> myController.pauseSimulation());
+    makeButton(myResources.getString("Step"), e -> myController.stepSimulation());
     makeButton(myResources.getString("Reset"), e -> myController.resetSimulation());
     makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();

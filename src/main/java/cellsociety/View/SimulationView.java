@@ -34,6 +34,9 @@ public class SimulationView {
   public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language) {
     // get resource bundle
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+    // make initial splash screen window
+    SplashScreen initialScreen = new SplashScreen();
+    Scene splashScreen = initialScreen.showSplashScreen(new Stage(), "Cell Society", 1000, 800);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         simulationConfig.getType(),
