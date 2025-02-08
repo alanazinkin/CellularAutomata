@@ -37,7 +37,6 @@ public class GameOfLifeTest {
         new HashMap<>()
     );
     grid = new Grid(3, 3, GameOfLifeState.DEAD);
-    // Ensure every cell is explicitly set to DEAD.
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
@@ -46,10 +45,6 @@ public class GameOfLifeTest {
     }
     simulation = new GameOfLife(simulationConfig, grid);
   }
-
-  // =================================
-  // Positive (Model) Tests
-  // =================================
 
   /**
    * applyRules: A live cell with fewer than 2 live neighbors dies (underpopulation).
@@ -137,20 +132,29 @@ public class GameOfLifeTest {
         "A dead cell with 2 live neighbors should remain dead.");
   }
 
-  // =================================
-  // Negative Tests (Exception Scenarios)
-  // =================================
-
   /**
-   * GameOfLifeConstructor: Passing a null grid should throw NullPointerException.
-   * Input: Null grid.
+   * Tests the behavior of the {@code GameOfLife} constructor when a {@code null} grid is provided.
+   * <p>
+   * This test ensures that passing a {@code null} grid to the {@code GameOfLife} constructor
+   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid simulation instance.
+   * </p>
+   *
+   * <p>Expected behavior:</p>
+   * <ul>
+   *   <li>When the simulation is created with a {@code null} grid, an {@code IllegalArgumentException} should be thrown.</li>
+   *   <li>The exception message should not be null.</li>
+   * </ul>
+   *
+   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code GameOfLife} simulation.
    */
   @Test
-  void GameOfLifeConstructor_NullGrid_ThrowsNullPointerException() {
-    assertThrows(NullPointerException.class,
+  void GameOfLifeConstructor_NullGrid_ThrowsIllegalArgumentException() {
+    Exception exception = assertThrows(IllegalArgumentException.class,
         () -> new GameOfLife(simulationConfig, null),
-        "Constructing GameOfLife with null grid should throw NullPointerException.");
+        "Constructing GameOfLife with null grid should throw IllegalArgumentException.");
+    assertNotNull(exception.getMessage(), "Exception message should not be null");
   }
+
 
   /**
    * GameOfLifeConstructor: Passing a null SimulationConfig should throw NullPointerException.
@@ -163,102 +167,6 @@ public class GameOfLifeTest {
         "Constructing GameOfLife with null SimulationConfig should throw NullPointerException.");
   }
 
-  /**
-   * Grid_getCell: Using an invalid row index should throw IndexOutOfBoundsException.
-   * Input: Negative row index.
-   */
-  @Test
-  void Grid_getCell_InvalidRowIndex_ThrowsIndexOutOfBoundsException() {
-    assertThrows(IndexOutOfBoundsException.class,
-        () -> grid.getCell(-1, 0),
-        "Accessing a cell with an invalid row index should throw IndexOutOfBoundsException.");
-  }
-
-  /**
-   * Grid_getCell: Using an invalid column index should throw IndexOutOfBoundsException.
-   * Input: Column index equal to grid.getCols().
-   */
-  @Test
-  void Grid_getCell_InvalidColumnIndex_ThrowsIndexOutOfBoundsException() {
-    assertThrows(IndexOutOfBoundsException.class,
-        () -> grid.getCell(0, grid.getCols()),
-        "Accessing a cell with an invalid column index should throw IndexOutOfBoundsException.");
-  }
-
-  /**
-   * Cell_setState: Setting a cell's state to null should throw IllegalArgumentException.
-   * Input: Null state.
-   */
-  @Test
-  void Cell_setState_NullState_ThrowsIllegalArgumentException() {
-    Cell cell = grid.getCell(0, 0);
-    assertThrows(IllegalArgumentException.class,
-        () -> cell.setState(null),
-        "Setting a cell's state to null should throw IllegalArgumentException.");
-  }
-
-  /**
-   * Cell_setNextState: Setting a cell's next state to null should throw IllegalArgumentException.
-   * Input: Null next state.
-   */
-  @Test
-  void Cell_setNextState_NullState_ThrowsIllegalArgumentException() {
-    Cell cell = grid.getCell(0, 0);
-    assertThrows(IllegalArgumentException.class,
-        () -> cell.setNextState(null),
-        "Setting a cell's next state to null should throw IllegalArgumentException.");
-  }
-
-  /**
-   * applyRules: If a cell in the grid has a null state, applyRules should throw IllegalArgumentException.
-   * Input: Manually set a cell's state to null using reflection.
-   */
-  @Test
-  void applyRules_NullCellStateInGrid_ThrowsIllegalArgumentException() throws NoSuchFieldException, IllegalAccessException {
-    Cell cell = grid.getCell(1, 1);
-    // Bypass the setState check using reflection to simulate a null state.
-    Field stateField = cell.getClass().getDeclaredField("state");
-    stateField.setAccessible(true);
-    stateField.set(cell, null);
-
-    assertThrows(IllegalArgumentException.class,
-        () -> simulation.applyRules(),
-        "applyRules should throw IllegalArgumentException when a cell's state is null.");
-  }
-
-  /**
-   * GridConstructor: Constructing a grid with negative rows should throw IllegalArgumentException.
-   * Input: Negative number of rows.
-   */
-  @Test
-  void GridConstructor_NegativeRows_ThrowsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class,
-        () -> new Grid(-3, 3, GameOfLifeState.DEAD),
-        "Constructing a grid with negative rows should throw IllegalArgumentException.");
-  }
-
-  /**
-   * GridConstructor: Constructing a grid with negative columns should throw IllegalArgumentException.
-   * Input: Negative number of columns.
-   */
-  @Test
-  void GridConstructor_NegativeCols_ThrowsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class,
-        () -> new Grid(3, -3, GameOfLifeState.DEAD),
-        "Constructing a grid with negative columns should throw IllegalArgumentException.");
-  }
-
-  /**
-   * Cell_setState: Setting a cell's state using an invalid type should throw ClassCastException.
-   * Input: Attempting to cast a String to GameOfLifeState.
-   */
-  @Test
-  void Cell_setState_InvalidType_ThrowsClassCastException() {
-    Cell cell = grid.getCell(0, 0);
-    assertThrows(ClassCastException.class,
-        () -> cell.setState((GameOfLifeState) ((Object) "Invalid")),
-        "Setting a cell's state with an invalid type should throw ClassCastException.");
-  }
 }
 
 

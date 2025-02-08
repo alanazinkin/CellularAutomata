@@ -101,16 +101,27 @@ public class SchellingTest {
   }
 
   /**
-   * applyRules: When a null grid is passed to the Schelling simulation, applyRules() should throw a NullPointerException.
-   * Input: Null grid.
+   * Tests the behavior of {@code applyRules()} when a {@code null} grid is passed to the {@code Schelling} simulation.
+   * <p>
+   * This test verifies that attempting to invoke {@code applyRules()} on a {@code Schelling} simulation
+   * instantiated with a {@code null} grid results in an {@code IllegalArgumentException}.
+   * </p>
+   * <p>
+   * Expected behavior:
+   * <ul>
+   *   <li>When the simulation is created with a {@code null} grid, an {@code IllegalArgumentException} should be thrown in the constructor.</li>
+   * </ul>
+   * </p>
+   *
+   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code Schelling} simulation.
    */
   @Test
-  void applyRules_NullGrid_ThrowsNullPointerException() {
+  void applyRules_NullGrid_ThrowsIllegalArgumentException() {
     SimulationConfig simConfig = createSchellingSimConfig(1, 1);
-    Schelling simulation = new Schelling(simConfig, null, 0.5);
-    assertThrows(NullPointerException.class, simulation::applyRules,
-        "applyRules() should throw NullPointerException when grid is null.");
+    assertThrows(IllegalArgumentException.class, () -> new Schelling(simConfig, null, 0.5),
+        "Schelling simulation constructor should throw IllegalArgumentException when grid is null.");
   }
+
 
   /**
    * applyRules: If the grid contains a cell that is not an AgentCell, applyRules() should throw a ClassCastException.

@@ -113,18 +113,28 @@ class WaTorWorldTest {
   }
 
   /**
-   * WaTorWorldConstructor: Passing a null grid should throw a NullPointerException.
-   * Input: Null grid.
+   * Tests the behavior of the {@code WaTorWorld} constructor when a {@code null} grid is provided.
+   * <p>
+   * This test ensures that passing a {@code null} grid to the {@code WaTorWorld} constructor
+   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid simulation instance.
+   * </p>
+   *
+   * <p>Expected behavior:</p>
+   * <ul>
+   *   <li>When the simulation is created with a {@code null} grid, an {@code IllegalArgumentException} should be thrown.</li>
+   *   <li>The exception message should not be null.</li>
+   * </ul>
+   *
+   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code WaTorWorld} simulation.
    */
   @Test
-  void WaTorWorldConstructor_NullGrid_ThrowsNullPointerException() {
-    Exception exception = assertThrows(NullPointerException.class, () -> {
+  void WaTorWorldConstructor_NullGrid_ThrowsIllegalArgumentException() {
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> {
       new WaTorWorld(simConfig, null, 3, 3, 5, 2);
     });
     assertNotNull(exception.getMessage(), "Exception message should not be null");
   }
 
-  // ----- Helper Methods -----
 
   /**
    * Counts the number of cells in the grid that have the specified state.
