@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Game of Life</type>
+    <title>Blinker</title>
+    <author>Angela Predolac</author>
+    <description>A three-cell oscillator that alternates between horizontal and vertical states.</description>
+    <width>5</width>
+    <height>5</height>
+    <initial_states>
+        0 0 0 0 0
+        0 1 1 1 0
+        0 0 0 0 0
+        0 0 0 0 0
+        0 0 0 0 0
+    </initial_states>
+</simulation>

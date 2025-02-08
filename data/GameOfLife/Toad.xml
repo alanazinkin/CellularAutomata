@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Game of Life</type>
+    <title>Toad</title>
+    <author>Angela Predolac</author>
+    <description>A period-2 oscillator where cells flip between two states.</description>
+    <width>6</width>
+    <height>6</height>
+    <initial_states>
+        0 0 0 0 0 0
+        0 0 1 1 1 0
+        0 1 1 1 0 0
+        0 0 0 0 0 0
+        0 0 0 0 0 0
+        0 0 0 0 0 0
+    </initial_states>
+</simulation>
