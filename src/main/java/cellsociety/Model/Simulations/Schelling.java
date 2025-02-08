@@ -37,14 +37,22 @@ public class Schelling extends Simulation {
   private final Random random;
 
   /**
-   * Constructs a new Schelling simulation with the specified configuration, grid, and tolerance threshold.
+   * Constructs a new {@code Schelling} simulation with the specified configuration, grid, and tolerance.
    *
-   * @param simulationConfig the configuration settings for the simulation
-   * @param grid the simulation grid (populated with AgentCell instances)
-   * @param tolerance the minimum fraction of same-group neighbors required for satisfaction
+   * The constructor initializes the simulation with the provided {@link SimulationConfig}, {@link Grid},
+   * and tolerance value. The tolerance determines the proportion of similar neighbors an agent requires
+   * to be content in its location. The tolerance value must be between 0.0 and 1.0, inclusive.
+   *
+   * @param simulationConfig the configuration for the simulation (must not be {@code null})
+   * @param grid the grid for the simulation (must not be {@code null})
+   * @param tolerance the tolerance for similarity of neighbors (must be between 0.0 and 1.0)
+   * @throws IllegalArgumentException if {@code tolerance} is less than 0.0 or greater than 1.0
    */
   public Schelling(SimulationConfig simulationConfig, Grid grid, double tolerance) {
     super(simulationConfig, grid);
+    if (tolerance < 0.0 || tolerance > 1.0) {
+      throw new IllegalArgumentException("Tolerance must be between 0.0 and 1.0.");
+    }
     this.tolerance = tolerance;
     this.random = new Random();
   }
