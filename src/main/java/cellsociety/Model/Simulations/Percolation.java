@@ -45,9 +45,6 @@ public class Percolation extends Simulation {
    */
   public Percolation(SimulationConfig simulationConfig, Grid grid, double percolationProbability) {
     super(simulationConfig, grid);
-    if (grid == null) {
-      throw new IllegalArgumentException("Grid cannot be null");
-    }
     if (percolationProbability < 0.0 || percolationProbability > RANDOM_MAX) {
       throw new IllegalArgumentException("Percolation probability must be between 0 and 1 inclusive.");
     }
@@ -55,9 +52,18 @@ public class Percolation extends Simulation {
   }
 
   /**
-   * Initializes the color map for Percolation simulation.
+   * Initializes a map that associates each percolation state with its corresponding color.
+   * This method creates a mapping between {@link StateInterface} states and {@link Color} values
+   * to represent the color for each state in the percolation simulation.
    *
-   * @return the map of integer states to simulation states.
+   * The states and their associated colors are as follows:
+   * <ul>
+   *     <li>{@link PercolationState#OPEN} - {@link Color} representing the open state.</li>
+   *     <li>{@link PercolationState#PERCOLATED} - {@link Color} representing the percolated state.</li>
+   *     <li>{@link PercolationState#BLOCKED} - {@link Color} representing the blocked state.</li>
+   * </ul>
+   *
+   * @return A {@link Map} that associates each percolation state with its corresponding color.
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
@@ -67,6 +73,20 @@ public class Percolation extends Simulation {
     colorMap.put(PercolationState.BLOCKED, BLOCKED_COLOR);
     return colorMap;
   }
+  /**
+   * Initializes a map that associates integer values with corresponding states in the percolation simulation.
+   * This method creates a mapping between integer keys and {@link StateInterface} values,
+   * representing different states in the percolation model.
+   *
+   * The mapping is as follows:
+   * <ul>
+   *     <li>0 - {@link PercolationState#OPEN} (Open state)</li>
+   *     <li>1 - {@link PercolationState#PERCOLATED} (Percolated state)</li>
+   *     <li>2 - {@link PercolationState#BLOCKED} (Blocked state)</li>
+   * </ul>
+   *
+   * @return A {@link Map} that associates integers with their corresponding percolation states.
+   */
 
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
