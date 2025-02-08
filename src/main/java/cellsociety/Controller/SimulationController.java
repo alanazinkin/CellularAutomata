@@ -9,6 +9,8 @@ import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 public class SimulationController {
@@ -43,16 +45,41 @@ public class SimulationController {
    * @throws Exception If there is an error during initialization.
    */
   public void init(Stage primaryStage) throws Exception {
+    // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
-    mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);
+    mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
     if (mySimulationConfig == null) {
       throw new IllegalStateException("Failed to parse simulation configuration.");
     }
+    else{
+      SplashScreen initialScreen = new SplashScreen();
+      Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
+      ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
+      // Wait for language selection
+      selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
+    }
+    
+  }
+
+  private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen,
+      ComboBox<String> languageSelector, Stage splashStage) {
+    Button enterButton = initialScreen.makeEnterButton();
+    enterButton.setOnAction(e -> {
+      String selectedLanguage = languageSelector.getValue();
+      if (selectedLanguage != null) {
+        splashStage.close();
+        // Start the simulation with selected language
+        mySimulationConfig.initializeStage(primaryStage);
+        startSimulation(primaryStage, selectedLanguage);
+      }
+    });
+  }
+
+  private void startSimulation(Stage primaryStage, String language) {
     mySimulationConfig.initializeStage(primaryStage);
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
     mySimView = new SimulationView();
-    String language = "Spanish";
     initializeView(primaryStage, language);
     primaryStage.setOnCloseRequest(event -> stopSimulation());
   }
