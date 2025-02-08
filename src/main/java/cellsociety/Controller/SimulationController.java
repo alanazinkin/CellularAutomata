@@ -6,6 +6,7 @@ import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
+import cellsociety.View.SplashScreen;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -113,6 +114,10 @@ public class SimulationController {
     System.out.println("Pausing Simulation");
   }
 
+  public void stepSimulation() {
+    //TODO write step method which calls the backend stepSimulation() method
+  }
+
   /**
    * Resets the simulation to its initial state.
    */
@@ -125,6 +130,7 @@ public class SimulationController {
   }
 
   public void saveSimulation() {
+    //TODO save a simulation config file based on the current state liek a snapshot
     System.out.println("Saving Simulation");
   }
 
