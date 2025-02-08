@@ -11,7 +11,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class SimulationController {
-  private static final String FILE_PATH = "data/SpreadingFire/SF1.xml";
+  private static final String FILE_PATH = "data/SpreadingFire/BasicCenterFireSpread.xml";
   private static final long FRAME_INTERVAL = 200_000_000L;
 
   private SimulationConfig mySimulationConfig;
