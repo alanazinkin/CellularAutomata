@@ -13,6 +13,7 @@ public class Main extends Application {
   public void start(Stage primaryStage) throws Exception {
     SimulationController myController = new SimulationController();
     myController.init(primaryStage);
+    myController.startSimulation();
   }
 
   /**
