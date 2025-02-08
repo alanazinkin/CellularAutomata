@@ -131,6 +131,7 @@ public class SimulationController {
       return; // Prevent multiple simulations
     }
     isRunning = true;
+    isPaused = false;
     if (mySimulation == null) {
       System.err.println("Error: mySimulation is null. Ensure init() is called before starting the simulation.");
       return;
@@ -138,9 +139,6 @@ public class SimulationController {
     if (simulationTimer == null) {
       System.err.println("Error: simulationTimer is null. Ensure setupSimulationTimer() is called.");
       return;
-    }
-    if (isPaused) {
-      isPaused = false;
     }
     simulationTimer.start();
     System.out.println("Starting Simulation");
@@ -164,10 +162,11 @@ public class SimulationController {
       System.err.println("Error: mySimulationConfig is null in resetSimulation.");
       return;
     }
-    pauseSimulation();
+    stopSimulation();
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
-    Platform.runLater(() -> updateView());
+    Platform.runLater(this::updateView);
+    isRunning = false;
     System.out.println("Resetting Simulation");
   }
 
@@ -196,9 +195,7 @@ public class SimulationController {
       System.err.println("Error: View, Simulation, or Grid is null in updateView.");
       return;
     }
-    Stage currentStage = (Stage) mySimView.getRoot().getScene().getWindow();
-    mySimView.getRoot().getChildren().clear();
-    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getColorMap(), myGrid, "English");
+    mySimView.updateGrid(mySimulation.getColorMap());
   }
 
   /**
@@ -240,6 +237,7 @@ public class SimulationController {
       simulationTimer.stop();
     }
     isRunning = false;
+    isPaused = true;
   }
 
 }
