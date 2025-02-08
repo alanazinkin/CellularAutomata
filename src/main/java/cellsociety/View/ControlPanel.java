@@ -67,9 +67,14 @@ public class ControlPanel {
     makeButton(myResources.getString("Reset"), e -> myController.resetSimulation());
     makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
-    makeComboBox(myResources.getString("SelectSim"), e -> myController.selectSimulation(), simulationTypes);
+    makeComboBox(myResources.getString("SelectSim"), myResources.getString("SelectConfig") , e -> myController.selectSimulation(),
+        simulationTypes);
   }
 
+  /**
+   * This method initializes and adds the lower VBox panel containing the speed slider to the scene
+   * @param root the main BorderPane holding all other panes in the simulation view
+   */
   public void makeSliderBar(BorderPane root) {
     // instantiate mySliderBar
     mySliderBar = new VBox(5);
@@ -119,14 +124,14 @@ public class ControlPanel {
     myControlBar.getChildren().add(button);
   }
 
-  private void makeComboBox(String label, EventHandler<ActionEvent> handler, List<String> simulationTypeOptions) {
+  private void makeComboBox(String label, String secondBoxLabel, EventHandler<ActionEvent> handler, List<String> simulationTypeOptions) {
     ComboBox<String> simulationTypes = new ComboBox<>();
     simulationTypes.setPromptText(label);
     simulationTypes.getItems().addAll(simulationTypeOptions);
     simulationTypes.setOnAction(handler);
 
     ComboBox<String> configFileComboBox = new ComboBox<>();
-    configFileComboBox.setPromptText(myResources.getString("ConfigFile"));
+    configFileComboBox.setPromptText(secondBoxLabel);
 
     // Update available files when simulation type is selected
     makeSimulationFileComboBox(simulationTypes, configFileComboBox);

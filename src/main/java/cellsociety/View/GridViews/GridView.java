@@ -27,6 +27,12 @@ public abstract class GridView {
   int cellWidth;
   int cellHeight;
 
+  /**
+   * Constructor for creating a GridView object, which is responsible for creating and updating the visuals
+   * of the grid of cells.
+   * @param simulationConfig configuration object containing relevant simulation details such as type, title, description etc.
+   * @param grid the grid of cells of the simulation
+   */
   public GridView(SimulationConfig simulationConfig, Grid grid) {
     myGrid = grid;
     numRows = simulationConfig.getWidth();
@@ -49,6 +55,10 @@ public abstract class GridView {
     renderGrid(stateMap);
   }
 
+  /**
+   * Creates the visual display of grid cells based on the Grid object and organizes them in the view
+   * @param stateMap mapping of state interfaces to colors to visually render each cell according to its state value
+   */
   public void renderGrid(Map<StateInterface, Color> stateMap) {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {

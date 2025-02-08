@@ -45,7 +45,8 @@ public class SimulationController {
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
     mySimView = new SimulationView();
-    initializeView(primaryStage);
+    String language = "Spanish";
+    initializeView(primaryStage, language);
     setupSimulationTimer();
   }
 
@@ -189,14 +190,15 @@ public class SimulationController {
    *
    * @param primaryStage The primary stage for the JavaFX application.
    */
-  private void initializeView(Stage primaryStage) {
+  private void initializeView(Stage primaryStage, String language) {
     mySimView.initView(
             primaryStage,
             mySimulationConfig,
             mySimulation,
             mySimView,
             mySimulation.getColorMap(),
-            myGrid
+            myGrid,
+            language
     );
   }
 
