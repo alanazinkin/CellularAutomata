@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Percolation</type>
+    <title>No Percolation</title>
+    <author>Angela Predolac</author>
+    <description>A scenario where water cannot pass due to a fully blocked layer.</description>
+    <width>6</width>
+    <height>6</height>
+    <!-- 0 : BLOCKED      1 : OPEN      2 : FULL (Water) -->
+    <initial_states>
+        2 1 1 1 1 1
+        1 0 0 0 0 1
+        1 0 1 1 0 1
+        1 0 1 1 0 1
+        1 0 0 0 0 1
+        1 1 1 1 1 1
+    </initial_states>
+</simulation>

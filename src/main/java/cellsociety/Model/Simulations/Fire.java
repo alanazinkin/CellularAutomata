@@ -6,11 +6,11 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.FireState;
 import cellsociety.Model.StateInterface;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import java.util.Collection;
 
 /**
  * Simulation class for the Spreading of Fire.
@@ -38,20 +38,6 @@ public class Fire extends Simulation {
   private static final Color EMPTY_COLOR = Color.WHITE;
 
   /**
-   * Helper method to validate the grid before passing it to the superclass constructor.
-   *
-   * @param grid the grid to check
-   * @return the grid if it is not null
-   * @throws IllegalArgumentException if grid is null
-   */
-  private static Grid checkGrid(Grid grid) {
-    if (grid == null) {
-      throw new IllegalArgumentException("Grid cannot be null");
-    }
-    return grid;
-  }
-
-  /**
    * Constructs a Fire simulation with the specified configuration, grid, and parameters.
    *
    * @param simulationConfig the configuration settings for the simulation
@@ -61,7 +47,7 @@ public class Fire extends Simulation {
    * @throws IllegalArgumentException if grid is null or if p or f are not in the interval [0, 1]
    */
   public Fire(SimulationConfig simulationConfig, Grid grid, double p, double f) {
-    super(simulationConfig, checkGrid(grid)); // Ensures grid is not null before passing it to the superclass.
+    super(simulationConfig, grid);
     if (p < 0 || p > 1) {
       throw new IllegalArgumentException("Regrowth probability must be between 0 and 1.");
     }
@@ -94,7 +80,7 @@ public class Fire extends Simulation {
   }
 
   /**
-   * Applies the rules of the fire simulation to each cell in the grid.
+   * Computes the next state for every cell without modifying any cell’s current state.
    * <p>
    * The rules are as follows:
    * <ul>
@@ -110,23 +96,36 @@ public class Fire extends Simulation {
    */
   @Override
   public void applyRules() {
-    for (int row = 0; row < getGrid().getRows(); row++) {
-      for (int col = 0; col < getGrid().getCols(); col++) {
+    int numRows = getGrid().getRows();
+    int numCols = getGrid().getCols();
+    // Create a temporary array to hold computed next states.
+    StateInterface[][] nextStates = new StateInterface[numRows][numCols];
+
+    // First pass: compute next state for each cell using only the current state.
+    for (int row = 0; row < numRows; row++) {
+      for (int col = 0; col < numCols; col++) {
         Cell cell = getGrid().getCell(row, col);
         FireState currentState = (FireState) cell.getState();
-
         switch (currentState) {
           case BURNING:
-            cell.setNextState(FireState.BURNT);
+            nextStates[row][col] = FireState.BURNT;
             break;
           case TREE:
-            cell.setNextState(getNextTreeState(row, col));
+            nextStates[row][col] = getNextTreeState(row, col);
             break;
           case EMPTY:
           case BURNT:
-            cell.setNextState(probabilityEvent(p) ? FireState.TREE : currentState);
+            nextStates[row][col] = probabilityEvent(p) ? FireState.TREE : currentState;
             break;
+          default:
+            nextStates[row][col] = currentState;
         }
+      }
+    }
+    // Second pass: write computed next states into each cell.
+    for (int row = 0; row < numRows; row++) {
+      for (int col = 0; col < numCols; col++) {
+        getGrid().getCell(row, col).setNextState(nextStates[row][col]);
       }
     }
   }
@@ -161,8 +160,7 @@ public class Fire extends Simulation {
   /**
    * Checks whether any of the neighbors of the cell at (row, col) are burning.
    * <p>
-   * This method assumes that grid.getNeighbors(row, col) returns a collection of neighboring
-   * cells.
+   * This method assumes that getNeighbors(row, col) returns a collection of neighboring cells.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
@@ -178,6 +176,30 @@ public class Fire extends Simulation {
     }
     return false;
   }
+
+  /**
+   * The step method performs a two-phase update:
+   * <ol>
+   *   <li>Compute next state for each cell using applyRules().</li>
+   *   <li>Commit those states to each cell.</li>
+   * </ol>
+   */
+  @Override
+  public void step() {
+    // First, compute the next state for every cell.
+    applyRules();
+    // Then, commit the computed next state for each cell and reset its next state.
+    for (int row = 0; row < getGrid().getRows(); row++) {
+      for (int col = 0; col < getGrid().getCols(); col++) {
+        Cell cell = getGrid().getCell(row, col);
+        cell.applyNextState();
+        cell.resetNextState();
+      }
+    }
+  }
 }
+
+
+
 
 

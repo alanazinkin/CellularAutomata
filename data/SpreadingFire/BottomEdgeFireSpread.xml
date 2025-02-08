@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Spreading of Fire</type>
+    <title>Bottom Edge Fire Spread</title>
+    <author>Angela Predolac</author>
+    <description>Fire starts at the bottom of the grid and spreads upwards, modeling an uphill fire spread scenario.</description>
+    <width>7</width>
+    <height>7</height>
+    <parameter name="fireProb" value="0.75"/>
+    <parameter name="treeProb" value="0.95"/>
+    <!-- 0 : EMPTY      1 : TREE      2 : BURNING -->
+    <initial_states>
+        1 1 1 1 1 1 1
+        1 1 1 1 1 1 1
+        1 1 1 1 1 1 1
+        1 1 1 1 1 1 1
+        1 1 1 1 1 1 1
+        1 1 1 1 1 1 1
+        2 2 2 2 2 2 2
+    </initial_states>
+</simulation>
+

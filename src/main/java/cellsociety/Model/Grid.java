@@ -19,6 +19,9 @@ public class Grid {
   /** The number of columns in the grid. */
   private int cols;
 
+  /** The default state used when constructing the grid. */
+  private final StateInterface defaultState;
+
   /**
    * Constructs a new {@code Grid} with the specified dimensions and initializes
    * all cells to the given default state.
@@ -38,6 +41,7 @@ public class Grid {
     }
     this.rows = rows;
     this.cols = cols;
+    this.defaultState = defaultState;
     cells = new Cell[rows][cols];
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
@@ -77,6 +81,15 @@ public class Grid {
       }
     }
   }
+  /**
+   * Returns the default state that was used to construct the grid.
+   *
+   * @return the default state.
+   */
+  public StateInterface getDefaultState() {
+    return defaultState;
+  }
+
 
   /**
    * Retrieves the cell at the specified row and column in the grid.

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Wa-Tor World</type>
+  <title>Edge-Based Sharks</title>
+  <author>Angela Predolac</author>
+  <description>Sharks start along the edges, testing their movement and hunting behavior.</description>
+  <width>6</width>
+  <height>6</height>
+  <parameter name="fishReproductionTime" value="3"/>
+  <parameter name="sharkReproductionTime" value="5"/>
+  <parameter name="sharkStarvationTime" value="3"/>
+  <initial_states>
+    2 2 2 2 2 2
+    2 0 0 0 0 2
+    2 0 1 1 0 2
+    2 0 1 1 0 2
+    2 0 0 0 0 2
+    2 2 2 2 2 2
+  </initial_states>
+</simulation>

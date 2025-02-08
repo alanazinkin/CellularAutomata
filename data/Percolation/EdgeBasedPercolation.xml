@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Percolation</type>
+  <title>Edge-Based Percolation</title>
+  <author>Angela Predolac</author>
+  <description>Water enters from the left edge and should spread through the open paths.</description>
+  <width>5</width>
+  <height>5</height>
+  <!-- 0 : BLOCKED      1 : OPEN      2 : FULL (Water) -->
+  <initial_states>
+    2 1 0 1 1
+    2 1 1 0 1
+    2 0 1 1 0
+    2 1 1 1 1
+    2 1 0 1 1
+  </initial_states>
+</simulation>

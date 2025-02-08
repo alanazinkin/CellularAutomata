@@ -14,7 +14,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 public class SimulationController {
-  private static final String FILE_PATH = "data/SpreadingFire/SF1.xml";
+  private static final String FILE_PATH = "data/SpreadingFire/BasicCenterFireSpread.xml";
   private static final long FRAME_INTERVAL = 200_000_000L;
 
   private SimulationConfig mySimulationConfig;
@@ -24,6 +24,7 @@ public class SimulationController {
   private GridView myGridView;
   private boolean isPaused = false;
   private AnimationTimer simulationTimer;
+  private boolean isRunning = false;
   private long lastUpdate = 0;
   private double simulationSpeed = 1.0;
 
@@ -32,7 +33,9 @@ public class SimulationController {
   private static final double DEFAULT_SATISFACTION = 0.3;
   private static final double DEFAULT_PERCOLATION_PROB = 0.5;
 
-  public SimulationController() {}
+  public SimulationController() {
+    setupSimulationTimer();
+  }
 
   /**
    * Initializes the simulation by parsing the configuration file, setting up the model,
@@ -45,11 +48,17 @@ public class SimulationController {
     // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
-    SplashScreen initialScreen = new SplashScreen();
-    Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
-    ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
-    // Wait for language selection
-    selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
+    if (mySimulationConfig == null) {
+      throw new IllegalStateException("Failed to parse simulation configuration.");
+    }
+    else{
+      SplashScreen initialScreen = new SplashScreen();
+      Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
+      ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
+      // Wait for language selection
+      selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
+    }
+    
   }
 
   private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen,
@@ -67,11 +76,12 @@ public class SimulationController {
   }
 
   private void startSimulation(Stage primaryStage, String language) {
+    mySimulationConfig.initializeStage(primaryStage);
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
     mySimView = new SimulationView();
     initializeView(primaryStage, language);
-    setupSimulationTimer();
+    primaryStage.setOnCloseRequest(event -> stopSimulation());
   }
 
   /**
@@ -84,6 +94,30 @@ public class SimulationController {
 
     if (mySimulation == null) {
       throw new IllegalArgumentException("Invalid simulation type: " + simulationType);
+    }
+    System.out.println("Simulation initialized: " + simulationType);
+  }
+
+  /**
+   * Sets up the animation timer for running the simulation loop.
+   * Uses JavaFX AnimationTimer for smooth frame updates.
+   */
+  private void setupSimulationTimer() {
+    if (simulationTimer == null) {
+      simulationTimer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+          if (mySimulation == null) {
+            System.err.println("Error: mySimulation is null in AnimationTimer.");
+            return;
+          }
+          if (!isPaused && now - lastUpdate >= FRAME_INTERVAL / simulationSpeed) {
+            mySimulation.step();
+            updateView();
+            lastUpdate = now;
+          }
+        }
+      };
     }
   }
 
@@ -120,8 +154,19 @@ public class SimulationController {
    * Starts or resumes the simulation.
    */
   public void startSimulation() {
-    if (isPaused) {
-      isPaused = false;
+    if (isRunning) {
+      System.out.println("Simulation is already running.");
+      return; // Prevent multiple simulations
+    }
+    isRunning = true;
+    isPaused = false;
+    if (mySimulation == null) {
+      System.err.println("Error: mySimulation is null. Ensure init() is called before starting the simulation.");
+      return;
+    }
+    if (simulationTimer == null) {
+      System.err.println("Error: simulationTimer is null. Ensure setupSimulationTimer() is called.");
+      return;
     }
     simulationTimer.start();
     System.out.println("Starting Simulation");
@@ -145,10 +190,15 @@ public class SimulationController {
    * Resets the simulation to its initial state.
    */
   public void resetSimulation() {
-    pauseSimulation();
+    if (mySimulationConfig == null) {
+      System.err.println("Error: mySimulationConfig is null in resetSimulation.");
+      return;
+    }
+    stopSimulation();
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    mySimulation = new GameOfLife(mySimulationConfig, myGrid);
-    updateView();
+    initializeSimulationType();
+    Platform.runLater(this::updateView);
+    isRunning = false;
     System.out.println("Resetting Simulation");
   }
 
@@ -174,9 +224,11 @@ public class SimulationController {
    * Updates the view to reflect the current simulation state.
    */
   private void updateView() {
-    Stage currentStage = (Stage) mySimView.getRoot().getScene().getWindow();
-    mySimView.getRoot().getChildren().clear();
-    mySimView.initView(currentStage, mySimulationConfig, mySimulation, mySimView, mySimulation.getColorMap(), myGrid, "English");
+    if (mySimView == null || mySimulation == null || myGrid == null) {
+      System.err.println("Error: View, Simulation, or Grid is null in updateView.");
+      return;
+    }
+    mySimView.updateGrid(mySimulation.getColorMap());
   }
 
   /**
@@ -186,24 +238,6 @@ public class SimulationController {
     if (simulationTimer != null) {
       simulationTimer.stop();
     }
-  }
-
-  /**
-   * Sets up the animation timer for running the simulation loop.
-   * Uses JavaFX AnimationTimer for smooth frame updates.
-   */
-  private void setupSimulationTimer() {
-    simulationTimer = new AnimationTimer() {
-      @Override
-      public void handle(long now) {
-        if (now - lastUpdate >= (long)(FRAME_INTERVAL / simulationSpeed)) {
-          if (!isPaused) {
-            step();
-          }
-          lastUpdate = now;
-        }
-      }
-    };
   }
 
   /**
@@ -229,6 +263,14 @@ public class SimulationController {
             myGrid,
             language
     );
+  }
+
+  public void stopSimulation() {
+    if (simulationTimer != null) {
+      simulationTimer.stop();
+    }
+    isRunning = false;
+    isPaused = true;
   }
 
 }

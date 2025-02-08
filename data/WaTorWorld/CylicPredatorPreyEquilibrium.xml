@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Wa-Tor World</type>
+    <title>Cyclical Predator-Prey Equilibrium</title>
+    <author>Angela Predolac</author>
+    <description>Fish and sharks are positioned to maintain a natural predator-prey cycle.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="fishReproductionTime" value="3"/>
+    <parameter name="sharkReproductionTime" value="4"/>
+    <parameter name="sharkStarvationTime" value="3"/>
+    <initial_states>
+        1 0 2 0 1 0
+        0 2 0 1 0 2
+        2 0 1 0 2 0
+        0 1 0 2 0 1
+        1 0 2 0 1 0
+        0 2 0 1 0 2
+    </initial_states>
+</simulation>

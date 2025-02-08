@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Spreading of Fire</type>
+    <title>Large Dense Forest Fire</title>
+    <author>Angela Predolac</author>
+    <description>A large, densely packed forest is modeled with high tree density and fast fire spread.</description>
+    <width>10</width>
+    <height>10</height>
+    <parameter name="fireProb" value="0.9"/>
+    <parameter name="treeProb" value="0.98"/>
+    <!-- 0 : EMPTY      1 : TREE      2 : BURNING -->
+    <initial_states>
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 2 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1
+    </initial_states>
+</simulation>
+

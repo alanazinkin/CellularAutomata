@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Spreading of Fire</type>
+    <title>Left Edge Fire Spread</title>
+    <author>Angela Predolac</author>
+    <description>This simulation starts a fire on the left edge of the forest, simulating wind-driven spread.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="fireProb" value="0.8"/>
+    <parameter name="treeProb" value="0.85"/>
+    <!-- 0 : EMPTY      1 : TREE      2 : BURNING -->
+    <initial_states>
+        2 1 1 1 1 1
+        2 1 1 1 1 1
+        2 1 1 1 1 1
+        2 1 1 1 1 1
+        2 1 1 1 1 1
+        2 1 1 1 1 1
+    </initial_states>
+</simulation>
+

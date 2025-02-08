@@ -7,6 +7,8 @@ import cellsociety.Model.StateInterface;
 import cellsociety.View.GridViews.FireGridView;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import cellsociety.View.GridViews.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -21,6 +23,7 @@ public class SimulationView {
   private Scene myScene;
   private BorderPane myRoot;
   private ResourceBundle myResources;
+  private GridView myGridView;
 
   /**
    * entry point for adding all views to application
@@ -51,7 +54,7 @@ public class SimulationView {
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
-    FireGridView myGridView = new FireGridView(simulationConfig, grid);
+    myGridView = new FireGridView(simulationConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), stateMap);
   }
 
@@ -87,4 +90,13 @@ public class SimulationView {
    * @return Resource Bundle for a user-selected language
    */
   public ResourceBundle getResources() {return myResources;}
+
+  public void updateGrid(Map<StateInterface, Color> stateMap) {
+    if (myGridView != null) {
+      myGridView.updateCellColors(stateMap);
+    } else {
+      System.err.println("Error: GridView is not initialized.");
+    }
+  }
+
 }
