@@ -1,35 +1,42 @@
 package cellsociety.View;
 
+import cellsociety.Controller.SimulationConfig;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class SplashScreen {
-  public Scene showSplashScreen(Stage stage, String title, double width, double height) {
+  private Pane layout;
+  public Stage showSplashScreen(Stage stage, SimulationConfig simulationConfig, String title, double width, double height) {
     stage.setTitle(title);
-    StackPane layout = new StackPane();
+    Text titleText = new Text(simulationConfig.getTitle());
+    layout = new VBox();
+    layout.getChildren().add(titleText);
 
     Scene scene = new Scene(layout, width, height);
     stage.setScene(scene);
     stage.show();
-    return scene;
+    return stage;
   }
 
-  public void handleSplashScreenEvent(Scene scene, Stage newStage) {
-    scene.setOnKeyPressed(event -> {
-      closeSplashScreen(newStage);
-    });
-    scene.setOnMouseClicked(event -> {
-      closeSplashScreen(newStage);
-    });
-    newStage.setOnCloseRequest((WindowEvent event) -> {
-      closeSplashScreen(newStage);
-    });
+  public ComboBox<String> makeLanguageComboBox() {
+    // make language selector combo Box
+    ComboBox<String> languageSelector = new ComboBox<>();
+    languageSelector.setPromptText("Select Language");
+    languageSelector.getItems().addAll("English", "Spanish", "Italian");
+    layout.getChildren().add(languageSelector);
+    return languageSelector;
   }
 
-  public void closeSplashScreen(Stage stage) {
-    stage.close();
+  public Button makeEnterButton() {
+    Button enterButton = new Button("Enter");
+    layout.getChildren().add(enterButton);
+    return enterButton;
   }
+
 
 }
