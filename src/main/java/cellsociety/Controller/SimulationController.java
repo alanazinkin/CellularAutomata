@@ -10,6 +10,7 @@ import cellsociety.View.SplashScreen;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -200,29 +201,25 @@ public class SimulationController {
 
   public void saveSimulation() {
     try {
-      FileChooser fileChooser = new FileChooser();
+      SaveSimulationDescription dialog = new SaveSimulationDescription(myStage, myResources, mySimulationConfig);
+      Optional<SaveSimulationDescription.SimulationMetadata> result = dialog.showAndWait();
 
-      fileChooser.setTitle(myResources.getString("Save"));
-      fileChooser.getExtensionFilters().add(
-              new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+      if (result.isPresent()) {
+        SaveSimulationDescription.SimulationMetadata metadata = result.get();
 
-      // Set initial directory to the data folder
-      File initialDirectory = new File("data/" + mySimulationConfig.getType().replace(" ", ""));
-      if (!initialDirectory.exists()) {
-        initialDirectory.mkdirs();
-      }
-      fileChooser.setInitialDirectory(initialDirectory);
+        // Update the configuration with new metadata
+        mySimulationConfig.setTitle(metadata.title());
+        mySimulationConfig.setAuthor(metadata.author());
+        mySimulationConfig.setDescription(metadata.description());
 
-      // Show save dialog
-      File file = fileChooser.showSaveDialog(myStage);
-      if (file != null) {
+        // Save the file
         XMLWriter xmlWriter = new XMLWriter();
-        xmlWriter.saveToXML(mySimulationConfig, myGrid, file.getAbsolutePath());
+        xmlWriter.saveToXML(mySimulationConfig, myGrid, metadata.saveLocation().getAbsolutePath());
 
-        // Show success message using existing resource strings
+        // Show success message
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(myResources.getString("Success"));
-        alert.setContentText(file.getName() + " " + myResources.getString("Saved"));
+        alert.setContentText(metadata.saveLocation().getName() + " " + myResources.getString("Saved"));
         alert.showAndWait();
       }
     } catch (IOException e) {
