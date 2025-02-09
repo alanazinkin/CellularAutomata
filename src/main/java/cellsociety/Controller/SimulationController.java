@@ -4,28 +4,27 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
-import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class SimulationController {
   private static final String FILE_PATH = "data/SpreadingFire/BasicCenterFireSpread.xml";
-  private static final long FRAME_INTERVAL = 200_000_000L;
+  private static final double FRAME_INTERVAL_MS = 200.0;
 
   private SimulationConfig mySimulationConfig;
   private Simulation mySimulation;
   private SimulationView mySimView;
   private Grid myGrid;
-  private GridView myGridView;
   private boolean isPaused = false;
-  private AnimationTimer simulationTimer;
+  private Timeline simulationTimeline;
   private boolean isRunning = false;
-  private long lastUpdate = 0;
   private double simulationSpeed = 1.0;
 
   private static final double DEFAULT_FIRE_PROB = 0.5;
@@ -34,7 +33,7 @@ public class SimulationController {
   private static final double DEFAULT_PERCOLATION_PROB = 0.5;
 
   public SimulationController() {
-    setupSimulationTimer();
+    setupSimulationTimeline();
   }
 
   /**
@@ -60,9 +59,13 @@ public class SimulationController {
     Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
     ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
 
-    // Wait for language selection
+
     selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
-    
+  }
+
+  private void setupSimulationTimeline() {
+    simulationTimeline = new Timeline(new KeyFrame(Duration.millis(FRAME_INTERVAL_MS), e -> step()));
+    simulationTimeline.setCycleCount(Timeline.INDEFINITE);
   }
 
   private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen, ComboBox<String> languageSelector, Stage splashStage) {
@@ -87,8 +90,8 @@ public class SimulationController {
       System.err.println("Error: mySimulation is null. Ensure init() is called before starting.");
       return;
     }
-    if (simulationTimer == null) {
-      setupSimulationTimer();
+    if (simulationTimeline == null) {
+      setupSimulationTimeline();
     }
 
     mySimView = new SimulationView();
@@ -97,7 +100,7 @@ public class SimulationController {
 
     isRunning = true;
     isPaused = false;
-    simulationTimer.start();
+    simulationTimeline.play();
     System.out.println("Starting Simulation");
 
   }
@@ -113,29 +116,6 @@ public class SimulationController {
       throw new IllegalArgumentException("Invalid simulation type: " + simulationType);
     }
     System.out.println("Simulation initialized: " + simulationType);
-  }
-
-  /**
-   * Sets up the animation timer for running the simulation loop.
-   * Uses JavaFX AnimationTimer for smooth frame updates.
-   */
-  private void setupSimulationTimer() {
-    if (simulationTimer == null) {
-      simulationTimer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-          if (mySimulation == null) {
-            System.err.println("Error: mySimulation is null in AnimationTimer.");
-            return;
-          }
-          if (!isPaused && now - lastUpdate >= FRAME_INTERVAL / simulationSpeed) {
-            mySimulation.step();
-            updateView();
-            lastUpdate = now;
-          }
-        }
-      };
-    }
   }
 
   /**
@@ -171,22 +151,12 @@ public class SimulationController {
    * Starts or resumes the simulation.
    */
   public void startSimulation() {
-    if (isRunning) {
-      System.out.println("Simulation is already running.");
-      return; // Prevent multiple simulations
+    if (!isRunning) {
+      isRunning = true;
+      isPaused = false;
+      simulationTimeline.play();
+      System.out.println("Starting Simulation");
     }
-    isRunning = true;
-    isPaused = false;
-    if (mySimulation == null) {
-      System.err.println("Error: mySimulation is null. Ensure init() is called before starting the simulation.");
-      return;
-    }
-    if (simulationTimer == null) {
-      System.err.println("Error: simulationTimer is null. Ensure setupSimulationTimer() is called.");
-      return;
-    }
-    simulationTimer.start();
-    System.out.println("Starting Simulation");
   }
 
   /**
@@ -195,8 +165,9 @@ public class SimulationController {
   public void pauseSimulation() {
     if (!isPaused) {
       isPaused = true;
+      simulationTimeline.pause();
+      System.out.println("Pausing Simulation");
     }
-    System.out.println("Pausing Simulation");
   }
 
   public void stepSimulation() {
@@ -212,31 +183,12 @@ public class SimulationController {
    * Resets the simulation to its initial state.
    */
   public void resetSimulation() {
-    if (mySimulationConfig == null) {
-      System.err.println("Error: mySimulationConfig is null in resetSimulation.");
-      return;
-    }
-
     stopSimulation();
     isRunning = false;
 
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
-
-    if (mySimView != null && mySimView.getPrimaryStage() != null) {
-      Platform.runLater(() -> {
-        initializeView(mySimView.getPrimaryStage(), mySimView.getLanguage());
-        updateView();
-      });
-
-      isRunning = true;
-      isPaused = false;
-      simulationTimer.start();
-      System.out.println("Resetting Simulation");
-    } else {
-      System.err.println("Error: View not properly initialized for reset.");
-    }
-
+    updateView();
   }
 
   public void saveSimulation() {
@@ -251,6 +203,7 @@ public class SimulationController {
    */
   public void setSimulationSpeed(double speed) {
     this.simulationSpeed = Math.max(0.1, Math.min(5.0, speed));
+    simulationTimeline.setRate(simulationSpeed);
   }
 
   public void selectSimulation() {
@@ -261,19 +214,17 @@ public class SimulationController {
    * Updates the view to reflect the current simulation state.
    */
   private void updateView() {
-    if (mySimView == null || mySimulation == null || myGrid == null) {
-      System.err.println("Error: View, Simulation, or Grid is null in updateView.");
-      return;
+    if (mySimView != null && mySimulation != null && myGrid != null) {
+      mySimView.updateGrid(mySimulation.getColorMap());
     }
-    mySimView.updateGrid(mySimulation.getColorMap());
   }
 
   /**
    * Cleans up resources when the simulation is closed.
    */
   public void cleanup() {
-    if (simulationTimer != null) {
-      simulationTimer.stop();
+    if (simulationTimeline != null) {
+      simulationTimeline.stop();
     }
   }
 
@@ -281,8 +232,10 @@ public class SimulationController {
    * Performs a single step of the simulation and updates the view.
    */
   private void step() {
-    mySimulation.step();
-    Platform.runLater(this::updateView);
+    if (!isPaused && mySimulation != null) {
+      mySimulation.step();
+      Platform.runLater(this::updateView);
+    }
   }
 
   /**
@@ -303,8 +256,8 @@ public class SimulationController {
   }
 
   public void stopSimulation() {
-    if (simulationTimer != null) {
-      simulationTimer.stop();
+    if (simulationTimeline != null) {
+      simulationTimeline.stop();
     }
     isRunning = false;
     isPaused = true;

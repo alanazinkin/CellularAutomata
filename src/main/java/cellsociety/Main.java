@@ -11,21 +11,20 @@ public class Main extends Application {
    * entry point of simulation
    */
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     try {
       SimulationController myController = new SimulationController();
       myController.init(primaryStage);
 
       primaryStage.setOnCloseRequest(event -> {
-        if (myController != null) {
-          myController.cleanup();
-        }
+        myController.cleanup();
         Platform.exit();
       });
+
+      primaryStage.show();
     } catch (Exception e) {
       System.err.println("Error initializing simulation: " + e.getMessage());
       e.printStackTrace();
-      throw e;
     }
   }
 
