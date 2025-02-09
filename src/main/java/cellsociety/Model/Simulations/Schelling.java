@@ -27,7 +27,7 @@ public class Schelling extends Simulation {
 
   private static final Color AGENT_COLOR = Color.RED;
   private static final Color EMPTY_CELL_COLOR = Color.BLUE;
-  private static final int EMPTY_AGENT_GROUP = -1;
+  private static final int EMPTY_AGENT_GROUP = 0;
   private static final int NO_NEIGHBORS = 0;
 
   // The satisfaction threshold: an agent is satisfied if at least this fraction of its neighbors
