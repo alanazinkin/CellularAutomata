@@ -6,219 +6,234 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.FireState;
 import cellsociety.Model.StateInterface;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import javafx.scene.paint.Color;
-import java.util.Collection;
 
 /**
- * Simulation class for the Spreading of Fire.
- * <p>
- * This simulation models a forest fire according to the following rules:
+ * Represents a forest fire spread simulation based on the following rules:
  * <ul>
- *   <li>A burning cell turns into a burnt cell.</li>
- *   <li>A tree will catch fire if at least one neighbor is burning.</li>
- *   <li>A tree ignites spontaneously with probability f even if no neighbor is burning.</li>
- *   <li>An empty or burnt cell fills with a tree with probability p.</li>
+ *   <li>Burning cells become burnt in the next state</li>
+ *   <li>Tree cells catch fire if neighbors are burning or through spontaneous combustion</li>
+ *   <li>Empty/burnt cells may regrow trees based on probability</li>
  * </ul>
- * <p>
- * The parameters p and f control tree growth and lightning strikes, respectively.
  */
 public class Fire extends Simulation {
 
-  private final double p;
-  private final double f;
-  private Random random;
   private static final Color TREE_COLOR = Color.GREEN;
   private static final Color BURNING_COLOR = Color.RED;
   private static final Color BURNT_COLOR = Color.BROWN;
   private static final Color EMPTY_COLOR = Color.WHITE;
 
+  private static final int EMPTY_STATE_KEY = 0;
+  private static final int TREE_STATE_KEY = 1;
+  private static final int BURNING_STATE_KEY = 2;
+  private static final int BURNT_STATE_KEY = 3;
+
+  /** Probability of empty/burnt cell regrowing a tree */
+  private final double regrowthProbability;
+  /** Probability of spontaneous tree combustion */
+  private final double ignitionProbability;
+  /** Random number generator for probability checks */
+  private final Random randomNumGenerator;
+
   /**
-   * Constructs a Fire simulation with the specified configuration, grid, and parameters.
+   * Constructs a Fire simulation with specified parameters
    *
-   * @param simulationConfig the configuration settings for the simulation
-   * @param grid the grid on which the simulation is run
-   * @param p    the probability that an empty cell grows a tree (must be between 0 and 1)
-   * @param f    the probability that a tree spontaneously catches fire (must be between 0 and 1)
-   * @throws IllegalArgumentException if grid is null or if p or f are not in the interval [0, 1]
+   * @param simulationConfig Configuration object containing simulation settings
+   * @param grid The grid of cells to simulate
+   * @param p Tree regrowth probability (0 ≤ p ≤ 1)
+   * @param f Spontaneous ignition probability (0 ≤ f ≤ 1)
+   * @throws IllegalArgumentException If probabilities are out of valid range
    */
   public Fire(SimulationConfig simulationConfig, Grid grid, double p, double f) {
     super(simulationConfig, grid);
-    if (p < 0 || p > 1) {
-      throw new IllegalArgumentException("Regrowth probability must be between 0 and 1.");
-    }
-    if (f < 0 || f > 1) {
-      throw new IllegalArgumentException("Ignition probability must be between 0 and 1.");
-    }
-    this.p = p;
-    this.f = f;
-    this.random = new Random();
+    validateProbability(p, "Regrowth probability");
+    validateProbability(f, "Ignition probability");
+    this.regrowthProbability = p;
+    this.ignitionProbability = f;
+    this.randomNumGenerator = new Random();
   }
+
   /**
-   * Initializes a map that associates each state in the fire simulation with its corresponding color.
-   * This method creates a mapping between {@link StateInterface} states and {@link Color} values.
+   * Validates that a probability value is within [0,1] range
    *
-   * The states include:
-   * <ul>
-   *     <li>{@link FireState#TREE} - Color for trees.</li>
-   *     <li>{@link FireState#BURNING} - Color for burning trees.</li>
-   *     <li>{@link FireState#BURNT} - Color for burnt trees.</li>
-   *     <li>{@link FireState#EMPTY} - Color for empty spaces.</li>
-   * </ul>
-   *
-   * @return A {@link Map} that associates each fire state with a corresponding color.
+   * @param probability The probability value to validate
+   * @param name Descriptive name for error messages
+   * @throws IllegalArgumentException If probability is outside valid range
+   */
+  private void validateProbability(double probability, String name) {
+    if (probability < 0 || probability > 1) {
+      throw new IllegalArgumentException(name + " must be between 0 and 1.");
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * Creates color mapping for fire states:
+   * - Tree: Green
+   * - Burning: Red
+   * - Burnt: Brown
+   * - Empty: White
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> colorMap = new HashMap<>();
-    colorMap.put(FireState.TREE, TREE_COLOR);
-    colorMap.put(FireState.BURNING, BURNING_COLOR);
-    colorMap.put(FireState.BURNT, BURNT_COLOR);
-    colorMap.put(FireState.EMPTY, EMPTY_COLOR);
-    return colorMap;
+    return Map.of(
+        FireState.TREE, TREE_COLOR,
+        FireState.BURNING, BURNING_COLOR,
+        FireState.BURNT, BURNT_COLOR,
+        FireState.EMPTY, EMPTY_COLOR
+    );
   }
+
   /**
-   * Initializes a map that associates integer values with corresponding fire states.
-   * This method creates a mapping between integer keys and {@link StateInterface} values,
-   * representing different states in the fire simulation.
-   *
-   * The mapping is as follows:
-   * <ul>
-   *     <li>0 - {@link FireState#EMPTY} (Empty space)</li>
-   *     <li>1 - {@link FireState#TREE} (Tree state)</li>
-   *     <li>2 - {@link FireState#BURNING} (Burning tree state)</li>
-   *     <li>3 - {@link FireState#BURNT} (Burnt tree state)</li>
-   * </ul>
-   *
-   * @return A {@link Map} that associates integers with their corresponding fire states.
+   * {@inheritDoc}
+   * Creates state mapping for fire simulation:
+   * - 0: Empty
+   * - 1: Tree
+   * - 2: Burning
+   * - 3: Burnt
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
-    Map<Integer, StateInterface> stateMap = new HashMap<>();
-    stateMap.put(0, FireState.EMPTY);
-    stateMap.put(1, FireState.TREE);
-    stateMap.put(2, FireState.BURNING);
-    stateMap.put(3, FireState.BURNT);
-    return stateMap;
+    return Map.of(
+        EMPTY_STATE_KEY, FireState.EMPTY,
+        TREE_STATE_KEY, FireState.TREE,
+        BURNING_STATE_KEY, FireState.BURNING,
+        BURNT_STATE_KEY, FireState.BURNT
+    );
   }
 
   /**
-   * Computes the next state for every cell without modifying any cell’s current state.
-   * <p>
-   * The rules are as follows:
-   * <ul>
-   *   <li>If a cell is BURNING, it becomes BURNT.</li>
-   *   <li>If a cell is a TREE:
-   *     <ul>
-   *       <li>If at least one neighbor is BURNING, it catches fire.</li>
-   *       <li>Otherwise, it may spontaneously ignite with probability f.</li>
-   *     </ul>
-   *   </li>
-   *   <li>If a cell is EMPTY or BURNT, it may regrow into a TREE with probability p.</li>
-   * </ul>
+   * {@inheritDoc}
+   * Applies fire spread rules in two phases:
+   * 1. Calculate next states for all cells
+   * 2. Update all cells' next states simultaneously
    */
   @Override
   public void applyRules() {
-    int numRows = getGrid().getRows();
-    int numCols = getGrid().getCols();
-    StateInterface[][] nextStates = new StateInterface[numRows][numCols];
+    Grid grid = getGrid();
+    StateInterface[][] nextStates = new StateInterface[grid.getRows()][grid.getCols()];
 
-    for (int row = 0; row < numRows; row++) {
-      for (int col = 0; col < numCols; col++) {
-        Cell cell = getGrid().getCell(row, col);
-        FireState currentState = (FireState) cell.getCurrentState();
-        switch (currentState) {
-          case BURNING:
-            nextStates[row][col] = FireState.BURNT;
-            break;
-          case TREE:
-            nextStates[row][col] = getNextTreeState(row, col);
-            break;
-          case EMPTY:
-          case BURNT:
-            nextStates[row][col] = probabilityEvent(p) ? FireState.TREE : currentState;
-            break;
-          default:
-            nextStates[row][col] = currentState;
-        }
+    // Phase 1: Calculate next states
+    for (int row = 0; row < grid.getRows(); row++) {
+      for (int col = 0; col < grid.getCols(); col++) {
+        Cell cell = grid.getCell(row, col);
+        FireState currentState = validateAndGetState(cell);
+        nextStates[row][col] = determineNextState(currentState, row, col);
       }
     }
-    for (int row = 0; row < numRows; row++) {
-      for (int col = 0; col < numCols; col++) {
-        getGrid().getCell(row, col).setNextState(nextStates[row][col]);
+
+    // Phase 2: Update next states
+    for (int row = 0; row < grid.getRows(); row++) {
+      for (int col = 0; col < grid.getCols(); col++) {
+        grid.getCell(row, col).setNextState(nextStates[row][col]);
       }
     }
   }
 
   /**
-   * Determines the next state of a TREE cell based on fire spreading rules.
+   * Validates and retrieves the current fire state of a cell
    *
-   * @param row the row index of the cell
-   * @param col the column index of the cell
-   * @return FireState.BURNING if the tree catches fire, otherwise FireState.TREE
+   * @param cell The cell to check
+   * @return Valid FireState of the cell
+   * @throws IllegalStateException If cell has unexpected state type
+   */
+  private FireState validateAndGetState(Cell cell) {
+    StateInterface state = cell.getCurrentState();
+    if (!(state instanceof FireState)) {
+      throw new IllegalStateException("Invalid state type: " + state.getClass().getSimpleName());
+    }
+    return (FireState) state;
+  }
+
+  /**
+   * Determines next state based on current state and simulation rules
+   *
+   * @param currentState The cell's current fire state
+   * @param row Grid row index
+   * @param col Grid column index
+   * @return Next state for the cell
+   */
+  private StateInterface determineNextState(FireState currentState, int row, int col) {
+    return switch (currentState) {
+      case BURNING -> FireState.BURNT;
+      case TREE -> getNextTreeState(row, col);
+      case EMPTY, BURNT -> handleEmptyOrBurntState(currentState);
+    };
+  }
+
+  /**
+   * Calculates next state for tree cells
+   *
+   * @param row Grid row index
+   * @param col Grid column index
+   * @return BURNING if neighbors are burning or spontaneous ignition occurs,
+   *         otherwise remains TREE
    */
   private FireState getNextTreeState(int row, int col) {
-    if (hasBurningNeighbor(row, col)) {
-      return FireState.BURNING;
-    }
-    if (probabilityEvent(f)) {
-      return FireState.BURNING;
-    }
-    return FireState.TREE;
+    return hasBurningNeighbor(row, col) || probabilityEvent(ignitionProbability) ?
+        FireState.BURNING : FireState.TREE;
   }
 
   /**
-   * Determines whether an event occurs based on the given probability.
+   * Handles state transitions for empty/burnt cells
    *
-   * @param probability the probability (between 0 and 1) of the event occurring
-   * @return true if the event occurs, false otherwise
+   * @param currentState Either EMPTY or BURNT state
+   * @return TREE if regrowth occurs, otherwise original state
+   */
+  private StateInterface handleEmptyOrBurntState(FireState currentState) {
+    return probabilityEvent(regrowthProbability) ? FireState.TREE : currentState;
+  }
+
+  /**
+   * Tests if a random event occurs based on given probability
+   *
+   * @param probability Chance of event occurring (0 ≤ probability ≤ 1)
+   * @return true if event occurs, false otherwise
    */
   private boolean probabilityEvent(double probability) {
-    return random.nextDouble() < probability;
+    return randomNumGenerator.nextDouble() < probability;
   }
 
   /**
-   * Checks whether any of the neighbors of the cell at (row, col) are burning.
-   * <p>
-   * This method assumes that getNeighbors(row, col) returns a collection of neighboring cells.
+   * Checks if any neighbors are burning
    *
-   * @param row the row index of the cell
-   * @param col the column index of the cell
-   * @return true if at least one neighbor is in the BURNING state; false otherwise
+   * @param row Grid row index
+   * @param col Grid column index
+   * @return true if at least one neighboring cell is burning
    */
   private boolean hasBurningNeighbor(int row, int col) {
-    Collection<Cell> neighbors = getGrid().getNeighbors(row, col);
-    for (Cell neighbor : neighbors) {
-      FireState neighborState = (FireState) neighbor.getCurrentState();
-      if (neighborState == FireState.BURNING) {
-        return true;
-      }
-    }
-    return false;
+    return getGrid().getNeighbors(row, col).stream()
+        .anyMatch(neighbor -> neighbor.getCurrentState() == FireState.BURNING);
   }
 
   /**
-   * The step method performs a two-phase update:
-   * <ol>
-   *   <li>Compute next state for each cell using applyRules().</li>
-   *   <li>Commit those states to each cell.</li>
-   * </ol>
+   * {@inheritDoc}
+   * Executes one simulation step:
+   * 1. Applies rules to calculate next states
+   * 2. Commits all state changes simultaneously
    */
   @Override
   public void step() {
     applyRules();
-    for (int row = 0; row < getGrid().getRows(); row++) {
-      for (int col = 0; col < getGrid().getCols(); col++) {
-        Cell cell = getGrid().getCell(row, col);
+    commitNextStates();
+  }
+
+  /**
+   * Applies calculated next states to all cells and resets state buffers
+   */
+  private void commitNextStates() {
+    Grid grid = getGrid();
+    for (int row = 0; row < grid.getRows(); row++) {
+      for (int col = 0; col < grid.getCols(); col++) {
+        Cell cell = grid.getCell(row, col);
         cell.applyNextState();
         cell.resetNextState();
       }
     }
   }
 }
-
 
 
 
