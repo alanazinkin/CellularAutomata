@@ -4,7 +4,6 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
-import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
 import java.util.HashMap;
@@ -36,7 +35,6 @@ public class SimulationController {
   private boolean isPaused = false;
   private Timeline myTimeline;
   private boolean isRunning = false;
-  private long lastUpdate = 0;
   private double simulationSpeed = 1.0;
   private Stage myStage;
   private ResourceBundle myResources;
@@ -226,7 +224,6 @@ public class SimulationController {
       displayAlert(myResources.getString("Error") + ":" + " " + myResources.getString("ViewSimOrGridNull"));
       return;
     }
-    mySimView.updateGrid(mySimulation.getColorMap());
   }
 
   private void displayAlert(String content) {
