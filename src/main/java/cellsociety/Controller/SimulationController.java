@@ -7,23 +7,22 @@ import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
-import java.util.HashMap;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class SimulationController {
   private static final String FILE_PATH = "data/SpreadingFire/BasicCenterFireSpread.xml";
-  // use Java's dot notation, like with import, for properties files
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
 
   private SimulationController myController;
@@ -200,7 +199,35 @@ public class SimulationController {
   }
 
   public void saveSimulation() {
-    //TODO save a simulation config file based on the current state liek a snapshot
+    try {
+      FileChooser fileChooser = new FileChooser();
+
+      fileChooser.setTitle(myResources.getString("Save"));
+      fileChooser.getExtensionFilters().add(
+              new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+
+      // Set initial directory to the data folder
+      File initialDirectory = new File("data/" + mySimulationConfig.getType().replace(" ", ""));
+      if (!initialDirectory.exists()) {
+        initialDirectory.mkdirs();
+      }
+      fileChooser.setInitialDirectory(initialDirectory);
+
+      // Show save dialog
+      File file = fileChooser.showSaveDialog(myStage);
+      if (file != null) {
+        XMLWriter xmlWriter = new XMLWriter();
+        xmlWriter.saveToXML(mySimulationConfig, myGrid, file.getAbsolutePath());
+
+        // Show success message using existing resource strings
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(myResources.getString("Success"));
+        alert.setContentText(file.getName() + " " + myResources.getString("Saved"));
+        alert.showAndWait();
+      }
+    } catch (IOException e) {
+      displayAlert(myResources.getString("Error") + ": " + e.getMessage());
+    }
     System.out.println("Saving Simulation");
   }
 
