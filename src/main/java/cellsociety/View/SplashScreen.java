@@ -13,7 +13,7 @@ public class SplashScreen {
   private Pane layout;
   public Stage showSplashScreen(Stage stage, SimulationConfig simulationConfig, String title, double width, double height) {
     stage.setTitle(title);
-    Text titleText = new Text(simulationConfig.getTitle());
+    Text titleText = new Text(simulationConfig.getType());
     layout = new VBox();
     layout.getChildren().add(titleText);
 
