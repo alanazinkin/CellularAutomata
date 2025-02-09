@@ -6,7 +6,6 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.PercolationState;
 import cellsociety.Model.StateInterface;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -26,11 +25,18 @@ import javafx.scene.paint.Color;
  */
 public class Percolation extends Simulation {
 
+  public static final int OPEN_ID = 0;
+  public static final int PERCOLATED_ID = 1;
+  public static final int BLOCKED_ID = 2;
+
   private static final Color OPEN_COLOR = Color.WHITE;
   private static final Color PERCOLATED_COLOR = Color.LIGHTBLUE;
   private static final Color BLOCKED_COLOR = Color.BLACK;
 
-  private static final double RANDOM_MAX = 1.0;
+  /** Maximum value for probability calculations */
+  private static final double MAX_PROBABILITY = 1.0;
+  /** Minimum valid probability value */
+  private static final double MIN_PROBABILITY = 0.0;
 
   private final double percolationProbability;
 
@@ -42,68 +48,74 @@ public class Percolation extends Simulation {
    * @param percolationProbability the probability that an open cell percolates when adjacent to a percolated cell;
    *                               must be between 0 and 1 inclusive.
    * @throws IllegalArgumentException if the grid is null or the percolationProbability is not in [0, 1]
+   * @throws NullPointerException if either simulationConfig or grid parameters are null
    */
   public Percolation(SimulationConfig simulationConfig, Grid grid, double percolationProbability) {
     super(simulationConfig, grid);
-    if (percolationProbability < 0.0 || percolationProbability > RANDOM_MAX) {
-      throw new IllegalArgumentException("Percolation probability must be between 0 and 1 inclusive.");
-    }
+    validateProbability(percolationProbability);
     this.percolationProbability = percolationProbability;
   }
 
   /**
-   * Initializes a map that associates each percolation state with its corresponding color.
-   * This method creates a mapping between {@link StateInterface} states and {@link Color} values
-   * to represent the color for each state in the percolation simulation.
+   * Validates that the given probability falls within the acceptable range [0, 1].
    *
-   * The states and their associated colors are as follows:
+   * @param probability the probability value to validate
+   * @throws IllegalArgumentException if the probability is outside the valid range
+   */
+  private void validateProbability(double probability) {
+    if (probability < MIN_PROBABILITY || probability > MAX_PROBABILITY) {
+      throw new IllegalArgumentException(
+          String.format("Percolation probability must be between %.1f and %.1f inclusive.",
+              MIN_PROBABILITY, MAX_PROBABILITY));
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Initializes the color mapping specific to Percolation states:
    * <ul>
-   *     <li>{@link PercolationState#OPEN} - {@link Color} representing the open state.</li>
-   *     <li>{@link PercolationState#PERCOLATED} - {@link Color} representing the percolated state.</li>
-   *     <li>{@link PercolationState#BLOCKED} - {@link Color} representing the blocked state.</li>
+   *   <li>OPEN - White</li>
+   *   <li>PERCOLATED - Light Blue</li>
+   *   <li>BLOCKED - Black</li>
    * </ul>
-   *
-   * @return A {@link Map} that associates each percolation state with its corresponding color.
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> colorMap = new HashMap<>();
-    colorMap.put(PercolationState.OPEN, OPEN_COLOR);
-    colorMap.put(PercolationState.PERCOLATED, PERCOLATED_COLOR);
-    colorMap.put(PercolationState.BLOCKED, BLOCKED_COLOR);
-    return colorMap;
+    return Map.of(
+        PercolationState.OPEN, OPEN_COLOR,
+        PercolationState.PERCOLATED, PERCOLATED_COLOR,
+        PercolationState.BLOCKED, BLOCKED_COLOR
+    );
   }
-  /**
-   * Initializes a map that associates integer values with corresponding states in the percolation simulation.
-   * This method creates a mapping between integer keys and {@link StateInterface} values,
-   * representing different states in the percolation model.
-   *
-   * The mapping is as follows:
-   * <ul>
-   *     <li>0 - {@link PercolationState#OPEN} (Open state)</li>
-   *     <li>1 - {@link PercolationState#PERCOLATED} (Percolated state)</li>
-   *     <li>2 - {@link PercolationState#BLOCKED} (Blocked state)</li>
-   * </ul>
-   *
-   * @return A {@link Map} that associates integers with their corresponding percolation states.
-   */
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Initializes the state mapping using the predefined integer identifiers:
+   * <ul>
+   *   <li>0 - OPEN</li>
+   *   <li>1 - PERCOLATED</li>
+   *   <li>2 - BLOCKED</li>
+   * </ul>
+   */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
-    Map<Integer, StateInterface> stateMap = new HashMap<>();
-    stateMap.put(0, PercolationState.OPEN);
-    stateMap.put(1, PercolationState.PERCOLATED);
-    stateMap.put(2, PercolationState.BLOCKED);
-    return stateMap;
+    return Map.of(
+        OPEN_ID, PercolationState.OPEN,
+        PERCOLATED_ID, PercolationState.PERCOLATED,
+        BLOCKED_ID, PercolationState.BLOCKED
+    );
   }
 
   /**
-   * Applies the percolation rules with probabilistic behavior to all cells in the grid.
+   * {@inheritDoc}
    * <p>
-   * - BLOCKED and PERCOLATED cells remain unchanged.
-   * - For OPEN cells, if any neighbor is PERCOLATED then with the given probability the cell becomes PERCOLATED.
-   * <p>
-   * After calling this method, grid.applyNextStates() should be invoked to update the cell states.
+   * Applies percolation rules to all cells in the grid:
+   * <ul>
+   *   <li>BLOCKED and PERCOLATED cells remain unchanged</li>
+   *   <li>OPEN cells check neighbors for PERCOLATED cells and may percolate probabilistically</li>
+   * </ul>
    */
   @Override
   public void applyRules() {
@@ -113,7 +125,7 @@ public class Percolation extends Simulation {
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         Cell cell = getGrid().getCell(row, col);
-        PercolationState currentState = (PercolationState) cell.getCurrentState();
+        PercolationState currentState = validateAndGetState(cell);
 
         if (isStaticState(currentState)) {
           cell.setNextState(currentState);
@@ -125,26 +137,41 @@ public class Percolation extends Simulation {
   }
 
   /**
-   * Determines if the given state is static (i.e., BLOCKED or PERCOLATED) and should remain unchanged.
+   * Validates that a cell's state is compatible with the Percolation simulation.
    *
-   * @param state the current state of the cell
-   * @return true if the state is BLOCKED or PERCOLATED; false otherwise
+   * @param cell the cell to validate
+   * @return the validated PercolationState of the cell
+   * @throws IllegalStateException if the cell contains an invalid state type
+   */
+  private PercolationState validateAndGetState(Cell cell) {
+    StateInterface state = cell.getCurrentState();
+    if (!(state instanceof PercolationState)) {
+      throw new IllegalStateException("Invalid cell state type: " + state.getClass().getSimpleName());
+    }
+    return (PercolationState) state;
+  }
+
+  /**
+   * Determines if a state is immutable between simulation steps.
+   *
+   * @param state the state to check
+   * @return true if the state is BLOCKED or PERCOLATED, false otherwise
    */
   private boolean isStaticState(PercolationState state) {
     return state == PercolationState.BLOCKED || state == PercolationState.PERCOLATED;
   }
 
   /**
-   * Determines the next state for an OPEN cell based on its neighbors and a probabilistic rule.
+   * Determines the next state for an OPEN cell based on neighbor states and percolation probability.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
-   * @return {@link PercolationState#PERCOLATED} if the cell percolates; {@link PercolationState#OPEN} otherwise
+   * @return PERCOLATED if conditions are met, otherwise remains OPEN
    */
   private PercolationState determineNextStateForOpenCell(int row, int col) {
     List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
-      if (neighbor.getCurrentState() == PercolationState.PERCOLATED && shouldPercolate()) {
+      if (isPercolatedNeighbor(neighbor) && shouldPercolate()) {
         return PercolationState.PERCOLATED;
       }
     }
@@ -152,13 +179,22 @@ public class Percolation extends Simulation {
   }
 
   /**
-   * Determines whether an open cell should percolate based on the percolation probability.
+   * Checks if a neighboring cell is in the PERCOLATED state.
    *
-   * @return true if a generated random number is less than percolationProbability; false otherwise
+   * @param neighbor the neighboring cell to check
+   * @return true if the neighbor is PERCOLATED, false otherwise
+   */
+  private boolean isPercolatedNeighbor(Cell neighbor) {
+    return neighbor.getCurrentState() == PercolationState.PERCOLATED;
+  }
+
+  /**
+   * Determines if percolation should occur based on configured probability.
+   *
+   * @return true if generated random value is below percolation probability threshold
    */
   private boolean shouldPercolate() {
-    final double randomValue = Math.random();
-    return randomValue < percolationProbability;
+    return Math.random() < percolationProbability;
   }
 }
 
