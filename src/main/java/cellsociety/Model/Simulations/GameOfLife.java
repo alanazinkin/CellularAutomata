@@ -6,125 +6,146 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Cell;
 import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.Model.StateInterface;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
- * Represents the Game of Life simulation.
- * The rules of the Game of Life are applied to each cell in the grid.
+ * Represents Conway's Game of Life cellular automaton simulation.
+ * <p>
+ * Implements the following rules:
+ * <ul>
+ *   <li>Any live cell with 2-3 live neighbors survives</li>
+ *   <li>Any dead cell with exactly 3 live neighbors becomes alive</li>
+ *   <li>All other cells die or stay dead</li>
+ * </ul>
+ * Maintains strict encapsulation through private fields and final constants, with validation
+ * for cell states and neighbor calculations.
+ * </p>
  */
 public class GameOfLife extends Simulation {
 
   private static final int MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 2;
   private static final int MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 3;
   private static final int EXACT_LIVE_NEIGHBORS_FOR_BIRTH = 3;
-
   private static final Color ALIVE_COLOR = Color.BLACK;
   private static final Color DEAD_COLOR = Color.WHITE;
 
   /**
-   * Constructs a new {@code GameOfLife} object with the specified simulation configuration and grid.
+   * Constructs a Game of Life simulation with specified configuration and grid
    *
-   * The constructor initializes the simulation with the provided {@link SimulationConfig} and {@link Grid}.
-   * Both parameters must be non-null, as they represent the configuration and the grid for the simulation.
-   *
-   * @param simulationConfig the configuration for the simulation (must not be {@code null})
-   * @param grid the grid for the simulation (must not be {@code null})
-   * @throws IllegalArgumentException if either {@code simulationConfig} or {@code grid} is {@code null}
+   * @param simulationConfig Simulation configuration parameters (parsed from XML)
+   * @param grid Initial grid layout containing cell states
+   * @throws NullPointerException if either parameter is null (enforced by superclass)
    */
   public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
-    if (simulationConfig == null) {
-      throw new IllegalArgumentException("SimulationConfig cannot be null.");
-    }
   }
 
   /**
-   * Applies the Game of Life rules to the grid.
-   * This method updates the next states of the cells based on their neighbors.
+   * Applies Conway's Game of Life rules to all cells in the grid
+   * <p>
+   * Iterates through each cell, calculates its next state based on neighbor counts,
+   * and updates the cell's next state. Actual grid update happens after all calculations.
+   * </p>
    */
   @Override
   public void applyRules() {
-    for (int r = 0; r < getGrid().getRows(); r++) {
-      for (int c = 0; c < getGrid().getCols(); c++) {
-        Cell cell = getGrid().getCell(r, c);
-        List<Cell> neighbors = getGrid().getNeighbors(r, c);
+    Grid grid = getGrid();
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        Cell cell = grid.getCell(r, c);
+        validateCellState(cell);
+        GameOfLifeState currentState = (GameOfLifeState) cell.getCurrentState();
+        List<Cell> neighbors = grid.getNeighbors(r, c);
         int liveNeighbors = countLiveNeighbors(neighbors);
-        GameOfLifeState nextState = determineNextState((GameOfLifeState) cell.getCurrentState(), liveNeighbors);
+        GameOfLifeState nextState = determineNextState(currentState, liveNeighbors);
         cell.setNextState(nextState);
       }
     }
   }
 
   /**
-   * Counts the number of live neighbors in the provided list of cells.
+   * Validates that a cell's current state is compatible with Game of Life rules
    *
-   * @param neighbors the list of neighboring cells
-   * @return the count of live neighbors
+   * @param cell Cell to validate
+   * @throws IllegalStateException if cell contains an invalid state type
    */
-  private int countLiveNeighbors(List<Cell> neighbors) {
-    int liveCount = 0;
-    for (Cell neighbor : neighbors) {
-      if (neighbor.getCurrentState() == GameOfLifeState.ALIVE) {
-        liveCount++;
-      }
+  private void validateCellState(Cell cell) {
+    StateInterface state = cell.getCurrentState();
+    if (!(state instanceof GameOfLifeState)) {
+      throw new IllegalStateException("Invalid cell state for Game of Life: " + state.getClass());
     }
-    return liveCount;
   }
 
   /**
-   * Determines the next state of a cell based on its current state and the number of live neighbors.
+   * Counts the number of alive neighbors using stream operations
    *
-   * @param currentState the current state of the cell
-   * @param liveNeighbors the number of live neighboring cells
-   * @return the next state of the cell
+   * @param neighbors List of neighboring cells to evaluate
+   * @return Number of neighbors in ALIVE state
    */
-  private GameOfLifeState determineNextState(GameOfLifeState currentState, int liveNeighbors) {
+  private int countLiveNeighbors(List<Cell> neighbors) {
+    return (int) neighbors.stream()
+        .filter(neighbor -> neighbor.getCurrentState() == GameOfLifeState.ALIVE)
+        .count();
+  }
+
+  /**
+   * Determines a cell's next state based on current state and neighbor count
+   *
+   * @param currentState The cell's current state (ALIVE/DEAD)
+   * @param liveNeighbors Number of alive neighbors
+   * @return The calculated next state for the cell
+   * @throws IllegalArgumentException if currentState is null
+   */
+  private static GameOfLifeState determineNextState(GameOfLifeState currentState, int liveNeighbors) {
     if (currentState == null) {
       throw new IllegalArgumentException("Cell state cannot be null");
     }
     if (currentState == GameOfLifeState.ALIVE) {
-      if (liveNeighbors < MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL ||
-          liveNeighbors > MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL) {
-        return GameOfLifeState.DEAD;
-      } else {
-        return GameOfLifeState.ALIVE;
-      }
+      return (liveNeighbors >= MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL &&
+          liveNeighbors <= MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL)
+          ? GameOfLifeState.ALIVE : GameOfLifeState.DEAD;
     } else {
-      if (liveNeighbors == EXACT_LIVE_NEIGHBORS_FOR_BIRTH) {
-        return GameOfLifeState.ALIVE;
-      } else {
-        return GameOfLifeState.DEAD;
-      }
+      return (liveNeighbors == EXACT_LIVE_NEIGHBORS_FOR_BIRTH)
+          ? GameOfLifeState.ALIVE : GameOfLifeState.DEAD;
     }
   }
 
   /**
-   * Creates the state map and color mappings.
-   *
-   * @return the state-to-color map
+   * {@inheritDoc}
+   * <p>
+   * Game of Life implementation maps:
+   * <ul>
+   *   <li>ALIVE → Black</li>
+   *   <li>DEAD → White</li>
+   * </ul>
+   * </p>
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> colorMap = new HashMap<>();
-    colorMap.put(GameOfLifeState.ALIVE, ALIVE_COLOR);
-    colorMap.put(GameOfLifeState.DEAD, DEAD_COLOR);
-    return colorMap;
+    return Map.of(
+        GameOfLifeState.ALIVE, ALIVE_COLOR,
+        GameOfLifeState.DEAD, DEAD_COLOR
+    );
   }
 
   /**
-   * Initializes the state map for the Game Of Life simulation.
-   *
-   * @return the map of integer states to simulation states.
+   * {@inheritDoc}
+   * <p>
+   * Game of Life implementation maps:
+   * <ul>
+   *   <li>0 → DEAD</li>
+   *   <li>1 → ALIVE</li>
+   * </ul>
+   * </p>
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
-    Map<Integer, StateInterface> stateMap = new HashMap<>();
-    stateMap.put(0, GameOfLifeState.DEAD);
-    stateMap.put(1, GameOfLifeState.ALIVE);
-    return stateMap;
+    return Map.of(
+        0, GameOfLifeState.DEAD,
+        1, GameOfLifeState.ALIVE
+    );
   }
 }
 
