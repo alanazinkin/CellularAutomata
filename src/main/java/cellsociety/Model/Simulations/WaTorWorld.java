@@ -83,9 +83,9 @@ public class WaTorWorld extends Simulation {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         Cell cell = grid.getCell(r, c);
-        if (cell.getState() == WaTorWorldState.FISH) {
+        if (cell.getCurrentState() == WaTorWorldState.FISH) {
           breedCounter[r][c] = 0;
-        } else if (cell.getState() == WaTorWorldState.SHARK) {
+        } else if (cell.getCurrentState() == WaTorWorldState.SHARK) {
           breedCounter[r][c] = 0;
           sharkEnergy[r][c] = sharkInitialEnergy;
         }
@@ -139,7 +139,7 @@ public class WaTorWorld extends Simulation {
           continue;
         }
         Cell cell = getGrid().getCell(r, c);
-        WaTorWorldState state = (WaTorWorldState) cell.getState();
+        WaTorWorldState state = (WaTorWorldState) cell.getCurrentState();
         if (state == WaTorWorldState.FISH) {
           processFish(r, c, moved);
         } else if (state == WaTorWorldState.SHARK) {
@@ -264,7 +264,7 @@ public class WaTorWorld extends Simulation {
     for (int i = 0; i < DIRECTIONS_COUNT; i++) {
       final int nr = (r + DIRECTION_ROW_OFFSETS[i] + rows) % rows;
       final int nc = (c + DIRECTION_COL_OFFSETS[i] + cols) % cols;
-      if (!moved[nr][nc] && getGrid().getCell(nr, nc).getState() == targetState) {
+      if (!moved[nr][nc] && getGrid().getCell(nr, nc).getCurrentState() == targetState) {
         neighbors.add(new int[]{nr, nc});
       }
     }

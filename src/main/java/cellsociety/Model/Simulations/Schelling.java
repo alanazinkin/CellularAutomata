@@ -125,7 +125,7 @@ public class Schelling extends Simulation {
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         AgentCell cell = (AgentCell) getGrid().getCell(row, col);
-        if (cell.getState() == SchellingState.AGENT) {
+        if (cell.getCurrentState() == SchellingState.AGENT) {
           int agentGroup = cell.getAgentGroup();
           if (!isAgentSatisfied(row, col, agentGroup)) {
             List<int[]> candidateCells = getCandidateCells(emptyCells, agentGroup);
@@ -155,7 +155,7 @@ public class Schelling extends Simulation {
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         AgentCell cell = (AgentCell) getGrid().getCell(row, col);
-        if (cell.getState() == SchellingState.EMPTY_CELL) {
+        if (cell.getCurrentState() == SchellingState.EMPTY_CELL) {
           emptyCells.add(new int[]{row, col});
         }
       }
@@ -214,7 +214,7 @@ public class Schelling extends Simulation {
     int agentNeighborCount = 0;
 
     for (AgentCell neighbor : neighbors) {
-      if (neighbor.getState() == SchellingState.AGENT) {
+      if (neighbor.getCurrentState() == SchellingState.AGENT) {
         agentNeighborCount++;
         if (neighbor.getAgentGroup() == agentGroup) {
           sameGroupCount++;

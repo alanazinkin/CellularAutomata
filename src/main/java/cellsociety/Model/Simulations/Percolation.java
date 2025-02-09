@@ -113,7 +113,7 @@ public class Percolation extends Simulation {
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         Cell cell = getGrid().getCell(row, col);
-        PercolationState currentState = (PercolationState) cell.getState();
+        PercolationState currentState = (PercolationState) cell.getCurrentState();
 
         if (isStaticState(currentState)) {
           cell.setNextState(currentState);
@@ -144,7 +144,7 @@ public class Percolation extends Simulation {
   private PercolationState determineNextStateForOpenCell(int row, int col) {
     List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
-      if (neighbor.getState() == PercolationState.PERCOLATED && shouldPercolate()) {
+      if (neighbor.getCurrentState() == PercolationState.PERCOLATED && shouldPercolate()) {
         return PercolationState.PERCOLATED;
       }
     }

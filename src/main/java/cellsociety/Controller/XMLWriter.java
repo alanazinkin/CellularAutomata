@@ -56,7 +56,7 @@ public class XMLWriter {
         for (int row = 0; row < grid.getRows(); row++) {
             StringBuilder rowContent = new StringBuilder("    ");
             for (int col = 0; col < grid.getCols(); col++) {
-                rowContent.append(grid.getCell(row, col).getState().toString());
+                rowContent.append(grid.getCell(row, col).getCurrentState().toString());
                 if (col < grid.getCols() - 1) {
                     rowContent.append(",");
                 }

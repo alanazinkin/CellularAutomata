@@ -64,7 +64,7 @@ public class SchellingTest {
     simulation.applyRules();
 
     AgentCell cell = (AgentCell) grid.getCell(0, 0);
-    assertEquals(SchellingState.AGENT, cell.getState(), "Agent should remain in place as it has no neighbors.");
+    assertEquals(SchellingState.AGENT, cell.getCurrentState(), "Agent should remain in place as it has no neighbors.");
     assertEquals(1, cell.getAgentGroup(), "Agent group should remain unchanged.");
   }
 
@@ -91,12 +91,12 @@ public class SchellingTest {
     simulation.applyRules();
 
     AgentCell sourceCell = (AgentCell) grid.getCell(0, 0);
-    assertEquals(SchellingState.EMPTY_CELL, sourceCell.getState(), "The unsatisfied agent should leave its original cell.");
+    assertEquals(SchellingState.EMPTY_CELL, sourceCell.getCurrentState(), "The unsatisfied agent should leave its original cell.");
 
     AgentCell destCell1 = (AgentCell) grid.getCell(1, 0);
     AgentCell destCell2 = (AgentCell) grid.getCell(1, 1);
-    boolean moved = (destCell1.getState() == SchellingState.AGENT && destCell1.getAgentGroup() == 1) ||
-        (destCell2.getState() == SchellingState.AGENT && destCell2.getAgentGroup() == 1);
+    boolean moved = (destCell1.getCurrentState() == SchellingState.AGENT && destCell1.getAgentGroup() == 1) ||
+        (destCell2.getCurrentState() == SchellingState.AGENT && destCell2.getAgentGroup() == 1);
     assertTrue(moved, "One of the empty cells should now contain the moving agent from (0,0).");
   }
 

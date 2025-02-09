@@ -44,13 +44,13 @@ class FireTest {
   @Test
   void applyRules_BurningCell_TransitionsToBurnt() {
     Cell center = grid.getCell(1, 1);
-    center.setState(FireState.BURNING);
+    center.setCurrentState(FireState.BURNING);
 
     // Set all other cells to TREE so they don't affect the test.
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!(row == 1 && col == 1)) {
-          grid.getCell(row, col).setState(FireState.TREE);
+          grid.getCell(row, col).setCurrentState(FireState.TREE);
         }
       }
     }
@@ -68,15 +68,15 @@ class FireTest {
   @Test
   void applyRules_TreeWithBurningNeighbor_TransitionsToBurning() {
     Cell center = grid.getCell(1, 1);
-    center.setState(FireState.TREE);
+    center.setCurrentState(FireState.TREE);
 
     Cell leftNeighbor = grid.getCell(1, 0);
-    leftNeighbor.setState(FireState.BURNING);
+    leftNeighbor.setCurrentState(FireState.BURNING);
 
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 1 && col == 0))) {
-          grid.getCell(row, col).setState(FireState.TREE);
+          grid.getCell(row, col).setCurrentState(FireState.TREE);
         }
       }
     }
@@ -94,12 +94,12 @@ class FireTest {
   @Test
   void applyRules_TreeWithoutBurningNeighbor_SpontaneouslyIgnites() {
     Cell center = grid.getCell(1, 1);
-    center.setState(FireState.TREE);
+    center.setCurrentState(FireState.TREE);
 
     // All cells remain trees (no burning neighbors).
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
-        grid.getCell(row, col).setState(FireState.TREE);
+        grid.getCell(row, col).setCurrentState(FireState.TREE);
       }
     }
 
@@ -116,7 +116,7 @@ class FireTest {
   @Test
   void applyRules_EmptyCell_GrowsTree() {
     Cell center = grid.getCell(1, 1);
-    center.setState(FireState.EMPTY);
+    center.setCurrentState(FireState.EMPTY);
 
     Fire fireSim = new Fire(simulationConfig, grid, 1.0, 0.0);
     fireSim.applyRules();
@@ -131,15 +131,15 @@ class FireTest {
   @Test
   void step_BurningNeighborAndTree_TransitionsCorrectly() {
     Cell center = grid.getCell(1, 1);
-    center.setState(FireState.TREE);
+    center.setCurrentState(FireState.TREE);
 
     Cell topNeighbor = grid.getCell(0, 1);
-    topNeighbor.setState(FireState.BURNING);
+    topNeighbor.setCurrentState(FireState.BURNING);
 
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 1 && col == 1) || (row == 0 && col == 1))) {
-          grid.getCell(row, col).setState(FireState.TREE);
+          grid.getCell(row, col).setCurrentState(FireState.TREE);
         }
       }
     }
@@ -147,8 +147,8 @@ class FireTest {
     Fire fireSim = new Fire(simulationConfig, grid, 0.0, 0.0);
     fireSim.step();
 
-    assertEquals(FireState.BURNT, topNeighbor.getState(), "A burning neighbor did not become burnt after step().");
-    assertEquals(FireState.BURNING, center.getState(), "A tree with a burning neighbor did not ignite after step().");
+    assertEquals(FireState.BURNT, topNeighbor.getCurrentState(), "A burning neighbor did not become burnt after step().");
+    assertEquals(FireState.BURNING, center.getCurrentState(), "A tree with a burning neighbor did not ignite after step().");
   }
 
   /**
@@ -158,15 +158,15 @@ class FireTest {
   @Test
   void applyRules_EdgeCell_BurningNeighbor_TriggersNeighborIgnition() {
     Cell edgeCell = grid.getCell(0, 0);
-    edgeCell.setState(FireState.BURNING);
+    edgeCell.setCurrentState(FireState.BURNING);
 
     Cell neighborCell = grid.getCell(0, 1);
-    neighborCell.setState(FireState.TREE);
+    neighborCell.setCurrentState(FireState.TREE);
 
     for (int row = 0; row < grid.getRows(); row++) {
       for (int col = 0; col < grid.getCols(); col++) {
         if (!((row == 0 && col == 0) || (row == 0 && col == 1))) {
-          grid.getCell(row, col).setState(FireState.TREE);
+          grid.getCell(row, col).setCurrentState(FireState.TREE);
         }
       }
     }

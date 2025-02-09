@@ -128,7 +128,7 @@ public class Fire extends Simulation {
     for (int row = 0; row < numRows; row++) {
       for (int col = 0; col < numCols; col++) {
         Cell cell = getGrid().getCell(row, col);
-        FireState currentState = (FireState) cell.getState();
+        FireState currentState = (FireState) cell.getCurrentState();
         switch (currentState) {
           case BURNING:
             nextStates[row][col] = FireState.BURNT;
@@ -191,7 +191,7 @@ public class Fire extends Simulation {
   private boolean hasBurningNeighbor(int row, int col) {
     Collection<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
-      FireState neighborState = (FireState) neighbor.getState();
+      FireState neighborState = (FireState) neighbor.getCurrentState();
       if (neighborState == FireState.BURNING) {
         return true;
       }

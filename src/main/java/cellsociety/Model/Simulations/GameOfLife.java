@@ -52,7 +52,7 @@ public class GameOfLife extends Simulation {
         Cell cell = getGrid().getCell(r, c);
         List<Cell> neighbors = getGrid().getNeighbors(r, c);
         int liveNeighbors = countLiveNeighbors(neighbors);
-        GameOfLifeState nextState = determineNextState((GameOfLifeState) cell.getState(), liveNeighbors);
+        GameOfLifeState nextState = determineNextState((GameOfLifeState) cell.getCurrentState(), liveNeighbors);
         cell.setNextState(nextState);
       }
     }
@@ -67,7 +67,7 @@ public class GameOfLife extends Simulation {
   private int countLiveNeighbors(List<Cell> neighbors) {
     int liveCount = 0;
     for (Cell neighbor : neighbors) {
-      if (neighbor.getState() == GameOfLifeState.ALIVE) {
+      if (neighbor.getCurrentState() == GameOfLifeState.ALIVE) {
         liveCount++;
       }
     }
