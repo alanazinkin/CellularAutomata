@@ -48,16 +48,20 @@ public class SimulationController {
     // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
+
     if (mySimulationConfig == null) {
       throw new IllegalStateException("Failed to parse simulation configuration.");
     }
-    else{
-      SplashScreen initialScreen = new SplashScreen();
-      Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
-      ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
-      // Wait for language selection
-      selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
-    }
+
+    myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
+    initializeSimulationType();
+
+    SplashScreen initialScreen = new SplashScreen();
+    Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
+    ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
+
+    // Wait for language selection
+    selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
     
   }
 
@@ -76,12 +80,27 @@ public class SimulationController {
   }
 
   private void startSimulation(Stage primaryStage, String language) {
-    mySimulationConfig.initializeStage(primaryStage);
-    myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
-    initializeSimulationType();
+    if (isRunning) {
+      System.out.println("Simulation is already running.");
+      return;
+    }
+    if (mySimulation == null) {
+      System.err.println("Error: mySimulation is null. Ensure init() is called before starting.");
+      return;
+    }
+    if (simulationTimer == null) {
+      setupSimulationTimer();
+    }
+
     mySimView = new SimulationView();
+    mySimView.setController(this);
     initializeView(primaryStage, language);
-    primaryStage.setOnCloseRequest(event -> stopSimulation());
+
+    isRunning = true;
+    isPaused = false;
+    simulationTimer.start();
+    System.out.println("Starting Simulation");
+
   }
 
   /**
@@ -183,7 +202,12 @@ public class SimulationController {
   }
 
   public void stepSimulation() {
-    //TODO write step method which calls the backend stepSimulation() method
+    if (mySimulation != null) {
+      mySimulation.step();
+      updateView();
+    } else {
+      System.err.println("Error: Cannot step simulation - simulation is null");
+    }
   }
 
   /**
@@ -194,12 +218,27 @@ public class SimulationController {
       System.err.println("Error: mySimulationConfig is null in resetSimulation.");
       return;
     }
+
     stopSimulation();
+    isRunning = false;
+
     myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
     initializeSimulationType();
-    Platform.runLater(this::updateView);
-    isRunning = false;
-    System.out.println("Resetting Simulation");
+
+    if (mySimView != null && mySimView.getPrimaryStage() != null) {
+      Platform.runLater(() -> {
+        initializeView(mySimView.getPrimaryStage(), mySimView.getLanguage());
+        updateView();
+      });
+
+      isRunning = true;
+      isPaused = false;
+      simulationTimer.start();
+      System.out.println("Resetting Simulation");
+    } else {
+      System.err.println("Error: View not properly initialized for reset.");
+    }
+
   }
 
   public void saveSimulation() {

@@ -1,6 +1,7 @@
 package cellsociety.View;
 
 import cellsociety.Controller.SimulationConfig;
+import cellsociety.Controller.SimulationController;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.StateInterface;
@@ -8,6 +9,7 @@ import cellsociety.View.GridViews.FireGridView;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import cellsociety.View.GridViews.GameOfLifeGridView;
 import cellsociety.View.GridViews.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +26,9 @@ public class SimulationView {
   private BorderPane myRoot;
   private ResourceBundle myResources;
   private GridView myGridView;
+  private Stage myStage;
+  private String myLanguage;
+  private SimulationController myController;
 
   /**
    * entry point for adding all views to application
@@ -56,6 +61,8 @@ public class SimulationView {
     // create Grid
     myGridView = new FireGridView(simulationConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), stateMap);
+    myStage = primaryStage;
+    myLanguage = language;
   }
 
   /**
@@ -74,6 +81,14 @@ public class SimulationView {
     myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
     myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
     return myScene;
+  }
+
+  private GridView createAppropriateGridView(SimulationConfig config, Grid grid) {
+      return switch (config.getType().toLowerCase()) {
+          case "spreading of fire" -> new FireGridView(config, grid);
+          case "game of life" -> new GameOfLifeGridView(config, grid);
+          default -> null;
+      };
   }
 
   /**
@@ -98,5 +113,18 @@ public class SimulationView {
       System.err.println("Error: GridView is not initialized.");
     }
   }
+
+  public Stage getPrimaryStage() {
+    return myStage;
+  }
+
+  public String getLanguage() {
+    return myLanguage;
+  }
+
+  public void setController(SimulationController controller) {
+    myController = controller;
+  }
+
 
 }
