@@ -59,10 +59,17 @@ public class WaTorWorld extends Simulation {
    * @param sharkBreedTime number of chronons a shark must survive before reproducing
    * @param sharkInitialEnergy the initial energy for a shark when it is created
    * @param sharkEnergyGain the energy a shark gains by eating a fish
+   * @throws IllegalArgumentException if {@code fishBreedTime} or {@code sharkBreedTime} is less than or equal to 0
    */
   public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime, int sharkBreedTime,
       int sharkInitialEnergy, int sharkEnergyGain) {
     super(simulationConfig, grid);
+    if (fishBreedTime <= 0) {
+      throw new IllegalArgumentException("fishBreedTime must be greater than 0.");
+    }
+    if (sharkBreedTime <= 0) {
+      throw new IllegalArgumentException("sharkBreedTime must be greater than 0.");
+    }
     this.rows = grid.getRows();
     this.cols = grid.getCols();
     this.fishBreedTime = fishBreedTime;
@@ -85,6 +92,7 @@ public class WaTorWorld extends Simulation {
       }
     }
   }
+
   /**
    * Initializes the color map for Wa-Tor World simulation.
    *

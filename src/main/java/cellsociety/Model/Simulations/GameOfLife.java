@@ -17,25 +17,27 @@ import javafx.scene.paint.Color;
  */
 public class GameOfLife extends Simulation {
 
-  // Named constant values for the rules of the Game of Life
   private static final int MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 2;
   private static final int MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 3;
   private static final int EXACT_LIVE_NEIGHBORS_FOR_BIRTH = 3;
 
-  // Named constant values for the cell colors
   private static final Color ALIVE_COLOR = Color.BLACK;
   private static final Color DEAD_COLOR = Color.WHITE;
 
   /**
-   * Constructs a new Game of Life simulation with the specified configuration and grid.
+   * Constructs a new {@code GameOfLife} object with the specified simulation configuration and grid.
    *
-   * @param simulationConfig the configuration settings for the simulation
-   * @param grid the {@code Grid} object representing the simulation space
+   * The constructor initializes the simulation with the provided {@link SimulationConfig} and {@link Grid}.
+   * Both parameters must be non-null, as they represent the configuration and the grid for the simulation.
+   *
+   * @param simulationConfig the configuration for the simulation (must not be {@code null})
+   * @param grid the grid for the simulation (must not be {@code null})
+   * @throws IllegalArgumentException if either {@code simulationConfig} or {@code grid} is {@code null}
    */
   public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
-    if (simulationConfig == null || grid == null) {
-      throw new NullPointerException("SimulationConfig and Grid cannot be null.");
+    if (simulationConfig == null) {
+      throw new IllegalArgumentException("SimulationConfig cannot be null.");
     }
   }
 

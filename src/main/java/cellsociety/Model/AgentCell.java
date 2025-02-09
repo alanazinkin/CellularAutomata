@@ -8,13 +8,20 @@ public class AgentCell extends Cell {
   private int agentGroup;
 
   /**
-   * Constructs an AgentCell with the given state and group.
+   * Constructs an {@code AgentCell} with the specified state and agent group.
    *
-   * @param state the initial state (should be SchellingState.AGENT or SchellingState.EMPTY_CELL)
-   * @param agentGroup the group identifier for the agent (ignored if the state is EMPTY_CELL)
+   * The constructor initializes an agent cell with the given state and agent group. It ensures that the provided
+   * agent group is non-negative. If the provided agent group is negative, an {@link IllegalArgumentException} is thrown.
+   *
+   * @param state the state of the agent cell (must not be {@code null})
+   * @param agentGroup the agent group to be assigned to the agent cell (must not be negative)
+   * @throws IllegalArgumentException if {@code agentGroup} is less than 0
    */
   public AgentCell(StateInterface state, int agentGroup) {
     super(state);
+    if (agentGroup < 0) {
+      throw new IllegalArgumentException("Agent group cannot be negative.");
+    }
     this.agentGroup = agentGroup;
   }
 
@@ -28,11 +35,18 @@ public class AgentCell extends Cell {
   }
 
   /**
-   * Sets the agent's group identifier.
+   * Sets the agent group to the specified value.
    *
-   * @param agentGroup the new group identifier
+   * This method sets the agent group for the agent, ensuring that the specified group number is non-negative.
+   * If the provided agent group is negative, an {@link IllegalArgumentException} is thrown.
+   *
+   * @param agentGroup the agent group to be set (must not be negative)
+   * @throws IllegalArgumentException if {@code agentGroup} is less than 0
    */
   public void setAgentGroup(int agentGroup) {
+    if (agentGroup < 0) {
+      throw new IllegalArgumentException("Agent group cannot be negative.");
+    }
     this.agentGroup = agentGroup;
   }
 }
