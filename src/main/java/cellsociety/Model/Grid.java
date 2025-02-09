@@ -86,7 +86,6 @@ public class Grid {
    * @throws ArrayIndexOutOfBoundsException if {@code row} or {@code col} is out of bounds
    */
   public List<Cell> getNeighbors(int row, int col) {
-    // Throw an exception if the starting indices are invalid.
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
       throw new ArrayIndexOutOfBoundsException("Indices (" + row + "," + col + ") out of bounds");
     }
