@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * This class creates the buttons and components of the control panel,
@@ -37,14 +38,10 @@ public class ControlPanel {
    * construct a new Control Panel. Initializes the controller object by default.
    * This prevents a possible exception from occuring.
    */
-  public ControlPanel(String language) {
+  public ControlPanel(String language, SimulationController controller) {
+    myController = controller;
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
-    initializeControls();
     initializeFileRetriever();
-  }
-
-  private void initializeControls() {
-    myController = new SimulationController();
   }
 
   private void initializeFileRetriever() {
@@ -64,8 +61,15 @@ public class ControlPanel {
     // add buttons to Control Bar
     makeButton(myResources.getString("Start"), e -> myController.startSimulation());
     makeButton(myResources.getString("Pause"), e -> myController.pauseSimulation());
-    makeButton(myResources.getString("Step"), e -> myController.stepSimulation());
-    makeButton(myResources.getString("Reset"), e -> myController.resetSimulation());
+    //TODO add "one step"
+    makeButton(myResources.getString("Step"), e -> myController.stepSimulation(1));
+    makeButton(myResources.getString("Reset"), e -> {
+      try {
+        myController.resetSimulation();
+      } catch (Exception ex) {
+        displayAlert(myResources.getString("Error"));
+      }
+    });
     makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     makeComboBox(myResources.getString("SelectSim"), myResources.getString("SelectConfig") , e -> myController.selectSimulation(),
@@ -152,7 +156,7 @@ public class ControlPanel {
           configFileComboBox.getItems().setAll(fileNames);
           configFileComboBox.setDisable(false);
         } catch (FileNotFoundException e) {
-          displayAlert(simulationType);
+          displayAlert(myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
           configFileComboBox.getItems().clear();
           configFileComboBox.setDisable(true);
         }
@@ -160,10 +164,10 @@ public class ControlPanel {
     });
   }
 
-  private void displayAlert(String simulationType) {
+  private void displayAlert(String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(myResources.getString("Error"));
-    alert.setContentText(myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
+    alert.setContentText(content);
     alert.showAndWait();
   }
 }

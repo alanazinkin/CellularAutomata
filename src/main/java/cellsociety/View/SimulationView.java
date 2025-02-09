@@ -19,16 +19,13 @@ import javafx.stage.Stage;
 public class SimulationView {
   public static final int SIMULATION_WIDTH = 1000;
   public static final int SIMULATION_HEIGHT = 800;
-  // use Java's dot notation, like with import, for properties files
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
 
+  private SimulationController myController;
   private Scene myScene;
   private BorderPane myRoot;
   private ResourceBundle myResources;
   private GridView myGridView;
-  private Stage myStage;
-  private String myLanguage;
-  private SimulationController myController;
+  private SimulationConfig myConfig;
 
   /**
    * entry point for adding all views to application
@@ -39,30 +36,29 @@ public class SimulationView {
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language) {
-    // get resource bundle
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, SimulationController controller) {
+    myConfig = simulationConfig;
+    myResources = controller.getResources();
+    myController = controller;
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
-        simulationConfig.getType(),
-        simulationConfig.getTitle(),
-        simulationConfig.getAuthor(),
-        simulationConfig.getDescription(),
-        simulationConfig.getParameters(),
+        myConfig.getType(),
+        myConfig.getTitle(),
+        myConfig.getAuthor(),
+        myConfig.getDescription(),
+        myConfig.getParameters(),
         simulation.getColorMap(),
         language
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"));
     createSimulationWindow(primaryStage);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(language);
+    ControlPanel myControlPanel = new ControlPanel(language, myController);
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeSliderBar(simView.getRoot());
     // create Grid
-    myGridView = new FireGridView(simulationConfig, grid);
+    myGridView = new FireGridView(myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), stateMap);
-    myStage = primaryStage;
-    myLanguage = language;
   }
 
   /**
@@ -79,14 +75,13 @@ public class SimulationView {
     primaryStage.show();
     // add CSS files
     myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
-    myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
     return myScene;
   }
 
-  private GridView createAppropriateGridView(SimulationConfig config, Grid grid) {
-      return switch (config.getType().toLowerCase()) {
-          case "spreading of fire" -> new FireGridView(config, grid);
-          case "game of life" -> new GameOfLifeGridView(config, grid);
+  private GridView createAppropriateGridView(Grid grid) {
+      return switch (myConfig.getType().toLowerCase()) {
+          case "spreading of fire" -> new FireGridView(myConfig, grid);
+          case "game of life" -> new GameOfLifeGridView(myConfig, grid);
           default -> null;
       };
   }
@@ -100,12 +95,6 @@ public class SimulationView {
     return myRoot;
   }
 
-  /**
-   * method that allows access to the simulation view class' resource bundle for a specific language
-   * @return Resource Bundle for a user-selected language
-   */
-  public ResourceBundle getResources() {return myResources;}
-
   public void updateGrid(Map<StateInterface, Color> stateMap) {
     if (myGridView != null) {
       myGridView.updateCellColors(stateMap);
@@ -113,18 +102,5 @@ public class SimulationView {
       System.err.println("Error: GridView is not initialized.");
     }
   }
-
-  public Stage getPrimaryStage() {
-    return myStage;
-  }
-
-  public String getLanguage() {
-    return myLanguage;
-  }
-
-  public void setController(SimulationController controller) {
-    myController = controller;
-  }
-
 
 }
