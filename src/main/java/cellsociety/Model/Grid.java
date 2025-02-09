@@ -137,7 +137,7 @@ public class Grid {
     }
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        cells[r][c].setState(newState);
+        cells[r][c].setCurrentState(newState);
         cells[r][c].resetNextState();
       }
     }
@@ -170,7 +170,7 @@ public class Grid {
   public void printGrid() {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        System.out.print(cells[r][c].getState().toString().charAt(0) + " ");
+        System.out.print(cells[r][c].getCurrentState().toString().charAt(0) + " ");
       }
       System.out.println();
     }

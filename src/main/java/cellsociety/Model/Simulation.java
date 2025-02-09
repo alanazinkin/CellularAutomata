@@ -143,8 +143,8 @@ public abstract class Simulation {
           throw new NullPointerException("State map is null");
         }
         StateInterface newState = stateMap.get(simulationConfig.getInitialStates()[cellCount]);
-        if (grid.getCell(r, c).getState().equals(grid.getDefaultState())) {
-          grid.getCell(r, c).setState(newState);
+        if (grid.getCell(r, c).getCurrentState().equals(grid.getDefaultState())) {
+          grid.getCell(r, c).setCurrentState(newState);
         }
         cellCount++;
       }

@@ -52,7 +52,7 @@ class PercolationTest {
   @Test
   void applyRules_OpenCellWithPercolatedNeighbor_BecomesPercolated() {
     Grid grid = createTestGrid();
-    grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
+    grid.getCell(0, 0).setCurrentState(PercolationState.PERCOLATED);
     SimulationConfig simConfig = createSimulationConfigForPercolation();
     Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
 
@@ -60,11 +60,11 @@ class PercolationTest {
     grid.applyNextStates();
 
     // All adjacent cells should become percolated due to propagation.
-    assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 1).getState(),
+    assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 1).getCurrentState(),
         "Cell (0,1) should become percolated.");
-    assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 0).getState(),
+    assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 0).getCurrentState(),
         "Cell (1,0) should become percolated.");
-    assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 1).getState(),
+    assertEquals(PercolationState.PERCOLATED, grid.getCell(1, 1).getCurrentState(),
         "Cell (1,1) should become percolated.");
   }
 
@@ -75,20 +75,20 @@ class PercolationTest {
   @Test
   void applyRules_OpenCellsWithoutPercolatedNeighbor_RemainUnchanged() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    grid.getCell(0, 1).setState(PercolationState.BLOCKED);
+    grid.getCell(0, 1).setCurrentState(PercolationState.BLOCKED);
     SimulationConfig simConfig = createSimulationConfigForPercolation();
     Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
 
     simulation.applyRules();
     grid.applyNextStates();
 
-    assertEquals(PercolationState.OPEN, grid.getCell(0, 0).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(0, 0).getCurrentState(),
         "Cell (0,0) should remain open.");
-    assertEquals(PercolationState.BLOCKED, grid.getCell(0, 1).getState(),
+    assertEquals(PercolationState.BLOCKED, grid.getCell(0, 1).getCurrentState(),
         "Cell (0,1) should remain blocked.");
-    assertEquals(PercolationState.OPEN, grid.getCell(1, 0).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 0).getCurrentState(),
         "Cell (1,0) should remain open.");
-    assertEquals(PercolationState.OPEN, grid.getCell(1, 1).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 1).getCurrentState(),
         "Cell (1,1) should remain open.");
   }
 
@@ -99,20 +99,20 @@ class PercolationTest {
   @Test
   void applyRules_WithProbabilityZero_OpenCellsRemainOpen() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
-    grid.getCell(0, 0).setState(PercolationState.PERCOLATED);
+    grid.getCell(0, 0).setCurrentState(PercolationState.PERCOLATED);
     SimulationConfig simConfig = createSimulationConfigForPercolation();
     Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ZERO);
 
     simulation.applyRules();
     grid.applyNextStates();
 
-    assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 0).getState(),
+    assertEquals(PercolationState.PERCOLATED, grid.getCell(0, 0).getCurrentState(),
         "Cell (0,0) should remain percolated.");
-    assertEquals(PercolationState.OPEN, grid.getCell(0, 1).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(0, 1).getCurrentState(),
         "Cell (0,1) should remain open due to zero probability.");
-    assertEquals(PercolationState.OPEN, grid.getCell(1, 0).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 0).getCurrentState(),
         "Cell (1,0) should remain open due to zero probability.");
-    assertEquals(PercolationState.OPEN, grid.getCell(1, 1).getState(),
+    assertEquals(PercolationState.OPEN, grid.getCell(1, 1).getCurrentState(),
         "Cell (1,1) should remain open due to zero probability.");
   }
 

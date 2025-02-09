@@ -63,7 +63,7 @@ public abstract class GridView {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
-        StateInterface cellState = cell.getState();
+        StateInterface cellState = cell.getCurrentState();
         Rectangle rectCell = new Rectangle(cellWidth, cellHeight, stateMap.get(cellState));
         rectCell.setStroke(Color.BLACK);
         rectCell.setStrokeWidth(1);
@@ -82,7 +82,7 @@ public abstract class GridView {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
-        StateInterface state =  cell.getState();
+        StateInterface state =  cell.getCurrentState();
         Shape myCell = myCells.get(cellCount);
         myCell.setFill(stateMap.get(state));
         cellCount++;

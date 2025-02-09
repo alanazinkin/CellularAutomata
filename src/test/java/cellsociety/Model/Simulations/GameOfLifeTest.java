@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.GameOfLifeState;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import cellsociety.Controller.SimulationConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +39,7 @@ public class GameOfLifeTest {
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
-        cell.setState(GameOfLifeState.DEAD);
+        cell.setCurrentState(GameOfLifeState.DEAD);
       }
     }
     simulation = new GameOfLife(simulationConfig, grid);
@@ -53,7 +52,7 @@ public class GameOfLifeTest {
   @Test
   void applyRules_LiveCellWithFewerThanTwoLiveNeighbors_Dies() {
     Cell center = grid.getCell(1, 1);
-    center.setState(GameOfLifeState.ALIVE);
+    center.setCurrentState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 
@@ -68,9 +67,9 @@ public class GameOfLifeTest {
   @Test
   void applyRules_LiveCellWithTwoLiveNeighbors_Survives() {
     Cell center = grid.getCell(1, 1);
-    center.setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 0).setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 1).setState(GameOfLifeState.ALIVE);
+    center.setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 0).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 1).setCurrentState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 
@@ -85,11 +84,11 @@ public class GameOfLifeTest {
   @Test
   void applyRules_LiveCellWithFourLiveNeighbors_Dies() {
     Cell center = grid.getCell(1, 1);
-    center.setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 0).setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 1).setState(GameOfLifeState.ALIVE);
-    grid.getCell(1, 0).setState(GameOfLifeState.ALIVE);
-    grid.getCell(1, 2).setState(GameOfLifeState.ALIVE);
+    center.setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 0).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 1).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(1, 0).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(1, 2).setCurrentState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 
@@ -104,10 +103,10 @@ public class GameOfLifeTest {
   @Test
   void applyRules_DeadCellWithThreeLiveNeighbors_BecomesAlive() {
     Cell center = grid.getCell(1, 1);
-    center.setState(GameOfLifeState.DEAD);
-    grid.getCell(0, 0).setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 1).setState(GameOfLifeState.ALIVE);
-    grid.getCell(1, 0).setState(GameOfLifeState.ALIVE);
+    center.setCurrentState(GameOfLifeState.DEAD);
+    grid.getCell(0, 0).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 1).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(1, 0).setCurrentState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 
@@ -122,9 +121,9 @@ public class GameOfLifeTest {
   @Test
   void applyRules_DeadCellWithTwoLiveNeighbors_RemainsDead() {
     Cell center = grid.getCell(1, 1);
-    center.setState(GameOfLifeState.DEAD);
-    grid.getCell(0, 0).setState(GameOfLifeState.ALIVE);
-    grid.getCell(0, 1).setState(GameOfLifeState.ALIVE);
+    center.setCurrentState(GameOfLifeState.DEAD);
+    grid.getCell(0, 0).setCurrentState(GameOfLifeState.ALIVE);
+    grid.getCell(0, 1).setCurrentState(GameOfLifeState.ALIVE);
 
     simulation.applyRules();
 

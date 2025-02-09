@@ -21,18 +21,18 @@ class CellTest {
 
   @Test
   void getState_InitialState_ReturnsStateOne() {
-    assertEquals(stateOne, cell.getState(), "Cell state should be STATE_ONE");
+    assertEquals(stateOne, cell.getCurrentState(), "Cell state should be STATE_ONE");
   }
 
   @Test
   void setState_NewState_UpdatesCurrentState() {
-    cell.setState(stateTwo);
-    assertEquals(stateTwo, cell.getState(), "Cell state should be STATE_TWO after setting it");
+    cell.setCurrentState(stateTwo);
+    assertEquals(stateTwo, cell.getCurrentState(), "Cell state should be STATE_TWO after setting it");
   }
 
   @Test
   void setState_NullValue_ThrowsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> cell.setState(null),
+    assertThrows(IllegalArgumentException.class, () -> cell.setCurrentState(null),
         "Setting state to null should throw IllegalArgumentException");
   }
 
@@ -40,7 +40,7 @@ class CellTest {
   void applyNextState_NextStateSet_UpdatesCurrentState() {
     cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(stateTwo, cell.getState(), "Cell should transition to STATE_TWO after next state is applied");
+    assertEquals(stateTwo, cell.getCurrentState(), "Cell should transition to STATE_TWO after next state is applied");
   }
 
   @Test
@@ -53,40 +53,40 @@ class CellTest {
   void applyNextState_AfterSet_CurrentStateMatchesNextState() {
     cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(stateTwo, cell.getState(), "Cell should change to STATE_TWO after applying the next state");
+    assertEquals(stateTwo, cell.getCurrentState(), "Cell should change to STATE_TWO after applying the next state");
   }
 
   @Test
   void applyNextState_NextStateSet_StateChangedToNextState() {
     cell.setNextState(stateTwo);
     cell.applyNextState();
-    assertEquals(stateTwo, cell.getState(), "Cell state should match next state after applying it");
+    assertEquals(stateTwo, cell.getCurrentState(), "Cell state should match next state after applying it");
   }
 
   @Test
   void resetNextState_AfterSet_ResetsToCurrentState() {
     cell.setNextState(stateTwo);
     cell.resetNextState();
-    assertEquals(stateOne, cell.getState(), "Next state should reset to current state");
+    assertEquals(stateOne, cell.getCurrentState(), "Next state should reset to current state");
   }
 
   @Test
   void resetNextState_AfterSet_MaintainsConsistency() {
     cell.setNextState(stateTwo);
     cell.resetNextState();
-    assertEquals(stateOne, cell.getState(), "Next state reset should maintain current state consistency");
+    assertEquals(stateOne, cell.getCurrentState(), "Next state reset should maintain current state consistency");
   }
 
   @Test
   void resetState_NewState_UpdatesCurrentAndNextStates() {
     cell.resetState(stateTwo);
-    assertEquals(stateTwo, cell.getState(), "Reset state should set both current and next state to STATE_TWO");
+    assertEquals(stateTwo, cell.getCurrentState(), "Reset state should set both current and next state to STATE_TWO");
   }
 
   @Test
   void resetState_DifferentState_UpdatesBothStates() {
     cell.resetState(stateTwo);
-    assertEquals(stateTwo, cell.getState(), "Resetting state should update both current and next state");
+    assertEquals(stateTwo, cell.getCurrentState(), "Resetting state should update both current and next state");
   }
 
   @Test
