@@ -195,15 +195,13 @@ public class SimulationController {
   /**
    * Resets the simulation to its initial state.
    */
-  public void resetSimulation() throws Exception {
-    myTimeline.stop();
-    myStage.close();
-    init(new Stage(), myController);
+  public void makeNewSimulation() throws Exception {
+    init(new Stage(), new SimulationController());
   }
 
   public void resetGrid() {
     mySimulation.reinitializeGridStates(mySimulationConfig);
-    mySimView.getMyGridView().updateCellColors(mySimulation.getColorMap());
+    updateView();
   }
 
   public void saveSimulation() {
