@@ -61,8 +61,7 @@ public class SimulationController {
     
   }
 
-  private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen,
-      ComboBox<String> languageSelector, Stage splashStage) {
+  private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen, ComboBox<String> languageSelector, Stage splashStage) {
     Button enterButton = initialScreen.makeEnterButton();
     enterButton.setOnAction(e -> {
       String selectedLanguage = languageSelector.getValue();
@@ -91,7 +90,6 @@ public class SimulationController {
   private void initializeSimulationType() {
     String simulationType = mySimulationConfig.getType();
     mySimulation = createSimulation(simulationType);
-
     if (mySimulation == null) {
       throw new IllegalArgumentException("Invalid simulation type: " + simulationType);
     }
