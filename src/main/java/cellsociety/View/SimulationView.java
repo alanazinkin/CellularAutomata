@@ -62,6 +62,14 @@ public class SimulationView {
   }
 
   /**
+   * getter method to access the gridView
+   * @return a GridView object
+   */
+  public GridView getMyGridView() {
+    return myGridView;
+  }
+
+  /**
    * Creates a new main pane to hold the grid view and control bar.
    * @param primaryStage holds all main panes and views for simulation except the Simulation Information
    * @return myScene

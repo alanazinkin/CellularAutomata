@@ -151,6 +151,26 @@ public abstract class Simulation {
     }
   }
 
+  public void reinitializeGridStates(SimulationConfig simulationConfig) {
+    int cellCount = 0;
+    if (simulationConfig.getInitialStates().length == 0) {
+      throw new NullPointerException("Initial states array is empty");
+    }
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        if (grid.getCell(r, c) == null) {
+          throw new NullPointerException("Cell at (" + r + "," + c + ") is null");
+        }
+        if (stateMap == null) {
+          throw new NullPointerException("State map is null");
+        }
+        StateInterface newState = stateMap.get(simulationConfig.getInitialStates()[cellCount]);
+        grid.getCell(r, c).setCurrentState(newState);
+        cellCount++;
+      }
+    }
+  }
+
   /**
    * Returns the mapping of simulation states to their corresponding display colors.
    * <p>

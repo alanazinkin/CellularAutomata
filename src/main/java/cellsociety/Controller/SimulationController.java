@@ -4,6 +4,7 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.View.GridViews.GameOfLifeGridView;
 import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -197,6 +199,11 @@ public class SimulationController {
     myTimeline.stop();
     myStage.close();
     init(new Stage(), myController);
+  }
+
+  public void resetGrid() {
+    mySimulation.reinitializeGridStates(mySimulationConfig);
+    mySimView.getMyGridView().updateCellColors(mySimulation.getColorMap());
   }
 
   public void saveSimulation() {

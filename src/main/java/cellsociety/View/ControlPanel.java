@@ -65,7 +65,7 @@ public class ControlPanel {
     makeButton(myResources.getString("Step"), e -> myController.stepSimulation(1));
     makeButton(myResources.getString("Reset"), e -> {
       try {
-        myController.resetSimulation();
+        myController.resetGrid();
       } catch (Exception ex) {
         displayAlert(myResources.getString("Error"));
       }
