@@ -225,6 +225,7 @@ public class SimulationController {
       displayAlert(myResources.getString("Error") + ":" + " " + myResources.getString("ViewSimOrGridNull"));
       return;
     }
+    mySimView.updateGrid(mySimulation.getColorMap());
   }
 
   private void displayAlert(String content) {
