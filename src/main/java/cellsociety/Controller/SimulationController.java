@@ -234,7 +234,7 @@ public class SimulationController {
    * @param speed The new speed multiplier (1.0 is normal speed)
    */
   public void setSimulationSpeed(double speed) {
-    FRAMES_PER_SECOND = Math.max(1, Math.min(5, speed));
+    myTimeline.setRate(Math.max(0.1, Math.min(5, speed)));
   }
 
   public void selectSimulation() {
