@@ -55,12 +55,12 @@ public class SimulationController {
    * Initializes the simulation by parsing the configuration file, setting up the model,
    * and initializing the view.
    *
-   * @param primaryStage The primary stage for the JavaFX application.
+   * @param stage The primary stage for the JavaFX application.
    * @throws Exception If there is an error during initialization.
    */
-  public void init(Stage primaryStage, SimulationController controller) throws Exception {
+  public void init(Stage stage, SimulationController controller) throws Exception {
     myController = controller;
-    myStage = primaryStage;
+    myStage = stage;
     // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
@@ -74,7 +74,7 @@ public class SimulationController {
     Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
     ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
     // Wait for language selection
-    selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
+    selectLanguageToStartSimulation(initialScreen, languageSelector, splashStage);
   }
 
   private void initializeTimeline() {
@@ -83,16 +83,17 @@ public class SimulationController {
     myTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> stepSimulation(SECOND_DELAY)));
   }
 
-  private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen, ComboBox<String> languageSelector, Stage splashStage) {
+  private void selectLanguageToStartSimulation(SplashScreen initialScreen, ComboBox<String> languageSelector, Stage splashStage) {
     Button enterButton = initialScreen.makeEnterButton();
     enterButton.setOnAction(e -> {
       String selectedLanguage = languageSelector.getValue();
       if (selectedLanguage != null) {
+        System.out.println("Selected language: " + selectedLanguage);
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
         splashStage.close();
-        myScene = mySimulationConfig.initializeStage(primaryStage);
+        myScene = mySimulationConfig.initializeStage(myStage);
         try {
-          setupSimulation(primaryStage, selectedLanguage);
+          setupSimulation(myStage, selectedLanguage);
         } catch (Exception ex) {
           throw new RuntimeException(ex);
         }
@@ -106,9 +107,9 @@ public class SimulationController {
    */
   public ResourceBundle getResources() {return myResources;}
 
-  private void setupSimulation(Stage primaryStage, String language) throws Exception {
+  private void setupSimulation(Stage stage, String language) throws Exception {
     mySimView = new SimulationView();
-    initializeView(primaryStage, language);
+    initializeView(stage, language);
   }
 
 
@@ -164,7 +165,8 @@ public class SimulationController {
         mySimulation.getColorMap(),
         myGrid,
         language,
-        myController
+        myController,
+        myResources
     );
   }
 
@@ -192,12 +194,6 @@ public class SimulationController {
     updateView();
   }
 
-  /**
-   * Resets the simulation to its initial state.
-   */
-  public void makeNewSimulation() throws Exception {
-    init(new Stage(), new SimulationController());
-  }
 
   public void resetGrid() {
     mySimulation.reinitializeGridStates(mySimulationConfig);

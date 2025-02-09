@@ -1,6 +1,7 @@
 package cellsociety;
 
 import cellsociety.Controller.SimulationController;
+import cellsociety.Controller.SimulationMaker;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -11,8 +12,8 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
-      SimulationController myController = new SimulationController();
-      myController.init(primaryStage, myController);
+      SimulationMaker simulationMaker = new SimulationMaker();
+      simulationMaker.makeNewSimulation();
   }
 
   /**

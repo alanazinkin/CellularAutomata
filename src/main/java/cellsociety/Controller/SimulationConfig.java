@@ -1,11 +1,6 @@
 package cellsociety.Controller;
 
-import cellsociety.Model.Grid;
-import cellsociety.Model.Simulation;
-import cellsociety.Model.Simulations.GameOfLife;
-import cellsociety.Model.State.GameOfLifeState;
 import cellsociety.Model.StateInterface;
-import cellsociety.View.SimulationView;
 import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -59,14 +54,14 @@ public class SimulationConfig {
 
     /**
      * set the JavaFX stage for the application
-     * @param primaryStage main stage onto which all elements are added
+     * @param stage main stage onto which all elements are added
      */
-    public Scene initializeStage(Stage primaryStage) {
+    public Scene initializeStage(Stage stage) {
         Group root = new Group();
         Scene myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.WHITE);
-        primaryStage.setScene(myScene);
-        primaryStage.setTitle(TITLE);
-        primaryStage.show();
+        stage.setScene(myScene);
+        stage.setTitle(TITLE);
+        stage.show();
         return myScene;
     }
 

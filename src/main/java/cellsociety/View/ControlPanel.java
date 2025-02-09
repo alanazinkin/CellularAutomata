@@ -1,6 +1,7 @@
 package cellsociety.View;
 
 import cellsociety.Controller.FileRetriever;
+import cellsociety.Controller.SimulationMaker;
 import cellsociety.Controller.SimulationController;
 import java.io.FileNotFoundException;
 import java.util.Collection;
@@ -17,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  * This class creates the buttons and components of the control panel,
@@ -63,13 +63,16 @@ public class ControlPanel {
     makeButton(myResources.getString("Pause"), e -> myController.pauseSimulation());
     //TODO add "one step"
     makeButton(myResources.getString("Step"), e -> myController.stepSimulation(1));
-    makeButton(myResources.getString("Reset"), e -> {
+    makeButton(myResources.getString("Reset"), e -> myController.resetGrid());
+    makeButton(myResources.getString("AddSimulation"), e -> {
       try {
-        myController.resetGrid();
+        SimulationMaker maker = new SimulationMaker();
+        maker.makeNewSimulation();
       } catch (Exception ex) {
         displayAlert(myResources.getString("Error"));
       }
     });
+
     makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     makeComboBox(myResources.getString("SelectSim"), myResources.getString("SelectConfig") , e -> myController.selectSimulation(),
