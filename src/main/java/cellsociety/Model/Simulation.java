@@ -105,7 +105,6 @@ public abstract class Simulation {
    * </p>
    */
   public void step() {
-    System.out.println("hello");
     applyRules();
     grid.applyNextStates();
   }
