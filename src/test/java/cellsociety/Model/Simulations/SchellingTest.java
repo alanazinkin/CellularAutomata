@@ -78,8 +78,9 @@ public class SchellingTest {
     Grid grid = new Grid(2, 2, SchellingState.EMPTY_CELL);
     AgentCell agentCell1 = new AgentCell(SchellingState.AGENT, 1); // unsatisfied due to neighbor group mismatch
     AgentCell agentCell2 = new AgentCell(SchellingState.AGENT, 2);
-    AgentCell emptyCell1 = new AgentCell(SchellingState.EMPTY_CELL, -1);
-    AgentCell emptyCell2 = new AgentCell(SchellingState.EMPTY_CELL, -1);
+    AgentCell emptyCell1 = new AgentCell(SchellingState.EMPTY_CELL, 0);
+    AgentCell emptyCell2 = new AgentCell(SchellingState.EMPTY_CELL, 0);
+
 
     replaceCell(grid, 0, 0, agentCell1);
     replaceCell(grid, 0, 1, agentCell2);
@@ -122,7 +123,6 @@ public class SchellingTest {
         "Schelling simulation constructor should throw IllegalArgumentException when grid is null.");
   }
 
-
   /**
    * applyRules: If the grid contains a cell that is not an AgentCell, applyRules() should throw a ClassCastException.
    * Input: A grid cell is replaced with a non-AgentCell.
@@ -139,6 +139,23 @@ public class SchellingTest {
     assertThrows(ClassCastException.class, simulation::applyRules,
         "applyRules() should throw ClassCastException when a cell is not an AgentCell.");
   }
+
+  /**
+   * constructor: Verifies that creating a Schelling simulation with a negative tolerance throws an IllegalArgumentException.
+   * Input: A valid grid and SimulationConfig, but with a negative tolerance value.
+   * Expected: The constructor throws an IllegalArgumentException with the message "Tolerance must be between 0.0 and 1.0."
+   */
+  @Test
+  void constructor_NegativeTolerance_ThrowsIllegalArgumentException() {
+    Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
+    SimulationConfig simConfig = createSchellingSimConfig(1, 1);
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        () -> new Schelling(simConfig, grid, -0.1),
+        "Schelling simulation constructor should throw IllegalArgumentException when negative tolerance is provided.");
+    assertEquals("Tolerance must be between 0.0 and 1.0.", exception.getMessage(),
+        "Exception message should indicate the valid tolerance range.");
+  }
 }
+
 
 

@@ -1,60 +1,41 @@
 package cellsociety.Model;
 import cellsociety.Controller.SimulationConfig;
+import java.util.Collections;
 import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
- * Represents an abstract simulation that operates on a {@link Grid}.
+ * Represents an abstract base class for cellular automata simulations operating on a {@link Grid}.
  * <p>
- * This class provides a framework for simulations by defining methods to apply simulation-specific rules
- * and update the grid states. Subclasses must implement the {@link #applyRules()} method to define
- * the specific rules of the simulation.
+ * This class provides core functionality for initializing simulations, managing state transitions,
+ * and enforcing common simulation constraints. Subclasses must implement simulation-specific rules
+ * through the abstract methods while benefiting from shared error handling and state management.
  * </p>
  */
 public abstract class Simulation {
 
-  /**
-   * The grid on which the simulation operates.
-   */
-  private Grid grid;
+  private static final String ERROR_GRID_NULL = "Grid cannot be null";
+  private static final String ERROR_INITIAL_STATES_EMPTY = "Initial states array is empty";
+  private static final String ERROR_INITIAL_STATES_SIZE = "Initial states array size does not match grid dimensions";
+  private static final String ERROR_CELL_NULL = "Cell at (%d,%d) is null";
+  private static final String ERROR_STATE_MAP_NULL = "State map is null";
+
+  private final Grid grid;
+  /** Immutable mapping of states to their visual representations */
+  private final Map<StateInterface, Color> colorMap;
+  /** Immutable mapping of integer values to simulation states */
+  private final Map<Integer, StateInterface> stateMap;
 
   /**
-   * A mapping of simulation states to their corresponding display colors.
-   * <p>
-   * This map is used to translate each cell's integer value upon initialization into a state interface value.
-   * The map is initialized by the {@link #initializeColorMap()} method during construction and can be
-   * retrieved using the {@link #getColorMap()} method.
-   * </p>
-   */
-  private Map<StateInterface, Color> colorMap;
-
-
-  /**
-   * A mapping of integer values to their corresponding state interface values.
-   * <p>
-   * This map is used to translate each cell's state into a visual color when rendering the simulation.
-   * The map is initialized by the {@link #initializeStateMap()} method during construction and can be
-   * retrieved using the {@link #getStateMap()} method.
-   * </p>
-   */
-  private Map<Integer, StateInterface> stateMap;
-
-  /**
-   * Constructs a new {@code Simulation} instance with the specified grid and simulation configuration.
-   * <p>
-   * This constructor initializes the simulation by setting up the grid, mapping states to colors, and
-   * applying the initial configuration. The grid must not be {@code null}; otherwise, an exception is thrown.
-   * </p>
+   * Constructs a new Simulation instance with specified configuration and grid.
    *
-   * @param simulationConfig the {@code SimulationConfig} object holding all the simulation information,
-   *                         including initial states and parameters.
-   * @param grid             the {@code Grid} object representing the simulation space.
-   * @throws IllegalArgumentException if the provided grid is {@code null}.
+   * @param simulationConfig Contains initial simulation parameters and state configuration
+   * @param grid The grid structure to use for this simulation
+   * @throws IllegalArgumentException If grid is null or initial states are invalid
+   * @throws IllegalStateException If state mapping fails or grid contains null cells
    */
   public Simulation(SimulationConfig simulationConfig, Grid grid) {
-    if (grid == null) {
-      throw new IllegalArgumentException("Grid cannot be null");
-    }
+    validateGrid(grid);
     this.grid = grid;
     this.colorMap = initializeColorMap();
     this.stateMap = initializeStateMap();
@@ -62,114 +43,142 @@ public abstract class Simulation {
   }
 
   /**
-   * method is used to retrieve grid instance variable for subclasses
-   * @return Grid instance variable
+   * Validates grid integrity during construction.
+   *
+   * @param grid The grid to validate
+   * @throws IllegalArgumentException If grid is null
    */
-  protected Grid getGrid() {
-    return grid;
+  private void validateGrid(Grid grid) {
+    if (grid == null) {
+      throw new IllegalArgumentException(ERROR_GRID_NULL);
+    }
   }
 
   /**
-   * Initializes the mapping of simulation states to their corresponding display colors.
-   * <p>
-   * Subclasses must implement this method to provide a complete mapping for the specific simulation.
-   * </p>
+   * Initializes grid cells with states from simulation configuration.
    *
-   * @return a {@code Map} where keys are simulation states and values are their display colors
-   */
-  protected abstract Map<StateInterface, Color> initializeColorMap();
-
-  /**
-   * Initializes the mapping of integer states to their corresponding simulation interface values.
-   * @return a {@code Map} where keys are integer states and values are corresponding simulation states.
-   */
-  protected abstract Map<Integer, StateInterface> initializeStateMap();
-
-  /**
-   * Applies the specific rules of the simulation.
-   * <p>
-   * This method must be implemented by subclasses to define how the grid's state is updated
-   * according to the rules of the simulation.
-   * </p>
-   */
-  public abstract void applyRules();
-
-  /**
-   * Performs a single step of the simulation by applying the rules and updating the grid.
-   * <p>
-   * The process involves:
-   * <ol>
-   *   <li>Calling {@link #applyRules()} to calculate the new states.</li>
-   *   <li>Invoking {@link Grid#applyNextStates()} to update the grid with the calculated states.</li>
-   * </ol>
-   * </p>
-   */
-  public void step() {
-    System.out.println("hello");
-    applyRules();
-    grid.applyNextStates();
-  }
-  /**
-   * Initializes the grid's cell states based on the provided simulation configuration.
-   * <p>
-   * This method iterates over each cell in the grid and sets its state according to the corresponding
-   * value in the simulation configuration's initial states array. The integer value from the configuration
-   * is mapped to a {@code StateInterface} using the simulation's state map. Only cells whose current state
-   * equals the grid's default state are updated, allowing previously modified cells to remain unchanged.
-   * </p>
-   * <p>
-   * The method will throw a {@code NullPointerException} in the following cases:
-   * <ul>
-   *   <li>If the initial states array from the configuration is empty.</li>
-   *   <li>If any cell in the grid is {@code null}.</li>
-   *   <li>If the state map is {@code null}.</li>
-   * </ul>
-   * </p>
-   *
-   * @param simulationConfig the simulation configuration containing the initial states for the grid
-   * @throws NullPointerException if the initial states array is empty, a grid cell is null, or the state map is null
+   * @param simulationConfig Provides initial cell states array
+   * @throws IllegalArgumentException If initial states array is empty or size mismatches grid dimensions
+   * @throws IllegalStateException If state map is not initialized or grid contains null cells
    */
   private void initializeGrid(SimulationConfig simulationConfig) {
+    int[] initialStates = simulationConfig.getInitialStates();
+    validateInitialStates(initialStates);
+
     int cellCount = 0;
-    if (simulationConfig.getInitialStates().length == 0) {
-      throw new NullPointerException("Initial states array is empty");
-    }
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
-        if (grid.getCell(r, c) == null) {
-          throw new NullPointerException("Cell at (" + r + "," + c + ") is null");
-        }
-        if (stateMap == null) {
-          throw new NullPointerException("State map is null");
-        }
-        StateInterface newState = stateMap.get(simulationConfig.getInitialStates()[cellCount]);
-        if (grid.getCell(r, c).getCurrentState().equals(grid.getDefaultState())) {
-          grid.getCell(r, c).setCurrentState(newState);
-        }
+        validateCell(r, c);
+        setCellState(r, c, initialStates[cellCount]);
         cellCount++;
       }
     }
   }
 
   /**
-   * Returns the mapping of simulation states to their corresponding display colors.
-   * <p>
-   * This color map is used to visually render the simulation grid by translating each cell's state into a color.
-   * </p>
-   * @return a {@code Map} where the keys are simulation states and the values are the colors associated with them
+   * Validates initial states array integrity.
+   *
+   * @param initialStates The array of initial cell states
+   * @throws IllegalArgumentException If array is empty or size mismatches grid
+   * @throws IllegalStateException If state map is not initialized
    */
-  public Map<StateInterface, Color> getColorMap() {
-    return colorMap;
+  private void validateInitialStates(int[] initialStates) {
+    if (initialStates.length == 0) {
+      throw new IllegalArgumentException(ERROR_INITIAL_STATES_EMPTY);
+    }
+    if (initialStates.length != grid.getRows() * grid.getCols()) {
+      throw new IllegalArgumentException(ERROR_INITIAL_STATES_SIZE);
+    }
+    if (stateMap == null) {
+      throw new IllegalStateException(ERROR_STATE_MAP_NULL);
+    }
   }
 
   /**
-   * Returns the mapping of integer values to their corresponding state interface values
-   * <p>
-   *   This state map is used to interpret numerical values as state interface values
-   * </p>
-   * @return a {@code Map} where the keys are integer values and teh values are the state interface values
+   * Validates existence of cell at specified coordinates.
+   *
+   * @param r Row index
+   * @param c Column index
+   * @throws IllegalStateException If cell at (r,c) is null
    */
-  public Map<Integer, StateInterface> getStateMap() {return stateMap;}
+  private void validateCell(int r, int c) {
+    if (grid.getCell(r, c) == null) {
+      throw new IllegalStateException(String.format(ERROR_CELL_NULL, r, c));
+    }
+  }
+
+  /**
+   * Updates cell state if it matches grid's default state.
+   *
+   * @param r Row index of cell to update
+   * @param c Column index of cell to update
+   * @param stateValue Integer value mapping to new state via stateMap
+   */
+  private void setCellState(int r, int c, int stateValue) {
+    StateInterface newState = stateMap.get(stateValue);
+    if (grid.getCell(r, c).getCurrentState().equals(grid.getDefaultState())) {
+      grid.getCell(r, c).setCurrentState(newState);
+    }
+  }
+
+  /**
+   * Executes one simulation step by applying rules and updating grid.
+   * <p>
+   * Implementation sequence:
+   * 1. Apply simulation-specific rules through {@link #applyRules()}
+   * 2. Commit calculated next states to the grid
+   * </p>
+   */
+  public void step() {
+    applyRules();
+    grid.applyNextStates();
+  }
+
+  /**
+   * Template method for initializing state-color mappings.
+   *
+   * @return Complete mapping of states to their display colors
+   */
+  protected abstract Map<StateInterface, Color> initializeColorMap();
+
+  /**
+   * Template method for initializing value-state mappings.
+   *
+   * @return Complete mapping of integer values to simulation states
+   */
+  protected abstract Map<Integer, StateInterface> initializeStateMap();
+
+  /**
+   * Applies simulation-specific rules to calculate next cell states.
+   */
+  protected abstract void applyRules();
+
+  /**
+   * Provides controlled access to simulation grid for subclasses.
+   *
+   * @return The simulation grid instance
+   */
+  protected Grid getGrid() {
+    return grid;
+  }
+
+  /**
+   * Retrieves immutable view of state-color mappings.
+   *
+   * @return Unmodifiable map of states to colors
+   */
+  public Map<StateInterface, Color> getColorMap() {
+    return Collections.unmodifiableMap(colorMap);
+  }
+
+  /**
+   * Retrieves immutable view of value-state mappings.
+   *
+   * @return Unmodifiable map of integer values to states
+   */
+  public Map<Integer, StateInterface> getStateMap() {
+    return Collections.unmodifiableMap(stateMap);
+  }
 }
 
 
