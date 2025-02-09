@@ -23,7 +23,7 @@ class XMLParserTest {
         assertEquals(5, simulationConfig.getWidth());
         assertEquals(5, simulationConfig.getHeight());
         assertArrayEquals(initialStates, simulationConfig.getInitialStates());
-        assertEquals(0, simulationConfig.getParameter().size());
+        assertEquals(0, simulationConfig.getParameters().size());
     }
 
 }
