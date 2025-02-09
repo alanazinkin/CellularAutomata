@@ -61,14 +61,14 @@ public class SimulationConfig {
      * set the JavaFX stage for the application
      * @param primaryStage main stage onto which all elements are added
      */
-    public void initializeStage(Stage primaryStage) {
+    public Scene initializeStage(Stage primaryStage) {
         Group root = new Group();
         Scene myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.WHITE);
         primaryStage.setScene(myScene);
         primaryStage.setTitle(TITLE);
         primaryStage.show();
+        return myScene;
     }
-
 
     public String getType() { return type; }
     public String getTitle() { return title; }
