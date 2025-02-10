@@ -29,18 +29,15 @@
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 4, 4); /* More intense shadow */
 }
 
-.label {
-  -fx-font-size: 11pt;
-  -fx-font-family: "Trebuchet MS";
-  -fx-text-fill: white;
-  -fx-opacity: 1;
+.custom-text {
+  -fx-font-size: 12pt;
+  -fx-fill: white;
 }
 
 .text-field {
   -fx-fill: white;
   -fx-text-fill: white;
-  -fx-font-size: 14pt;
-  -fx-font-family: "Trebuchet MS";
+  -fx-font-size: 12pt;
 }
 
 .slider {

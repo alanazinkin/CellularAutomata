@@ -22,12 +22,12 @@ public class SimulationView {
   public static final int SIMULATION_HEIGHT = 800;
 
   private SimulationController myController;
-  private List<String> myCSSFiles;
   private Scene myScene;
   private BorderPane myRoot;
   private ResourceBundle myResources;
   private GridView myGridView;
   private SimulationConfig myConfig;
+  private String myThemeColor;
 
   /**
    *
@@ -48,13 +48,24 @@ public class SimulationView {
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, List<String> cssFiles) {
-    myCSSFiles = cssFiles;
+  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, String themeColor) {
     createSimulationWindow(primaryStage);
+    setTheme(themeColor);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(language, myController);
+    ControlPanel myControlPanel = new ControlPanel(language, myController, simView);
     myControlPanel.makeControlBar(simView.getRoot());
-    myControlPanel.makeSliderBar(simView.getRoot());
+    myControlPanel.makeLowerBar(simView.getRoot());
+    myControlPanel.makeLabelBar();
+    myControlPanel.makeCustomizationBar();
+    try {
+      myControlPanel.makeSliderComponent();
+      myControlPanel.makeThemeComponent();
+    }
+    catch (Exception e) {
+      myController.displayAlert(myResources.getString("Error"), myResources.getString("CustomizationBarError"));
+      throw new NullPointerException(e.getMessage());
+    }
+
     // create Grid
     myGridView = new FireGridView(myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), stateMap);
@@ -81,10 +92,45 @@ public class SimulationView {
   public Scene createSimulationWindow(Stage primaryStage) {
     myRoot = new BorderPane();
     myScene = new Scene(myRoot, SIMULATION_WIDTH, SIMULATION_HEIGHT);
-    addCSSFiles(myCSSFiles);
     primaryStage.setScene(myScene);
     primaryStage.show();
     return myScene;
+  }
+
+  public void setTheme(String themeColor) {
+    myThemeColor = themeColor;
+    updateTheme();
+  }
+
+  /**
+   * Called by set theme.
+   * <p>
+   *   Ony way to update the theme is to call setTheme()
+   * </p>
+   */
+  private void updateTheme() {
+    System.out.println(myThemeColor);
+    myScene.getStylesheets().clear();
+    String themeFile = getThemeFolderOrFile(myConfig.getType());
+    List<String> cssFiles = List.of(myThemeColor, getSimulationFile(themeFile, myThemeColor));
+    addCSSFiles(cssFiles);
+  }
+
+
+  private String getThemeFolderOrFile(String simulationType) {
+    switch (simulationType) {
+      case "Game of Life": return "GameOfLife";
+      case "Spreading of Fire": return "Fire";
+      case "Percolation": return "Percolation";
+      case "Schelling Segregation": return "Schelling";
+      case "Wa-Tor World": return "WaTorWorld";
+      default: myController.displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimulationType"));
+        return "";
+    }
+  }
+
+  private String getSimulationFile(String themeFile, String selectedThemeColor) {
+    return themeFile + "/" + themeFile + selectedThemeColor;
   }
 
   private void addCSSFiles(List<String> files) {
