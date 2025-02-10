@@ -31,7 +31,7 @@ public class RuleStringParser {
             return;
         }
 
-        // Try S/B format 
+        // Try S/B format
         Matcher sbMatcher = SB_PATTERN.matcher(ruleString);
         if (sbMatcher.matches()) {
             addRules(survivalRules, sbMatcher.group(1));
