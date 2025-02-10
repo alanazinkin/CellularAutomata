@@ -1,0 +1,9 @@
+#watorworld-state-empty {
+  -fx-fill: skyblue
+}
+#watorworld-state-fish {
+  -fx-fill: coral
+}
+#watorworld-state-shark {
+  -fx-fill: grey
+}

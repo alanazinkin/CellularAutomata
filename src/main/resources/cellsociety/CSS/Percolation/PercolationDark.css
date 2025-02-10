@@ -1,0 +1,9 @@
+#percolation-state-open {
+  -fx-fill: whitesmoke
+}
+#percolation-state-percolated {
+  -fx-fill: royalblue
+}
+#percolation-state-blocked {
+  -fx-fill: black
+}

@@ -1,6 +1,7 @@
 package cellsociety.Controller;
 
 import cellsociety.Model.StateInterface;
+import java.util.List;
 import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ public class SimulationConfig {
     private static final int SCREEN_HEIGHT = 600;
     private static final String TITLE = "Cell Society";
 
+    private Scene myScene;
     private String type;
     private String title;
     private String author;
@@ -54,16 +56,18 @@ public class SimulationConfig {
 
     /**
      * set the JavaFX stage for the application
-     * @param stage main stage onto which all elements are added
+     *
+     * @param stage     main stage onto which all elements are added
      */
     public Scene initializeStage(Stage stage) {
         Group root = new Group();
-        Scene myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.WHITE);
+        myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.WHITE);
         stage.setScene(myScene);
         stage.setTitle(TITLE);
         stage.show();
         return myScene;
     }
+
 
     public String getType() { return type; }
     public String getTitle() { return title; }

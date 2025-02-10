@@ -1,6 +1,7 @@
 package cellsociety.View;
 
 import cellsociety.Controller.SimulationConfig;
+import java.util.List;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -23,13 +24,13 @@ public class SplashScreen {
     return stage;
   }
 
-  public ComboBox<String> makeLanguageComboBox() {
+  public ComboBox<String> makeComboBox(String prompt, List<String> options) {
     // make language selector combo Box
-    ComboBox<String> languageSelector = new ComboBox<>();
-    languageSelector.setPromptText("Select Language");
-    languageSelector.getItems().addAll("English", "Spanish", "Italian");
-    layout.getChildren().add(languageSelector);
-    return languageSelector;
+    ComboBox<String> selector = new ComboBox<>();
+    selector.setPromptText(prompt);
+    selector.getItems().addAll(options);
+    layout.getChildren().add(selector);
+    return selector;
   }
 
   public Button makeEnterButton() {

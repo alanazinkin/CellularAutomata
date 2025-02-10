@@ -1,0 +1,54 @@
+.root {
+  -fx-background: #4d4e4f;
+}
+.button {
+  -fx-text-fill: #FFFFFF;
+  -fx-background-color: #131e24;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-padding: 10;
+  -fx-pref-width: 150;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 3, 3); /* Adds shadow */
+}
+
+.button:hover {
+  -fx-background-color: black;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 4, 4); /* More intense shadow */
+}
+
+.combo-box-base {
+  -fx-text-base-color: white;
+  -fx-background-color: #131e24;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-padding: 3;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 3, 3); /* Adds shadow */
+}
+.combo-box-base:hover {
+  -fx-background-color: black;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 4, 4); /* More intense shadow */
+}
+
+.label {
+  -fx-font-size: 11pt;
+  -fx-font-family: "Trebuchet MS";
+  -fx-text-fill: white;
+  -fx-opacity: 1;
+}
+
+.text-field {
+  -fx-fill: white;
+  -fx-text-fill: white;
+  -fx-font-size: 14pt;
+  -fx-font-family: "Trebuchet MS";
+}
+
+.slider {
+  -fx-background-color: #4d4e4f;
+}
+
+.slider .track {
+  -fx-background-color: white;
+  -fx-background-insets: 0;
+  -fx-background-radius: 5px;
+}
