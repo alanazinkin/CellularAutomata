@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
@@ -30,17 +32,21 @@ public class ControlPanel {
 
   private HBox myControlBar;
   private SimulationController myController;
-  private VBox mySliderBar;
+  private VBox myLowerBar;
+  private HBox myLabelBar;
+  private HBox myCustomizationBar;
   private FileRetriever myFileRetriever;
   private ResourceBundle myResources;
+  private SimulationView mySimView;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default.
    * This prevents a possible exception from occuring.
    */
-  public ControlPanel(String language, SimulationController controller) {
+  public ControlPanel(String language, SimulationController controller, SimulationView simulationView) {
     myController = controller;
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+    mySimView = simulationView;
     initializeFileRetriever();
   }
 
@@ -69,56 +75,117 @@ public class ControlPanel {
         SimulationMaker maker = new SimulationMaker();
         maker.makeNewSimulation();
       } catch (Exception ex) {
-        displayAlert(myResources.getString("Error"));
+        myController.displayAlert(myResources.getString("Error"), myResources.getString("CantMakeNewSimulation"));
       }
     });
-
     makeButton(myResources.getString("Save"), e -> myController.saveSimulation());
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     makeComboBox(myResources.getString("SelectSim"), myResources.getString("SelectConfig") , e -> myController.selectSimulation(),
         simulationTypes);
   }
 
+  //TODO
+  public void makeLowerBar(BorderPane root) {
+    myLowerBar = new VBox(10);
+    myLowerBar.setPadding(new Insets(0, 0, 10, 0));
+    myLowerBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
+    myLowerBar.setAlignment(Pos.CENTER);
+    myLowerBar.setPrefWidth(Double.MAX_VALUE);
+    root.setBottom(myLowerBar);
+  }
+
+  public void makeLabelBar(){
+    myLabelBar = new HBox(400);
+    myLabelBar.setAlignment(Pos.CENTER);
+    addLabelBarToLowerBar();
+    makeLabelsAndAddToLabelBar();
+  }
+
+  private void addLabelBarToLowerBar() {
+    myLowerBar.getChildren().add(myLabelBar);
+  }
+
+  private void makeLabelsAndAddToLabelBar() {
+    Text myLabel = new Text(myResources.getString("Speed"));
+    Text myCustomizationLabel = new Text(myResources.getString("Settings"));
+    myLabelBar.getChildren().addAll(myLabel, myCustomizationLabel);
+    addCSSStyleIDs(List.of(myLabel, myCustomizationLabel));
+  }
+
+  private void addCSSStyleIDs(List<Text> myTexts) {
+    for (Text myText : myTexts) {
+      myText.getStyleClass().add("custom-text");
+    }
+  }
+
+  public void makeCustomizationBar() {
+    myCustomizationBar = new HBox(200);
+    myCustomizationBar.setAlignment(Pos.CENTER);
+    addCustomizationBarToLowerBar();
+  }
+
+  private void addCustomizationBarToLowerBar() {
+    myLowerBar.getChildren().add(myCustomizationBar);
+  }
   /**
    * This method initializes and adds the lower VBox panel containing the speed slider to the scene
-   * @param root the main BorderPane holding all other panes in the simulation view
    */
-  public void makeSliderBar(BorderPane root) {
-    // instantiate mySliderBar
-    mySliderBar = new VBox(5);
-    root.setBottom(mySliderBar);
-    mySliderBar.setAlignment(Pos.CENTER);
-    mySliderBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
-    // make speed slider
-    makeSlider(myResources.getString("Speed"));
+  //TODO
+  public void makeSliderComponent() throws Exception {
+      Slider slider = makeSlider();
+      addElementToCustomizationBar(slider);
   }
 
   /**
    * make a new slider with Text label centered above it
-   * @param label text label displayed to user describing slider
    */
-  private void makeSlider(String label) {
-    Text myLabel = new Text(label);
-    mySliderBar.getChildren().add(myLabel);
-    // make slider
+  private Slider makeSlider() {
     Slider slider = new Slider(0.1, 5, 1);
-    slider.setPrefWidth(100);
+    slider.setPrefWidth(SimulationView.SIMULATION_WIDTH * .5);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
     slider.setMajorTickUnit(1.0);
     slider.setMinorTickCount(9);
     slider.setBlockIncrement(0.1);
-    slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .75);
+    slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .5);
     makeSliderAdjustToSpeed(slider);
-    // add slider to slider bar
-    mySliderBar.getChildren().add(slider);
+    return slider;
   }
 
   private void makeSliderAdjustToSpeed(Slider slider) {
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
       myController.setSimulationSpeed(newValue.doubleValue());
     });
+  }
+  //TODO
+  public void makeThemeComponent() throws Exception {
+      ComboBox themeSelector = makeThemeComboBox();
+      themeSelector.setPromptText(myResources.getString("SelectTheme"));
+      addElementToCustomizationBar(themeSelector);
+  }
+
+  private ComboBox makeThemeComboBox() {
+    ComboBox<String> themeSelector = new ComboBox<>();
+    themeSelector.getItems().addAll("Dark", "Light");
+    themeSelector.setOnAction(e -> {
+      String selectedThemeColor = themeSelector.getValue();
+      if (selectedThemeColor != null) {
+        mySimView.setTheme(selectedThemeColor);
+      } else {
+        myController.displayAlert(myResources.getString("Error"), myResources.getString("NoThemeSelected"));
+      }
+    });
+    return themeSelector;
+  }
+
+  private void addElementToCustomizationBar(Control element) throws Exception {
+    if (myCustomizationBar != null){
+      myCustomizationBar.getChildren().add(element);
+    }
+    else {
+      throw new NullPointerException("CustomizationBar is null");
+    }
   }
 
   /**
@@ -137,13 +204,10 @@ public class ControlPanel {
     simulationTypes.setPromptText(label);
     simulationTypes.getItems().addAll(simulationTypeOptions);
     simulationTypes.setOnAction(handler);
-
     ComboBox<String> configFileComboBox = new ComboBox<>();
     configFileComboBox.setPromptText(secondBoxLabel);
-
     // Update available files when simulation type is selected
     makeSimulationFileComboBox(simulationTypes, configFileComboBox);
-
     myControlBar.getChildren().addAll(simulationTypes, configFileComboBox);
   }
 
@@ -159,7 +223,7 @@ public class ControlPanel {
           configFileComboBox.getItems().setAll(fileNames);
           configFileComboBox.setDisable(false);
         } catch (FileNotFoundException e) {
-          displayAlert(myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
+          myController.displayAlert(myResources.getString("Error"), myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
           configFileComboBox.getItems().clear();
           configFileComboBox.setDisable(true);
         }
@@ -167,10 +231,4 @@ public class ControlPanel {
     });
   }
 
-  private void displayAlert(String content) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle(myResources.getString("Error"));
-    alert.setContentText(content);
-    alert.showAndWait();
-  }
 }

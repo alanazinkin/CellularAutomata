@@ -90,11 +90,8 @@ public class SimulationController {
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
         // close splash screen
         splashStage.close();
-        //myScene = mySimulationConfig.initializeStage(myStage);
-        String themeFile = getThemeFolderOrFile(mySimulationConfig.getType());
-        List<String> cssFiles = List.of(selectedThemeColor, getSimulationFile(themeFile, selectedThemeColor));
         try {
-          setupSimulation(myStage, selectedLanguage, cssFiles);
+          setupSimulation(myStage, selectedLanguage, selectedThemeColor);
         } catch (Exception ex) {
           throw new RuntimeException(ex);
         }
@@ -102,25 +99,9 @@ public class SimulationController {
     });
   }
 
-  private String getThemeFolderOrFile(String simulationType) {
-    switch (simulationType) {
-      case "Game of Life": return "GameOfLife";
-      case "Spreading of Fire": return "Fire";
-      case "Percolation": return "Percolation";
-      case "Schelling Segregation": return "Schelling";
-      case "Wa-Tor World": return "WaTorWorld";
-      default: displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimulationType"));
-        return "";
-    }
-  }
-
-  private String getSimulationFile(String themeFile, String selectedThemeColor) {
-    return themeFile + "/" + themeFile + selectedThemeColor;
-  }
-
-  private void setupSimulation(Stage stage, String language, List<String> cssFiles) throws Exception {
+  private void setupSimulation(Stage stage, String language, String themeColor) throws Exception {
     mySimView = new SimulationView(mySimulationConfig,myController, myResources);
-    initializeView(stage, language, cssFiles);
+    initializeView(stage, language, themeColor);
   }
 
   /**
@@ -128,7 +109,6 @@ public class SimulationController {
    * @return Resource Bundle for a user-selected language
    */
   public ResourceBundle getResources() {return myResources;}
-
 
   /**
    * Initializes the simulation based on the type specified in the configuration.
@@ -173,7 +153,7 @@ public class SimulationController {
    *
    * @param primaryStage The primary stage for the JavaFX application.
    */
-  private void initializeView(Stage primaryStage, String language, List<String> cssFiles) {
+  private void initializeView(Stage primaryStage, String language, String themeColor) throws Exception {
     mySimView.initView(
         primaryStage,
         mySimulation,
@@ -181,7 +161,7 @@ public class SimulationController {
         mySimulation.getColorMap(),
         myGrid,
         language,
-        cssFiles
+        themeColor
     );
   }
 
@@ -264,7 +244,7 @@ public class SimulationController {
     mySimView.updateGrid(mySimulation.getColorMap());
   }
 
-  private void displayAlert(String title, String content) {
+  public void displayAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
     alert.setContentText(content);
