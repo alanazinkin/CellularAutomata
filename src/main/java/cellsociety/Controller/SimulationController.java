@@ -8,8 +8,8 @@ import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -18,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -53,12 +52,12 @@ public class SimulationController {
    * Initializes the simulation by parsing the configuration file, setting up the model,
    * and initializing the view.
    *
-   * @param primaryStage The primary stage for the JavaFX application.
+   * @param stage The primary stage for the JavaFX application.
    * @throws Exception If there is an error during initialization.
    */
-  public void init(Stage primaryStage, SimulationController controller) throws Exception {
+  public void init(Stage stage, SimulationController controller) throws Exception {
     myController = controller;
-    myStage = primaryStage;
+    myStage = stage;
     // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
     mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
@@ -70,9 +69,10 @@ public class SimulationController {
     initializeTimeline();
     SplashScreen initialScreen = new SplashScreen();
     Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
-    ComboBox<String> languageSelector = initialScreen.makeLanguageComboBox();
+    ComboBox<String> languageSelector = initialScreen.makeComboBox("Select Language", List.of("English", "Spanish", "Italian"));
+    ComboBox<String> themeColorSelector = initialScreen.makeComboBox("Select Theme Color", List.of("Dark", "Light"));
     // Wait for language selection
-    selectLanguageToStartSimulation(primaryStage, initialScreen, languageSelector, splashStage);
+    selectSettingsToStartSimulation(initialScreen, languageSelector, themeColorSelector, splashStage);
   }
 
   private void initializeTimeline() {
@@ -81,16 +81,20 @@ public class SimulationController {
     myTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> stepSimulation(SECOND_DELAY)));
   }
 
-  private void selectLanguageToStartSimulation(Stage primaryStage, SplashScreen initialScreen, ComboBox<String> languageSelector, Stage splashStage) {
+  private void selectSettingsToStartSimulation(SplashScreen initialScreen, ComboBox<String> languageSelector, ComboBox<String> themeColorSelector, Stage splashStage) {
     Button enterButton = initialScreen.makeEnterButton();
     enterButton.setOnAction(e -> {
       String selectedLanguage = languageSelector.getValue();
-      if (selectedLanguage != null) {
+      String selectedThemeColor = themeColorSelector.getValue();
+      if (selectedLanguage != null && selectedThemeColor != null) {
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
+        // close splash screen
         splashStage.close();
-        myScene = mySimulationConfig.initializeStage(primaryStage);
+        //myScene = mySimulationConfig.initializeStage(myStage);
+        String themeFile = getThemeFolderOrFile(mySimulationConfig.getType());
+        List<String> cssFiles = List.of(selectedThemeColor, getSimulationFile(themeFile, selectedThemeColor));
         try {
-          setupSimulation(primaryStage, selectedLanguage);
+          setupSimulation(myStage, selectedLanguage, cssFiles);
         } catch (Exception ex) {
           throw new RuntimeException(ex);
         }
@@ -98,16 +102,32 @@ public class SimulationController {
     });
   }
 
+  private String getThemeFolderOrFile(String simulationType) {
+    switch (simulationType) {
+      case "Game of Life": return "GameOfLife";
+      case "Spreading of Fire": return "Fire";
+      case "Percolation": return "Percolation";
+      case "Schelling Segregation": return "Schelling";
+      case "Wa-Tor World": return "WaTorWorld";
+      default: displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimulationType"));
+        return "";
+    }
+  }
+
+  private String getSimulationFile(String themeFile, String selectedThemeColor) {
+    return themeFile + "/" + themeFile + selectedThemeColor;
+  }
+
+  private void setupSimulation(Stage stage, String language, List<String> cssFiles) throws Exception {
+    mySimView = new SimulationView(mySimulationConfig,myController, myResources);
+    initializeView(stage, language, cssFiles);
+  }
+
   /**
    * method that allows access to resource bundle for a specific language
    * @return Resource Bundle for a user-selected language
    */
   public ResourceBundle getResources() {return myResources;}
-
-  private void setupSimulation(Stage primaryStage, String language) throws Exception {
-    mySimView = new SimulationView();
-    initializeView(primaryStage, language);
-  }
 
 
   /**
@@ -118,7 +138,7 @@ public class SimulationController {
     String simulationType = mySimulationConfig.getType();
     mySimulation = createSimulation(simulationType);
     if (mySimulation == null) {
-      displayAlert(myResources.getString("InvalidSimType") + " " + simulationType);
+      displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimType") + " " + simulationType);
     }
     return mySimulation;
   }
@@ -140,7 +160,7 @@ public class SimulationController {
       case "Percolation":
         double percolationProb = mySimulationConfig.getParameters().getOrDefault("percolationProb", DEFAULT_PERCOLATION_PROB);
         return new Percolation(mySimulationConfig, myGrid, percolationProb);
-      case "Schelling":
+      case "Schelling Segregation":
         double satisfaction = mySimulationConfig.getParameters().getOrDefault("satisfaction", DEFAULT_SATISFACTION);
         return new Schelling(mySimulationConfig, myGrid, satisfaction);
         default:
@@ -153,16 +173,15 @@ public class SimulationController {
    *
    * @param primaryStage The primary stage for the JavaFX application.
    */
-  private void initializeView(Stage primaryStage, String language) {
+  private void initializeView(Stage primaryStage, String language, List<String> cssFiles) {
     mySimView.initView(
         primaryStage,
-        mySimulationConfig,
         mySimulation,
         mySimView,
         mySimulation.getColorMap(),
         myGrid,
         language,
-        myController
+        cssFiles
     );
   }
 
@@ -191,39 +210,32 @@ public class SimulationController {
   }
 
   /**
-   * Resets the simulation to its initial state.
+   * re-initializes the Grid States to their original
+   * configuration based on the Simulation Configuration
    */
-  public void resetSimulation() throws Exception {
-    myTimeline.stop();
-    myStage.close();
-    init(new Stage(), myController);
+  public void resetGrid() {
+    mySimulation.reinitializeGridStates(mySimulationConfig);
+    updateView();
   }
 
   public void saveSimulation() {
     try {
       SaveSimulationDescription dialog = new SaveSimulationDescription(myStage, myResources, mySimulationConfig);
       Optional<SaveSimulationDescription.SimulationMetadata> result = dialog.showAndWait();
-
       if (result.isPresent()) {
         SaveSimulationDescription.SimulationMetadata metadata = result.get();
-
         // Update the configuration with new metadata
         mySimulationConfig.setTitle(metadata.title());
         mySimulationConfig.setAuthor(metadata.author());
         mySimulationConfig.setDescription(metadata.description());
-
         // Save the file
         XMLWriter xmlWriter = new XMLWriter();
         xmlWriter.saveToXML(mySimulationConfig, myGrid, metadata.saveLocation().getAbsolutePath());
-
         // Show success message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(myResources.getString("Success"));
-        alert.setContentText(metadata.saveLocation().getName() + " " + myResources.getString("Saved"));
-        alert.showAndWait();
+        displayAlert(myResources.getString("Success"), metadata.saveLocation().getName() + " " + myResources.getString("Saved"));
       }
     } catch (IOException e) {
-      displayAlert(myResources.getString("Error") + ": " + e.getMessage());
+      displayAlert(myResources.getString("Error"), myResources.getString("Error") + ": " + e.getMessage());
     }
     System.out.println("Saving Simulation");
   }
@@ -246,15 +258,15 @@ public class SimulationController {
    */
   private void updateView() {
     if (mySimView == null || mySimulation == null || myGrid == null) {
-      displayAlert(myResources.getString("Error") + ":" + " " + myResources.getString("ViewSimOrGridNull"));
+      displayAlert(myResources.getString("Error"), myResources.getString("Error") + ":" + " " + myResources.getString("ViewSimOrGridNull"));
       return;
     }
     mySimView.updateGrid(mySimulation.getColorMap());
   }
 
-  private void displayAlert(String content) {
+  private void displayAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle(myResources.getString("Error"));
+    alert.setTitle(title);
     alert.setContentText(content);
     alert.showAndWait();
   }
@@ -265,8 +277,5 @@ public class SimulationController {
   public void cleanup() {
     System.out.println("Cleaning up");
   }
-
-
-
 
 }

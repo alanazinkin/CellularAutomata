@@ -1,0 +1,12 @@
+#fire-state-empty {
+  -fx-fill: grey
+}
+#fire-state-tree {
+  -fx-fill: darkgreen
+}
+#fire-state-burning {
+  -fx-fill: red
+}
+#fire-state-burnt {
+  -fx-fill: maroon
+}

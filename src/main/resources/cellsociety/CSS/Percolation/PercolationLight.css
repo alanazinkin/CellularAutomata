@@ -1,0 +1,9 @@
+#percolation-state-open {
+  -fx-fill: seashell
+}
+#percolation-state-percolated {
+  -fx-fill: skyblue
+}
+#percolation-state-blocked {
+  -fx-fill: slategray
+}

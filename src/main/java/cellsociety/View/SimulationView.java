@@ -6,6 +6,7 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.StateInterface;
 import cellsociety.View.GridViews.FireGridView;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -21,6 +22,7 @@ public class SimulationView {
   public static final int SIMULATION_HEIGHT = 800;
 
   private SimulationController myController;
+  private List<String> myCSSFiles;
   private Scene myScene;
   private BorderPane myRoot;
   private ResourceBundle myResources;
@@ -28,18 +30,34 @@ public class SimulationView {
   private SimulationConfig myConfig;
 
   /**
+   *
+   * @param simulationConfig the simulation configuration containing all information about the exact simulation file
+   * @param controller
+   * @param resources
+   */
+  public SimulationView(SimulationConfig simulationConfig, SimulationController controller, ResourceBundle resources) {
+    myConfig = simulationConfig;
+    myController = controller;
+    myResources = resources;
+  }
+  /**
    * entry point for adding all views to application
    *
    * @param primaryStage main stage onto which all elements are added
-   * @param simulationConfig the simulation configuration containing all information about the exact simulation file
    * @param simulation the simulation model
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, SimulationController controller) {
-    myConfig = simulationConfig;
-    myResources = controller.getResources();
-    myController = controller;
+  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, List<String> cssFiles) {
+    myCSSFiles = cssFiles;
+    createSimulationWindow(primaryStage);
+    // make control panel
+    ControlPanel myControlPanel = new ControlPanel(language, myController);
+    myControlPanel.makeControlBar(simView.getRoot());
+    myControlPanel.makeSliderBar(simView.getRoot());
+    // create Grid
+    myGridView = new FireGridView(myConfig, grid);
+    myGridView.createGridDisplay(simView.getRoot(), stateMap);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         myConfig.getType(),
@@ -51,32 +69,33 @@ public class SimulationView {
         language
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"));
-    createSimulationWindow(primaryStage);
-    // make control panel
-    ControlPanel myControlPanel = new ControlPanel(language, myController);
-    myControlPanel.makeControlBar(simView.getRoot());
-    myControlPanel.makeSliderBar(simView.getRoot());
-    // create Grid
-    myGridView = new FireGridView(myConfig, grid);
-    myGridView.createGridDisplay(simView.getRoot(), stateMap);
   }
 
   /**
    * Creates a new main pane to hold the grid view and control bar.
-   * @param primaryStage holds all main panes and views for simulation except the Simulation Information
+   *
+   * @param primaryStage holds all main panes and views for simulation except the Simulation
+   *                     Information
    * @return myScene
    */
   public Scene createSimulationWindow(Stage primaryStage) {
     myRoot = new BorderPane();
-    // add relevant text to scene
-    // create and set the scene
     myScene = new Scene(myRoot, SIMULATION_WIDTH, SIMULATION_HEIGHT);
+    addCSSFiles(myCSSFiles);
     primaryStage.setScene(myScene);
     primaryStage.show();
-    // add CSS files
-    myScene.getStylesheets().add(getClass().getResource("/cellsociety/CSS/ControlPanel.css").toExternalForm());
     return myScene;
   }
+
+  private void addCSSFiles(List<String> files) {
+    String basePath = "/cellsociety/CSS/";
+    for (String file : files) {
+      String completePath = basePath + file + ".css";
+      System.out.println(completePath);
+      myScene.getStylesheets().add(getClass().getResource(completePath).toExternalForm());
+    }
+  }
+
 
   private GridView createAppropriateGridView(Grid grid) {
       return switch (myConfig.getType().toLowerCase()) {

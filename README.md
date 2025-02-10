@@ -1,13 +1,13 @@
 # cell society
-## TEAM NUMBER
-## NAMES
+## 5
+## Alana Zinkin, Tatum McKinnis, Angela Predolac
 
 
 This project implements a cellular automata simulator.
 
 ### Timeline
 
- * Start Date: 
+ * Start Date: 1/28/25
 
  * Finish Date: 
 
@@ -24,9 +24,9 @@ This project implements a cellular automata simulator.
 
 ### Running the Program
 
- * Main class:
+ * Main class: Main.java
 
- * Data files needed: 
+ * Data files needed: Simulation xml file is needed to load a new simulation
 
  * Interesting data files:
 
@@ -45,6 +45,11 @@ This project implements a cellular automata simulator.
  * Features unimplemented:
 
  * Noteworthy Features:
+
+ * Running multiple simulations simultaneously:
+   * All simulations run independently and are created by 
+   initializing a new SimulationMaker object and calling makeSimulation()
+   * Each simulation runs in an entirely new window, which is not organized in any particular arrangement
 
 
 
