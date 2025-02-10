@@ -1,0 +1,6 @@
+#gameoflife-state-alive {
+  -fx-fill: royalblue
+}
+#gameoflife-state-dead {
+  -fx-fill: lightcyan
+}

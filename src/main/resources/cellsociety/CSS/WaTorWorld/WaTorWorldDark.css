@@ -1,0 +1,9 @@
+#watorworld-state-empty {
+  -fx-fill: midnightblue
+}
+#watorworld-state-fish {
+  -fx-fill: orangered
+}
+#watorworld-state-shark {
+  -fx-fill: dimgrey
+}
