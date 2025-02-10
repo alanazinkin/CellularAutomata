@@ -28,6 +28,10 @@
   -fx-background-color: #3a3a3a;
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 4, 4); /* More intense shadow */
 }
+.combo-box-popup {
+  -fx-background-color: white;
+  -fx-text-fill: black;
+}
 
 .custom-text {
   -fx-font-size: 12pt;
