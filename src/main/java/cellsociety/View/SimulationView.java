@@ -36,9 +36,9 @@ public class SimulationView {
    * @param simView the simulation view object
    * @param stateMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, SimulationController controller) {
+  public void initView(Stage primaryStage, SimulationConfig simulationConfig, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, SimulationController controller, ResourceBundle resources) {
     myConfig = simulationConfig;
-    myResources = controller.getResources();
+    myResources = resources;
     myController = controller;
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(

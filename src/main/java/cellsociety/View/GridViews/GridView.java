@@ -57,14 +57,14 @@ public abstract class GridView {
 
   /**
    * Creates the visual display of grid cells based on the Grid object and organizes them in the view
-   * @param stateMap mapping of state interfaces to colors to visually render each cell according to its state value
+   * @param colorMap mapping of state interfaces to colors to visually render each cell according to its state value
    */
-  public void renderGrid(Map<StateInterface, Color> stateMap) {
+  public void renderGrid(Map<StateInterface, Color> colorMap) {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
         StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight, stateMap.get(cellState));
+        Rectangle rectCell = new Rectangle(cellWidth, cellHeight, colorMap.get(cellState));
         rectCell.setStroke(Color.BLACK);
         rectCell.setStrokeWidth(1);
         myCells.add(rectCell);
@@ -82,7 +82,7 @@ public abstract class GridView {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
-        StateInterface state =  cell.getCurrentState();
+        StateInterface state = cell.getCurrentState();
         Shape myCell = myCells.get(cellCount);
         myCell.setFill(stateMap.get(state));
         cellCount++;
