@@ -30,7 +30,8 @@ public class FileRetriever {
    * @throws FileNotFoundException if there are no files associated with the simulation type
    */
   public Collection<String> getFileNames(String simulationType) throws FileNotFoundException {
-    List<File> simulationFiles = getSimulationTypeFiles(simulationType);
+    String simulationFilePath = getSimulationTypeFilePath(simulationType);
+    List<File> simulationFiles = getFilesInFolder(simulationFilePath);
     List<String> fileNames = new ArrayList<>();
     for (File file : simulationFiles) {
       fileNames.add(file.getName()); // Use just the name, not full path
@@ -38,7 +39,7 @@ public class FileRetriever {
     return fileNames;
   }
 
-  private List<File> getSimulationTypeFiles(String simulationType) throws FileNotFoundException {
+  public String getSimulationTypeFilePath(String simulationType) throws FileNotFoundException {
     String basePath = "data";
     String folderExtension;
     switch (simulationType) {
@@ -50,7 +51,7 @@ public class FileRetriever {
       // potential point of abuse! Handle edge case:
       default: throw new FileNotFoundException("No files found for " + simulationType);
     }
-    return getFilesInFolder(basePath + folderExtension);
+    return basePath + folderExtension;
   }
 
   private List<File> getFilesInFolder(String folderPath) throws FileNotFoundException {

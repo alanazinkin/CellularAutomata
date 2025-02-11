@@ -50,7 +50,7 @@ public class  SimulationInfoDisplay {
   /**
    * key indicating what each color means for a given simulation
    */
-  private Map<StateInterface, Color> myStateColors;
+  private Map<StateInterface, String> myStateColors;
 
   private ResourceBundle myResources;
 
@@ -64,7 +64,7 @@ public class  SimulationInfoDisplay {
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
 
-  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, Color> stateColors, String language) {
+  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language) {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     setType(type);
     setTitle(title);
@@ -118,7 +118,7 @@ public class  SimulationInfoDisplay {
    * set the stateColors instance variable
    * @param stateColors a key that indicates the meaning of the color of each cell
    */
-  private void setStateColors(Map<StateInterface, Color> stateColors) {
+  private void setStateColors(Map<StateInterface, String> stateColors) {
     myStateColors = stateColors;
   }
 
@@ -165,7 +165,8 @@ public class  SimulationInfoDisplay {
     addTextToScene(vbox, myResources.getString("StateColors") + " ");
     StateColor standardColors = new StateColor();
     for (StateInterface state : myStateColors.keySet()) {
-      addTextToScene(vbox, state.getStateValue() + ": " + standardColors.getColor(myStateColors.get(state)));
+      addTextToScene(vbox, state.getStateValue() + ": " + myStateColors.get(state));
+      //standardColors.getColor(.toString())
     }
   }
 

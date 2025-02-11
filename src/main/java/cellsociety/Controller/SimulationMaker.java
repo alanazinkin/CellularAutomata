@@ -10,6 +10,6 @@ public class SimulationMaker {
    */
   public void makeNewSimulation() throws Exception {
     SimulationController controller = new SimulationController();
-    controller.init(new Stage(), controller);
+    controller.selectSimulation("Game of Life", "Glider.xml", new Stage(), controller);
   }
 }

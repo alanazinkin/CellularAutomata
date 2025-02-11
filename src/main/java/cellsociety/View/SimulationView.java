@@ -14,7 +14,6 @@ import cellsociety.View.GridViews.GameOfLifeGridView;
 import cellsociety.View.GridViews.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class SimulationView {
@@ -46,13 +45,13 @@ public class SimulationView {
    * @param primaryStage main stage onto which all elements are added
    * @param simulation the simulation model
    * @param simView the simulation view object
-   * @param stateMap data structure mapping cell states to visual colors in the simulation grid
+   * @param colorMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, Color> stateMap, Grid grid, String language, String themeColor) {
+  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor) {
     createSimulationWindow(primaryStage);
     setTheme(themeColor);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(language, myController, simView);
+    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView);
     myControlPanel.makeControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
     myControlPanel.makeLabelBar();
@@ -68,7 +67,7 @@ public class SimulationView {
 
     // create Grid
     myGridView = new FireGridView(myConfig, grid);
-    myGridView.createGridDisplay(simView.getRoot(), stateMap);
+    myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
         myConfig.getType(),
@@ -160,7 +159,7 @@ public class SimulationView {
     return myRoot;
   }
 
-  public void updateGrid(Map<StateInterface, Color> stateMap) {
+  public void updateGrid(Map<StateInterface, String> stateMap) {
     if (myGridView != null) {
       myGridView.updateCellColors(stateMap);
     } else {

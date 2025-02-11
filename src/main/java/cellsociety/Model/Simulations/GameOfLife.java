@@ -123,10 +123,10 @@ public class GameOfLife extends Simulation {
    * </p>
    */
   @Override
-  public Map<StateInterface, Color> initializeColorMap() {
+  public Map<StateInterface, String> initializeColorMap() {
     return Map.of(
-        GameOfLifeState.ALIVE, ALIVE_COLOR,
-        GameOfLifeState.DEAD, DEAD_COLOR
+        GameOfLifeState.ALIVE, "gameoflife-state-alive",
+        GameOfLifeState.DEAD, "gameoflife-state-dead"
     );
   }
 

@@ -20,11 +20,6 @@ import javafx.scene.paint.Color;
  */
 public class Fire extends Simulation {
 
-  private static final Color TREE_COLOR = Color.GREEN;
-  private static final Color BURNING_COLOR = Color.RED;
-  private static final Color BURNT_COLOR = Color.BROWN;
-  private static final Color EMPTY_COLOR = Color.WHITE;
-
   private static final int EMPTY_STATE_KEY = 0;
   private static final int TREE_STATE_KEY = 1;
   private static final int BURNING_STATE_KEY = 2;
@@ -77,12 +72,12 @@ public class Fire extends Simulation {
    * - Empty: White
    */
   @Override
-  public Map<StateInterface, Color> initializeColorMap() {
+  public Map<StateInterface, String> initializeColorMap() {
     return Map.of(
-        FireState.TREE, TREE_COLOR,
-        FireState.BURNING, BURNING_COLOR,
-        FireState.BURNT, BURNT_COLOR,
-        FireState.EMPTY, EMPTY_COLOR
+        FireState.TREE, "fire-state-tree",
+        FireState.BURNING, "fire-state-burning",
+        FireState.BURNT, "fire-state-burnt",
+        FireState.EMPTY, "fire-state-empty"
     );
   }
 

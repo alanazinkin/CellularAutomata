@@ -157,10 +157,10 @@ public class Schelling extends Simulation {
    * @return Color mapping specific to Schelling simulation states
    */
   @Override
-  public Map<StateInterface, Color> initializeColorMap() {
+  public Map<StateInterface, String> initializeColorMap() {
     return Map.of(
-        SchellingState.AGENT, AGENT_COLOR,
-        SchellingState.EMPTY_CELL, EMPTY_CELL_COLOR
+        SchellingState.AGENT, "schelling-state-agent",
+        SchellingState.EMPTY_CELL, "schelling-state-empty"
     );
   }
 
