@@ -1,5 +1,7 @@
 package cellsociety.Model;
 
+import java.util.Objects;
+
 /**
  * Represents an individual ant in the simulation, tracking its position, orientation, and whether
  * it is carrying food.
@@ -20,6 +22,7 @@ public class Ant {
    * @param hasFood     true if the ant is carrying food
    */
   public Ant(int row, int col, Orientation orientation, boolean hasFood) {
+    this.orientation = Objects.requireNonNull(orientation, "Orientation cannot be null");
     this.row = row;
     this.col = col;
     this.orientation = orientation;

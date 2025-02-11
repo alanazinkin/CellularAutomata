@@ -28,9 +28,6 @@ import javafx.scene.paint.Color;
  * </ul>
  * The simulation handles pheromone evaporation and diffusion dynamics automatically.
  * </p>
- *
- * @author YourName
- * @version 1.0
  */
 public class AntSimulation extends Simulation {
 
@@ -133,7 +130,7 @@ public class AntSimulation extends Simulation {
    * </p>
    */
   @Override
-  protected void applyRules() {
+  public void applyRules() {
     initializeNextStates();
     ants.forEach(this::processAntMovement);
     applyEvaporationAndDiffusion();
@@ -176,6 +173,21 @@ public class AntSimulation extends Simulation {
   }
 
   /**
+   * Returns an unmodifiable view of the ants in the simulation.
+   * <p>
+   * This provides safe access to the ant population without exposing the internal list
+   * to modification. The returned list reflects the current state of ants but cannot
+   * be modified directly.
+   * </p>
+   *
+   * @return an unmodifiable list containing all active ants in the simulation
+   * @see Collections#unmodifiableList
+   */
+  public List<Ant> getAnts() {
+    return Collections.unmodifiableList(this.ants);
+  }
+
+  /**
    * Deposits pheromones at the ant's current location.
    *
    * @param row     Grid row coordinate
@@ -193,6 +205,16 @@ public class AntSimulation extends Simulation {
     } else if (!hasFood && desired > nextState.getHomePheromone()) {
       cell.setNextState(nextState.withHomePheromone(desired));
     }
+  }
+
+
+  // In AntSimulation.java
+  /**
+   * Provides access to the maximum pheromone value for testing purposes
+   * @return The maximum allowed pheromone concentration
+   */
+  public static double getMaxPheromone() {
+    return MAX_PHEROMONE;
   }
 
   /**
@@ -384,11 +406,19 @@ public class AntSimulation extends Simulation {
    * @param newCol Target column
    */
   private void moveAnt(Ant ant, int newRow, int newCol) {
-    updateAntCount(ant.getRow(), ant.getCol(), -1);
+    int oldRow = ant.getRow();
+    int oldCol = ant.getCol();
+
+    if (oldRow != newRow || oldCol != newCol) {
+      int dr = newRow - oldRow;
+      int dc = newCol - oldCol;
+      ant.setOrientation(Orientation.fromDrDc(dr, dc));
+    }
+
+    updateAntCount(oldRow, oldCol, -1);
     ant.setRow(newRow);
     ant.setCol(newCol);
     updateAntCount(newRow, newCol, 1);
-    ant.setOrientation(Orientation.fromDrDc(newRow - ant.getRow(), newCol - ant.getCol()));
   }
 
   /**
