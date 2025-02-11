@@ -18,7 +18,8 @@ import java.util.Random;
  * Implements the Wa-Tor World simulation rules for a predator–prey ecosystem.
  * <p>
  * In this simulation, fish and sharks move, breed, and (in the case of sharks) lose or gain energy.
- * The rules for movement and reproduction are encapsulated in helper methods to reduce duplication.
+ * The rules for movement and reproduction are encapsulated in helper methods to reduce
+ * duplication.
  * </p>
  */
 public class WaTorWorld extends Simulation {
@@ -48,13 +49,16 @@ public class WaTorWorld extends Simulation {
    *
    * @param simulationConfig   configuration settings for the simulation
    * @param grid               the grid on which the simulation runs
-   * @param fishBreedTime      number of chronons a fish must survive before reproducing (must be > 0)
-   * @param sharkBreedTime     number of chronons a shark must survive before reproducing (must be > 0)
+   * @param fishBreedTime      number of chronons a fish must survive before reproducing (must be >
+   *                           0)
+   * @param sharkBreedTime     number of chronons a shark must survive before reproducing (must be >
+   *                           0)
    * @param sharkInitialEnergy initial energy for a shark when created
    * @param sharkEnergyGain    energy a shark gains by eating a fish
    * @throws IllegalArgumentException if fishBreedTime or sharkBreedTime is less than or equal to 0
    */
-  public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime, int sharkBreedTime,
+  public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime,
+      int sharkBreedTime,
       int sharkInitialEnergy, int sharkEnergyGain) {
     super(simulationConfig, grid);
 
@@ -193,7 +197,8 @@ public class WaTorWorld extends Simulation {
    * @param newBreedVal new breeding counter value (after increment)
    * @param moved       grid marking moved cells
    */
-  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal, boolean[][] moved) {
+  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal,
+      boolean[][] moved) {
     if (newBreedVal >= fishBreedTime) {
       // Reproduce: reset counter at both cells.
       setFish(currentR, currentC, 0);
@@ -255,18 +260,18 @@ public class WaTorWorld extends Simulation {
   /**
    * Moves or reproduces a shark.
    * <p>
-   * If the shark’s breeding counter exceeds its threshold, it reproduces: a new shark is
-   * left in the original cell (with initial energy) and the moving shark resets its counter.
-   * Otherwise, it simply moves.
+   * If the shark’s breeding counter exceeds its threshold, it reproduces: a new shark is left in
+   * the original cell (with initial energy) and the moving shark resets its counter. Otherwise, it
+   * simply moves.
    * </p>
    *
-   * @param currentR    current row index
-   * @param currentC    current column index
-   * @param targetR     target row index
-   * @param targetC     target column index
-   * @param breedVal    new breeding counter value (after increment)
-   * @param energy      updated energy value for the shark
-   * @param moved       grid marking moved cells
+   * @param currentR current row index
+   * @param currentC current column index
+   * @param targetR  target row index
+   * @param targetC  target column index
+   * @param breedVal new breeding counter value (after increment)
+   * @param energy   updated energy value for the shark
+   * @param moved    grid marking moved cells
    */
   private void moveShark(int currentR, int currentC, int targetR, int targetC,
       int breedVal, int energy, boolean[][] moved) {
@@ -285,8 +290,8 @@ public class WaTorWorld extends Simulation {
   // ===================== Helper Methods =====================
 
   /**
-   * Finds all neighbor positions (with toroidal wrap–around) of the cell at (r, c) that are
-   * in the specified target state and have not yet been updated.
+   * Finds all neighbor positions (with toroidal wrap–around) of the cell at (r, c) that are in the
+   * specified target state and have not yet been updated.
    *
    * @param r           the row index of the current cell
    * @param c           the column index of the current cell
@@ -294,7 +299,8 @@ public class WaTorWorld extends Simulation {
    * @param moved       grid marking cells updated in this chronon
    * @return a list of {row, col} pairs for matching neighbors
    */
-  private List<int[]> findNeighborsByState(int r, int c, WaTorWorldState targetState, boolean[][] moved) {
+  private List<int[]> findNeighborsByState(int r, int c, WaTorWorldState targetState,
+      boolean[][] moved) {
     List<int[]> neighbors = new ArrayList<>();
     for (int i = 0; i < DIRECTIONS_COUNT; i++) {
       int neighborRow = (r + DIRECTION_ROW_OFFSETS[i] + rows) % rows;
@@ -325,11 +331,11 @@ public class WaTorWorld extends Simulation {
   /**
    * Marks two cells as updated in the moved grid.
    *
-   * @param moved    the moved grid
-   * @param r1       row index of the first cell
-   * @param c1       column index of the first cell
-   * @param r2       row index of the second cell
-   * @param c2       column index of the second cell
+   * @param moved the moved grid
+   * @param r1    row index of the first cell
+   * @param c1    column index of the first cell
+   * @param r2    row index of the second cell
+   * @param c2    column index of the second cell
    */
   private void markMoved(boolean[][] moved, int r1, int c1, int r2, int c2) {
     moved[r1][c1] = true;
