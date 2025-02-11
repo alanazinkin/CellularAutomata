@@ -30,20 +30,26 @@ public class Fire extends Simulation {
   private static final int BURNING_STATE_KEY = 2;
   private static final int BURNT_STATE_KEY = 3;
 
-  /** Probability of empty/burnt cell regrowing a tree */
+  /**
+   * Probability of empty/burnt cell regrowing a tree
+   */
   private final double regrowthProbability;
-  /** Probability of spontaneous tree combustion */
+  /**.
+   * Probability of spontaneous tree combustion
+   */
   private final double ignitionProbability;
-  /** Random number generator for probability checks */
+  /**
+   * Random number generator for probability checks
+   */
   private final Random randomNumGenerator;
 
   /**
    * Constructs a Fire simulation with specified parameters
    *
    * @param simulationConfig Configuration object containing simulation settings
-   * @param grid The grid of cells to simulate
-   * @param p Tree regrowth probability (0 ≤ p ≤ 1)
-   * @param f Spontaneous ignition probability (0 ≤ f ≤ 1)
+   * @param grid             The grid of cells to simulate
+   * @param p                Tree regrowth probability (0 ≤ p ≤ 1)
+   * @param f                Spontaneous ignition probability (0 ≤ f ≤ 1)
    * @throws IllegalArgumentException If probabilities are out of valid range
    */
   public Fire(SimulationConfig simulationConfig, Grid grid, double p, double f) {
@@ -59,7 +65,7 @@ public class Fire extends Simulation {
    * Validates that a probability value is within [0,1] range
    *
    * @param probability The probability value to validate
-   * @param name Descriptive name for error messages
+   * @param name        Descriptive name for error messages
    * @throws IllegalArgumentException If probability is outside valid range
    */
   private void validateProbability(double probability, String name) {
@@ -69,12 +75,8 @@ public class Fire extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
-   * Creates color mapping for fire states:
-   * - Tree: Green
-   * - Burning: Red
-   * - Burnt: Brown
-   * - Empty: White
+   * {@inheritDoc} Creates color mapping for fire states: - Tree: Green - Burning: Red - Burnt:
+   * Brown - Empty: White
    */
   @Override
   public Map<StateInterface, Color> initializeColorMap() {
@@ -87,12 +89,8 @@ public class Fire extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
-   * Creates state mapping for fire simulation:
-   * - 0: Empty
-   * - 1: Tree
-   * - 2: Burning
-   * - 3: Burnt
+   * {@inheritDoc} Creates state mapping for fire simulation: - 0: Empty - 1: Tree - 2: Burning - 3:
+   * Burnt
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
@@ -105,9 +103,7 @@ public class Fire extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
-   * Applies fire spread rules in two phases:
-   * 1. Calculate next states for all cells
+   * {@inheritDoc} Applies fire spread rules in two phases: 1. Calculate next states for all cells
    * 2. Update all cells' next states simultaneously
    */
   @Override
@@ -151,8 +147,8 @@ public class Fire extends Simulation {
    * Determines next state based on current state and simulation rules
    *
    * @param currentState The cell's current fire state
-   * @param row Grid row index
-   * @param col Grid column index
+   * @param row          Grid row index
+   * @param col          Grid column index
    * @return Next state for the cell
    */
   private StateInterface determineNextState(FireState currentState, int row, int col) {
@@ -168,8 +164,7 @@ public class Fire extends Simulation {
    *
    * @param row Grid row index
    * @param col Grid column index
-   * @return BURNING if neighbors are burning or spontaneous ignition occurs,
-   *         otherwise remains TREE
+   * @return BURNING if neighbors are burning or spontaneous ignition occurs, otherwise remains TREE
    */
   private FireState getNextTreeState(int row, int col) {
     return hasBurningNeighbor(row, col) || probabilityEvent(ignitionProbability) ?
@@ -209,10 +204,8 @@ public class Fire extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
-   * Executes one simulation step:
-   * 1. Applies rules to calculate next states
-   * 2. Commits all state changes simultaneously
+   * {@inheritDoc} Executes one simulation step: 1. Applies rules to calculate next states 2.
+   * Commits all state changes simultaneously
    */
   @Override
   public void step() {
