@@ -52,19 +52,15 @@ public class SimulationView {
     setTheme(themeColor);
     // make control panel
     ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView);
-    myControlPanel.makeControlBar(simView.getRoot());
+    myControlPanel.setupControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
-    myControlPanel.makeLabelBar();
-    myControlPanel.makeCustomizationBar();
     try {
-      myControlPanel.makeSliderComponent();
-      myControlPanel.makeThemeComponent();
+      myControlPanel.setUpLowerBar(simView.getRoot());
     }
     catch (Exception e) {
       myController.displayAlert(myResources.getString("Error"), myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
-
     // create Grid
     myGridView = new FireGridView(myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);

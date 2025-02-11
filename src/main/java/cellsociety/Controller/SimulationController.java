@@ -124,17 +124,21 @@ public class SimulationController {
    * method that allows access to resource bundle for a specific language
    * @return Resource Bundle for a user-selected language
    */
-  public ResourceBundle getResources() {return myResources;}
+  //TODO make immutable
+  private ResourceBundle getImmutableResources() {
+    return myResources;
+  }
 
   /**
    * Initializes the simulation based on the type specified in the configuration.
    * Uses a switch statement to determine which simulation to create.
    */
-  private Simulation initializeSimulationType() {
+  private Simulation initializeSimulationType() throws IllegalStateException {
     String simulationType = mySimulationConfig.getType();
     mySimulation = createSimulation(simulationType);
     if (mySimulation == null) {
-      displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimType") + " " + simulationType);
+      displayAlert(myResources.getString("Error"), myResources.getString("SimNotSupported"));
+      throw new IllegalStateException(myResources.getString("InvalidSimType") + " " + simulationType);
     }
     return mySimulation;
   }

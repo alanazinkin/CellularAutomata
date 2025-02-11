@@ -1,5 +1,6 @@
 .root {
   -fx-background: WHITE;
+  -fx-background-color: WHITE;
 }
 .button {
   -fx-text-fill: #FFFFFF;
