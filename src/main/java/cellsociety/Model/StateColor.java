@@ -12,7 +12,8 @@ public class StateColor {
         if (field.getType() == Color.class && field.get(null).equals(color)) {
           return field.getName().toLowerCase(); // Return the color name
         }
-      } catch (IllegalAccessException ignored) { }
+      } catch (IllegalAccessException ignored) {
+      }
     }
     return color.toString(); // Default to rgba format if no name found
   }

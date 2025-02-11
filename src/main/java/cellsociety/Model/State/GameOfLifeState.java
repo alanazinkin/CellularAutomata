@@ -5,12 +5,12 @@ import cellsociety.Model.StateInterface;
 /**
  * Enum representing the states for Conway's Game of Life simulation.
  * <p>
- * Conway's Game of Life has two possible states: ALIVE and DEAD. A cell can either be alive
- * or dead based on the number of neighbors it has in each generation.
+ * Conway's Game of Life has two possible states: ALIVE and DEAD. A cell can either be alive or dead
+ * based on the number of neighbors it has in each generation.
  * </p>
  * <p>
- * This enum implements the {@link cellsociety.Model.StateInterface} interface to maintain consistency across
- * various state enums used in grid-based simulations.
+ * This enum implements the {@link cellsociety.Model.StateInterface} interface to maintain
+ * consistency across various state enums used in grid-based simulations.
  * </p>
  */
 public enum GameOfLifeState implements StateInterface {
@@ -29,7 +29,8 @@ public enum GameOfLifeState implements StateInterface {
   private final int numericValue;
 
   /**
-   * Constructor for the GameOfLifeState enum, assigning a string value and a numeric value to each state.
+   * Constructor for the GameOfLifeState enum, assigning a string value and a numeric value to each
+   * state.
    *
    * @param stateValue   the string value representing the state (e.g., "Alive", "Dead")
    * @param numericValue the numeric value representing the state (e.g., 1 for alive, 0 for dead)

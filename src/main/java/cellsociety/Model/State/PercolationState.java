@@ -30,8 +30,8 @@ public enum PercolationState implements StateInterface {
   BLOCKED("Blocked"),
 
   /**
-   * Represents a cell that has been percolated. This cell was open and now indicates that
-   * fluid has percolated through it.
+   * Represents a cell that has been percolated. This cell was open and now indicates that fluid has
+   * percolated through it.
    */
   PERCOLATED("Percolated");
 
@@ -40,7 +40,8 @@ public enum PercolationState implements StateInterface {
   /**
    * Constructor for the PercolationState enum, assigning a string value to each state.
    *
-   * @param stateValue the string value representing the state (e.g., "Open", "Blocked", "Percolated")
+   * @param stateValue the string value representing the state (e.g., "Open", "Blocked",
+   *                   "Percolated")
    */
   PercolationState(String stateValue) {
     this.stateValue = stateValue;

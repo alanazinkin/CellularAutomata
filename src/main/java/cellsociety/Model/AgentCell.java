@@ -9,11 +9,12 @@ public class AgentCell extends Cell {
 
   /**
    * Constructs an {@code AgentCell} with the specified state and agent group.
+   * <p>
+   * The constructor initializes an agent cell with the given state and agent group. It ensures that
+   * the provided agent group is non-negative. If the provided agent group is negative, an
+   * {@link IllegalArgumentException} is thrown.
    *
-   * The constructor initializes an agent cell with the given state and agent group. It ensures that the provided
-   * agent group is non-negative. If the provided agent group is negative, an {@link IllegalArgumentException} is thrown.
-   *
-   * @param state the state of the agent cell (must not be {@code null})
+   * @param state      the state of the agent cell (must not be {@code null})
    * @param agentGroup the agent group to be assigned to the agent cell (must not be negative)
    * @throws IllegalArgumentException if {@code agentGroup} is less than 0
    */
@@ -36,9 +37,10 @@ public class AgentCell extends Cell {
 
   /**
    * Sets the agent group to the specified value.
-   *
-   * This method sets the agent group for the agent, ensuring that the specified group number is non-negative.
-   * If the provided agent group is negative, an {@link IllegalArgumentException} is thrown.
+   * <p>
+   * This method sets the agent group for the agent, ensuring that the specified group number is
+   * non-negative. If the provided agent group is negative, an {@link IllegalArgumentException} is
+   * thrown.
    *
    * @param agentGroup the agent group to be set (must not be negative)
    * @throws IllegalArgumentException if {@code agentGroup} is less than 0

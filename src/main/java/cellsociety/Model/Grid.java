@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a 2D grid of {@link Cell} objects used in a simulation.
- * The grid maintains a fixed number of rows and columns and provides
- * methods for accessing cells, retrieving neighbors, and updating states.
+ * Represents a 2D grid of {@link Cell} objects used in a simulation. The grid maintains a fixed
+ * number of rows and columns and provides methods for accessing cells, retrieving neighbors, and
+ * updating states.
  */
 public class Grid {
 
   // Named constant for neighbor offsets (row, column)
   private static final int[][] NEIGHBOR_OFFSETS = {
       {-1, -1}, {-1, 0}, {-1, 1},
-      {0, -1},           {0, 1},
-      {1, -1},  {1, 0},  {1, 1}
+      {0, -1}, {0, 1},
+      {1, -1}, {1, 0}, {1, 1}
   };
 
   private final Cell[][] cells;
@@ -25,14 +25,14 @@ public class Grid {
   private final StateInterface defaultState;
 
   /**
-   * Constructs a new {@code Grid} with the specified dimensions and initializes
-   * all cells to the given default state.
+   * Constructs a new {@code Grid} with the specified dimensions and initializes all cells to the
+   * given default state.
    *
    * @param rows         the number of rows in the grid
    * @param cols         the number of columns in the grid
    * @param defaultState the initial state assigned to all cells
    * @throws IllegalArgumentException if either {@code rows} or {@code cols} is negative
-   * @throws NullPointerException if {@code defaultState} is {@code null}
+   * @throws NullPointerException     if {@code defaultState} is {@code null}
    */
   public Grid(int rows, int cols, StateInterface defaultState) {
     if (rows < 0 || cols < 0) {
@@ -96,8 +96,8 @@ public class Grid {
   }
 
   /**
-   * Retrieves the neighboring cells of the specified cell at (row, col).
-   * Neighbors are determined using the eight surrounding positions in the grid.
+   * Retrieves the neighboring cells of the specified cell at (row, col). Neighbors are determined
+   * using the eight surrounding positions in the grid.
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
@@ -122,11 +122,11 @@ public class Grid {
   }
 
   /**
-   * Applies the next state to all cells in the grid.
-   * This method iterates through all cells and updates their state
-   * based on the precomputed next state.
+   * Applies the next state to all cells in the grid. This method iterates through all cells and
+   * updates their state based on the precomputed next state.
    *
-   * @throws IllegalStateException if any cell is {@code null} or if any cell's next state is {@code null}
+   * @throws IllegalStateException if any cell is {@code null} or if any cell's next state is
+   *                               {@code null}
    */
   public void applyNextStates() {
     for (int r = 0; r < rows; r++) {
@@ -158,14 +158,14 @@ public class Grid {
   }
 
   /**
-   * Replaces the cell at the specified row and column with the provided cell.
-   * This method allows controlled modification of individual cells without exposing
-   * the entire internal cell array.
+   * Replaces the cell at the specified row and column with the provided cell. This method allows
+   * controlled modification of individual cells without exposing the entire internal cell array.
    *
    * @param row  the row index of the cell to replace
    * @param col  the column index of the cell to replace
    * @param cell the new {@code Cell} to be placed at the specified location
-   * @throws IllegalArgumentException if the specified row or column is out of bounds or if cell is null
+   * @throws IllegalArgumentException if the specified row or column is out of bounds or if cell is
+   *                                  null
    */
   public void setCellAt(int row, int col, Cell cell) {
     if (!isInBounds(row, col)) {

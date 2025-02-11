@@ -3,10 +3,9 @@ package cellsociety.Model;
 import cellsociety.Model.State.*;
 
 /**
- * Represents a cell that holds a state, which can vary depending on the simulation.
- * The cell maintains the current state, a next state (to be applied in the next generation),
- * and a previous state (the state prior to the current state). The state can be one of the
- * following:
+ * Represents a cell that holds a state, which can vary depending on the simulation. The cell
+ * maintains the current state, a next state (to be applied in the next generation), and a previous
+ * state (the state prior to the current state). The state can be one of the following:
  * <ul>
  *   <li>In Conway's Game of Life: {@link GameOfLifeState#ALIVE}, {@link GameOfLifeState#DEAD}</li>
  *   <li>In the Percolation simulation: {@link PercolationState#OPEN}, {@link PercolationState#BLOCKED}</li>
@@ -24,8 +23,8 @@ public class Cell {
   private StateInterface prevState;
 
   /**
-   * Constructs a new {@code Cell} with the specified initial state.
-   * Initializes the current, next, and previous state to the provided state.
+   * Constructs a new {@code Cell} with the specified initial state. Initializes the current, next,
+   * and previous state to the provided state.
    *
    * @param state The initial state of the cell. Must not be null.
    * @throws IllegalArgumentException if the provided state is null
@@ -58,8 +57,7 @@ public class Cell {
   }
 
   /**
-   * Sets a new state for the cell.
-   * Updates the previous state to the old current state.
+   * Sets a new state for the cell. Updates the previous state to the old current state.
    *
    * @param newState The new state to set for the cell. Must not be null.
    * @throws IllegalArgumentException if the provided state is null
@@ -95,8 +93,8 @@ public class Cell {
   }
 
   /**
-   * Applies the next state to the cell.
-   * Before updating, the current state is saved as the previous state.
+   * Applies the next state to the cell. Before updating, the current state is saved as the previous
+   * state.
    */
   public void applyNextState() {
     this.prevState = this.currentState;
