@@ -3,8 +3,7 @@ package cellsociety.Model.State;
 import cellsociety.Model.StateInterface;
 
 /**
- * Mock state implementation used for testing purposes.
- * Implements the StateInterface.
+ * Mock state implementation used for testing purposes. Implements the StateInterface.
  */
 public enum MockState implements StateInterface {
 

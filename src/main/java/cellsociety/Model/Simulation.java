@@ -1,4 +1,5 @@
 package cellsociety.Model;
+
 import cellsociety.Controller.SimulationConfig;
 import java.util.Collections;
 import java.util.Map;
@@ -21,18 +22,22 @@ public abstract class Simulation {
   private static final String ERROR_STATE_MAP_NULL = "State map is null";
 
   private final Grid grid;
-  /** Immutable mapping of states to their visual representations */
+  /**
+   * Immutable mapping of states to their visual representations
+   */
   private final Map<StateInterface, Color> colorMap;
-  /** Immutable mapping of integer values to simulation states */
+  /**
+   * Immutable mapping of integer values to simulation states
+   */
   private final Map<Integer, StateInterface> stateMap;
 
   /**
    * Constructs a new Simulation instance with specified configuration and grid.
    *
    * @param simulationConfig Contains initial simulation parameters and state configuration
-   * @param grid The grid structure to use for this simulation
+   * @param grid             The grid structure to use for this simulation
    * @throws IllegalArgumentException If grid is null or initial states are invalid
-   * @throws IllegalStateException If state mapping fails or grid contains null cells
+   * @throws IllegalStateException    If state mapping fails or grid contains null cells
    */
   public Simulation(SimulationConfig simulationConfig, Grid grid) {
     validateGrid(grid);
@@ -58,8 +63,9 @@ public abstract class Simulation {
    * Initializes grid cells with states from simulation configuration.
    *
    * @param simulationConfig Provides initial cell states array
-   * @throws IllegalArgumentException If initial states array is empty or size mismatches grid dimensions
-   * @throws IllegalStateException If state map is not initialized or grid contains null cells
+   * @throws IllegalArgumentException If initial states array is empty or size mismatches grid
+   *                                  dimensions
+   * @throws IllegalStateException    If state map is not initialized or grid contains null cells
    */
   private void initializeGrid(SimulationConfig simulationConfig) {
     int[] initialStates = simulationConfig.getInitialStates();
@@ -100,7 +106,7 @@ public abstract class Simulation {
    *
    * @param initialStates The array of initial cell states
    * @throws IllegalArgumentException If array is empty or size mismatches grid
-   * @throws IllegalStateException If state map is not initialized
+   * @throws IllegalStateException    If state map is not initialized
    */
   private void validateInitialStates(int[] initialStates) {
     if (initialStates.length == 0) {
@@ -130,8 +136,8 @@ public abstract class Simulation {
   /**
    * Updates cell state if it matches grid's default state.
    *
-   * @param r Row index of cell to update
-   * @param c Column index of cell to update
+   * @param r          Row index of cell to update
+   * @param c          Column index of cell to update
    * @param stateValue Integer value mapping to new state via stateMap
    */
   private void setCellState(int r, int c, int stateValue) {
@@ -144,9 +150,8 @@ public abstract class Simulation {
   /**
    * Executes one simulation step by applying rules and updating grid.
    * <p>
-   * Implementation sequence:
-   * 1. Apply simulation-specific rules through {@link #applyRules()}
-   * 2. Commit calculated next states to the grid
+   * Implementation sequence: 1. Apply simulation-specific rules through {@link #applyRules()} 2.
+   * Commit calculated next states to the grid
    * </p>
    */
   public void step() {
