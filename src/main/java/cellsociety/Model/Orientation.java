@@ -2,6 +2,7 @@ package cellsociety.Model;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Represents the eight possible directions an ant can face. Each direction includes delta row (dr)
@@ -59,6 +60,10 @@ public enum Orientation {
       }
     }
     throw new IllegalArgumentException("Invalid direction: dr=" + dr + ", dc=" + dc);
+  }
+
+  public static Orientation getRandom() {
+    return values()[new Random().nextInt(values().length)];
   }
 
   /**
