@@ -34,7 +34,7 @@ public class Fire extends Simulation {
    * Probability of empty/burnt cell regrowing a tree
    */
   private final double regrowthProbability;
-  /**
+  /**.
    * Probability of spontaneous tree combustion
    */
   private final double ignitionProbability;
