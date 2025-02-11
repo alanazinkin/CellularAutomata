@@ -1,54 +1,75 @@
 package cellsociety.Model;
 
 /**
- * A cell specialized for Schelling's simulation that holds an agent group identifier.
+ * A cell specialized for Schelling's simulation that holds a mutable agent group identifier.
+ * Validates state and agent group parameters during construction and modification.
  */
 public class AgentCell extends Cell {
+
+  private static final String INVALID_AGENT_GROUP_MSG = "Agent group cannot be negative. Received: %d";
+  private static final String NULL_STATE_MSG = "State cannot be null";
 
   private int agentGroup;
 
   /**
-   * Constructs an {@code AgentCell} with the specified state and agent group.
-   * <p>
-   * The constructor initializes an agent cell with the given state and agent group. It ensures that
-   * the provided agent group is non-negative. If the provided agent group is negative, an
-   * {@link IllegalArgumentException} is thrown.
+   * Constructs an {@code AgentCell} with the specified state and agent group identifier. Validates
+   * parameters before initialization using class validation methods.
    *
-   * @param state      the state of the agent cell (must not be {@code null})
-   * @param agentGroup the agent group to be assigned to the agent cell (must not be negative)
-   * @throws IllegalArgumentException if {@code agentGroup} is less than 0
+   * @param state      the cellular state object (must implement {@link StateInterface})
+   * @param agentGroup the affiliation group identifier for the agent
+   * @throws IllegalArgumentException if state is null or agentGroup is negative
    */
   public AgentCell(StateInterface state, int agentGroup) {
-    super(state);
-    if (agentGroup < 0) {
-      throw new IllegalArgumentException("Agent group cannot be negative.");
-    }
+    super(validateState(state));
+    validateAgentGroup(agentGroup);
     this.agentGroup = agentGroup;
   }
 
   /**
-   * Returns the agent's group identifier.
+   * Validates the state parameter before passing to superclass constructor.
    *
-   * @return the group identifier
+   * @param state the state object to validate
+   * @return the validated state object
+   * @throws IllegalArgumentException if state is null
+   */
+  private static StateInterface validateState(StateInterface state) {
+    if (state == null) {
+      throw new IllegalArgumentException(NULL_STATE_MSG);
+    }
+    return state;
+  }
+
+  /**
+   * Validates agent group identifier meets simulation requirements.
+   *
+   * @param agentGroup the group identifier to validate
+   * @throws IllegalArgumentException if agentGroup is negative
+   */
+  private void validateAgentGroup(int agentGroup) {
+    if (agentGroup < 0) {
+      throw new IllegalArgumentException(
+          String.format(INVALID_AGENT_GROUP_MSG, agentGroup)
+      );
+    }
+  }
+
+  /**
+   * Retrieves the current agent group identifier.
+   *
+   * @return the agent's current group affiliation identifier
    */
   public int getAgentGroup() {
     return agentGroup;
   }
 
   /**
-   * Sets the agent group to the specified value.
-   * <p>
-   * This method sets the agent group for the agent, ensuring that the specified group number is
-   * non-negative. If the provided agent group is negative, an {@link IllegalArgumentException} is
-   * thrown.
+   * Updates the agent's group identifier with validation.
    *
-   * @param agentGroup the agent group to be set (must not be negative)
-   * @throws IllegalArgumentException if {@code agentGroup} is less than 0
+   * @param agentGroup the new group identifier to assign
+   * @throws IllegalArgumentException if agentGroup is negative
    */
   public void setAgentGroup(int agentGroup) {
-    if (agentGroup < 0) {
-      throw new IllegalArgumentException("Agent group cannot be negative.");
-    }
+    validateAgentGroup(agentGroup);
     this.agentGroup = agentGroup;
   }
 }
