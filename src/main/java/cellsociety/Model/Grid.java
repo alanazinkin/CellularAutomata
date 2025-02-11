@@ -69,6 +69,26 @@ public class Grid {
   }
 
   /**
+   * Checks if the specified row and column indices represent a valid position within the grid.
+   * <p>
+   * A valid position is one where:
+   * <ul>
+   *   <li>{@code row} is between 0 (inclusive) and the grid's row count (exclusive)</li>
+   *   <li>{@code col} is between 0 (inclusive) and the grid's column count (exclusive)</li>
+   * </ul>
+   * This method provides a public interface to the private {@code isInBounds} check while maintaining
+   * encapsulation of the grid's internal implementation details.
+   * </p>
+   *
+   * @param row the row index to check
+   * @param col the column index to check
+   * @return {@code true} if the position is within grid bounds, {@code false} otherwise
+   */
+  public boolean isValidPosition(int row, int col) {
+    return isInBounds(row, col);
+  }
+
+  /**
    * Retrieves the cell at the specified row and column in the grid.
    *
    * @param row the row index of the cell
