@@ -18,6 +18,10 @@ import cellsociety.Model.State.*;
  */
 public class Cell {
 
+  private static final String NULL_STATE_ERROR = "State cannot be null";
+  private static final String NULL_NEXT_STATE_ERROR = "Next state cannot be null";
+  private static final String NULL_INITIAL_STATE_ERROR = "Initial state cannot be null";
+
   private StateInterface currentState;
   private StateInterface nextState;
   private StateInterface prevState;
@@ -30,9 +34,7 @@ public class Cell {
    * @throws IllegalArgumentException if the provided state is null
    */
   public Cell(StateInterface state) {
-    if (state == null) {
-      throw new IllegalArgumentException("Initial state cannot be null");
-    }
+    validateState(state, NULL_INITIAL_STATE_ERROR);
     this.currentState = state;
     this.nextState = state;
     this.prevState = state;
@@ -63,9 +65,7 @@ public class Cell {
    * @throws IllegalArgumentException if the provided state is null
    */
   public void setCurrentState(StateInterface newState) {
-    if (newState == null) {
-      throw new IllegalArgumentException("State cannot be null");
-    }
+    validateState(newState, NULL_STATE_ERROR);
     this.prevState = this.currentState;
     this.currentState = newState;
   }
@@ -77,9 +77,7 @@ public class Cell {
    * @throws IllegalArgumentException if the provided next state is null
    */
   public void setNextState(StateInterface nextState) {
-    if (nextState == null) {
-      throw new IllegalArgumentException("Next state cannot be null");
-    }
+    validateState(nextState, NULL_NEXT_STATE_ERROR);
     this.nextState = nextState;
   }
 
@@ -115,9 +113,7 @@ public class Cell {
    * @throws IllegalArgumentException if the provided state is null
    */
   public void resetState(StateInterface state) {
-    if (state == null) {
-      throw new IllegalArgumentException("State cannot be null");
-    }
+    validateState(state, NULL_STATE_ERROR);
     this.currentState = state;
     this.nextState = state;
     this.prevState = state;
@@ -131,5 +127,17 @@ public class Cell {
   @Override
   public String toString() {
     return currentState.toString();
+  }
+
+  /**
+   * Centralized state validation method
+   *
+   * @param state        State to validate
+   * @param errorMessage Message to use if validation fails
+   */
+  private void validateState(StateInterface state, String errorMessage) {
+    if (state == null) {
+      throw new IllegalArgumentException(errorMessage);
+    }
   }
 }
