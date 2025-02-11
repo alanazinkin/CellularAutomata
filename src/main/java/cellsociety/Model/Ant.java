@@ -5,6 +5,7 @@ package cellsociety.Model;
  * it is carrying food.
  */
 public class Ant {
+
   private int row;
   private int col;
   private Orientation orientation;
