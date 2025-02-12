@@ -5,14 +5,14 @@ import cellsociety.Model.StateInterface;
 /**
  * Enum representing the states for the Spreading of Fire simulation.
  * <p>
- * The Spreading of Fire simulation includes four states: TREE, BURNING, BURNT, and EMPTY.
- * A tree may catch fire (TREE), burn (BURNING), or remain as an empty cell after burning out (BURNT).
+ * The Spreading of Fire simulation includes four states: TREE, BURNING, BURNT, and EMPTY. A tree
+ * may catch fire (TREE), burn (BURNING), or remain as an empty cell after burning out (BURNT).
  * Empty cells can also be represented as (EMPTY).
  * </p>
- *
- * Each enum constant in FireState represents a specific state of a cell in the simulation.
- * The enum implements the StateInterface interface, ensuring that each state can be handled
- * polymorphically across various simulations.
+ * <p>
+ * Each enum constant in FireState represents a specific state of a cell in the simulation. The enum
+ * implements the StateInterface interface, ensuring that each state can be handled polymorphically
+ * across various simulations.
  */
 public enum FireState implements StateInterface {
 
@@ -40,7 +40,8 @@ public enum FireState implements StateInterface {
   private final int numericValue;
 
   /**
-   * Constructor for the FireState enum, assigning both a string value and a numeric value to each state.
+   * Constructor for the FireState enum, assigning both a string value and a numeric value to each
+   * state.
    *
    * @param stateValue   the string representation of the state (e.g., "Tree", "Burning")
    * @param numericValue the numeric representation of the state (e.g., 1 for TREE, 2 for BURNING)

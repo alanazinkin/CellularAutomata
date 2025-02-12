@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Combined JUnit tests for the GameOfLife simulation.
- * Naming convention: [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * Combined JUnit tests for the GameOfLife simulation. Naming convention:
+ * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  */
 public class GameOfLifeTest {
 
@@ -21,8 +21,8 @@ public class GameOfLifeTest {
   private SimulationConfig simulationConfig;
 
   /**
-   * Sets up a 3x3 grid with all cells initially set to DEAD and creates a SimulationConfig.
-   * The SimulationConfig is created with dummy values appropriate for a GameOfLife simulation.
+   * Sets up a 3x3 grid with all cells initially set to DEAD and creates a SimulationConfig. The
+   * SimulationConfig is created with dummy values appropriate for a GameOfLife simulation.
    */
   @BeforeEach
   public void setup() {
@@ -46,8 +46,8 @@ public class GameOfLifeTest {
   }
 
   /**
-   * applyRules: A live cell with fewer than 2 live neighbors dies (underpopulation).
-   * Input: Center cell is ALIVE with 0 live neighbors.
+   * applyRules: A live cell with fewer than 2 live neighbors dies (underpopulation). Input: Center
+   * cell is ALIVE with 0 live neighbors.
    */
   @Test
   void applyRules_LiveCellWithFewerThanTwoLiveNeighbors_Dies() {
@@ -61,8 +61,8 @@ public class GameOfLifeTest {
   }
 
   /**
-   * applyRules: A live cell with exactly 2 live neighbors survives.
-   * Input: Center cell is ALIVE with exactly 2 live neighbors.
+   * applyRules: A live cell with exactly 2 live neighbors survives. Input: Center cell is ALIVE
+   * with exactly 2 live neighbors.
    */
   @Test
   void applyRules_LiveCellWithTwoLiveNeighbors_Survives() {
@@ -78,8 +78,8 @@ public class GameOfLifeTest {
   }
 
   /**
-   * applyRules: A live cell with 4 live neighbors dies (overpopulation).
-   * Input: Center cell is ALIVE with 4 live neighbors.
+   * applyRules: A live cell with 4 live neighbors dies (overpopulation). Input: Center cell is
+   * ALIVE with 4 live neighbors.
    */
   @Test
   void applyRules_LiveCellWithFourLiveNeighbors_Dies() {
@@ -97,8 +97,8 @@ public class GameOfLifeTest {
   }
 
   /**
-   * applyRules: A dead cell with exactly 3 live neighbors becomes alive (reproduction).
-   * Input: Center cell is DEAD with 3 live neighbors.
+   * applyRules: A dead cell with exactly 3 live neighbors becomes alive (reproduction). Input:
+   * Center cell is DEAD with 3 live neighbors.
    */
   @Test
   void applyRules_DeadCellWithThreeLiveNeighbors_BecomesAlive() {
@@ -115,8 +115,8 @@ public class GameOfLifeTest {
   }
 
   /**
-   * applyRules: A dead cell with 2 live neighbors remains dead.
-   * Input: Center cell is DEAD with 2 live neighbors.
+   * applyRules: A dead cell with 2 live neighbors remains dead. Input: Center cell is DEAD with 2
+   * live neighbors.
    */
   @Test
   void applyRules_DeadCellWithTwoLiveNeighbors_RemainsDead() {
@@ -135,7 +135,8 @@ public class GameOfLifeTest {
    * Tests the behavior of the {@code GameOfLife} constructor when a {@code null} grid is provided.
    * <p>
    * This test ensures that passing a {@code null} grid to the {@code GameOfLife} constructor
-   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid simulation instance.
+   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid
+   * simulation instance.
    * </p>
    *
    * <p>Expected behavior:</p>
@@ -144,7 +145,8 @@ public class GameOfLifeTest {
    *   <li>The exception message should not be null.</li>
    * </ul>
    *
-   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code GameOfLife} simulation.
+   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code GameOfLife}
+   *                                  simulation.
    */
   @Test
   void GameOfLifeConstructor_NullGrid_ThrowsIllegalArgumentException() {

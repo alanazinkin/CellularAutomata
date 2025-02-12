@@ -33,22 +33,28 @@ public class Percolation extends Simulation {
   private static final Color PERCOLATED_COLOR = Color.LIGHTBLUE;
   private static final Color BLOCKED_COLOR = Color.BLACK;
 
-  /** Maximum value for probability calculations */
+  /**
+   * Maximum value for probability calculations
+   */
   private static final double MAX_PROBABILITY = 1.0;
-  /** Minimum valid probability value */
+  /**
+   * Minimum valid probability value
+   */
   private static final double MIN_PROBABILITY = 0.0;
 
   private final double percolationProbability;
 
   /**
-   * Constructs a new Percolation simulation with the specified configuration, grid, and percolation probability.
+   * Constructs a new Percolation simulation with the specified configuration, grid, and percolation
+   * probability.
    *
-   * @param simulationConfig the configuration settings for the simulation
-   * @param grid the grid on which the percolation simulation is performed
-   * @param percolationProbability the probability that an open cell percolates when adjacent to a percolated cell;
-   *                               must be between 0 and 1 inclusive.
-   * @throws IllegalArgumentException if the grid is null or the percolationProbability is not in [0, 1]
-   * @throws NullPointerException if either simulationConfig or grid parameters are null
+   * @param simulationConfig       the configuration settings for the simulation
+   * @param grid                   the grid on which the percolation simulation is performed
+   * @param percolationProbability the probability that an open cell percolates when adjacent to a
+   *                               percolated cell; must be between 0 and 1 inclusive.
+   * @throws IllegalArgumentException if the grid is null or the percolationProbability is not in
+   *                                  [0, 1]
+   * @throws NullPointerException     if either simulationConfig or grid parameters are null
    */
   public Percolation(SimulationConfig simulationConfig, Grid grid, double percolationProbability) {
     super(simulationConfig, grid);
@@ -101,11 +107,8 @@ public class Percolation extends Simulation {
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
-    return Map.of(
-        OPEN_ID, PercolationState.OPEN,
-        PERCOLATED_ID, PercolationState.PERCOLATED,
-        BLOCKED_ID, PercolationState.BLOCKED
-    );
+    return Map.of(OPEN_ID, PercolationState.OPEN, PERCOLATED_ID, PercolationState.PERCOLATED,
+        BLOCKED_ID, PercolationState.BLOCKED);
   }
 
   /**
@@ -146,7 +149,8 @@ public class Percolation extends Simulation {
   private PercolationState validateAndGetState(Cell cell) {
     StateInterface state = cell.getCurrentState();
     if (!(state instanceof PercolationState)) {
-      throw new IllegalStateException("Invalid cell state type: " + state.getClass().getSimpleName());
+      throw new IllegalStateException(
+          "Invalid cell state type: " + state.getClass().getSimpleName());
     }
     return (PercolationState) state;
   }
@@ -162,7 +166,8 @@ public class Percolation extends Simulation {
   }
 
   /**
-   * Determines the next state for an OPEN cell based on neighbor states and percolation probability.
+   * Determines the next state for an OPEN cell based on neighbor states and percolation
+   * probability.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell

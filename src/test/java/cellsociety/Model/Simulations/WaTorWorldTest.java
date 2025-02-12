@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * JUnit test class for the WaTorWorld simulation.
- * Naming convention: [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * JUnit test class for the WaTorWorld simulation. Naming convention:
+ * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  */
 class WaTorWorldTest {
 
@@ -37,53 +37,56 @@ class WaTorWorldTest {
   }
 
   /**
-   * step: Fish movement without reproduction.
-   * Input: A fish is placed at (1,1) with a breed time of 3 (not reached).
-   * Expected: After one step, the fish moves so that exactly one fish exists and its original cell becomes empty.
+   * step: Fish movement without reproduction. Input: A fish is placed at (1,1) with a breed time of
+   * 3 (not reached). Expected: After one step, the fish moves so that exactly one fish exists and
+   * its original cell becomes empty.
    */
   @Test
   void step_FishMovementWithoutReproduction_FishCountOneAndOriginEmpty() {
     grid.getCell(1, 1).setCurrentState(WaTorWorldState.FISH);
     int fishBreedTime = 3;
     int sharkBreedTime = 3, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
+        sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
     int fishCount = countState(WaTorWorldState.FISH);
-    assertEquals(1, fishCount, "There should be exactly one fish after moving without reproduction");
+    assertEquals(1, fishCount,
+        "There should be exactly one fish after moving without reproduction");
     assertEquals("Empty", grid.getCell(1, 1).getCurrentState().getStateValue(),
         "The original cell should be empty after the fish moves");
   }
 
   /**
-   * step: Fish reproduction when breed time is reached.
-   * Input: A fish is placed at (1,1) with a breed time of 1.
-   * Expected: After one step, reproduction occurs so that there are two fish.
+   * step: Fish reproduction when breed time is reached. Input: A fish is placed at (1,1) with a
+   * breed time of 1. Expected: After one step, reproduction occurs so that there are two fish.
    */
   @Test
   void step_FishReproductionWhenBreedTimeReached_FishCountEqualsTwo() {
     grid.getCell(1, 1).setCurrentState(WaTorWorldState.FISH);
     int fishBreedTime = 1;
     int sharkBreedTime = 3, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
+        sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
     int fishCount = countState(WaTorWorldState.FISH);
-    assertEquals(2, fishCount, "Fish should reproduce when breed time is reached, resulting in two fish");
+    assertEquals(2, fishCount,
+        "Fish should reproduce when breed time is reached, resulting in two fish");
   }
 
   /**
-   * step: Shark death due to starvation.
-   * Input: A shark is placed at (1,1) with an initial energy of 1.
-   * Expected: After one step, the shark dies of starvation and the cell becomes empty.
+   * step: Shark death due to starvation. Input: A shark is placed at (1,1) with an initial energy
+   * of 1. Expected: After one step, the shark dies of starvation and the cell becomes empty.
    */
   @Test
   void step_SharkDeathDueToStarvation_CellBecomesEmpty() {
     grid.getCell(1, 1).setCurrentState(WaTorWorldState.SHARK);
     int fishBreedTime = 3, sharkBreedTime = 3, sharkInitialEnergy = 1, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
+        sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -92,17 +95,18 @@ class WaTorWorldTest {
   }
 
   /**
-   * step: Shark eats a fish and reproduces.
-   * Input: A shark is placed at (1,1) and a fish at (1,2) with shark breed time 1.
-   * Expected: After one step, the shark eats the fish and reproduction occurs so that there are two sharks,
-   * and the cell originally containing the fish now holds a shark.
+   * step: Shark eats a fish and reproduces. Input: A shark is placed at (1,1) and a fish at (1,2)
+   * with shark breed time 1. Expected: After one step, the shark eats the fish and reproduction
+   * occurs so that there are two sharks, and the cell originally containing the fish now holds a
+   * shark.
    */
   @Test
   void step_SharkEatsFishAndReproduces_SharkCountEqualsTwoAndPreyCellConverted() {
     grid.getCell(1, 1).setCurrentState(WaTorWorldState.SHARK);
     grid.getCell(1, 2).setCurrentState(WaTorWorldState.FISH);
     int fishBreedTime = 3, sharkBreedTime = 1, sharkInitialEnergy = 5, sharkEnergyGain = 2;
-    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime, sharkInitialEnergy, sharkEnergyGain);
+    WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
+        sharkInitialEnergy, sharkEnergyGain);
 
     simulation.step();
 
@@ -116,7 +120,8 @@ class WaTorWorldTest {
    * Tests the behavior of the {@code WaTorWorld} constructor when a {@code null} grid is provided.
    * <p>
    * This test ensures that passing a {@code null} grid to the {@code WaTorWorld} constructor
-   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid simulation instance.
+   * results in an {@code IllegalArgumentException}, preventing the creation of an invalid
+   * simulation instance.
    * </p>
    *
    * <p>Expected behavior:</p>
@@ -125,7 +130,8 @@ class WaTorWorldTest {
    *   <li>The exception message should not be null.</li>
    * </ul>
    *
-   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code WaTorWorld} simulation.
+   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code WaTorWorld}
+   *                                  simulation.
    */
   @Test
   void WaTorWorldConstructor_NullGrid_ThrowsIllegalArgumentException() {

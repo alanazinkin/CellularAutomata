@@ -1,54 +1,64 @@
 package cellsociety.Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Represents a 2D grid of {@link Cell} objects used in a simulation.
- * The grid maintains a fixed number of rows and columns and provides
- * methods for accessing cells, retrieving neighbors, and updating states.
+ * Represents a 2D grid of {@link Cell} objects used in a simulation. The grid maintains a fixed
+ * number of rows and columns and provides methods for accessing cells, retrieving neighbors, and
+ * updating states.
  */
 public class Grid {
 
-  /** The 2D array of cells representing the grid. */
-  private Cell[][] cells;
+  // Named constant for neighbor offsets (row, column)
+  private static final int[][] NEIGHBOR_OFFSETS = {
+      {-1, -1}, {-1, 0}, {-1, 1},
+      {0, -1}, {0, 1},
+      {1, -1}, {1, 0}, {1, 1}
+  };
 
-  /** The number of rows in the grid. */
-  private int rows;
-
-  /** The number of columns in the grid. */
-  private int cols;
-
-  /** The default state used when constructing the grid. */
+  private final Cell[][] cells;
+  private final int rows;
+  private final int cols;
   private final StateInterface defaultState;
 
   /**
-   * Constructs a new {@code Grid} with the specified dimensions and initializes
-   * all cells to the given default state.
+   * Constructs a new {@code Grid} with the specified dimensions and initializes all cells to the
+   * given default state.
    *
    * @param rows         the number of rows in the grid
    * @param cols         the number of columns in the grid
    * @param defaultState the initial state assigned to all cells
    * @throws IllegalArgumentException if either {@code rows} or {@code cols} is negative
-   * @throws NullPointerException if {@code defaultState} is {@code null}
+   * @throws NullPointerException     if {@code defaultState} is {@code null}
    */
   public Grid(int rows, int cols, StateInterface defaultState) {
     if (rows < 0 || cols < 0) {
-      throw new IllegalArgumentException("Grid dimensions cannot be negative: " + rows + "x" + cols);
-    }
-    if (defaultState == null) {
-      throw new NullPointerException("defaultState cannot be null");
+      throw new IllegalArgumentException(
+          String.format("Grid dimensions cannot be negative: %dx%d", rows, cols));
     }
     this.rows = rows;
     this.cols = cols;
-    this.defaultState = defaultState;
+    this.defaultState = Objects.requireNonNull(defaultState, "defaultState cannot be null");
     cells = new Cell[rows][cols];
+    initializeCells(defaultState);
+  }
+
+  /**
+   * Initializes all cells in the grid with the given state.
+   *
+   * @param state the state to assign to each cell.
+   */
+  private void initializeCells(StateInterface state) {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        cells[r][c] = new Cell(defaultState);
+        cells[r][c] = new Cell(state);
       }
     }
   }
+
   /**
    * Returns the default state that was used to construct the grid.
    *
@@ -58,6 +68,25 @@ public class Grid {
     return defaultState;
   }
 
+  /**
+   * Checks if the specified row and column indices represent a valid position within the grid.
+   * <p>
+   * A valid position is one where:
+   * <ul>
+   *   <li>{@code row} is between 0 (inclusive) and the grid's row count (exclusive)</li>
+   *   <li>{@code col} is between 0 (inclusive) and the grid's column count (exclusive)</li>
+   * </ul>
+   * This method provides a public interface to the private {@code isInBounds} check while maintaining
+   * encapsulation of the grid's internal implementation details.
+   * </p>
+   *
+   * @param row the row index to check
+   * @param col the column index to check
+   * @return {@code true} if the position is within grid bounds, {@code false} otherwise
+   */
+  public boolean isValidPosition(int row, int col) {
+    return isInBounds(row, col);
+  }
 
   /**
    * Retrieves the cell at the specified row and column in the grid.
@@ -68,59 +97,66 @@ public class Grid {
    * @throws IndexOutOfBoundsException if the row or column indices are out of bounds
    */
   public Cell getCell(int row, int col) {
-    if (row < 0 || row >= getRows() || col < 0 || col >= getCols()) {
-      throw new IndexOutOfBoundsException("Invalid cell indices: row=" + row + ", col=" + col);
+    if (!isInBounds(row, col)) {
+      throw new IndexOutOfBoundsException(
+          String.format("Invalid cell indices: row=%d, col=%d", row, col));
     }
     return cells[row][col];
   }
 
-
   /**
-   * Retrieves the neighboring cells of the specified cell at (row, col).
-   * Neighbors are determined using the eight surrounding positions in the grid.
-   * If the provided indices are out of bounds, an {@code ArrayIndexOutOfBoundsException} is thrown.
+   * Checks if the specified row and column indices are within the bounds of the grid.
    *
-   * @param row the row index of the target cell
-   * @param col the column index of the target cell
-   * @return a list of neighboring {@code Cell} objects
-   * @throws ArrayIndexOutOfBoundsException if {@code row} or {@code col} is out of bounds
+   * @param row the row index
+   * @param col the column index
+   * @return {@code true} if the indices are in bounds; {@code false} otherwise
    */
-  public List<Cell> getNeighbors(int row, int col) {
-    if (row < 0 || row >= rows || col < 0 || col >= cols) {
-      throw new ArrayIndexOutOfBoundsException("Indices (" + row + "," + col + ") out of bounds");
-    }
-
-    int[] dRow = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int[] dCol = {-1, 0, 1, -1, 1, -1, 0, 1};
-    List<Cell> neighbors = new ArrayList<>();
-
-    for (int i = 0; i < dRow.length; i++) {
-      int neighborRow = row + dRow[i];
-      int neighborCol = col + dCol[i];
-      if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
-        Cell neighbor = getCell(neighborRow, neighborCol);
-        if (neighbor != null) {
-          neighbors.add(neighbor);
-        }
-      }
-    }
-    return neighbors;
+  private boolean isInBounds(int row, int col) {
+    return row >= 0 && row < rows && col >= 0 && col < cols;
   }
 
   /**
-   * Applies the next state to all cells in the grid.
-   * This method iterates through all cells and updates their state
-   * based on the precomputed next state.
+   * Retrieves the neighboring cells of the specified cell at (row, col). Neighbors are determined
+   * using the eight surrounding positions in the grid.
    *
-   * @throws NullPointerException if any cell is {@code null} or if any cell's next state is {@code null}
+   * @param row the row index of the target cell
+   * @param col the column index of the target cell
+   * @return an unmodifiable list of neighboring {@code Cell} objects
+   * @throws IndexOutOfBoundsException if {@code row} or {@code col} is out of bounds
+   */
+  public List<Cell> getNeighbors(int row, int col) {
+    if (!isInBounds(row, col)) {
+      throw new IndexOutOfBoundsException(
+          String.format("Indices (%d,%d) out of bounds", row, col));
+    }
+
+    List<Cell> neighbors = new ArrayList<>(NEIGHBOR_OFFSETS.length);
+    for (int[] offset : NEIGHBOR_OFFSETS) {
+      int neighborRow = row + offset[0];
+      int neighborCol = col + offset[1];
+      if (isInBounds(neighborRow, neighborCol)) {
+        neighbors.add(getCell(neighborRow, neighborCol));
+      }
+    }
+    return Collections.unmodifiableList(neighbors);
+  }
+
+  /**
+   * Applies the next state to all cells in the grid. This method iterates through all cells and
+   * updates their state based on the precomputed next state.
+   *
+   * @throws IllegalStateException if any cell is {@code null} or if any cell's next state is
+   *                               {@code null}
    */
   public void applyNextStates() {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        if (cells[r][c] == null) {
-          throw new NullPointerException("Cell at (" + r + "," + c + ") is null");
+        Cell cell = cells[r][c];
+        if (cell == null) {
+          throw new IllegalStateException(
+              String.format("Cell at (%d,%d) is null", r, c));
         }
-        cells[r][c].applyNextState();
+        cell.applyNextState();
       }
     }
   }
@@ -132,9 +168,7 @@ public class Grid {
    * @throws NullPointerException if {@code newState} is {@code null}
    */
   public void resetGrid(StateInterface newState) {
-    if (newState == null) {
-      throw new NullPointerException("newState cannot be null");
-    }
+    Objects.requireNonNull(newState, "newState cannot be null");
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         cells[r][c].setCurrentState(newState);
@@ -144,36 +178,37 @@ public class Grid {
   }
 
   /**
-   * Replaces the cell at the specified row and column with the provided cell.
-   * This method allows controlled modification of individual cells without exposing
-   * the entire internal cell array.
+   * Replaces the cell at the specified row and column with the provided cell. This method allows
+   * controlled modification of individual cells without exposing the entire internal cell array.
    *
    * @param row  the row index of the cell to replace
    * @param col  the column index of the cell to replace
    * @param cell the new {@code Cell} to be placed at the specified location
-   * @throws IllegalArgumentException if the specified row or column is out of bounds or if cell is null
+   * @throws IllegalArgumentException if the specified row or column is out of bounds or if cell is
+   *                                  null
    */
   public void setCellAt(int row, int col, Cell cell) {
-    if (row < 0 || row >= rows || col < 0 || col >= cols) {
-      throw new IllegalArgumentException("Invalid row or column: (" + row + "," + col + ")");
+    if (!isInBounds(row, col)) {
+      throw new IllegalArgumentException(
+          String.format("Invalid row or column: (%d, %d)", row, col));
     }
-    if (cell == null) {
-      throw new IllegalArgumentException("Cell cannot be null");
-    }
+    Objects.requireNonNull(cell, "Cell cannot be null");
     cells[row][col] = cell;
   }
-
 
   /**
    * Prints the grid to the console. This is useful for debugging and visualization.
    */
   public void printGrid() {
+    StringBuilder sb = new StringBuilder();
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        System.out.print(cells[r][c].getCurrentState().toString().charAt(0) + " ");
+        // For visualization, we print the first character of the state's string representation.
+        sb.append(cells[r][c].getCurrentState().toString().charAt(0)).append(" ");
       }
-      System.out.println();
+      sb.append(System.lineSeparator());
     }
+    System.out.print(sb);
   }
 
   /**
@@ -194,5 +229,6 @@ public class Grid {
     return cols;
   }
 }
+
 
 

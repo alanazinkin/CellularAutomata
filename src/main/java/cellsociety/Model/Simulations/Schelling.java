@@ -39,20 +39,24 @@ public class Schelling extends Simulation {
   private static final int EMPTY_STATE_KEY = 0;
   private static final int AGENT_STATE_KEY = 1;
 
-  /** Minimum fraction of similar neighbors required for satisfaction (0.0-1.0) */
+  /**
+   * Minimum fraction of similar neighbors required for satisfaction (0.0-1.0)
+   */
   private final double tolerance;
 
-  /** Random number generator for stochastic operations */
+  /**
+   * Random number generator for stochastic operations
+   */
   private final Random randomNumGenerator;
 
   /**
    * Constructs a new Schelling segregation model simulation.
    *
    * @param simulationConfig Configuration parameters for simulation setup
-   * @param grid The cellular grid structure for the simulation
-   * @param tolerance Satisfaction threshold ratio (0.0-1.0 inclusive)
+   * @param grid             The cellular grid structure for the simulation
+   * @param tolerance        Satisfaction threshold ratio (0.0-1.0 inclusive)
    * @throws IllegalArgumentException if tolerance is outside valid range
-   * @throws NullPointerException if simulationConfig or grid are null
+   * @throws NullPointerException     if simulationConfig or grid are null
    */
   public Schelling(SimulationConfig simulationConfig, Grid grid, double tolerance) {
     super(simulationConfig, grid);
@@ -77,6 +81,7 @@ public class Schelling extends Simulation {
    * Immutable representation of grid coordinates.
    */
   private static class Coordinate {
+
     private final int row;
     private final int col;
 
@@ -91,14 +96,22 @@ public class Schelling extends Simulation {
       this.col = col;
     }
 
-    public int getRow() { return row; }
+    public int getRow() {
+      return row;
+    }
 
-    public int getCol() { return col; }
+    public int getCol() {
+      return col;
+    }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       Coordinate that = (Coordinate) o;
       return row == that.row && col == that.col;
     }
@@ -113,21 +126,28 @@ public class Schelling extends Simulation {
    * Represents a pending agent relocation operation.
    */
   private static class Move {
-    /** Original location of the agent */
+
+    /**
+     * Original location of the agent
+     */
     private final Coordinate source;
 
-    /** New destination for the agent */
+    /**
+     * New destination for the agent
+     */
     private final Coordinate destination;
 
-    /** Social group identifier for the agent */
+    /**
+     * Social group identifier for the agent
+     */
     private final int agentGroup;
 
     /**
      * Creates a relocation record.
      *
-     * @param source Original agent location
+     * @param source      Original agent location
      * @param destination Target location for relocation
-     * @param agentGroup Social group identifier
+     * @param agentGroup  Social group identifier
      */
     private Move(Coordinate source, Coordinate destination, int agentGroup) {
       this.source = source;
@@ -138,17 +158,23 @@ public class Schelling extends Simulation {
     /**
      * @return Source coordinate of the move
      */
-    public Coordinate getSource() { return source; }
+    public Coordinate getSource() {
+      return source;
+    }
 
     /**
      * @return Destination coordinate of the move
      */
-    public Coordinate getDestination() { return destination; }
+    public Coordinate getDestination() {
+      return destination;
+    }
 
     /**
      * @return Agent's social group identifier
      */
-    public int getAgentGroup() { return agentGroup; }
+    public int getAgentGroup() {
+      return agentGroup;
+    }
   }
 
   /**
@@ -181,9 +207,8 @@ public class Schelling extends Simulation {
    * {@inheritDoc}
    *
    * <p>Executes one iteration of the Schelling simulation:
-   * 1. Identify unsatisfied agents
-   * 2. Find suitable relocation targets
-   * 3. Process all moves simultaneously
+   * 1. Identify unsatisfied agents 2. Find suitable relocation targets 3. Process all moves
+   * simultaneously
    * </p>
    */
   @Override
@@ -231,12 +256,13 @@ public class Schelling extends Simulation {
   /**
    * Evaluates and processes relocation possibilities for a single cell.
    *
-   * @param row Row index of cell to evaluate
-   * @param col Column index of cell to evaluate
+   * @param row        Row index of cell to evaluate
+   * @param col        Column index of cell to evaluate
    * @param emptyCells List of available empty cells
-   * @param moves Collection to record valid moves
+   * @param moves      Collection to record valid moves
    */
-  private void processCellForMovement(int row, int col, List<Coordinate> emptyCells, List<Move> moves) {
+  private void processCellForMovement(int row, int col, List<Coordinate> emptyCells,
+      List<Move> moves) {
     AgentCell cell = getAgentCell(row, col);
     if (cell.getCurrentState() == SchellingState.AGENT) {
       attemptAgentRelocation(row, col, cell.getAgentGroup(), emptyCells, moves);
@@ -246,11 +272,11 @@ public class Schelling extends Simulation {
   /**
    * Attempts to relocate an unsatisfied agent.
    *
-   * @param row Current row of the agent
-   * @param col Current column of the agent
+   * @param row        Current row of the agent
+   * @param col        Current column of the agent
    * @param agentGroup Social group identifier
    * @param emptyCells List of available empty cells
-   * @param moves Collection to record successful moves
+   * @param moves      Collection to record successful moves
    */
   private void attemptAgentRelocation(int row, int col, int agentGroup, List<Coordinate> emptyCells,
       List<Move> moves) {
@@ -293,12 +319,12 @@ public class Schelling extends Simulation {
   /**
    * Records a relocation operation and updates available empty cells.
    *
-   * @param row Original row of agent
-   * @param col Original column of agent
-   * @param agentGroup Social group identifier
+   * @param row         Original row of agent
+   * @param col         Original column of agent
+   * @param agentGroup  Social group identifier
    * @param destination Chosen relocation target
-   * @param emptyCells List of available empty cells (will be modified)
-   * @param moves Collection of pending moves (will be modified)
+   * @param emptyCells  List of available empty cells (will be modified)
+   * @param moves       Collection of pending moves (will be modified)
    */
   private void recordMove(int row, int col, int agentGroup, Coordinate destination,
       List<Coordinate> emptyCells, List<Move> moves) {
@@ -307,9 +333,8 @@ public class Schelling extends Simulation {
   }
 
   /**
-   * Executes all pending relocation moves in two phases:
-   * 1. Clear original agent locations
-   * 2. Populate new agent locations
+   * Executes all pending relocation moves in two phases: 1. Clear original agent locations 2.
+   * Populate new agent locations
    *
    * @param moves List of relocation operations to execute
    */
@@ -338,7 +363,8 @@ public class Schelling extends Simulation {
    */
   private void populateDestinationCells(List<Move> moves) {
     moves.forEach(move -> {
-      AgentCell destCell = getAgentCell(move.getDestination().getRow(), move.getDestination().getCol());
+      AgentCell destCell = getAgentCell(move.getDestination().getRow(),
+          move.getDestination().getCol());
       destCell.setNextState(SchellingState.AGENT);
       destCell.setAgentGroup(move.getAgentGroup());
     });
@@ -347,8 +373,8 @@ public class Schelling extends Simulation {
   /**
    * Determines if an agent is satisfied with their current neighborhood.
    *
-   * @param row Agent's current row
-   * @param col Agent's current column
+   * @param row        Agent's current row
+   * @param col        Agent's current column
    * @param agentGroup Social group identifier
    * @return true if agent is satisfied, false otherwise
    */
@@ -363,7 +389,7 @@ public class Schelling extends Simulation {
   /**
    * Counts neighbors belonging to the same social group.
    *
-   * @param neighbors List of neighboring cells
+   * @param neighbors  List of neighboring cells
    * @param agentGroup Social group identifier to match
    * @return Number of neighbors in the same group
    */
@@ -390,14 +416,14 @@ public class Schelling extends Simulation {
    * Retrieves an AgentCell from the specified grid location with type safety.
    *
    * <p>This method performs an explicit cast to AgentCell and throws a detailed exception
-   * if the grid contains incompatible cell types, ensuring the simulation maintains
-   * type consistency.</p>
+   * if the grid contains incompatible cell types, ensuring the simulation maintains type
+   * consistency.</p>
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
    * @return AgentCell at specified grid coordinates
-   * @throws ClassCastException if the grid contains a non-AgentCell at the specified
-   *         location, with error message containing the problematic coordinates
+   * @throws ClassCastException if the grid contains a non-AgentCell at the specified location, with
+   *                            error message containing the problematic coordinates
    */
   private AgentCell getAgentCell(int row, int col) {
     Cell cell = getGrid().getCell(row, col);
@@ -412,14 +438,14 @@ public class Schelling extends Simulation {
    * Retrieves neighboring cells as AgentCell instances for segregation analysis.
    *
    * <p>This method relies on Java's native casting mechanism to ensure all neighbors
-   * are valid AgentCells. Any non-AgentCell neighbors will trigger an exception
-   * during the casting process.</p>
+   * are valid AgentCells. Any non-AgentCell neighbors will trigger an exception during the casting
+   * process.</p>
    *
    * @param row center cell's row position
    * @param col center cell's column position
    * @return List of neighboring AgentCells required for satisfaction calculation
-   * @throws ClassCastException if any neighboring cell cannot be cast to AgentCell,
-   *         indicating invalid cell types in the simulation grid
+   * @throws ClassCastException if any neighboring cell cannot be cast to AgentCell, indicating
+   *                            invalid cell types in the simulation grid
    */
   private List<AgentCell> getAgentNeighbors(int row, int col) {
     List<AgentCell> neighbors = new ArrayList<>();

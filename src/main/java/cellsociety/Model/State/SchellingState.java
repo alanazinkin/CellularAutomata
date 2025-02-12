@@ -1,17 +1,17 @@
 package cellsociety.Model.State;
+
 import cellsociety.Model.StateInterface;
 
 /**
  * Enum representing the states for Schelling's Model of Segregation.
  * <p>
- * Schelling's Model of Segregation simulation has two states: AGENT and EMPTY_CELL.
- * AGENT represents an individual agent in the simulation, and EMPTY_CELL represents
- * an empty space where no agent exists. These states help model the segregation
- * behavior of agents in a grid.
+ * Schelling's Model of Segregation simulation has two states: AGENT and EMPTY_CELL. AGENT
+ * represents an individual agent in the simulation, and EMPTY_CELL represents an empty space where
+ * no agent exists. These states help model the segregation behavior of agents in a grid.
  * </p>
  * <p>
- * This enum implements the {@link StateInterface} interface to ensure consistency across
- * different state enums in grid-based simulations.
+ * This enum implements the {@link StateInterface} interface to ensure consistency across different
+ * state enums in grid-based simulations.
  * </p>
  */
 public enum SchellingState implements StateInterface {

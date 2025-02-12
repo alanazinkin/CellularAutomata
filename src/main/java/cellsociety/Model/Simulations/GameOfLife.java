@@ -35,7 +35,7 @@ public class GameOfLife extends Simulation {
    * Constructs a Game of Life simulation with specified configuration and grid
    *
    * @param simulationConfig Simulation configuration parameters (parsed from XML)
-   * @param grid Initial grid layout containing cell states
+   * @param grid             Initial grid layout containing cell states
    * @throws NullPointerException if either parameter is null (enforced by superclass)
    */
   public GameOfLife(SimulationConfig simulationConfig, Grid grid) {
@@ -45,8 +45,8 @@ public class GameOfLife extends Simulation {
   /**
    * Applies Conway's Game of Life rules to all cells in the grid
    * <p>
-   * Iterates through each cell, calculates its next state based on neighbor counts,
-   * and updates the cell's next state. Actual grid update happens after all calculations.
+   * Iterates through each cell, calculates its next state based on neighbor counts, and updates the
+   * cell's next state. Actual grid update happens after all calculations.
    * </p>
    */
   @Override
@@ -93,12 +93,13 @@ public class GameOfLife extends Simulation {
   /**
    * Determines a cell's next state based on current state and neighbor count
    *
-   * @param currentState The cell's current state (ALIVE/DEAD)
+   * @param currentState  The cell's current state (ALIVE/DEAD)
    * @param liveNeighbors Number of alive neighbors
    * @return The calculated next state for the cell
    * @throws IllegalArgumentException if currentState is null
    */
-  private static GameOfLifeState determineNextState(GameOfLifeState currentState, int liveNeighbors) {
+  private static GameOfLifeState determineNextState(GameOfLifeState currentState,
+      int liveNeighbors) {
     if (currentState == null) {
       throw new IllegalArgumentException("Cell state cannot be null");
     }

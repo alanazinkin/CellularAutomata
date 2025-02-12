@@ -1,16 +1,17 @@
 package cellsociety.Model.State;
+
 import cellsociety.Model.StateInterface;
 
 /**
  * Enum representing the states for the Wa-Tor World simulation.
  * <p>
- * The Wa-Tor World simulation models a predator-prey ecosystem with three possible states:
- * FISH, SHARK, and EMPTY. FISH represents a fish in the simulation, SHARK represents
- * a shark, and EMPTY represents an empty cell where neither a fish nor a shark exists.
+ * The Wa-Tor World simulation models a predator-prey ecosystem with three possible states: FISH,
+ * SHARK, and EMPTY. FISH represents a fish in the simulation, SHARK represents a shark, and EMPTY
+ * represents an empty cell where neither a fish nor a shark exists.
  * </p>
  * <p>
- * This enum implements the {@link StateInterface} interface to maintain consistency across
- * various state enums used in grid-based simulations.
+ * This enum implements the {@link StateInterface} interface to maintain consistency across various
+ * state enums used in grid-based simulations.
  * </p>
  */
 public enum WaTorWorldState implements StateInterface {
