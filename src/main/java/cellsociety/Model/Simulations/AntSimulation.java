@@ -161,7 +161,6 @@ public class AntSimulation extends Simulation {
     Cell currentCell = getGrid().getCell(currentRow, currentCol);
     AntState currentState = (AntState) currentCell.getCurrentState();
 
-    // Handle food pickup/drop logic
     if (ant.hasFood() && currentState.isNest()) {
       ant.setHasFood(false);
     } else if (!ant.hasFood() && currentState.isFood()) {
@@ -208,7 +207,6 @@ public class AntSimulation extends Simulation {
   }
 
 
-  // In AntSimulation.java
   /**
    * Provides access to the maximum pheromone value for testing purposes
    * @return The maximum allowed pheromone concentration
@@ -284,10 +282,6 @@ public class AntSimulation extends Simulation {
    * @return List of valid [row,col] positions the ant can move to
    */
   private List<int[]> getPossibleMoves(Ant ant) {
-    List<int[]> forward = filterValidPositions(getForwardPositions(ant));
-    if (!forward.isEmpty()) {
-      return forward;
-    }
     return filterValidPositions(getAllNeighborPositions(ant.getRow(), ant.getCol()));
   }
 
@@ -444,7 +438,6 @@ public class AntSimulation extends Simulation {
     double[][] homeContributions = new double[rows][cols];
     double[][] foodContributions = new double[rows][cols];
 
-    // First pass: Calculate evaporation and diffusion contributions
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         Cell cell = grid.getCell(r, c);
@@ -458,7 +451,6 @@ public class AntSimulation extends Simulation {
       }
     }
 
-    // Second pass: Apply accumulated contributions
     applyContributions(homeContributions, foodContributions);
   }
 
@@ -536,7 +528,10 @@ public class AntSimulation extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
+   * Returns an unmodifiable map of states to their corresponding color representations.
+   * This map provides a way to associate each state with a specific color for visualization purposes.
+   *
+   * @return An unmodifiable {@code Map} where keys are {@code StateInterface} objects and values are color strings.
    */
   @Override
   public Map<StateInterface, String> getColorMap() {
@@ -544,10 +539,14 @@ public class AntSimulation extends Simulation {
   }
 
   /**
-   * {@inheritDoc}
+   * Returns an unmodifiable map of state IDs to their corresponding {@code StateInterface} objects.
+   * This map allows for efficient retrieval of states based on their unique integer identifiers.
+   *
+   * @return An unmodifiable {@code Map} where keys are integer state IDs and values are {@code StateInterface} objects.
    */
   @Override
   public Map<Integer, StateInterface> getStateMap() {
     return Collections.unmodifiableMap(super.getStateMap());
   }
+
 }
