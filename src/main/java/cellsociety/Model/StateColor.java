@@ -2,6 +2,7 @@ package cellsociety.Model;
 
 import java.lang.reflect.Field;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class StateColor {
 

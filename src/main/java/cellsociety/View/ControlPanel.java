@@ -54,14 +54,6 @@ public class ControlPanel {
     initializeUserControl();
   }
 
-  private void initializeFileRetriever() {
-    myFileRetriever = new FileRetriever();
-  }
-
-  private void initializeUserControl() {
-    myUserControl = new UserController(myResources, myController);
-  }
-
   /**
    * create control bar GUI to allow users to start, pause, save, and select the type of simulation
    * @param root of the scene
@@ -95,15 +87,18 @@ public class ControlPanel {
     //TODO add "one step back"
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     try {
-      myUserControl.makeSimSelectorComboBoxes(myResources.getString("SelectSim"),
-          myResources.getString("SelectConfig"), simulationTypes, myStage, myControlBar);
+      myUserControl.makeSimSelectorComboBoxes(myResources.getString("SelectSim"), myResources.getString("SelectConfig"), simulationTypes, myStage, myControlBar);
     }
     catch (Exception e) {
       myController.displayAlert(myResources.getString("Error"), myResources.getString("CantMakeSimSelector"));
     }
   }
 
-  //TODO
+  /**
+   * creates the lower control bar and adds all elements to the pane, including speed slider, customization buttons, and labels
+   * @param root main BorderPane that holds scene elements
+   * @throws Exception if myCustomizationBar is null and elements cannot be added to pane
+   */
   public void setUpLowerBar(BorderPane root) throws Exception {
     makeLowerBar(root);
     makeLabelBar();
@@ -115,7 +110,11 @@ public class ControlPanel {
     myUserControl.addElementToPane(speedSlider, myCustomizationBar);
     myUserControl.addElementToPane(themeSelector, myCustomizationBar);
   }
-  //TODO
+
+  /**
+   * Initializes lower control bar as a vertical box and adds it to the root borderpane
+   * @param root main BorderPane that holds scene elements
+   */
   public void makeLowerBar(BorderPane root) {
     myLowerBar = new VBox(10);
     myLowerBar.setPadding(new Insets(0, 0, 10, 0));
@@ -123,6 +122,14 @@ public class ControlPanel {
     myLowerBar.setAlignment(Pos.CENTER);
     myLowerBar.setPrefWidth(Double.MAX_VALUE);
     root.setBottom(myLowerBar);
+  }
+
+  private void initializeFileRetriever() {
+    myFileRetriever = new FileRetriever();
+  }
+
+  private void initializeUserControl() {
+    myUserControl = new UserController(myResources, myController);
   }
 
   private void makeControlBar(BorderPane root) {
@@ -143,7 +150,6 @@ public class ControlPanel {
     myLowerBar.getChildren().add(myLabelBar);
   }
 
-  //TODO refactor everything from here down and move to separate file
   private void makeLabelsAndAddToLabelBar() {
     Text myLabel = new Text(myResources.getString("Speed"));
     Text myCustomizationLabel = new Text(myResources.getString("Settings"));

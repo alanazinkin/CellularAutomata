@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -54,6 +56,8 @@ public class  SimulationInfoDisplay {
 
   private ResourceBundle myResources;
 
+  private Scene myScene;
+
   /**
    * constructor for creating a simulation information display
    * @param type of simulation
@@ -63,7 +67,6 @@ public class  SimulationInfoDisplay {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-
   public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language) {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
     setType(type);
@@ -130,18 +133,18 @@ public class  SimulationInfoDisplay {
    * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a BorderPane
    * root as the root element
    */
-  public void createDisplayBox(Stage stage, String title) {
+  public void createDisplayBox(Stage stage, String title, String themeColor) {
     // create display box to hold relevant information
     stage.setTitle(title);
     BorderPane root = new BorderPane();
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
     root.setCenter(vbox);
-    // add relevant text to scene
-    addSimulationInformationToScene(vbox);
     // create and set the scene
-    Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-    stage.setScene(scene);
+    myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+    stage.setScene(myScene);
+    // add relevant text to scene
+    addSimulationInformationToScene(vbox, themeColor);
     stage.show();
   }
 
@@ -149,7 +152,7 @@ public class  SimulationInfoDisplay {
    * Adds all the relevant simulation information to the new scene
    * @param vbox a vertical box pane that holds all the text elements
    */
-  private void addSimulationInformationToScene(VBox vbox) {
+  private void addSimulationInformationToScene(VBox vbox, String themeColor) {
     addTextToScene(vbox, myResources.getString("Type") + myType);
     addTextToScene(vbox, myResources.getString("Title") + myTitle);
     addTextToScene(vbox, myResources.getString("Author") + myAuthor);
@@ -163,10 +166,11 @@ public class  SimulationInfoDisplay {
       addTextToScene(vbox, param + ": " + myParameters.get(param));
     }
     addTextToScene(vbox, myResources.getString("StateColors") + " ");
-    StateColor standardColors = new StateColor();
+    ResourceBundle resources = ResourceBundle.getBundle("cellsociety.View." + themeColor);
     for (StateInterface state : myStateColors.keySet()) {
-      addTextToScene(vbox, state.getStateValue() + ": " + myStateColors.get(state));
-      //standardColors.getColor(.toString())
+      String cssId = myStateColors.get(state);
+      String color = resources.getString(cssId);
+      addTextToScene(vbox, state.getStateValue() + ": " + color);
     }
   }
 
