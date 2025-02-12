@@ -1,5 +1,6 @@
 .root {
   -fx-background: #4d4e4f;
+  -fx-background-color: #4d4e4f;
 }
 .button {
   -fx-text-fill: #FFFFFF;

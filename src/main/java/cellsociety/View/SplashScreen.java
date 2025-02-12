@@ -12,9 +12,10 @@ import javafx.stage.Stage;
 
 public class SplashScreen {
   private Pane layout;
-  public Stage showSplashScreen(Stage stage, SimulationConfig simulationConfig, String title, double width, double height) {
+
+  public Stage showSplashScreen(Stage stage, String title, double width, double height) {
     stage.setTitle(title);
-    Text titleText = new Text(simulationConfig.getType());
+    Text titleText = new Text("Cell Society Simulator");
     layout = new VBox();
     layout.getChildren().add(titleText);
 

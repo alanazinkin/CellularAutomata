@@ -25,9 +25,9 @@ import javafx.scene.paint.Color;
  */
 public class Percolation extends Simulation {
 
-  public static final int OPEN_ID = 0;
-  public static final int PERCOLATED_ID = 1;
-  public static final int BLOCKED_ID = 2;
+  public static final int OPEN_ID = 1;
+  public static final int PERCOLATED_ID = 2;
+  public static final int BLOCKED_ID = 0;
 
   private static final Color OPEN_COLOR = Color.WHITE;
   private static final Color PERCOLATED_COLOR = Color.LIGHTBLUE;
@@ -87,9 +87,12 @@ public class Percolation extends Simulation {
    * </ul>
    */
   @Override
-  public Map<StateInterface, Color> initializeColorMap() {
-    return Map.of(PercolationState.OPEN, OPEN_COLOR, PercolationState.PERCOLATED, PERCOLATED_COLOR,
-        PercolationState.BLOCKED, BLOCKED_COLOR);
+  public Map<StateInterface, String> initializeColorMap() {
+    return Map.of(
+        PercolationState.OPEN, "percolation-state-open",
+        PercolationState.PERCOLATED, "percolation-state-percolated",
+        PercolationState.BLOCKED, "percolation-state-blocked"
+    );
   }
 
   /**

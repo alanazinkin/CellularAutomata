@@ -22,13 +22,9 @@ public abstract class Simulation {
   private static final String ERROR_STATE_MAP_NULL = "State map is null";
 
   private final Grid grid;
-  /**
-   * Immutable mapping of states to their visual representations
-   */
-  private final Map<StateInterface, Color> colorMap;
-  /**
-   * Immutable mapping of integer values to simulation states
-   */
+  /** Immutable mapping of states to their visual representations */
+  private final Map<StateInterface, String> colorMap;
+  /** Immutable mapping of integer values to simulation states */
   private final Map<Integer, StateInterface> stateMap;
 
   /**
@@ -164,7 +160,7 @@ public abstract class Simulation {
    *
    * @return Complete mapping of states to their display colors
    */
-  protected abstract Map<StateInterface, Color> initializeColorMap();
+  protected abstract Map<StateInterface, String> initializeColorMap();
 
   /**
    * Template method for initializing value-state mappings.
@@ -192,7 +188,7 @@ public abstract class Simulation {
    *
    * @return Unmodifiable map of states to colors
    */
-  public Map<StateInterface, Color> getColorMap() {
+  public Map<StateInterface, String> getColorMap() {
     return Collections.unmodifiableMap(colorMap);
   }
 

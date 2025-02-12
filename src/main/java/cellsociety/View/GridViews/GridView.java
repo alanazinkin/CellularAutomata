@@ -44,27 +44,30 @@ public abstract class GridView {
 
   /**
    * creates a new pane to hold the grid and instantiates myCells and myGrid
+   *
    * @param myRoot
+   * @param colorMap
    */
-  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, Color> stateMap) {
+  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap) {
     myRoot.setCenter(gridPane);
     gridPane.setMaxWidth(SIMULATION_WIDTH);
     gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);
     myCells = new ArrayList<>();
-    renderGrid(stateMap);
+    renderGrid(colorMap);
   }
 
   /**
    * Creates the visual display of grid cells based on the Grid object and organizes them in the view
    * @param colorMap mapping of state interfaces to colors to visually render each cell according to its state value
    */
-  public void renderGrid(Map<StateInterface, Color> colorMap) {
+  public void renderGrid(Map<StateInterface, String> colorMap) {
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
         StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight, colorMap.get(cellState));
+        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
+        rectCell.setId(colorMap.get(cellState));
         rectCell.setStroke(Color.BLACK);
         rectCell.setStrokeWidth(1);
         myCells.add(rectCell);
@@ -75,18 +78,20 @@ public abstract class GridView {
 
   /**
    * updates the colors of all the cells in the grid according to all cells' current state
-   * @param stateMap data structure mapping cell states to visual colors in the simulation grid
+   * @param colorMap data structure mapping cell states to visual colors in the simulation grid
    */
-  public void updateCellColors(Map<StateInterface, Color> stateMap) {
+  public void updateCellColors(Map<StateInterface, String> colorMap) {
     int cellCount = 0;
     for(int i = 0; i < numRows; i ++) {
       for (int j = 0; j < numCols; j ++) {
         Cell cell = myGrid.getCell(i, j);
         StateInterface state = cell.getCurrentState();
         Shape myCell = myCells.get(cellCount);
-        myCell.setFill(stateMap.get(state));
+        myCell.setId(colorMap.get(state));
         cellCount++;
       }
     }
   }
+
+
 }

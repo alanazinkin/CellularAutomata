@@ -3,11 +3,12 @@ package cellsociety.Controller;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.*;
-import cellsociety.Model.State.GameOfLifeState;
+import cellsociety.Model.State.SchellingState;
 import cellsociety.View.GridViews.GridView;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +23,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class SimulationController {
-  private static final String FILE_PATH = "data/SpreadingFire/BasicCenterFireSpread.xml";
   public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
-
+  private String completeConfigFilePath;
   private SimulationController myController;
   private SimulationConfig mySimulationConfig;
   private Simulation mySimulation;
@@ -32,10 +32,7 @@ public class SimulationController {
   private Grid myGrid;
   private GridView myGridView;
   private Scene myScene;
-  private boolean isPaused = false;
   private Timeline myTimeline;
-  private boolean isRunning = false;
-  private double simulationSpeed = 1.0;
   private Stage myStage;
   private ResourceBundle myResources;
 
@@ -46,7 +43,28 @@ public class SimulationController {
   public double FRAMES_PER_SECOND = 5;
   public double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
-  public SimulationController(){}
+  public SimulationController(){
+    initializeTimeline();
+  }
+
+  public void selectSimulation(String simulationType, String fileName, Stage stage, SimulationController simulationController) throws Exception {
+    if (myTimeline != null) {
+      pauseSimulation();
+    }
+    loadFile(simulationType, fileName);
+    init(stage, simulationController);
+  }
+
+  private void loadFile(String simulationType, String fileName) throws FileNotFoundException {
+    FileRetriever fileRetriever = new FileRetriever();
+    try {
+      String myFilePath = fileRetriever.getSimulationTypeFilePath(simulationType);
+      completeConfigFilePath = myFilePath + "/" + fileName;
+    }
+    catch (FileNotFoundException e) {
+      displayAlert("Error", "Could not find simulation file.");
+    }
+  }
 
   /**
    * Initializes the simulation by parsing the configuration file, setting up the model,
@@ -60,15 +78,14 @@ public class SimulationController {
     myStage = stage;
     // initialize the simulation configuration
     XMLParser xmlParser = new XMLParser();
-    mySimulationConfig = xmlParser.parseXMLFile(FILE_PATH);// make initial splash screen window
+    mySimulationConfig = xmlParser.parseXMLFile(completeConfigFilePath);
     if (mySimulationConfig == null) {
       throw new IllegalStateException("Failed to parse simulation configuration.");
     }
-    myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), GameOfLifeState.ALIVE);
+    myGrid = new Grid(mySimulationConfig.getWidth(), mySimulationConfig.getHeight(), SchellingState.AGENT);
     mySimulation = initializeSimulationType();
-    initializeTimeline();
     SplashScreen initialScreen = new SplashScreen();
-    Stage splashStage = initialScreen.showSplashScreen(new Stage(), mySimulationConfig, "Cell Society", 1000, 800);
+    Stage splashStage = initialScreen.showSplashScreen(new Stage(), "Cell Society", 1000, 800);
     ComboBox<String> languageSelector = initialScreen.makeComboBox("Select Language", List.of("English", "Spanish", "Italian"));
     ComboBox<String> themeColorSelector = initialScreen.makeComboBox("Select Theme Color", List.of("Dark", "Light"));
     // Wait for language selection
@@ -88,7 +105,6 @@ public class SimulationController {
       String selectedThemeColor = themeColorSelector.getValue();
       if (selectedLanguage != null && selectedThemeColor != null) {
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
-        // close splash screen
         splashStage.close();
         try {
           setupSimulation(myStage, selectedLanguage, selectedThemeColor);
@@ -108,17 +124,21 @@ public class SimulationController {
    * method that allows access to resource bundle for a specific language
    * @return Resource Bundle for a user-selected language
    */
-  public ResourceBundle getResources() {return myResources;}
+  //TODO make immutable
+  private ResourceBundle getImmutableResources() {
+    return myResources;
+  }
 
   /**
    * Initializes the simulation based on the type specified in the configuration.
    * Uses a switch statement to determine which simulation to create.
    */
-  private Simulation initializeSimulationType() {
+  private Simulation initializeSimulationType() throws IllegalStateException {
     String simulationType = mySimulationConfig.getType();
     mySimulation = createSimulation(simulationType);
     if (mySimulation == null) {
-      displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimType") + " " + simulationType);
+      displayAlert(myResources.getString("Error"), myResources.getString("SimNotSupported"));
+      throw new IllegalStateException(myResources.getString("InvalidSimType") + " " + simulationType);
     }
     return mySimulation;
   }
@@ -227,10 +247,6 @@ public class SimulationController {
    */
   public void setSimulationSpeed(double speed) {
     myTimeline.setRate(Math.max(0.1, Math.min(5, speed)));
-  }
-
-  public void selectSimulation() {
-    System.out.println("Selecting Simulation");
   }
 
   /**

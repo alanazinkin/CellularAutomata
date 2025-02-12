@@ -101,12 +101,12 @@ public class WaTorWorld extends Simulation {
    * @return a map from simulation state to color.
    */
   @Override
-  public Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> colorMap = new HashMap<>();
-    colorMap.put(WaTorWorldState.FISH, Color.ORANGE);
-    colorMap.put(WaTorWorldState.SHARK, Color.GRAY);
-    colorMap.put(WaTorWorldState.EMPTY, Color.LIGHTBLUE);
-    return colorMap;
+  public Map<StateInterface, String> initializeColorMap() {
+    return Map.of(
+        WaTorWorldState.FISH, "watorworld-state-fish",
+        WaTorWorldState.SHARK, "watorworld-state-shark",
+        WaTorWorldState.EMPTY, "watorworld-state-empty"
+    );
   }
 
   /**
