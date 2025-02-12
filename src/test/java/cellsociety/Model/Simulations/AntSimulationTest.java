@@ -1,6 +1,9 @@
-package cellsociety.Model;
+package cellsociety.Model.Simulations;
 
 import cellsociety.Controller.SimulationConfig;
+import cellsociety.Model.Ant;
+import cellsociety.Model.Cell;
+import cellsociety.Model.Grid;
 import cellsociety.Model.State.AntState;
 import cellsociety.Model.Simulations.AntSimulation;
 import static org.junit.jupiter.api.Assertions.*;
@@ -184,11 +187,11 @@ class AntSimulationTest {
   void testObstacleAvoidance() {
     Grid testGrid = createTestGrid();
 
-    // Create obstacle wall with a gap
-    for (int r = 1; r < GRID_SIZE-1; r++) {
-      if (r != NEST_ROW) { // Leave gap at nest row
+    // Create obstacle wall in column 3, blocking all rows except row 2 (NEST_ROW)
+    for (int r = 0; r < GRID_SIZE; r++) {
+      if (r != NEST_ROW) {
         testGrid.getCell(r, 3).setCurrentState(
-            new AntState(false, false, true, 0, 0, 0)
+            new AntState(false, false, true, 0, 0, 0) // Set obstacle
         );
       }
     }
@@ -198,12 +201,11 @@ class AntSimulationTest {
     simulation.applyRules(); // Let ants move
 
     simulation.getAnts().forEach(ant -> {
-      // Verify ants navigated around obstacle
+      // Ants should only pass through column 3 at row 2
       assertTrue(ant.getCol() != 3 || ant.getRow() == NEST_ROW,
           "Ants should only pass through gap at row " + NEST_ROW);
     });
   }
-
   /**
    * Tests null grid initialization handling.
    * <p>
