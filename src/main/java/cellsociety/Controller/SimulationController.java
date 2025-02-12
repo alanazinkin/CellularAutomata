@@ -144,7 +144,6 @@ public class SimulationController {
     }
     catch (Exception e) {
       displayAlert(myResources.getString("Error"), myResources.getString("SimNotSupported"));
-      handleError("InitializationError", e);
     }
   }
 
