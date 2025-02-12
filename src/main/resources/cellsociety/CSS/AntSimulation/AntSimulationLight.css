@@ -1,0 +1,12 @@
+#ant-state-empty {
+  -fx-fill: white;
+}
+#ant-state-nest {
+  -fx-fill: coral;
+}
+#ant-state-food {
+  -fx-fill: lime;
+}
+#ant-state-obstacle {
+  -fx-fill: dimgray;
+}

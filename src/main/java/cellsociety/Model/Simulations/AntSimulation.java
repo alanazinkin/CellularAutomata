@@ -62,12 +62,12 @@ public class AntSimulation extends Simulation {
    * </p>
    */
   @Override
-  protected Map<StateInterface, Color> initializeColorMap() {
-    Map<StateInterface, Color> colorMap = new HashMap<>();
-    colorMap.put(new AntState(true, false, false, 0, 0, 0), Color.RED);
-    colorMap.put(new AntState(false, true, false, 0, 0, 0), Color.GREEN);
-    colorMap.put(new AntState(false, false, true, 0, 0, 0), Color.BLACK);
-    colorMap.put(new AntState(false, false, false, 0, 0, 0), Color.WHITE);
+  protected Map<StateInterface, String> initializeColorMap() {
+    Map<StateInterface, String> colorMap = new HashMap<>();
+    colorMap.put(new AntState(true, false, false, 0, 0, 0), "ant-state-nest");
+    colorMap.put(new AntState(false, true, false, 0, 0, 0), "ant-state-food");
+    colorMap.put(new AntState(false, false, true, 0, 0, 0), "ant-state-obstacle");
+    colorMap.put(new AntState(false, false, false, 0, 0, 0), "ant-state-empty");
     return colorMap;
   }
 
@@ -539,7 +539,7 @@ public class AntSimulation extends Simulation {
    * {@inheritDoc}
    */
   @Override
-  public Map<StateInterface, Color> getColorMap() {
+  public Map<StateInterface, String> getColorMap() {
     return Collections.unmodifiableMap(super.getColorMap());
   }
 
