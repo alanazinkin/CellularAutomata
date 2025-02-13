@@ -7,6 +7,9 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.SchellingState;
 import cellsociety.Model.StateInterface;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -245,11 +248,42 @@ public class Schelling extends Simulation {
    */
   private List<Move> collectMoves(List<Coordinate> emptyCells) {
     List<Move> moves = new ArrayList<>();
+    List<Coordinate> unsatisfiedAgents = new ArrayList<>();
+
+    // First pass: Identify all unsatisfied agents
     for (int row = 0; row < getGrid().getRows(); row++) {
       for (int col = 0; col < getGrid().getCols(); col++) {
-        processCellForMovement(row, col, emptyCells, moves);
+        AgentCell cell = getAgentCell(row, col);
+        if (cell.getCurrentState() == SchellingState.AGENT &&
+            !isAgentSatisfied(row, col, cell.getAgentGroup())) {
+          unsatisfiedAgents.add(new Coordinate(row, col));
+        }
       }
     }
+
+    // Shuffle agents to randomize processing order
+    Collections.shuffle(unsatisfiedAgents, randomNumGenerator);
+
+    // Track available destinations
+    Set<Coordinate> availableEmpties = new HashSet<>(emptyCells);
+
+    // Process each agent in shuffled order
+    for (Coordinate agentCoord : unsatisfiedAgents) {
+      int row = agentCoord.getRow();
+      int col = agentCoord.getCol();
+      AgentCell cell = getAgentCell(row, col);
+      int agentGroup = cell.getAgentGroup();
+
+      List<Coordinate> candidates = findSatisfyingCandidates(emptyCells, agentGroup);
+      candidates.retainAll(availableEmpties); // Only consider remaining empties
+
+      if (!candidates.isEmpty()) {
+        Coordinate destination = selectRandomCandidate(candidates);
+        moves.add(new Move(agentCoord, destination, agentGroup));
+        availableEmpties.remove(destination);
+      }
+    }
+
     return moves;
   }
 
