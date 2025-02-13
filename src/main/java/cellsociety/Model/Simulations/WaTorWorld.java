@@ -6,6 +6,7 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.State.WaTorWorldState;
 import cellsociety.Model.StateInterface;
+import java.util.Collections;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -132,30 +133,37 @@ public class WaTorWorld extends Simulation {
   @Override
   public void applyRules() {
     boolean[][] moved = new boolean[rows][cols];
+    List<int[]> agentCoords = new ArrayList<>();
 
+    // Collect all fish and shark coordinates
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        if (moved[r][c]) {
-          continue;
-        }
-        Cell cell = getGrid().getCell(r, c);
-        WaTorWorldState state = (WaTorWorldState) cell.getCurrentState();
-        switch (state) {
-          case FISH:
-            processFish(r, c, moved);
-            break;
-          case SHARK:
-            processShark(r, c, moved);
-            break;
-          case EMPTY:
-          default:
-            // Ensure empty cells are processed.
-            setEmpty(r, c);
-            moved[r][c] = true;
-            break;
+        WaTorWorldState state = (WaTorWorldState) getGrid().getCell(r, c).getCurrentState();
+        if (state == WaTorWorldState.FISH || state == WaTorWorldState.SHARK) {
+          agentCoords.add(new int[]{r, c});
         }
       }
     }
+
+    // Shuffle to randomize processing order
+    Collections.shuffle(agentCoords, RANDOM);
+
+    // Process agents in shuffled order
+    for (int[] coord : agentCoords) {
+      int r = coord[0], c = coord[1];
+      if (moved[r][c]) continue;
+
+      Cell cell = getGrid().getCell(r, c);
+      WaTorWorldState state = (WaTorWorldState) cell.getCurrentState();
+      switch (state) {
+        case FISH -> processFish(r, c, moved);
+        case SHARK -> processShark(r, c, moved);
+        default -> moved[r][c] = true;
+      }
+    }
+
+    // Process empty cells (if needed)
+    // ...
   }
 
   // ===================== Fish Behavior =====================
@@ -197,14 +205,13 @@ public class WaTorWorld extends Simulation {
    * @param newBreedVal new breeding counter value (after increment)
    * @param moved       grid marking moved cells
    */
-  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal,
-      boolean[][] moved) {
+  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal, boolean[][] moved) {
     if (newBreedVal >= fishBreedTime) {
-      // Reproduce: reset counter at both cells.
-      setFish(currentR, currentC, 0);
-      setFish(targetR, targetC, 0);
+      // Parent moves to target, child remains in current cell
+      setFish(targetR, targetC, 0); // Parent (moved) resets counter
+      setFish(currentR, currentC, 0); // Child (original cell)
     } else {
-      // Move fish: update target with incremented counter and empty the source.
+      // Regular move
       setFish(targetR, targetC, newBreedVal);
       setEmpty(currentR, currentC);
     }
@@ -273,20 +280,18 @@ public class WaTorWorld extends Simulation {
    * @param energy   updated energy value for the shark
    * @param moved    grid marking moved cells
    */
-  private void moveShark(int currentR, int currentC, int targetR, int targetC,
-      int breedVal, int energy, boolean[][] moved) {
+  private void moveShark(int currentR, int currentC, int targetR, int targetC, int breedVal, int energy, boolean[][] moved) {
     if (breedVal >= sharkBreedTime) {
-      // Reproduce: reset breeding counters in both the source and target.
-      setShark(currentR, currentC, 0, sharkInitialEnergy);
-      setShark(targetR, targetC, 0, energy);
+      // Parent moves to target, child remains in current cell
+      setShark(targetR, targetC, 0, energy); // Parent (moved)
+      setShark(currentR, currentC, 0, sharkInitialEnergy); // Child (original cell)
     } else {
-      // Move the shark: update target and empty the source.
+      // Regular move
       setShark(targetR, targetC, breedVal, energy);
       setEmpty(currentR, currentC);
     }
     markMoved(moved, currentR, currentC, targetR, targetC);
   }
-
   // ===================== Helper Methods =====================
 
   /**
