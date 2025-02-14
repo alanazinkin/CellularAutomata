@@ -4,12 +4,13 @@ import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
 import cellsociety.Model.Simulations.*;
 import cellsociety.Model.State.GameOfLifeState;
-import cellsociety.Model.State.SchellingState;
 import cellsociety.View.SimulationView;
 import cellsociety.View.SplashScreen;
 
+import cellsociety.View.UserController;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ import javafx.util.Duration;
 public class SimulationController {
 
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle("simulation");
-  private static final String FILE_PATH = CONFIG.getString("default.file.path");
+  private static final String DEFAULT_FILE_PATH = CONFIG.getString("default.file.path");
   public static final String DEFAULT_RESOURCE_PACKAGE = CONFIG.getString("default.resource.package");
 
   /**
@@ -92,9 +93,10 @@ public class SimulationController {
   private ResourceBundle myResources;
   private Simulation mySimulation;
   private SimulationView mySimView;
-  private Optional<Grid> myGrid;
+  private Grid myGrid;
   private SimulationConfig mySimulationConfig;
   private final SimulationParameters parameters;
+  private FileRetriever myFileRetriever;
   private SimulationController myController;
 
   /**
@@ -104,7 +106,6 @@ public class SimulationController {
     this.myStage = new Stage();
     this.myTimeline = initializeTimeline();
     this.parameters = SimulationParameters.fromConfig();
-    this.myGrid = Optional.empty();
   }
 
   public void selectSimulation(String simulationType, String fileName, Stage stage, SimulationController simulationController) throws Exception {
@@ -116,13 +117,14 @@ public class SimulationController {
   }
 
   private void loadFile(String simulationType, String fileName) throws FileNotFoundException {
-    FileRetriever fileRetriever = new FileRetriever();
+    myFileRetriever = new FileRetriever();
     try {
-      String myFilePath = fileRetriever.getSimulationTypeFilePath(simulationType);
+      String myFilePath = myFileRetriever.getSimulationTypeFilePath(simulationType);
       completeConfigFilePath = myFilePath + "/" + fileName;
     }
     catch (FileNotFoundException e) {
       displayAlert("Error", myResources.getString("InvalidSimType"));
+      throw e;
     }
   }
 
@@ -171,7 +173,7 @@ public class SimulationController {
    */
   private void initializeSimulation(SimulationConfig config) {
     try {
-      myGrid = Optional.of(new Grid(config.getWidth(), config.getHeight(), GameOfLifeState.ALIVE));
+      myGrid = new Grid(config.getWidth(), config.getHeight(), GameOfLifeState.ALIVE);
       mySimulation = createSimulation(config.getType());
     } catch (Exception e) {
       handleError(myResources.getString("SimulationInitError"), e);
@@ -188,9 +190,15 @@ public class SimulationController {
   private Simulation createSimulation(String type) {
     return SimulationType.fromString(type)
             .map(simType -> {
-              Grid grid = myGrid.orElseThrow(() -> new IllegalStateException("Grid not initialized"));
+              Grid grid = myGrid;
+              if (grid == null) {
+                throw new IllegalStateException(myResources.getString("GridNull"));
+              }
               SimulationConfig config = mySimulationConfig;
-                  //.orElseThrow(() -> new IllegalStateException("Configuration not initialized"));
+              if (config == null) {
+                displayAlert(myResources.getString("Error"), myResources.getString("ConfigNull"));
+                throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
+              }
               return switch (simType) {
                 case GAME_OF_LIFE -> new GameOfLife(config, grid);
                 case SPREADING_FIRE -> new Fire(config, grid, parameters.fireProb(), parameters.treeProb());
@@ -225,7 +233,9 @@ public class SimulationController {
               CONFIG.getString("theme.selector"),
               Arrays.asList(CONFIG.getString("available.themes").split(","))
       );
-
+      List<String> simulationTypes = myFileRetriever.getSimulationTypes();
+      UserController myUserController = new UserController(myResources, controller);
+      myUserController.makeSimSelectorComboBoxes(CONFIG.getString("select.sim"), CONFIG.getString("select.config"), simulationTypes, stage);
       setupSplashScreenCallbacks(initialScreen, languageSelector, themeSelector, splashStage);
     } catch (Exception e) {
       handleError("SplashScreenError", e);
@@ -252,7 +262,6 @@ public class SimulationController {
                 .orElseThrow(() -> new IllegalStateException("Language not selected"));
         String selectedTheme = Optional.ofNullable(themeSelector.getValue())
                 .orElseThrow(() -> new IllegalStateException("Theme not selected"));
-
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
         splashStage.close();
         setupSimulation(myStage, selectedLanguage, selectedTheme);
@@ -273,7 +282,7 @@ public class SimulationController {
     try {
       SimulationConfig config = mySimulationConfig;
       Simulation simulation = createSimulation(config.getType());
-      Grid grid = myGrid.orElseThrow();
+      Grid grid = myGrid;
 
       mySimView = new SimulationView(config, this, myResources);
       mySimView.initView(stage, simulation, mySimView, simulation.getColorMap(), grid, language, themeColor);
@@ -445,11 +454,7 @@ public class SimulationController {
           SimulationConfig config,
           SaveSimulationDescription.SimulationMetadata metadata) throws IOException {
     XMLWriter xmlWriter = new XMLWriter();
-    xmlWriter.saveToXML(
-            config,
-            myGrid.orElseThrow(() -> new IllegalStateException("Grid not initialized")),
-            metadata.saveLocation().getAbsolutePath()
-    );
+    xmlWriter.saveToXML(config, myGrid, metadata.saveLocation().getAbsolutePath());
   }
 
   /**
@@ -516,10 +521,10 @@ public class SimulationController {
 
       if (newConfig != null) {
         mySimulationConfig = newConfig;
-        myGrid = Optional.of(new Grid(newConfig.getWidth(), newConfig.getHeight(), GameOfLifeState.ALIVE));
+        myGrid = new Grid(newConfig.getWidth(), newConfig.getHeight(), GameOfLifeState.ALIVE);
         mySimulation = createSimulation(newConfig.getType());
         mySimView = new SimulationView(newConfig, this, myResources);
-        mySimView.initView(myStage, mySimulation, mySimView, mySimulation.getColorMap(), myGrid.orElseThrow(), myResources.getLocale().getLanguage(), "Light");
+        mySimView.initView(myStage, mySimulation, mySimView, mySimulation.getColorMap(), myGrid, myResources.getLocale().getLanguage(), "Light");
       } else {
         throw new IllegalStateException("Failed to parse new simulation configuration");
       }

@@ -111,7 +111,7 @@ public class SimulationView {
     addCSSFiles(cssFiles);
   }
 
-
+//TODO: get rid of thiss method
   private String getThemeFolderOrFile(String simulationType) {
     switch (simulationType) {
       case "Game of Life": return "GameOfLife";

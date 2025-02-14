@@ -43,7 +43,6 @@ public class UserController {
     Button button = new Button(label);
     button.setOnAction(handler);
     return button;
-    //addElementToPane(button, myControlBar)
   }
 
   /**
@@ -84,7 +83,7 @@ public class UserController {
     return themeSelector;
   }
 
-  public void makeSimSelectorComboBoxes(String label, String secondBoxLabel, List<String> simulationTypeOptions, Stage stage, Pane controlBar) throws Exception {
+  public List<ComboBox<String>> makeSimSelectorComboBoxes(String label, String secondBoxLabel, List<String> simulationTypeOptions, Stage stage) throws Exception {
     ComboBox<String> simulationTypes = new ComboBox<>();
     simulationTypes.setPromptText(label);
     simulationTypes.getItems().addAll(simulationTypeOptions);
@@ -92,8 +91,8 @@ public class UserController {
     configFileComboBox.setPromptText(secondBoxLabel);
     // Update available files when simulation type is selected
     updateFileOptions(simulationTypes, configFileComboBox, stage);
-    addElementToPane(simulationTypes, controlBar);
-    addElementToPane(configFileComboBox, controlBar);
+    respondToFileSelection(simulationTypes, configFileComboBox, stage);
+    return List.of(simulationTypes, configFileComboBox);
   }
 
   private void updateFileOptions(ComboBox<String> simulationTypes, ComboBox<String> configFileComboBox, Stage stage) {
@@ -105,7 +104,6 @@ public class UserController {
       else {
         try {
           displayNewFileOptions(configFileComboBox, simulationType);
-          respondToFileSelection(configFileComboBox, simulationType, stage);
         } catch (FileNotFoundException e) {
           myController.displayAlert(myResources.getString("Error"), myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
           configFileComboBox.getItems().clear();
@@ -115,10 +113,11 @@ public class UserController {
     });
   }
 
-  private void respondToFileSelection(ComboBox<String> configFileComboBox, String simulationType, Stage stage) {
+  public void respondToFileSelection(ComboBox<String> simulationTypes, ComboBox<String> configFileComboBox, Stage stage) {
     configFileComboBox.setOnAction(e -> {
       String fileName = configFileComboBox.getValue();
-      if (fileName != null) {
+      String simulationType = simulationTypes.getValue();
+      if (simulationType != null && fileName != null) {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         }
