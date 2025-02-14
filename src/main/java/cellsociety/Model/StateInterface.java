@@ -7,6 +7,7 @@ package cellsociety.Model;
  * simulations. Each state enum, such as FireState or GameOfLifeState, should implement this
  * interface to ensure consistency and shared functionality.
  * </p>
+ * @author Tatum McKinnis
  */
 public interface StateInterface {
 

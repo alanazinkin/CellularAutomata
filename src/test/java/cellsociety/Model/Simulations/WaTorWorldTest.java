@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * JUnit test class for the WaTorWorld simulation. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * @author Tatum McKinnis
  */
 class WaTorWorldTest {
 

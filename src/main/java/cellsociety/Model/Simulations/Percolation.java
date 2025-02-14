@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
  * <p>
  * The simulation uses a probabilistic rule: if an open cell has at least one percolated neighbor,
  * then the cell becomes percolated with a probability specified at construction.
+ * @author Tatum McKinnis
  */
 public class Percolation extends Simulation {
 

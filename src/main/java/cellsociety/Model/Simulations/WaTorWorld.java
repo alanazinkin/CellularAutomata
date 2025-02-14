@@ -57,6 +57,7 @@ public class WaTorWorld extends Simulation {
    * @param sharkInitialEnergy initial energy for a shark when created
    * @param sharkEnergyGain    energy a shark gains by eating a fish
    * @throws IllegalArgumentException if fishBreedTime or sharkBreedTime is less than or equal to 0
+   * @author Tatum McKinnis
    */
   public WaTorWorld(SimulationConfig simulationConfig, Grid grid, int fishBreedTime,
       int sharkBreedTime,

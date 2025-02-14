@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * JUnit tests for the {@link Percolation} class. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * @author Tatum McKinnis
  */
 class PercolationTest {
 

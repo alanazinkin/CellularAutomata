@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Combined JUnit tests for the GameOfLife simulation. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * @author Tatum McKinnis
  */
 public class GameOfLifeTest {
 

@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
  * and enforcing common simulation constraints. Subclasses must implement simulation-specific rules
  * through the abstract methods while benefiting from shared error handling and state management.
  * </p>
+ * @author Tatum McKinnis
  */
 public abstract class Simulation {
 

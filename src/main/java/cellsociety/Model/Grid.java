@@ -9,6 +9,7 @@ import java.util.Objects;
  * Represents a 2D grid of {@link Cell} objects used in a simulation. The grid maintains a fixed
  * number of rows and columns and provides methods for accessing cells, retrieving neighbors, and
  * updating states.
+ * @author Tatum McKinnis
  */
 public class Grid {
 

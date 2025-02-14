@@ -3,6 +3,7 @@ package cellsociety.Model;
 /**
  * A cell specialized for Schelling's simulation that holds a mutable agent group identifier.
  * Validates state and agent group parameters during construction and modification.
+ * @author Tatum McKinnis
  */
 public class AgentCell extends Cell {
 

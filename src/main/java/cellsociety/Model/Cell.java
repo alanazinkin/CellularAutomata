@@ -15,6 +15,7 @@ import cellsociety.Model.State.*;
  * </ul>
  * This class provides methods to get and set the states of the cell. The behavior of the cell is
  * determined by its current state within the simulation, and the previous state is tracked for reference.
+ * @author Tatum McKinnis
  */
 public class Cell {
 

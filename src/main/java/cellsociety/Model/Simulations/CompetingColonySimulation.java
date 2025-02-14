@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
  *   <li>{@code threshold}: Percentage of neighbors required for state conversion (0-100)</li>
  * </ul>
  * </p>
+ * @author Tatum McKinnis
  */
 public class CompetingColonySimulation extends Simulation {
   private final int numStates;

@@ -5,6 +5,7 @@ import java.util.Objects;
 /**
  * Represents an individual ant in the simulation, tracking its position, orientation, and whether
  * it is carrying food.
+ * @author Tatum McKinnis
  */
 public class Ant {
 
