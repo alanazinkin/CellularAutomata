@@ -28,9 +28,8 @@ import javafx.util.Duration;
 
 public class SimulationController {
 
-  private static final ResourceBundle CONFIG = ResourceBundle.getBundle("simulation");
-  private static final String DEFAULT_FILE_PATH = CONFIG.getString("default.file.path");
-  public static final String DEFAULT_RESOURCE_PACKAGE = CONFIG.getString("default.resource.package");
+  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(SimulationController.class.getPackageName() + ".Simulation");
+  public static final String DEFAULT_RESOURCE_PACKAGE = SimulationController.class.getPackageName() + ".";
 
   /**
    * Record representing various parameters required for simulations.
@@ -262,6 +261,7 @@ public class SimulationController {
         String selectedTheme = Optional.ofNullable(themeSelector.getValue())
                 .orElseThrow(() -> new IllegalStateException("Theme not selected"));
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
+        System.out.println(myResources);
         splashStage.close();
         setupSimulation(myStage, selectedLanguage, selectedTheme);
       } catch (Exception ex) {

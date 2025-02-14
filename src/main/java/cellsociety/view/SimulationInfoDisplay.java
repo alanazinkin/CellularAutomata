@@ -23,7 +23,6 @@ public class  SimulationInfoDisplay {
   private static int SCREEN_WIDTH = 800;
   private static int SCREEN_HEIGHT = 600;
   private static int TEXT_SIZE = 25;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
 
   /**
    * type of simulation (ex: Fire, GameofLife, etc.)
@@ -63,8 +62,8 @@ public class  SimulationInfoDisplay {
    * @param parameters to the simulation
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
-  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language) {
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+  public SimulationInfoDisplay(String type, String title, String author, String description, Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language, ResourceBundle resources) {
+    myResources = resources;
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -162,10 +161,10 @@ public class  SimulationInfoDisplay {
       addTextToScene(vbox, param + ": " + myParameters.get(param));
     }
     addTextToScene(vbox, myResources.getString("StateColors") + " ");
-    ResourceBundle resources = ResourceBundle.getBundle("cellsociety.View." + themeColor);
+    ResourceBundle colorResourceBundle = ResourceBundle.getBundle(SimulationInfoDisplay.class.getPackageName() + "." + themeColor);
     for (StateInterface state : myStateColors.keySet()) {
       String cssId = myStateColors.get(state);
-      String color = resources.getString(cssId);
+      String color = colorResourceBundle.getString(cssId);
       addTextToScene(vbox, state.getStateValue() + ": " + color);
     }
   }
