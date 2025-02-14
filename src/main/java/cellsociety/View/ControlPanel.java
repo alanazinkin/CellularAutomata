@@ -3,16 +3,11 @@ package cellsociety.View;
 import cellsociety.Controller.FileRetriever;
 import cellsociety.Controller.SimulationMaker;
 import cellsociety.Controller.SimulationController;
-import java.io.FileNotFoundException;
-import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
@@ -87,7 +82,10 @@ public class ControlPanel {
     //TODO add "one step back"
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     try {
-      myUserControl.makeSimSelectorComboBoxes(myResources.getString("SelectSim"), myResources.getString("SelectConfig"), simulationTypes, myStage, myControlBar);
+      List<ComboBox<String>> dropDownBoxes = myUserControl.makeSimSelectorComboBoxes(myResources.getString("SelectSim"), myResources.getString("SelectConfig"), simulationTypes, myStage);
+      for (ComboBox<String> dropDownBox : dropDownBoxes) {
+        myUserControl.addElementToPane(dropDownBox, myControlBar);
+      }
     }
     catch (Exception e) {
       myController.displayAlert(myResources.getString("Error"), myResources.getString("CantMakeSimSelector"));
