@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
  * </p>
  * @author Tatum McKinnis
  */
-public class CompetingColonySimulation extends Simulation {
+public class CompetingColony extends Simulation {
   private final int numStates;
   private final double thresholdPercentage;
   private Map<StateInterface, Integer> stateToIntMap;
@@ -45,7 +45,7 @@ public class CompetingColonySimulation extends Simulation {
    * @param grid             Preconfigured grid structure
    * @throws IllegalArgumentException If parameters violate constraints
    */
-  public CompetingColonySimulation(SimulationConfig simulationConfig, Grid grid) {
+  public CompetingColony(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
 
     this.numStates = simulationConfig.getParameters().get("numStates").intValue();

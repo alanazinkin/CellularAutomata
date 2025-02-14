@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
  * <p>
  * This class verifies core ant behavior including initialization, movement, orientation changes,
  * and food state transitions.
+ *  Naming convention:
+ *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
  * @author Tatum McKinnis
  */

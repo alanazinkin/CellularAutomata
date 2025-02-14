@@ -10,11 +10,12 @@ import org.junit.jupiter.api.Test;
  * <p>
  * This class verifies grid operations such as cell retrieval, neighbor determination,
  * state transitions, grid reset, and grid printing.
+ *  Naming convention:
+ *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
  * @author Tatum McKinnis
  */
 class GridTest {
-
   /**
    * Tests cell retrieval with valid indices.
    * <p>

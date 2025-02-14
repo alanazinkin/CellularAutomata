@@ -1,5 +1,6 @@
 package cellsociety.Model.Simulations;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -30,22 +31,27 @@ class CompetingColonyTest {
   private static final double VALID_THRESHOLD = 30.0;
   private SimulationConfig validConfig;
   private Grid mockGrid;
+  private Map<String, Number> validParams;
 
   @BeforeEach
   void setUp() {
+    // Mock configuration setup
     validConfig = mock(SimulationConfig.class);
-    Map<String, Number> validParams = new HashMap<>();
-    validParams.put("numStates", VALID_STATES);
-    validParams.put("threshold", VALID_THRESHOLD);
-    when(validConfig.getParameters()).thenReturn(validParams);
-
     mockGrid = mock(Grid.class);
-    when(mockGrid.getRows()).thenReturn(1);
-    when(mockGrid.getCols()).thenReturn(1);
+    validParams = new HashMap<>();
+
+    // Valid parameters
+    validParams.put("numStates", 3);
+    validParams.put("threshold", 30.0);
+
+    // Configure mock returns
+    when(validConfig.getParameters()).thenReturn(validParams);
+    when(mockGrid.getRows()).thenReturn(5);
+    when(mockGrid.getCols()).thenReturn(5);
   }
 
   @Test
-  void constructor_ValidParameters_CreatesInstanceWithoutErrors() {
+  void constructor_WithValidParameters_DoesNotThrowException() {
     assertDoesNotThrow(() -> new CompetingColony(validConfig, mockGrid));
   }
 

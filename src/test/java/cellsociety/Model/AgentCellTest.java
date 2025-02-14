@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
  * <p>
  * This class verifies proper initialization and manipulation of the agent group in an
  * {@link AgentCell} instance.
+ *  Naming convention:
+ *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
  * @author Tatum McKinnis
  */

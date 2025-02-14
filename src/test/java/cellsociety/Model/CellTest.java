@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
  * <p>
  * This class verifies proper state management in a cell including retrieval,
  * updates, application of the next state, resetting, and string representation.
+ *  Naming convention:
+ *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
  * @author Tatum McKinnis
  */
