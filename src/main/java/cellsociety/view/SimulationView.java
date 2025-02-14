@@ -51,7 +51,7 @@ public class SimulationView {
     createSimulationWindow(primaryStage);
     setTheme(themeColor);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView);
+    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView, myResources);
     myControlPanel.setupControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
     try {
@@ -72,7 +72,8 @@ public class SimulationView {
         myConfig.getDescription(),
         myConfig.getParameters(),
         simulation.getColorMap(),
-        language
+        language,
+        myResources
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor);
   }

@@ -23,7 +23,6 @@ import javafx.stage.Stage;
  */
 public class ControlPanel {
   private static final int CONTROL_BAR_HEIGHT = 60;
-  public static final String DEFAULT_RESOURCE_PACKAGE = "cellsociety.View.";
 
   private Stage myStage;
   private HBox myControlBar;
@@ -40,10 +39,10 @@ public class ControlPanel {
    * construct a new Control Panel. Initializes the controller object by default.
    * This prevents a possible exception from occuring.
    */
-  public ControlPanel(Stage stage, String language, SimulationController controller, SimulationView simulationView) {
+  public ControlPanel(Stage stage, String language, SimulationController controller, SimulationView simulationView, ResourceBundle resources) {
     myStage = stage;
     myController = controller;
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+    myResources = resources;
     mySimView = simulationView;
     initializeFileRetriever();
     initializeUserControl();
