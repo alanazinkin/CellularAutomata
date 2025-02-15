@@ -8,7 +8,6 @@ import cellsociety.model.state.PercolationState;
 import cellsociety.model.StateInterface;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.paint.Color;
 
 /**
  * A probabilistic percolation simulation that models fluid flow through a porous medium.
@@ -28,10 +27,6 @@ public class Percolation extends Simulation {
   public static final int OPEN_ID = 1;
   public static final int PERCOLATED_ID = 2;
   public static final int BLOCKED_ID = 0;
-
-  private static final Color OPEN_COLOR = Color.WHITE;
-  private static final Color PERCOLATED_COLOR = Color.LIGHTBLUE;
-  private static final Color BLOCKED_COLOR = Color.BLACK;
 
   /**
    * Maximum value for probability calculations

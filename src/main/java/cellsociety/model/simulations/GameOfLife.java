@@ -8,7 +8,6 @@ import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.StateInterface;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.paint.Color;
 
 /**
  * Represents Conway's Game of Life cellular automaton simulation.
@@ -28,8 +27,6 @@ public class GameOfLife extends Simulation {
   private static final int MINIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 2;
   private static final int MAXIMUM_LIVE_NEIGHBORS_FOR_SURVIVAL = 3;
   private static final int EXACT_LIVE_NEIGHBORS_FOR_BIRTH = 3;
-  private static final Color ALIVE_COLOR = Color.BLACK;
-  private static final Color DEAD_COLOR = Color.WHITE;
 
   /**
    * Constructs a Game of Life simulation with specified configuration and grid
