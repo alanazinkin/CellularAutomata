@@ -12,7 +12,8 @@ import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
- * Models a cellular automaton where bacterial colonies compete in a circular dominance relationship.
+ * Models a cellular automaton where bacterial colonies compete in a circular dominance
+ * relationship.
  * <p>
  * Simulation Rules:
  * <ul>
@@ -29,6 +30,7 @@ import javafx.scene.paint.Color;
  * </p>
  */
 public class CompetingColonySimulation extends Simulation {
+
   private final int numStates;
   private final double thresholdPercentage;
   private Map<StateInterface, Integer> stateToIntMap;
@@ -54,7 +56,8 @@ public class CompetingColonySimulation extends Simulation {
       throw new IllegalArgumentException("Minimum 2 states required. Received: " + numStates);
     }
     if (thresholdPercentage < 0 || thresholdPercentage > 100) {
-      throw new IllegalArgumentException("Threshold must be 0-100. Received: " + thresholdPercentage);
+      throw new IllegalArgumentException(
+          "Threshold must be 0-100. Received: " + thresholdPercentage);
     }
 
     initializeStateToIntMap();
@@ -73,7 +76,8 @@ public class CompetingColonySimulation extends Simulation {
   /**
    * Generates mapping from integer identifiers to state objects.
    *
-   * @return Map with keys 0 to {@code numStates-1} mapped to corresponding {@link ColonyState} instances
+   * @return Map with keys 0 to {@code numStates-1} mapped to corresponding {@link ColonyState}
+   * instances
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class FileRetriever {
+
   private static final List<String> SIMULATION_TYPES = List.of(
       "Game of Life",
       "Spreading of Fire",
@@ -15,8 +16,10 @@ public class FileRetriever {
       "Wa-Tor World",
       "Schelling State"
   );
+
   /**
    * creates list of different simulation types
+   *
    * @return list of all the different simulation types
    */
   public List<String> getSimulationTypes() {
@@ -24,7 +27,9 @@ public class FileRetriever {
   }
 
   /**
-   * retrieve all the files associated with a specific simulation type or throw file not found exception if no files exist
+   * retrieve all the files associated with a specific simulation type or throw file not found
+   * exception if no files exist
+   *
    * @param simulationType type of simulation as a string (Ex: Percolation, GameofLife)
    * @return collection of files associated with the type
    * @throws FileNotFoundException if there are no files associated with the simulation type
@@ -43,13 +48,24 @@ public class FileRetriever {
     String basePath = "data";
     String folderExtension;
     switch (simulationType) {
-      case "Game of Life": folderExtension = "/GameOfLife"; break;
-      case "Spreading of Fire": folderExtension = "/SpreadingFire"; break;
-      case "Percolation": folderExtension = "/Percolation"; break;
-      case "Schelling State": folderExtension = "/SchellingState"; break;
-      case "Wa-Tor World": folderExtension = "/WaTorWorld"; break;
+      case "Game of Life":
+        folderExtension = "/GameOfLife";
+        break;
+      case "Spreading of Fire":
+        folderExtension = "/SpreadingFire";
+        break;
+      case "Percolation":
+        folderExtension = "/Percolation";
+        break;
+      case "Schelling State":
+        folderExtension = "/SchellingState";
+        break;
+      case "Wa-Tor World":
+        folderExtension = "/WaTorWorld";
+        break;
       // potential point of abuse! Handle edge case:
-      default: throw new FileNotFoundException("No files found for " + simulationType);
+      default:
+        throw new FileNotFoundException("No files found for " + simulationType);
     }
     return basePath + folderExtension;
   }

@@ -30,37 +30,41 @@ public class SimulationView {
   private Map<String, String> mySimulationResourceMap;
 
   /**
-   *
-   * @param simulationConfig the simulation configuration containing all information about the exact simulation file
-   * @param controller simulation controller responsible for handling events
+   * @param simulationConfig  the simulation configuration containing all information about the
+   *                          exact simulation file
+   * @param controller        simulation controller responsible for handling events
    * @param languageResources the language file for user-selected language
    */
-  public SimulationView(SimulationConfig simulationConfig, SimulationController controller, ResourceBundle languageResources) {
+  public SimulationView(SimulationConfig simulationConfig, SimulationController controller,
+      ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
     myResources = languageResources;
     mySimulationResourceMap = controller.retrieveImmutableConfigResourceBundle();
   }
+
   /**
    * entry point for adding all views to application
    *
    * @param primaryStage main stage onto which all elements are added
-   * @param simulation the simulation model
-   * @param simView the simulation view object
-   * @param colorMap data structure mapping cell states to visual colors in the simulation grid
+   * @param simulation   the simulation model
+   * @param simView      the simulation view object
+   * @param colorMap     data structure mapping cell states to visual colors in the simulation grid
    */
-  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView, Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor) {
+  public void initView(Stage primaryStage, Simulation simulation, SimulationView simView,
+      Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor) {
     createSimulationWindow(primaryStage);
     setTheme(themeColor);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView, myResources);
+    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView,
+        myResources);
     myControlPanel.setupControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
     try {
       myControlPanel.setUpLowerBar(simView.getRoot());
-    }
-    catch (Exception e) {
-      myController.displayAlert(myResources.getString("Error"), myResources.getString("CustomizationBarError"));
+    } catch (Exception e) {
+      myController.displayAlert(myResources.getString("Error"),
+          myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
     // create Grid
@@ -89,7 +93,8 @@ public class SimulationView {
    */
   public Scene createSimulationWindow(Stage primaryStage) {
     myRoot = new BorderPane();
-    myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")), parseInt(mySimulationResourceMap.get("window.height")));
+    myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")),
+        parseInt(mySimulationResourceMap.get("window.height")));
     primaryStage.setScene(myScene);
     primaryStage.show();
     return myScene;
@@ -103,7 +108,7 @@ public class SimulationView {
   /**
    * Called by set theme.
    * <p>
-   *   Ony way to update the theme is to call setTheme()
+   * Ony way to update the theme is to call setTheme()
    * </p>
    */
   private void updateTheme() {
@@ -114,15 +119,22 @@ public class SimulationView {
     addCSSFiles(cssFiles);
   }
 
-//TODO: get rid of thiss method
+  //TODO: get rid of thiss method
   private String getThemeFolderOrFile(String simulationType) {
     switch (simulationType) {
-      case "Game of Life": return "GameOfLife";
-      case "Spreading of Fire": return "Fire";
-      case "Percolation": return "Percolation";
-      case "Schelling Segregation": return "Schelling";
-      case "Wa-Tor World": return "WaTorWorld";
-      default: myController.displayAlert(myResources.getString("Error"), myResources.getString("InvalidSimulationType"));
+      case "Game of Life":
+        return "GameOfLife";
+      case "Spreading of Fire":
+        return "Fire";
+      case "Percolation":
+        return "Percolation";
+      case "Schelling Segregation":
+        return "Schelling";
+      case "Wa-Tor World":
+        return "WaTorWorld";
+      default:
+        myController.displayAlert(myResources.getString("Error"),
+            myResources.getString("InvalidSimulationType"));
         return "";
     }
   }
@@ -142,16 +154,17 @@ public class SimulationView {
 
 
   private GridView createAppropriateGridView(Grid grid) {
-      return switch (myConfig.getType().toLowerCase()) {
-          case "spreading of fire" -> new FireGridView(myController, myConfig, grid);
-          case "game of life" -> new DefaultGridView(myController, myConfig, grid);
-          default -> null;
-      };
+    return switch (myConfig.getType().toLowerCase()) {
+      case "spreading of fire" -> new FireGridView(myController, myConfig, grid);
+      case "game of life" -> new DefaultGridView(myController, myConfig, grid);
+      default -> null;
+    };
   }
 
   /**
-   * Retrieves the root of the scene. Primarily used to add/ remove objects later on with root.getChildren().add()
-   * or root.getChildren().remove()
+   * Retrieves the root of the scene. Primarily used to add/ remove objects later on with
+   * root.getChildren().add() or root.getChildren().remove()
+   *
    * @return BorderPane myRoot
    */
   public BorderPane getRoot() {

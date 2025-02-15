@@ -9,7 +9,8 @@ public class DefaultGridView extends GridView {
   /**
    * construct a new instance of GameOfLifeGridView
    */
-  public DefaultGridView(SimulationController simulationController, SimulationConfig simulationConfig, Grid grid) {
+  public DefaultGridView(SimulationController simulationController,
+      SimulationConfig simulationConfig, Grid grid) {
     super(simulationController, simulationConfig, grid);
   }
 

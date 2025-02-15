@@ -11,12 +11,13 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
-      SimulationMaker simulationMaker = new SimulationMaker();
-      simulationMaker.makeNewSimulation();
+    SimulationMaker simulationMaker = new SimulationMaker();
+    simulationMaker.makeNewSimulation();
   }
 
   /**
    * Main method that launches the program application
+   *
    * @param args
    */
   public static void main(String[] args) {
