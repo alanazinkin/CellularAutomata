@@ -29,32 +29,37 @@ import javafx.util.Duration;
 
 /**
  * Class responsible for connecting frontend and backend to make the simulation work as a whole.
+ *
  * @author Angela Predolac
  */
 public class SimulationController {
 
-  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(SimulationController.class.getPackageName() + ".Simulation");
-  public static final String DEFAULT_RESOURCE_PACKAGE = SimulationController.class.getPackageName() + ".";
+  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
+      SimulationController.class.getPackageName() + ".Simulation");
+  public static final String DEFAULT_RESOURCE_PACKAGE =
+      SimulationController.class.getPackageName() + ".";
 
   /**
    * Record representing various parameters required for simulations.
    */
   public record SimulationParameters(
-          double fireProb,
-          double treeProb,
-          double satisfaction,
-          double percolationProb
+      double fireProb,
+      double treeProb,
+      double satisfaction,
+      double percolationProb
   ) {
+
     /**
      * Creates a SimulationParameters instance using default values from the configuration file.
+     *
      * @return a new SimulationParameters object populated with default values.
      */
     public static SimulationParameters fromConfig() {
       return new SimulationParameters(
-              Double.parseDouble(CONFIG.getString("default.fire.prob")),
-              Double.parseDouble(CONFIG.getString("default.tree.prob")),
-              Double.parseDouble(CONFIG.getString("default.satisfaction")),
-              Double.parseDouble(CONFIG.getString("default.percolation.prob"))
+          Double.parseDouble(CONFIG.getString("default.fire.prob")),
+          Double.parseDouble(CONFIG.getString("default.tree.prob")),
+          Double.parseDouble(CONFIG.getString("default.satisfaction")),
+          Double.parseDouble(CONFIG.getString("default.percolation.prob"))
       );
     }
   }
@@ -72,6 +77,7 @@ public class SimulationController {
 
     /**
      * Constructs a SimulationType with a specified display name.
+     *
      * @param displayName the display name of the simulation type.
      */
     SimulationType(String displayName) {
@@ -80,13 +86,14 @@ public class SimulationController {
 
     /**
      * Retrieves a SimulationType from a string representation.
+     *
      * @param text the display name of the simulation type.
      * @return an Optional containing the corresponding SimulationType, if found.
      */
     public static Optional<SimulationType> fromString(String text) {
       return Arrays.stream(SimulationType.values())
-              .filter(type -> type.displayName.equals(text))
-              .findFirst();
+          .filter(type -> type.displayName.equals(text))
+          .findFirst();
     }
   }
 
@@ -111,7 +118,8 @@ public class SimulationController {
     this.parameters = SimulationParameters.fromConfig();
   }
 
-  public void selectSimulation(String simulationType, String fileName, Stage stage, SimulationController simulationController) throws Exception {
+  public void selectSimulation(String simulationType, String fileName, Stage stage,
+      SimulationController simulationController) throws Exception {
     if (myTimeline != null) {
       pauseSimulation();
     }
@@ -124,17 +132,17 @@ public class SimulationController {
     try {
       String myFilePath = myFileRetriever.getSimulationTypeFilePath(simulationType);
       completeConfigFilePath = myFilePath + "/" + fileName;
-    }
-    catch (FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       displayAlert("Error", myResources.getString("InvalidSimType"));
       throw e;
     }
   }
 
   /**
-   * Initializes the simulation controller by loading configuration, setting up the simulation,
-   * and displaying the splash screen.
-   * @param stage the primary stage for the application.
+   * Initializes the simulation controller by loading configuration, setting up the simulation, and
+   * displaying the splash screen.
+   *
+   * @param stage      the primary stage for the application.
    * @param controller the main simulation controller instance.
    */
   public void init(Stage stage, SimulationController controller) throws Exception {
@@ -146,8 +154,7 @@ public class SimulationController {
       mySimulationConfig = xmlParser.parseXMLFile(completeConfigFilePath);
       initializeSimulation(mySimulationConfig);
       initializeSplashScreen(stage, controller);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       displayAlert(myResources.getString("Error"), myResources.getString("SimNotSupported"));
     }
   }
@@ -155,6 +162,7 @@ public class SimulationController {
 
   /**
    * Initializes the simulation timeline to control the simulation's execution speed.
+   *
    * @return a configured Timeline instance.
    */
   private Timeline initializeTimeline() {
@@ -164,14 +172,15 @@ public class SimulationController {
     Timeline timeline = new Timeline();
     timeline.setCycleCount(Timeline.INDEFINITE);
     timeline.getKeyFrames().add(
-            new KeyFrame(Duration.seconds(secondDelay),
-                    e -> stepSimulation(secondDelay))
+        new KeyFrame(Duration.seconds(secondDelay),
+            e -> stepSimulation(secondDelay))
     );
     return timeline;
   }
 
   /**
    * Initializes the simulation based on the provided configuration.
+   *
    * @param config the simulation configuration.
    */
   private void initializeSimulation(SimulationConfig config) {
@@ -192,53 +201,55 @@ public class SimulationController {
    */
   private Simulation createSimulation(String type) {
     return SimulationType.fromString(type)
-            .map(simType -> {
-              Grid grid = myGrid;
-              if (grid == null) {
-                throw new IllegalStateException(myResources.getString("GridNull"));
-              }
-              SimulationConfig config = mySimulationConfig;
-              if (config == null) {
-                displayAlert(myResources.getString("Error"), myResources.getString("ConfigNull"));
-                throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
-              }
-              return switch (simType) {
-                case GAME_OF_LIFE -> new GameOfLife(config, grid);
-                case SPREADING_FIRE -> new Fire(config, grid, parameters.fireProb(), parameters.treeProb());
-                case PERCOLATION -> new Percolation(config, grid, parameters.percolationProb());
-                case SCHELLING -> new Schelling(config, grid, parameters.satisfaction());
-              };
-            })
-            .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
+        .map(simType -> {
+          Grid grid = myGrid;
+          if (grid == null) {
+            throw new IllegalStateException(myResources.getString("GridNull"));
+          }
+          SimulationConfig config = mySimulationConfig;
+          if (config == null) {
+            displayAlert(myResources.getString("Error"), myResources.getString("ConfigNull"));
+            throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
+          }
+          return switch (simType) {
+            case GAME_OF_LIFE -> new GameOfLife(config, grid);
+            case SPREADING_FIRE ->
+                new Fire(config, grid, parameters.fireProb(), parameters.treeProb());
+            case PERCOLATION -> new Percolation(config, grid, parameters.percolationProb());
+            case SCHELLING -> new Schelling(config, grid, parameters.satisfaction());
+          };
+        })
+        .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
   }
 
   /**
    * Initializes and displays the splash screen.
    *
-   * @param stage the primary stage of the application
+   * @param stage      the primary stage of the application
    * @param controller the simulation controller instance
    */
   private void initializeSplashScreen(Stage stage, SimulationController controller) {
     try {
       SplashScreen initialScreen = new SplashScreen();
       Stage splashStage = initialScreen.showSplashScreen(
-              new Stage(),
-              CONFIG.getString("splash.title"),
-              Integer.parseInt(CONFIG.getString("window.width")),
-              Integer.parseInt(CONFIG.getString("window.height"))
+          new Stage(),
+          CONFIG.getString("splash.title"),
+          Integer.parseInt(CONFIG.getString("window.width")),
+          Integer.parseInt(CONFIG.getString("window.height"))
       );
 
       ComboBox<String> languageSelector = initialScreen.makeComboBox(
-              CONFIG.getString("language.selector"),
-              Arrays.asList(CONFIG.getString("available.languages").split(","))
+          CONFIG.getString("language.selector"),
+          Arrays.asList(CONFIG.getString("available.languages").split(","))
       );
       ComboBox<String> themeSelector = initialScreen.makeComboBox(
-              CONFIG.getString("theme.selector"),
-              Arrays.asList(CONFIG.getString("available.themes").split(","))
+          CONFIG.getString("theme.selector"),
+          Arrays.asList(CONFIG.getString("available.themes").split(","))
       );
       List<String> simulationTypes = myFileRetriever.getSimulationTypes();
       UserController myUserController = new UserController(myResources, controller);
-      myUserController.makeSimSelectorComboBoxes(CONFIG.getString("select.sim"), CONFIG.getString("select.config"), simulationTypes, stage);
+      myUserController.makeSimSelectorComboBoxes(CONFIG.getString("select.sim"),
+          CONFIG.getString("select.config"), simulationTypes, stage);
       setupSplashScreenCallbacks(initialScreen, languageSelector, themeSelector, splashStage);
     } catch (Exception e) {
       handleError("SplashScreenError", e);
@@ -248,23 +259,23 @@ public class SimulationController {
   /**
    * Sets up event handlers for the splash screen controls.
    *
-   * @param screen the splash screen instance
+   * @param screen           the splash screen instance
    * @param languageSelector the language selection combo box
-   * @param themeSelector the theme selection combo box
-   * @param splashStage the splash screen stage
+   * @param themeSelector    the theme selection combo box
+   * @param splashStage      the splash screen stage
    */
   private void setupSplashScreenCallbacks(
-          SplashScreen screen,
-          ComboBox<String> languageSelector,
-          ComboBox<String> themeSelector,
-          Stage splashStage) {
+      SplashScreen screen,
+      ComboBox<String> languageSelector,
+      ComboBox<String> themeSelector,
+      Stage splashStage) {
     Button enterButton = screen.makeEnterButton();
     enterButton.setOnAction(e -> {
       try {
         String selectedLanguage = Optional.ofNullable(languageSelector.getValue())
-                .orElseThrow(() -> new IllegalStateException("Language not selected"));
+            .orElseThrow(() -> new IllegalStateException("Language not selected"));
         String selectedTheme = Optional.ofNullable(themeSelector.getValue())
-                .orElseThrow(() -> new IllegalStateException("Theme not selected"));
+            .orElseThrow(() -> new IllegalStateException("Theme not selected"));
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + selectedLanguage);
         System.out.println(myResources);
         splashStage.close();
@@ -279,11 +290,12 @@ public class SimulationController {
   /**
    * Sets up the simulation with the given stage, language, and theme.
    *
-   * @param stage the primary application stage
-   * @param language the selected language
+   * @param stage      the primary application stage
+   * @param language   the selected language
    * @param themeColor the selected theme color
    */
-  private void setupSimulation(Stage stage, String language, String themeColor) throws IllegalStateException {
+  private void setupSimulation(Stage stage, String language, String themeColor)
+      throws IllegalStateException {
     try {
       Simulation simulation = createSimulation(mySimulationConfig.getType());
       if (simulation == null) {
@@ -296,7 +308,8 @@ public class SimulationController {
         throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
       }
       mySimView = new SimulationView(mySimulationConfig, this, myResources);
-      mySimView.initView(stage, simulation, mySimView, simulation.getColorMap(), grid, language, themeColor);
+      mySimView.initView(stage, simulation, mySimView, simulation.getColorMap(), grid, language,
+          themeColor);
     } catch (Exception e) {
       handleError("SetupError", e);
     }
@@ -332,14 +345,14 @@ public class SimulationController {
    * Handles errors by displaying an alert message.
    *
    * @param key the error message key
-   * @param e the exception that occurred
+   * @param e   the exception that occurred
    */
   private void handleError(String key, Exception e) {
     Platform.runLater(() -> {
       String title = getResourceString("Error");
       String message = String.format("%s: %s",
-              getResourceString(key),
-              e.getMessage());
+          getResourceString(key),
+          e.getMessage());
       displayAlert(title, message);
     });
   }
@@ -352,8 +365,8 @@ public class SimulationController {
    */
   private String getResourceString(String key) {
     return Optional.ofNullable(myResources)
-            .map(r -> r.getString(key))
-            .orElse(key);
+        .map(r -> r.getString(key))
+        .orElse(key);
   }
 
   /**
@@ -368,8 +381,8 @@ public class SimulationController {
   }
 
   /**
-   * Pauses the simulation by stopping the timeline.
-   * If an error occurs, it is handled appropriately.
+   * Pauses the simulation by stopping the timeline. If an error occurs, it is handled
+   * appropriately.
    */
   public void pauseSimulation() {
     try {
@@ -380,9 +393,8 @@ public class SimulationController {
   }
 
   /**
-   * Resets the grid to its initial state.
-   * If the simulation and configuration exist, their grid states are reinitialized.
-   * The view is updated after resetting.
+   * Resets the grid to its initial state. If the simulation and configuration exist, their grid
+   * states are reinitialized. The view is updated after resetting.
    */
   public void resetGrid() {
     try {
@@ -395,6 +407,7 @@ public class SimulationController {
 
   /**
    * Sets the simulation speed within defined bounds.
+   *
    * @param speed the desired simulation speed
    */
   public void setSimulationSpeed(double speed) {
@@ -410,7 +423,8 @@ public class SimulationController {
 
   /**
    * Displays an alert dialog with a given title and content.
-   * @param title the title of the alert
+   *
+   * @param title   the title of the alert
    * @param content the content/message of the alert
    */
   public void displayAlert(String title, String content) {
@@ -421,17 +435,18 @@ public class SimulationController {
   }
 
   /**
-   * Saves the current simulation configuration and grid state to an XML file.
-   * If an error occurs during saving, it is handled appropriately.
+   * Saves the current simulation configuration and grid state to an XML file. If an error occurs
+   * during saving, it is handled appropriately.
    */
-  public void saveSimulation()  throws IllegalStateException {
+  public void saveSimulation() throws IllegalStateException {
     try {
       SimulationConfig config = mySimulationConfig;
       if (config == null) {
         displayAlert(myResources.getString("Error"), myResources.getString("SaveError"));
         throw new IllegalStateException(myResources.getString("SaveError"));
       }
-      SaveSimulationDescription dialog = new SaveSimulationDescription(myStage, myResources, config);
+      SaveSimulationDescription dialog = new SaveSimulationDescription(myStage, myResources,
+          config);
 
       dialog.showAndWait().ifPresent(metadata -> {
         try {
@@ -449,10 +464,12 @@ public class SimulationController {
 
   /**
    * Updates the simulation configuration with user-provided metadata.
-   * @param config the current simulation configuration
+   *
+   * @param config   the current simulation configuration
    * @param metadata the metadata provided by the user
    */
-  private void updateConfigurationWithMetadata(SimulationConfig config, SaveSimulationDescription.SimulationMetadata metadata) {
+  private void updateConfigurationWithMetadata(SimulationConfig config,
+      SaveSimulationDescription.SimulationMetadata metadata) {
     config.setTitle(metadata.title());
     config.setAuthor(metadata.author());
     config.setDescription(metadata.description());
@@ -460,26 +477,28 @@ public class SimulationController {
 
   /**
    * Saves the simulation configuration and grid state to a file.
-   * @param config the simulation configuration
+   *
+   * @param config   the simulation configuration
    * @param metadata metadata containing file save location
    * @throws IOException if an error occurs during file writing
    */
   private void saveConfigurationToFile(
-          SimulationConfig config,
-          SaveSimulationDescription.SimulationMetadata metadata) throws IOException {
+      SimulationConfig config,
+      SaveSimulationDescription.SimulationMetadata metadata) throws IOException {
     XMLWriter xmlWriter = new XMLWriter();
     xmlWriter.saveToXML(config, myGrid, metadata.saveLocation().getAbsolutePath());
   }
 
   /**
    * Displays a success message upon successful saving of a simulation.
+   *
    * @param fileName the name of the saved file
    */
   private void displaySuccessMessage(String fileName) {
     String title = getResourceString("Success");
     String message = String.format("%s %s",
-            fileName,
-            getResourceString("Saved"));
+        fileName,
+        getResourceString("Saved"));
 
     Platform.runLater(() -> {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -491,6 +510,7 @@ public class SimulationController {
 
   /**
    * Sets the simulation controller for managing interactions.
+   *
    * @param controller the simulation controller instance
    */
   public void setController(SimulationController controller) {
@@ -499,8 +519,9 @@ public class SimulationController {
 
   /**
    * retrieves an immutable copy of the simulation resource bundle called CONFIG
-   * @return a Map<String, String> with the keys as the keys in the config resource bundle and the values as the values associated
-   * with the keys
+   *
+   * @return a Map<String, String> with the keys as the keys in the config resource bundle and the
+   * values as the values associated with the keys
    */
   public static Map<String, String> retrieveImmutableConfigResourceBundle() {
     return convertResourceBundletoImmutableMap(CONFIG);

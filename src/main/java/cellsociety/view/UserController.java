@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class UserController {
+
   private ResourceBundle myResources;
   private SimulationController myController;
   private Map<String, String> mySimulationResourceMap;
@@ -31,17 +32,17 @@ public class UserController {
 
   //TODO write better error message
   public void addElementToPane(Control element, Pane pane) throws Exception {
-    if (pane != null){
+    if (pane != null) {
       pane.getChildren().add(element);
-    }
-    else {
+    } else {
       throw new NullPointerException("Pane is null");
     }
   }
 
   /**
    * create and initialize a new button and add it to the Control Bar
-   * @param label of the button that is displayed to user
+   *
+   * @param label   of the button that is displayed to user
    * @param handler is the action that occurs upon clicking button
    */
   public Button makeButton(String label, EventHandler<ActionEvent> handler) {
@@ -55,7 +56,8 @@ public class UserController {
    */
   public Slider makeSpeedSlider() {
     Slider slider = new Slider(0.1, 5, 1);
-    slider.setPrefWidth(parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
+    slider.setPrefWidth(
+        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
@@ -82,13 +84,15 @@ public class UserController {
       if (selectedThemeColor != null) {
         simulationView.setTheme(selectedThemeColor);
       } else {
-        myController.displayAlert(myResources.getString("Error"), myResources.getString("NoThemeSelected"));
+        myController.displayAlert(myResources.getString("Error"),
+            myResources.getString("NoThemeSelected"));
       }
     });
     return themeSelector;
   }
 
-  public List<ComboBox<String>> makeSimSelectorComboBoxes(String label, String secondBoxLabel, List<String> simulationTypeOptions, Stage stage) throws Exception {
+  public List<ComboBox<String>> makeSimSelectorComboBoxes(String label, String secondBoxLabel,
+      List<String> simulationTypeOptions, Stage stage) throws Exception {
     ComboBox<String> simulationTypes = new ComboBox<>();
     simulationTypes.setPromptText(label);
     simulationTypes.getItems().addAll(simulationTypeOptions);
@@ -100,17 +104,19 @@ public class UserController {
     return List.of(simulationTypes, configFileComboBox);
   }
 
-  private void updateFileOptions(ComboBox<String> simulationTypes, ComboBox<String> configFileComboBox, Stage stage) {
+  private void updateFileOptions(ComboBox<String> simulationTypes,
+      ComboBox<String> configFileComboBox, Stage stage) {
     simulationTypes.valueProperty().addListener((obs, oldValue, simulationType) -> {
       if (simulationType == null) {
         configFileComboBox.getItems().clear();
         configFileComboBox.setDisable(true);
-      }
-      else {
+      } else {
         try {
           displayNewFileOptions(configFileComboBox, simulationType);
         } catch (FileNotFoundException e) {
-          myController.displayAlert(myResources.getString("Error"), myResources.getString("NoFilesToRun") + " " + simulationType + ". " + myResources.getString("SelectDifSim"));
+          myController.displayAlert(myResources.getString("Error"),
+              myResources.getString("NoFilesToRun") + " " + simulationType + ". "
+                  + myResources.getString("SelectDifSim"));
           configFileComboBox.getItems().clear();
           configFileComboBox.setDisable(true);
         }
@@ -118,22 +124,23 @@ public class UserController {
     });
   }
 
-  public void respondToFileSelection(ComboBox<String> simulationTypes, ComboBox<String> configFileComboBox, Stage stage) {
+  public void respondToFileSelection(ComboBox<String> simulationTypes,
+      ComboBox<String> configFileComboBox, Stage stage) {
     configFileComboBox.setOnAction(e -> {
       String fileName = configFileComboBox.getValue();
       String simulationType = simulationTypes.getValue();
       if (simulationType != null && fileName != null) {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
           System.err.println(myResources.getString("Error") + " " + ex.getMessage());
         }
       }
     });
   }
 
-  private static void displayNewFileOptions(ComboBox<String> configFileComboBox, String simulationType) throws FileNotFoundException {
+  private static void displayNewFileOptions(ComboBox<String> configFileComboBox,
+      String simulationType) throws FileNotFoundException {
     FileRetriever fileRetriever = new FileRetriever();
     Collection<String> fileNames = fileRetriever.getFileNames(simulationType);
     configFileComboBox.getItems().setAll(fileNames);

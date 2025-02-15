@@ -173,9 +173,9 @@ public class AntSimulation extends Simulation {
   /**
    * Returns an unmodifiable view of the ants in the simulation.
    * <p>
-   * This provides safe access to the ant population without exposing the internal list
-   * to modification. The returned list reflects the current state of ants but cannot
-   * be modified directly.
+   * This provides safe access to the ant population without exposing the internal list to
+   * modification. The returned list reflects the current state of ants but cannot be modified
+   * directly.
    * </p>
    *
    * @return an unmodifiable list containing all active ants in the simulation
@@ -208,6 +208,7 @@ public class AntSimulation extends Simulation {
 
   /**
    * Provides access to the maximum pheromone value for testing purposes
+   *
    * @return The maximum allowed pheromone concentration
    */
   public static double getMaxPheromone() {
@@ -527,10 +528,11 @@ public class AntSimulation extends Simulation {
   }
 
   /**
-   * Returns an unmodifiable map of states to their corresponding color representations.
-   * This map provides a way to associate each state with a specific color for visualization purposes.
+   * Returns an unmodifiable map of states to their corresponding color representations. This map
+   * provides a way to associate each state with a specific color for visualization purposes.
    *
-   * @return An unmodifiable {@code Map} where keys are {@code StateInterface} objects and values are color strings.
+   * @return An unmodifiable {@code Map} where keys are {@code StateInterface} objects and values
+   * are color strings.
    */
   @Override
   public Map<StateInterface, String> getColorMap() {
@@ -541,7 +543,8 @@ public class AntSimulation extends Simulation {
    * Returns an unmodifiable map of state IDs to their corresponding {@code StateInterface} objects.
    * This map allows for efficient retrieval of states based on their unique integer identifiers.
    *
-   * @return An unmodifiable {@code Map} where keys are integer state IDs and values are {@code StateInterface} objects.
+   * @return An unmodifiable {@code Map} where keys are integer state IDs and values are
+   * {@code StateInterface} objects.
    */
   @Override
   public Map<Integer, StateInterface> getStateMap() {
