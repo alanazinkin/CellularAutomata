@@ -7,6 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+/**
+ * The XMLWriter class is responsible for saving the current simulation state
+ * to an XML file. It constructs the XML structure based on the provided
+ * simulation configuration and grid state.
+ * @author Angela Predolac
+ */
 public class XMLWriter {
 
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
@@ -72,6 +78,13 @@ public class XMLWriter {
         Files.write(Paths.get(filePath), xmlContent.toString().getBytes());
     }
 
+    /**
+     * Appends an XML tag with a value to the provided StringBuilder.
+     *
+     * @param builder The StringBuilder to append the tag to.
+     * @param tag     The XML tag name.
+     * @param value   The value to enclose within the tag.
+     */
     private void appendTag(StringBuilder builder, String tag, String value) {
         builder.append(String.format("  <%s>%s</%s>\n", tag, value, tag));
     }
