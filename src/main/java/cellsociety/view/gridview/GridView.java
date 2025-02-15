@@ -1,9 +1,9 @@
 package cellsociety.view.gridview;
 
-import static cellsociety.view.SimulationView.SIMULATION_HEIGHT;
-import static cellsociety.view.SimulationView.SIMULATION_WIDTH;
+import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.SimulationConfig;
+import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
@@ -17,11 +17,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public abstract class GridView {
-  protected static final int SLIDER_BAR_HEIGHT = 150;
+  private static final int SLIDER_BAR_HEIGHT = 150;
 
   protected Grid myGrid;
   protected List<Shape> myCells;
   protected GridPane gridPane;
+  private SimulationController myController;
+  private Map<String, String> myConfigResourceMap;
+
   int numRows;
   int numCols;
   int cellWidth;
@@ -30,15 +33,18 @@ public abstract class GridView {
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the visuals
    * of the grid of cells.
+   * @param simulationController simulation controller responsible for managing the simulation and merging the back-end and front-end
    * @param simulationConfig configuration object containing relevant simulation details such as type, title, description etc.
    * @param grid the grid of cells of the simulation
    */
-  public GridView(SimulationConfig simulationConfig, Grid grid) {
+  public GridView(SimulationController simulationController, SimulationConfig simulationConfig, Grid grid) {
+    myController = simulationController;
+    myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
     myGrid = grid;
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = SIMULATION_WIDTH / numCols;
-    cellHeight = (SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT) / numRows;
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numCols;
+    cellHeight = (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT) / numRows;
     gridPane = new GridPane();
   }
 
@@ -50,8 +56,8 @@ public abstract class GridView {
    */
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap) {
     myRoot.setCenter(gridPane);
-    gridPane.setMaxWidth(SIMULATION_WIDTH);
-    gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
+    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
+    gridPane.setMaxHeight(parseInt(myConfigResourceMap.getOrDefault("window.height", "1000")) - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);
     myCells = new ArrayList<>();
     renderGrid(colorMap);
@@ -79,7 +85,7 @@ public abstract class GridView {
   /**
    * updates the colors of all the cells in the grid according to all cells' current state
    * @param colorMap data structure mapping cell states to visual colors in the simulation grid
-   */
+   * */
   public void updateCellColors(Map<StateInterface, String> colorMap) {
     int cellCount = 0;
     for(int i = 0; i < numRows; i ++) {

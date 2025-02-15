@@ -8,11 +8,13 @@ import cellsociety.view.SimulationView;
 import cellsociety.view.SplashScreen;
 
 import cellsociety.view.UserController;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -22,7 +24,6 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -265,6 +266,7 @@ public class SimulationController {
         splashStage.close();
         setupSimulation(myStage, selectedLanguage, selectedTheme);
       } catch (Exception ex) {
+        displayAlert("Problem setting up", "error");
         handleError("SetupError", ex);
       }
     });
@@ -277,13 +279,19 @@ public class SimulationController {
    * @param language the selected language
    * @param themeColor the selected theme color
    */
-  private void setupSimulation(Stage stage, String language, String themeColor) {
+  private void setupSimulation(Stage stage, String language, String themeColor) throws IllegalStateException {
     try {
-      SimulationConfig config = mySimulationConfig;
-      Simulation simulation = createSimulation(config.getType());
+      Simulation simulation = createSimulation(mySimulationConfig.getType());
+      if (simulation == null) {
+        displayAlert(myResources.getString("Error"), myResources.getString("SimNull"));
+        throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
+      }
       Grid grid = myGrid;
-
-      mySimView = new SimulationView(config, this, myResources);
+      if (grid == null) {
+        displayAlert(myResources.getString("Error"), myResources.getString("GridNull"));
+        throw new IllegalStateException(myResources.getString("ViewSimOrGridNull"));
+      }
+      mySimView = new SimulationView(mySimulationConfig, this, myResources);
       mySimView.initView(stage, simulation, mySimView, simulation.getColorMap(), grid, language, themeColor);
     } catch (Exception e) {
       handleError("SetupError", e);
@@ -412,10 +420,13 @@ public class SimulationController {
    * Saves the current simulation configuration and grid state to an XML file.
    * If an error occurs during saving, it is handled appropriately.
    */
-  public void saveSimulation() {
+  public void saveSimulation()  throws IllegalStateException {
     try {
       SimulationConfig config = mySimulationConfig;
-          //.orElseThrow(() -> new IllegalStateException("No simulation configuration available"));
+      if (config == null) {
+        displayAlert(myResources.getString("Error"), myResources.getString("SaveError"));
+        throw new IllegalStateException(myResources.getString("SaveError"));
+      }
       SaveSimulationDescription dialog = new SaveSimulationDescription(myStage, myResources, config);
 
       dialog.showAndWait().ifPresent(metadata -> {
@@ -475,68 +486,28 @@ public class SimulationController {
   }
 
   /**
-   * Opens a file chooser for the user to select a simulation file.
-   * If a valid file is selected, a new simulation is loaded.
-   */
-  /*
-  public void selectSimulation(String simulationType, String fileName, Stage stage, SimulationController simulationController) {
-    try {
-      FileChooser fileChooser = createSimulationFileChooser();
-      File selectedFile = fileChooser.showOpenDialog(myStage);
-
-      if (selectedFile != null) {
-        loadNewSimulation(selectedFile);
-      }
-    } catch (Exception e) {
-      handleError("SelectSimulationError", e);
-    }
-  }
-   */
-
-  /**
-   * Creates and configures a file chooser for selecting simulation files.
-   * @return a configured FileChooser instance
-   */
-  private FileChooser createSimulationFileChooser() {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle(getResourceString("SelectSimulation"));
-    fileChooser.setInitialDirectory(new File(CONFIG.getString("default.simulation.directory")));
-    fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("XML Files", "*.xml")
-    );
-    return fileChooser;
-  }
-
-  /**
-   * Loads a new simulation from a selected XML configuration file.
-   * @param configFile the selected simulation configuration file
-   */
-  private void loadNewSimulation(String configFile) {
-    try {
-      pauseSimulation();
-
-      XMLParser xmlParser = new XMLParser();
-      SimulationConfig newConfig = xmlParser.parseXMLFile(configFile);
-
-      if (newConfig != null) {
-        mySimulationConfig = newConfig;
-        myGrid = new Grid(newConfig.getWidth(), newConfig.getHeight(), GameOfLifeState.ALIVE);
-        mySimulation = createSimulation(newConfig.getType());
-        mySimView = new SimulationView(newConfig, this, myResources);
-        mySimView.initView(myStage, mySimulation, mySimView, mySimulation.getColorMap(), myGrid, myResources.getLocale().getLanguage(), "Light");
-      } else {
-        throw new IllegalStateException("Failed to parse new simulation configuration");
-      }
-    } catch (Exception e) {
-      handleError("LoadSimulationError", e);
-    }
-  }
-
-  /**
    * Sets the simulation controller for managing interactions.
    * @param controller the simulation controller instance
    */
   public void setController(SimulationController controller) {
     this.myController = controller;
   }
+
+  /**
+   * retrieves an immutable copy of the simulation resource bundle called CONFIG
+   * @return a Map<String, String> with the keys as the keys in the config resource bundle and the values as the values associated
+   * with the keys
+   */
+  public static Map<String, String> retrieveImmutableConfigResourceBundle() {
+    return convertResourceBundletoImmutableMap(CONFIG);
+  }
+
+  private static Map<String, String> convertResourceBundletoImmutableMap(ResourceBundle bundle) {
+    Map<String, String> copy = new HashMap<>();
+    for (String key : bundle.keySet()) {
+      copy.put(key, bundle.getString(key));
+    }
+    return Collections.unmodifiableMap(copy); // Make it immutable
+  }
+
 }
