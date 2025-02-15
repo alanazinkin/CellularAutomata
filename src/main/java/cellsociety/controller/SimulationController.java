@@ -26,6 +26,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Class responsible for connecting frontend and backend to make the simulation work as a whole.
+ * @author Angela Predolac
+ */
 public class SimulationController {
 
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle(SimulationController.class.getPackageName() + ".Simulation");
