@@ -13,6 +13,7 @@ import java.util.Map;
  * Parser for reading and validating Game of Life simulation configuration files in XML format.
  * This class handles parsing of simulation parameters, grid dimensions, and initial states
  * from an XML file and provides validation of the configuration.
+ * @author Angela Predolac
  */
 public class XMLParser {
 
