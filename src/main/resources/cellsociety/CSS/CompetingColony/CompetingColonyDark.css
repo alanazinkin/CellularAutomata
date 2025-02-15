@@ -1,0 +1,12 @@
+#colony-state-empty {
+  -fx-fill: white;
+}
+#colony-state-nest {
+  -fx-fill: darkred;
+}
+#colony-state-food {
+  -fx-fill: dark green;
+}
+#colony-state-obstacle {
+  -fx-fill: black;
+}

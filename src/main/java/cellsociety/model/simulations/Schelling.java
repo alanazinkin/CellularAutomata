@@ -10,7 +10,6 @@ import cellsociety.model.StateInterface;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +34,6 @@ import java.util.Objects;
  */
 public class Schelling extends Simulation {
 
-  private static final Color AGENT_COLOR = Color.RED;
-  private static final Color EMPTY_CELL_COLOR = Color.BLUE;
   private static final int EMPTY_AGENT_GROUP = 0;
   private static final int NO_NEIGHBORS = 0;
   private static final int EMPTY_STATE_KEY = 0;
