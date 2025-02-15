@@ -10,6 +10,11 @@ import java.io.File;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * The SaveSimulationDescription class provides a dialog for users to enter metadata
+ * about a simulation before saving it. Users can specify a title, author, and description.
+ * @author Angela Predolac
+ */
 public class SaveSimulationDescription {
 
     private final Dialog<SimulationMetadata> dialog;
@@ -19,8 +24,19 @@ public class SaveSimulationDescription {
     private final TextArea descriptionArea;
     private final SimulationConfig currentConfig;
 
+    /**
+     * A record that stores metadata about a simulation, including title, author, description,
+     * and save location.
+     */
     public record SimulationMetadata(String title, String author, String description, File saveLocation) {}
 
+    /**
+     * Constructs a SaveSimulationDescription dialog for entering metadata about a simulation.
+     *
+     * @param owner    The stage that owns this dialog.
+     * @param resources The resource bundle for localized strings.
+     * @param config   The current simulation configuration.
+     */
     public SaveSimulationDescription(Stage owner, ResourceBundle resources, SimulationConfig config) {
         myResources = resources;
         currentConfig = config;
@@ -38,6 +54,9 @@ public class SaveSimulationDescription {
         setupDialog();
     }
 
+    /**
+     * Sets up the dialog by creating the content grid, adding input fields, and configuring buttons.
+     */
     private void setupDialog() {
         // Create the content grid
         GridPane grid = new GridPane();
@@ -72,6 +91,11 @@ public class SaveSimulationDescription {
         saveButton.setDisable(false);
     }
 
+    /**
+     * Opens a file chooser to select a save location and creates a SimulationMetadata object.
+     *
+     * @return A SimulationMetadata object containing user-entered data and file location, or null if canceled.
+     */
     private SimulationMetadata showFileChooserAndCreateMetadata() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(myResources.getString("Save"));
@@ -98,6 +122,11 @@ public class SaveSimulationDescription {
         return null;
     }
 
+    /**
+     * Displays the dialog and waits for the user to input metadata.
+     *
+     * @return An Optional containing the SimulationMetadata if the user confirms, otherwise empty.
+     */
     public Optional<SimulationMetadata> showAndWait() {
         return dialog.showAndWait();
     }
