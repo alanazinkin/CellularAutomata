@@ -1,5 +1,7 @@
 package cellsociety.view;
 
+import static java.lang.Integer.parseInt;
+
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Grid;
@@ -17,8 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class SimulationView {
-  public static final int SIMULATION_WIDTH = 1000;
-  public static final int SIMULATION_HEIGHT = 800;
 
   private SimulationController myController;
   private Scene myScene;
@@ -27,17 +27,19 @@ public class SimulationView {
   private GridView myGridView;
   private SimulationConfig myConfig;
   private String myThemeColor;
+  private Map<String, String> mySimulationResourceMap;
 
   /**
    *
    * @param simulationConfig the simulation configuration containing all information about the exact simulation file
-   * @param controller
-   * @param resources
+   * @param controller simulation controller responsible for handling events
+   * @param languageResources the language file for user-selected language
    */
-  public SimulationView(SimulationConfig simulationConfig, SimulationController controller, ResourceBundle resources) {
+  public SimulationView(SimulationConfig simulationConfig, SimulationController controller, ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
-    myResources = resources;
+    myResources = languageResources;
+    mySimulationResourceMap = controller.retrieveImmutableConfigResourceBundle();
   }
   /**
    * entry point for adding all views to application
@@ -62,7 +64,7 @@ public class SimulationView {
       throw new NullPointerException(e.getMessage());
     }
     // create Grid
-    myGridView = new FireGridView(myConfig, grid);
+    myGridView = new FireGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
@@ -87,7 +89,7 @@ public class SimulationView {
    */
   public Scene createSimulationWindow(Stage primaryStage) {
     myRoot = new BorderPane();
-    myScene = new Scene(myRoot, SIMULATION_WIDTH, SIMULATION_HEIGHT);
+    myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")), parseInt(mySimulationResourceMap.get("window.height")));
     primaryStage.setScene(myScene);
     primaryStage.show();
     return myScene;
@@ -141,8 +143,8 @@ public class SimulationView {
 
   private GridView createAppropriateGridView(Grid grid) {
       return switch (myConfig.getType().toLowerCase()) {
-          case "spreading of fire" -> new FireGridView(myConfig, grid);
-          case "game of life" -> new GameOfLifeGridView(myConfig, grid);
+          case "spreading of fire" -> new FireGridView(myController, myConfig, grid);
+          case "game of life" -> new GameOfLifeGridView(myController, myConfig, grid);
           default -> null;
       };
   }

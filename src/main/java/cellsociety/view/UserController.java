@@ -1,10 +1,13 @@
 package cellsociety.view;
 
+import static java.lang.Integer.parseInt;
+
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,10 +21,12 @@ import javafx.stage.Stage;
 public class UserController {
   private ResourceBundle myResources;
   private SimulationController myController;
+  private Map<String, String> mySimulationResourceMap;
 
   public UserController(ResourceBundle resources, SimulationController simulationController) {
     myResources = resources;
     myController = simulationController;
+    mySimulationResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
   }
 
   //TODO write better error message
@@ -50,14 +55,14 @@ public class UserController {
    */
   public Slider makeSpeedSlider() {
     Slider slider = new Slider(0.1, 5, 1);
-    slider.setPrefWidth(SimulationView.SIMULATION_WIDTH * .5);
+    slider.setPrefWidth(parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
     slider.setMajorTickUnit(1.0);
     slider.setMinorTickCount(9);
     slider.setBlockIncrement(0.1);
-    slider.setMaxWidth(SimulationView.SIMULATION_WIDTH * .5);
+    slider.setMaxWidth(parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
     makeSliderAdjustToSpeed(slider);
     return slider;
   }
