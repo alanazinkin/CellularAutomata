@@ -133,7 +133,7 @@ public class UserController {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         } catch (Exception ex) {
-          System.err.println(myResources.getString("Error") + " " + ex.getMessage());
+          myController.displayAlert(myResources.getString("Error"), myResources.getString("SimOrFileNOtSelected"));
         }
       }
     });
