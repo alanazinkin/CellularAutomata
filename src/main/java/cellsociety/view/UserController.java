@@ -82,7 +82,11 @@ public class UserController {
     themeSelector.setOnAction(e -> {
       String selectedThemeColor = themeSelector.getValue();
       if (selectedThemeColor != null) {
-        simulationView.setTheme(selectedThemeColor);
+        try {
+          simulationView.setTheme(selectedThemeColor);
+        } catch (FileNotFoundException ex) {
+          throw new RuntimeException(ex);
+        }
       } else {
         myController.displayAlert(myResources.getString("Error"),
             myResources.getString("NoThemeSelected"));

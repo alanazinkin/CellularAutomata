@@ -2,12 +2,14 @@ package cellsociety.view;
 
 import static java.lang.Integer.parseInt;
 
+import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
 import cellsociety.view.gridview.FireGridView;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -52,7 +54,8 @@ public class SimulationView {
    * @param colorMap     data structure mapping cell states to visual colors in the simulation grid
    */
   public void initView(Stage primaryStage, Simulation simulation, SimulationView simView,
-      Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor) {
+      Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor)
+      throws FileNotFoundException {
     createSimulationWindow(primaryStage);
     setTheme(themeColor);
     // make control panel
@@ -71,14 +74,8 @@ public class SimulationView {
     myGridView = new DefaultGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make simulation information pop-up window
-    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
-        myConfig.getType(),
-        myConfig.getTitle(),
-        myConfig.getAuthor(),
-        myConfig.getDescription(),
-        myConfig.getParameters(),
-        simulation.getColorMap(),
-        language,
+    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(), myConfig.getTitle(),
+        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(), simulation.getColorMap(), language,
         myResources
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor);
@@ -100,7 +97,7 @@ public class SimulationView {
     return myScene;
   }
 
-  public void setTheme(String themeColor) {
+  public void setTheme(String themeColor) throws FileNotFoundException {
     myThemeColor = themeColor;
     updateTheme();
   }
@@ -111,10 +108,10 @@ public class SimulationView {
    * Ony way to update the theme is to call setTheme()
    * </p>
    */
-  private void updateTheme() {
-    System.out.println(myThemeColor);
+  private void updateTheme() throws FileNotFoundException {
     myScene.getStylesheets().clear();
-    String themeFile = getThemeFolderOrFile(myConfig.getType());
+    FileRetriever retriever = new FileRetriever();
+    String themeFile = retriever.getSimulationTypeFolderExtension(myConfig.getType());
     List<String> cssFiles = List.of(myThemeColor, getSimulationFile(themeFile, myThemeColor));
     addCSSFiles(cssFiles);
   }

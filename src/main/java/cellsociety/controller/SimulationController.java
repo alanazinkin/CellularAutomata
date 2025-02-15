@@ -130,7 +130,8 @@ public class SimulationController {
   private void loadFile(String simulationType, String fileName) throws FileNotFoundException {
     myFileRetriever = new FileRetriever();
     try {
-      String myFilePath = myFileRetriever.getSimulationTypeFilePath(simulationType);
+      String myFilePath = "data/" + myFileRetriever.getSimulationTypeFolderExtension(simulationType);
+      System.out.println(myFilePath);
       completeConfigFilePath = myFilePath + "/" + fileName;
     } catch (FileNotFoundException e) {
       displayAlert("Error", myResources.getString("InvalidSimType"));
