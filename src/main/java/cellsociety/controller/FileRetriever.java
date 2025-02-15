@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class FileRetriever {
-
+  private static final String BASE_PATH = "data/";
   private static final List<String> SIMULATION_TYPES = List.of(
       "Game of Life",
       "Spreading of Fire",
@@ -35,8 +35,8 @@ public class FileRetriever {
    * @throws FileNotFoundException if there are no files associated with the simulation type
    */
   public Collection<String> getFileNames(String simulationType) throws FileNotFoundException {
-    String simulationFilePath = getSimulationTypeFilePath(simulationType);
-    List<File> simulationFiles = getFilesInFolder(simulationFilePath);
+    String simulationFileExtension = getSimulationTypeFolderExtension(simulationType);
+    List<File> simulationFiles = getFilesInFolder(BASE_PATH + simulationFileExtension);
     List<String> fileNames = new ArrayList<>();
     for (File file : simulationFiles) {
       fileNames.add(file.getName()); // Use just the name, not full path
@@ -44,30 +44,29 @@ public class FileRetriever {
     return fileNames;
   }
 
-  public String getSimulationTypeFilePath(String simulationType) throws FileNotFoundException {
-    String basePath = "data";
+  public String getSimulationTypeFolderExtension(String simulationType) throws FileNotFoundException {
     String folderExtension;
     switch (simulationType) {
       case "Game of Life":
-        folderExtension = "/GameOfLife";
+        folderExtension = "GameOfLife";
         break;
       case "Spreading of Fire":
-        folderExtension = "/SpreadingFire";
+        folderExtension = "SpreadingFire";
         break;
       case "Percolation":
-        folderExtension = "/Percolation";
+        folderExtension = "Percolation";
         break;
       case "Schelling State":
-        folderExtension = "/SchellingState";
+        folderExtension = "SchellingState";
         break;
       case "Wa-Tor World":
-        folderExtension = "/WaTorWorld";
+        folderExtension = "WaTorWorld";
         break;
       // potential point of abuse! Handle edge case:
       default:
         throw new FileNotFoundException("No files found for " + simulationType);
     }
-    return basePath + folderExtension;
+    return folderExtension;
   }
 
   private List<File> getFilesInFolder(String folderPath) throws FileNotFoundException {

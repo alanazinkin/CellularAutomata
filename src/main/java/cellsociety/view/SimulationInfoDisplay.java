@@ -48,9 +48,14 @@ public class SimulationInfoDisplay {
    * key indicating what each color means for a given simulation
    */
   private Map<StateInterface, String> myStateColors;
-
+  /**
+   * resource bundle for given language
+   */
   private ResourceBundle myResources;
 
+  /**
+   * the scene holding all panes and elements of the view
+   */
   private Scene myScene;
 
   /**
