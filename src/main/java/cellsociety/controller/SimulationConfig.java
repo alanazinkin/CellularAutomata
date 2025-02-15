@@ -7,6 +7,11 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * Represents the configuration for a simulation, including metadata,
+ * grid dimensions, initial states, and simulation parameters.
+ * @author Angela Predolac
+ */
 public class SimulationConfig {
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 600;
@@ -54,9 +59,10 @@ public class SimulationConfig {
     }
 
     /**
-     * set the JavaFX stage for the application
+     * Initializes the JavaFX stage for the simulation.
      *
-     * @param stage     main stage onto which all elements are added
+     * @param stage The main JavaFX stage to display the simulation.
+     * @return The initialized JavaFX scene.
      */
     public Scene initializeStage(Stage stage) {
         Group root = new Group();
@@ -67,44 +73,87 @@ public class SimulationConfig {
         return myScene;
     }
 
+    // Getters
 
+    /** @return The type of simulation. */
     public String getType() { return type; }
+    /** @return The title of the simulation. */
     public String getTitle() { return title; }
+    /** @return The author of the simulation configuration. */
     public String getAuthor() { return author; }
+    /** @return The description of the simulation. */
     public String getDescription() { return description; }
+    /** @return The width of the simulation grid. */
     public int getWidth() { return width; }
+    /** @return The height of the simulation grid. */
     public int getHeight() { return height; }
+    /** @return The initial states of cells in the simulation. */
     public int[] getInitialStates() { return initialStates; }
+    /** @return The parameters for the simulation. */
     public Map<String, Double> getParameters() { return parameters; }
 
+    // Setters
+
+    /**
+     * Sets the type of simulation.
+     * @param type The new simulation type.
+     */
     public void setSimulationType(String type) {
         this.type = type;
     }
 
+    /**
+     * Sets the title of the simulation.
+     * @param title The new title.
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Sets the author of the simulation configuration.
+     * @param author The author's name.
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * Sets the description of the simulation.
+     * @param description The new description.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Sets the width of the simulation grid.
+     * @param i The new width.
+     */
     public void setWidth(int i) {
         width = i;
     }
 
+    /**
+     * Sets the height of the simulation grid.
+     * @param i The new height.
+     */
     public void setHeight(int i) {
         height = i;
     }
 
+    /**
+     * Sets the simulation parameters.
+     * @param stringDoubleMap A map of parameter names to values.
+     */
     public void setParameters(Map<String, Double> stringDoubleMap) {
         parameters = stringDoubleMap;
     }
 
+    /**
+     * Sets the initial states of cells in the simulation.
+     * @param initialStates The new array of initial states.
+     */
     public void setInitialStates(int[] initialStates) {
         this.initialStates = initialStates;
     }
