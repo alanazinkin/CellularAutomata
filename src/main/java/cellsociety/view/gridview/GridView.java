@@ -19,9 +19,9 @@ import javafx.scene.shape.Shape;
 public abstract class GridView {
   private static final int SLIDER_BAR_HEIGHT = 150;
 
-  protected Grid myGrid;
-  protected List<Shape> myCells;
-  protected GridPane gridPane;
+  private Grid myGrid;
+  private List<Shape> myCells;
+  private GridPane gridPane;
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
 
@@ -98,6 +98,5 @@ public abstract class GridView {
       }
     }
   }
-
 
 }

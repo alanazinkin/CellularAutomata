@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import cellsociety.view.gridview.GameOfLifeGridView;
+import cellsociety.view.gridview.DefaultGridView;
 import cellsociety.view.gridview.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -64,7 +64,7 @@ public class SimulationView {
       throw new NullPointerException(e.getMessage());
     }
     // create Grid
-    myGridView = new FireGridView(myController, myConfig, grid);
+    myGridView = new DefaultGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(
@@ -144,7 +144,7 @@ public class SimulationView {
   private GridView createAppropriateGridView(Grid grid) {
       return switch (myConfig.getType().toLowerCase()) {
           case "spreading of fire" -> new FireGridView(myController, myConfig, grid);
-          case "game of life" -> new GameOfLifeGridView(myController, myConfig, grid);
+          case "game of life" -> new DefaultGridView(myController, myConfig, grid);
           default -> null;
       };
   }
