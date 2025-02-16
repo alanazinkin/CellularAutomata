@@ -2,93 +2,145 @@ package cellsociety.Model.Simulations;
 
 import cellsociety.Controller.SimulationConfig;
 import cellsociety.Model.Cell;
-import cellsociety.Model.State.ColonyState;
 import cellsociety.Model.Grid;
 import cellsociety.Model.Simulation;
+import cellsociety.Model.State.BacteriaState;
 import cellsociety.Model.StateInterface;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.paint.Color;
 
-public class CompetingColony extends Simulation {
-  private int numStates;
-  private double thresholdPercentage;
-  private Map<StateInterface, Integer> stateToIntMap;
-  private SimulationConfig config;
+/**
+ * Simulates competing bacteria colonies using a rock-paper-scissors model.
+ * Each cell in the grid represents a bacteria colony that can be in one of three states:
+ * ROCK, PAPER, or SCISSORS. The simulation follows rock-paper-scissors rules where:
+ * <ul>
+ *   <li>ROCK beats SCISSORS</li>
+ *   <li>SCISSORS beats PAPER</li>
+ *   <li>PAPER beats ROCK</li>
+ * </ul>
+ * During each simulation step, cells compete with their Moore neighbors (8 surrounding cells).
+ * A cell changes its state to a competing state if the number of neighbors in that state
+ * exceeds a configurable threshold.
+ *
+ * @author Tatum McKinnis
+ * @see BacteriaState
+ * @see Simulation
+ */
+public class BacteriaColoniesSimulation extends Simulation {
+  /** Default threshold for number of neighbors needed to change a cell's state */
+  private static final int DEFAULT_THRESHOLD = 3;
+  /** Default state for initializing grid cells */
+  private static final BacteriaState DEFAULT_STATE = BacteriaState.ROCK;
+  /** Threshold number of neighbors needed to change a cell's state */
+  private final double neighborThreshold;
 
-  public CompetingColony(SimulationConfig simulationConfig, Grid grid) {
-    super(simulationConfig, grid);
-    this.config = simulationConfig;
-    initializeStateToIntMap();
+  /**
+   * Constructs a new BacteriaColoniesSimulation with specified configuration and grid.
+   * Initializes the simulation grid with the default state and sets up the neighbor
+   * threshold for state changes. The neighbor threshold determines how many neighbors
+   * of a competing state are needed to change a cell's current state.
+   *
+   * @param simulationConfig Configuration containing grid dimensions, initial states,
+   *                        and parameters including the neighbor threshold
+   * @throws IllegalArgumentException if grid dimensions are invalid or initial states array is empty
+   */
+  public BacteriaColoniesSimulation(SimulationConfig simulationConfig) {
+    super(simulationConfig, new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
+    this.neighborThreshold = simulationConfig.getParameters().getOrDefault("neighborThreshold", (double) DEFAULT_THRESHOLD);
   }
 
-  private void initializeStateToIntMap() {
-    stateToIntMap = new HashMap<>();
-    for (Map.Entry<Integer, StateInterface> entry : getStateMap().entrySet()) {
-      stateToIntMap.put(entry.getValue(), entry.getKey());
-    }
-  }
-
-  @Override
-  protected Map<Integer, StateInterface> initializeStateMap() {
-    // Get and validate parameters here since this is called during super()
-    numStates = config.getParameters().get("numStates").intValue();
-    thresholdPercentage = config.getParameters().get("threshold");
-
-    if (numStates <= 1) {
-      throw new IllegalArgumentException("Minimum 2 states required. Received: " + numStates);
-    }
-    if (thresholdPercentage < 0 || thresholdPercentage > 100) {
-      throw new IllegalArgumentException("Threshold must be 0-100. Received: " + thresholdPercentage);
-    }
-
-    // Create and return state map
-    Map<Integer, StateInterface> stateMap = new HashMap<>();
-    for (int i = 0; i < numStates; i++) {
-      stateMap.put(i, new ColonyState(i));
-    }
-    return stateMap;
-  }
-
+  /**
+   * Initializes the mapping between states and their display colors.
+   * ROCK is displayed as red, PAPER as green, and SCISSORS as blue.
+   *
+   * @return Map associating each bacteria state with its hexadecimal color code
+   */
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     Map<StateInterface, String> colorMap = new HashMap<>();
-    Map<Integer, StateInterface> stateMap = getStateMap();
-    for (int i = 0; i < numStates; i++) {
-      double hue = (360.0 * i) / numStates;
-      colorMap.put(stateMap.get(i), Color.hsb(hue, 1.0, 1.0).toString());
-    }
+    colorMap.put(BacteriaState.ROCK, "#FF0000");    // Red
+    colorMap.put(BacteriaState.PAPER, "#00FF00");   // Green
+    colorMap.put(BacteriaState.SCISSORS, "#0000FF"); // Blue
     return colorMap;
   }
 
+  /**
+   * Initializes the mapping between integer values and simulation states.
+   * This mapping is used to convert between the numeric representation in the
+   * configuration and the actual state objects.
+   *
+   * @return Map associating integer values with their corresponding bacteria states
+   */
+  @Override
+  protected Map<Integer, StateInterface> initializeStateMap() {
+    Map<Integer, StateInterface> stateMap = new HashMap<>();
+    stateMap.put(0, BacteriaState.ROCK);
+    stateMap.put(1, BacteriaState.PAPER);
+    stateMap.put(2, BacteriaState.SCISSORS);
+    return stateMap;
+  }
+
+  /**
+   * Applies the rock-paper-scissors rules to all cells in the grid.
+   * For each cell, counts its neighbors' states and determines if the cell
+   * should change state based on the neighbor threshold.
+   */
   @Override
   protected void applyRules() {
     Grid grid = getGrid();
-    int rows = grid.getRows();
-    int cols = grid.getCols();
+    for (int row = 0; row < grid.getRows(); row++) {
+      for (int col = 0; col < grid.getCols(); col++) {
+        updateCellState(row, col);
+      }
+    }
+  }
 
-    for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++) {
-        Cell currentCell = grid.getCell(r, c);
-        StateInterface currentState = currentCell.getCurrentState();
-        int currentStateInt = stateToIntMap.get(currentState);
+  /**
+   * Updates the state of a single cell based on its Moore neighbors.
+   * A cell changes its state to a competing state if the number of neighbors
+   * in that state exceeds the neighbor threshold. The competing state must be
+   * one that beats the current state in rock-paper-scissors rules.
+   *
+   * @param row The row index of the cell to update
+   * @param col The column index of the cell to update
+   */
+  private void updateCellState(int row, int col) {
+    Cell currentCell = getGrid().getCell(row, col);
+    BacteriaState currentState = (BacteriaState) currentCell.getCurrentState();
 
-        int beatingStateInt = (currentStateInt + 1) % numStates;
-        StateInterface beatingState = getStateMap().get(beatingStateInt);
+    List<Cell> neighbors = getGrid().getNeighbors(row, col);
+    Map<BacteriaState, Integer> neighborCounts = countNeighborStates(neighbors);
 
-        List<Cell> neighbors = grid.getNeighbors(r, c);
-        long count = neighbors.stream()
-            .filter(neighbor -> neighbor.getCurrentState().equals(beatingState))
-            .count();
-
-        double threshold = (thresholdPercentage / 100.0) * neighbors.size();
-        if (count >= threshold) {
-          currentCell.setNextState(beatingState);
-        } else {
-          currentCell.setNextState(currentState);
+    // Check if any competing state has enough neighbors to beat the current state
+    for (BacteriaState state : BacteriaState.values()) {
+      if (state.beats(currentState)) {
+        int count = neighborCounts.getOrDefault(state, 0);
+        if (count >= neighborThreshold) {
+          currentCell.setNextState(state);
+          return;
         }
       }
     }
+
+    // If no state has enough neighbors to win, keep current state
+    currentCell.setNextState(currentState);
+  }
+
+  /**
+   * Counts the number of neighbors in each possible state.
+   * Creates a mapping from each bacteria state to the number of neighboring
+   * cells currently in that state.
+   *
+   * @param neighbors List of neighboring cells to count
+   * @return Map containing the count of neighbors for each possible state
+   */
+  private Map<BacteriaState, Integer> countNeighborStates(List<Cell> neighbors) {
+    Map<BacteriaState, Integer> counts = new HashMap<>();
+    for (Cell neighbor : neighbors) {
+      BacteriaState state = (BacteriaState) neighbor.getCurrentState();
+      counts.merge(state, 1, Integer::sum);
+    }
+    return counts;
   }
 }

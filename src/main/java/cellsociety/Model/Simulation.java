@@ -137,7 +137,7 @@ public abstract class Simulation {
    * @param c          Column index of cell to update
    * @param stateValue Integer value mapping to new state via stateMap
    */
-  private void setCellState(int r, int c, int stateValue) {
+  public void setCellState(int r, int c, int stateValue) {
     StateInterface newState = stateMap.get(stateValue);
     if (grid.getCell(r, c).getCurrentState().equals(grid.getDefaultState())) {
       grid.getCell(r, c).setCurrentState(newState);
@@ -180,7 +180,7 @@ public abstract class Simulation {
    *
    * @return The simulation grid instance
    */
-  protected Grid getGrid() {
+  public Grid getGrid() {
     return grid;
   }
 
