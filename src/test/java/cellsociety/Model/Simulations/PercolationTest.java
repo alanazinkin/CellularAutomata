@@ -1,8 +1,12 @@
 package cellsociety.Model.Simulations;
 
+import static cellsociety.Model.Simulations.Percolation.BLOCKED_ID;
+import static cellsociety.Model.Simulations.Percolation.OPEN_ID;
+import static cellsociety.Model.Simulations.Percolation.PERCOLATED_ID;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.Controller.SimulationConfig;
+import cellsociety.Model.Cell;
 import cellsociety.Model.Grid;
 import cellsociety.Model.State.PercolationState;
 import java.util.HashMap;
@@ -27,7 +31,8 @@ class PercolationTest {
    * {@code PercolationState.OPEN} for all cells.
    */
   private Grid createTestGrid() {
-    return new Grid(2, 2, PercolationState.OPEN);
+    Grid grid = new Grid(2, 2, PercolationState.OPEN);
+    return grid;
   }
 
   /**
@@ -41,7 +46,7 @@ class PercolationTest {
         "Test Author",
         "Testing Percolation simulation",
         2, 2,
-        new int[4],
+        new int[]{1, 1, 1, 1},  // Use OPEN_ID (1) for all cells
         new HashMap<>()
     );
   }
@@ -76,11 +81,14 @@ class PercolationTest {
   @Test
   void applyRules_OpenCellsWithoutPercolatedNeighbor_RemainUnchanged() {
     Grid grid = new Grid(2, 2, PercolationState.OPEN);
+
     grid.getCell(0, 1).setCurrentState(PercolationState.BLOCKED);
+
     SimulationConfig simConfig = createSimulationConfigForPercolation();
     Percolation simulation = new Percolation(simConfig, grid, PROBABILITY_ONE);
 
     simulation.applyRules();
+
     grid.applyNextStates();
 
     assertEquals(PercolationState.OPEN, grid.getCell(0, 0).getCurrentState(),
@@ -129,12 +137,12 @@ class PercolationTest {
     Map<?, ?> stateMap = simulation.initializeColorMap();
 
     assertAll("State Map Validity",
-        () -> assertEquals(Color.WHITE, stateMap.get(PercolationState.OPEN),
-            "PercolationState.OPEN should map to WHITE."),
-        () -> assertEquals(Color.LIGHTBLUE, stateMap.get(PercolationState.PERCOLATED),
-            "PercolationState.PERCOLATED should map to LIGHTBLUE."),
-        () -> assertEquals(Color.BLACK, stateMap.get(PercolationState.BLOCKED),
-            "PercolationState.BLOCKED should map to BLACK.")
+        () -> assertEquals("percolation-state-open", stateMap.get(PercolationState.OPEN),
+            "PercolationState.OPEN should map to percolation-state-open"),
+        () -> assertEquals("percolation-state-percolated", stateMap.get(PercolationState.PERCOLATED),
+            "PercolationState.PERCOLATED should map to percolation-state-percolated"),
+        () -> assertEquals("percolation-state-blocked", stateMap.get(PercolationState.BLOCKED),
+            "PercolationState.BLOCKED should map to percolation-state-blocked")
     );
   }
 
