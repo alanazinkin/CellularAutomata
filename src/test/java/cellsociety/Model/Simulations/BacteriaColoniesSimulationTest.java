@@ -26,9 +26,7 @@ class BacteriaColoniesSimulationTest {
 
     // Create a 3x3 grid with all ROCK states initially
     int[] initialStates = new int[GRID_SIZE * GRID_SIZE];
-    for (int i = 0; i < initialStates.length; i++) {
-      initialStates[i] = 0; // 0 represents ROCK state
-    }
+    // 0 represents ROCK state
 
     config = new SimulationConfig(
         "Bacteria",           // type
