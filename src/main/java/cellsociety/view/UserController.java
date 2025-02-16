@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
+import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class UserController {
+
+  private boolean hasGridLines = true;
 
   private ResourceBundle myResources;
   private SimulationController myController;
@@ -58,7 +61,7 @@ public class UserController {
   public Slider makeSpeedSlider() {
     Slider slider = new Slider(0.1, 5, 1);
     slider.setPrefWidth(
-        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
+        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .4);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
@@ -138,7 +141,8 @@ public class UserController {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         } catch (Exception ex) {
-          myController.displayAlert(myResources.getString("Error"), myResources.getString("SimOrFileNOtSelected"));
+          myController.displayAlert(myResources.getString("Error"),
+              myResources.getString("SimOrFileNOtSelected"));
         }
       }
     });
@@ -150,5 +154,23 @@ public class UserController {
     Collection<String> fileNames = fileRetriever.getFileNames(simulationType);
     configFileComboBox.getItems().setAll(fileNames);
     configFileComboBox.setDisable(false);
+  }
+
+  public Button makeGridLinesToggleButton(String label, GridView gridView) {
+    Button toggleButton = new Button(label);
+    setGridLinesToggleButtonAction(gridView, toggleButton);
+    return toggleButton;
+  }
+
+  private void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
+    toggleButton.setOnAction(e -> {
+      if (hasGridLines) {
+        gridView.removeGridLines();
+        hasGridLines = false;
+      } else {
+        gridView.addGridLines();
+        hasGridLines = true;
+      }
+    });
   }
 }

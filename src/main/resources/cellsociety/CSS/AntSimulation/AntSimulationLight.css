@@ -1,12 +1,16 @@
 #ant-state-empty {
   -fx-fill: white;
+  -fx-stroke: black;
 }
 #ant-state-nest {
   -fx-fill: coral;
+  -fx-stroke: black;
 }
 #ant-state-food {
   -fx-fill: lime;
+  -fx-stroke: black;
 }
 #ant-state-obstacle {
   -fx-fill: dimgray;
+  -fx-stroke: black;
 }

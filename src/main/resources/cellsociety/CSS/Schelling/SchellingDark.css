@@ -1,6 +1,8 @@
 #schelling-state-empty {
-  -fx-fill: darkgreen
+  -fx-fill: darkgreen;
+  -fx-stroke: black;
 }
 #schelling-state-agent {
-  -fx-fill: rebeccapurple
+  -fx-fill: rebeccapurple;
+  -fx-stroke: black;
 }

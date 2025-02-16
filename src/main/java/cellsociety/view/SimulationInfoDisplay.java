@@ -187,8 +187,6 @@ public class SimulationInfoDisplay {
       Text colorText = createText(state.getStateValue());
       String cssID = myStateColors.get(state);
       colorText.setId(cssID);
-      System.out.println(cssID);
-      System.out.println("Assigned ID: " + colorText.getId());
       vbox.getChildren().add(colorText);
     }
   }

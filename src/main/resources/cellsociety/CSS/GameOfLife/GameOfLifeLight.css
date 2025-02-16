@@ -1,6 +1,8 @@
 #gameoflife-state-alive {
-  -fx-fill: royalblue
+  -fx-fill: royalblue;
+  -fx-stroke: black;
 }
 #gameoflife-state-dead {
-  -fx-fill: lightcyan
+  -fx-fill: lightcyan;
+  -fx-stroke: black;
 }

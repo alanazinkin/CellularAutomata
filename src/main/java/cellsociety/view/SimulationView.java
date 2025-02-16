@@ -58,9 +58,12 @@ public class SimulationView {
       throws FileNotFoundException {
     createSimulationWindow(primaryStage);
     setTheme(themeColor, myScene);
+    // create Grid
+    myGridView = new DefaultGridView(myController, myConfig, grid);
+    myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(primaryStage, myScene, language, myController,
-        simView, myResources);
+    ControlPanel myControlPanel = new ControlPanel(primaryStage, myScene, myController,
+        simView, myResources, myGridView);
     myControlPanel.setupControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
     try {
@@ -70,9 +73,6 @@ public class SimulationView {
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
-    // create Grid
-    myGridView = new DefaultGridView(myController, myConfig, grid);
-    myGridView.createGridDisplay(simView.getRoot(), colorMap);
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(), myConfig.getTitle(),
         myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(), simulation.getColorMap(), language,
