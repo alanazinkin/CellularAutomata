@@ -222,7 +222,8 @@ public class WaTorWorld extends Simulation {
   // ===================== Shark Behavior =====================
 
   /**
-   * Processes the shark at position (r, c).
+   * Processes the shark at position (r, c) by checking for death conditions, attempting to move to prey,
+   * attempting to move to empty cells, or updating in-place if no movement is possible.
    *
    * @param r     the row index of the shark
    * @param c     the column index of the shark
@@ -230,41 +231,108 @@ public class WaTorWorld extends Simulation {
    */
   private void processShark(int r, int c, boolean[][] moved) {
     int newBreedCount = breedCounters[r][c] + 1;
-    int newEnergy = sharkEnergies[r][c] - SHARK_ENERGY_DECAY;
+    int currentEnergy = sharkEnergies[r][c];
+    int newEnergy = currentEnergy - SHARK_ENERGY_DECAY;
 
-    if (newEnergy <= 0) {
-      // Shark dies due to energy depletion.
-      setEmpty(r, c);
-      resetCellAttributes(r, c);
-      moved[r][c] = true;
+    if (handleSharkDeath(r, c, newEnergy, moved)) {
       return;
     }
 
-    // Try to find prey first.
-    List<int[]> fishNeighbors = findNeighborsByState(r, c, WaTorWorldState.FISH, moved);
-    if (!fishNeighbors.isEmpty()) {
-      int[] targetPos = selectRandomNeighbor(fishNeighbors);
-      int targetR = targetPos[0];
-      int targetC = targetPos[1];
-      // Gain energy by eating a fish.
-      newEnergy += sharkEnergyGain;
-      moveShark(r, c, targetR, targetC, newBreedCount, newEnergy, moved);
-    } else {
-      // If no fish are nearby, look for an empty cell.
-      List<int[]> emptyNeighbors = findNeighborsByState(r, c, WaTorWorldState.EMPTY, moved);
-      if (!emptyNeighbors.isEmpty()) {
-        int[] targetPos = selectRandomNeighbor(emptyNeighbors);
-        int targetR = targetPos[0];
-        int targetC = targetPos[1];
-        moveShark(r, c, targetR, targetC, newBreedCount, newEnergy, moved);
-      } else {
-        // No move available; simply update the shark's internal state.
-        setShark(r, c, newBreedCount, newEnergy);
-        moved[r][c] = true;
-      }
+    // Use array to allow energy modification in helper methods
+    int[] energyHolder = {newEnergy};
+    if (tryMoveToPrey(r, c, newBreedCount, energyHolder, moved)) {
+      newEnergy = energyHolder[0];
+      return;
     }
+
+    if (tryMoveToEmpty(r, c, newBreedCount, newEnergy, moved)) {
+      return;
+    }
+
+    updateSharkInPlace(r, c, newBreedCount, newEnergy, moved);
   }
 
+
+  /**
+   * Handles shark death due to energy depletion.
+   *
+   * @param r          the row index of the shark
+   * @param c          the column index of the shark
+   * @param newEnergy  the shark's energy after decay
+   * @param moved      a grid that tracks cells already updated in this chronon
+   * @return true if the shark died and was removed, false otherwise
+   */
+  private boolean handleSharkDeath(int r, int c, int newEnergy, boolean[][] moved) {
+    if (newEnergy > 0) {
+      return false;
+    }
+    setEmpty(r, c);
+    resetCellAttributes(r, c);
+    moved[r][c] = true;
+    return true;
+  }
+
+  /**
+   * Attempts to move shark to a cell containing prey (fish) and updates energy.
+   *
+   * @param r              the row index of the shark
+   * @param c              the column index of the shark
+   * @param newBreedCount  the updated breed counter after increment
+   * @param energyHolder   array holding current energy value (modified during prey consumption)
+   * @param moved          a grid that tracks cells already updated in this chronon
+   * @return true if movement to prey occurred, false otherwise
+   */
+  private boolean tryMoveToPrey(int r, int c, int newBreedCount, int[] energyHolder, boolean[][] moved) {
+    List<int[]> fishNeighbors = findNeighborsByState(r, c, WaTorWorldState.FISH, moved);
+    if (fishNeighbors.isEmpty()) {
+      return false;
+    }
+
+    int[] targetPos = selectRandomNeighbor(fishNeighbors);
+    int targetR = targetPos[0];
+    int targetC = targetPos[1];
+
+    // Update energy and pass to movement
+    energyHolder[0] += sharkEnergyGain;
+    moveShark(r, c, targetR, targetC, newBreedCount, energyHolder[0], moved);
+    return true;
+  }
+
+  /**
+   * Attempts to move shark to an empty neighboring cell.
+   *
+   * @param r              the row index of the shark
+   * @param c              the column index of the shark
+   * @param newBreedCount  the updated breed counter after increment
+   * @param newEnergy      the updated energy value after decay
+   * @param moved          a grid that tracks cells already updated in this chronon
+   * @return true if movement to empty cell occurred, false otherwise
+   */
+  private boolean tryMoveToEmpty(int r, int c, int newBreedCount, int newEnergy, boolean[][] moved) {
+    List<int[]> emptyNeighbors = findNeighborsByState(r, c, WaTorWorldState.EMPTY, moved);
+    if (emptyNeighbors.isEmpty()) {
+      return false;
+    }
+    int[] targetPos = selectRandomNeighbor(emptyNeighbors);
+    int targetR = targetPos[0];
+    int targetC = targetPos[1];
+    moveShark(r, c, targetR, targetC, newBreedCount, newEnergy, moved);
+    return true;
+  }
+
+  /**
+   * Updates shark's state in its current position when no movement is possible.
+   *
+   * @param r              the row index of the shark
+   * @param c              the column index of the shark
+   * @param newBreedCount  the updated breed counter after increment
+   * @param newEnergy      the updated energy value after decay
+   * @param moved          a grid that tracks cells already updated in this chronon
+   */
+  private void updateSharkInPlace(int r, int c, int newBreedCount, int newEnergy, boolean[][] moved) {
+    setShark(r, c, newBreedCount, newEnergy);
+    moved[r][c] = true;
+  }
   /**
    * Moves or reproduces a shark.
    * <p>
