@@ -27,6 +27,7 @@ import java.util.Map;
  * </ul>
  * The simulation handles pheromone evaporation and diffusion dynamics automatically.
  * </p>
+ * @author Tatum McKinnis
  */
 public class AntSimulation extends Simulation {
 

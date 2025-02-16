@@ -21,6 +21,7 @@ import java.util.Map;
  * <p>
  * The simulation uses a probabilistic rule: if an open cell has at least one percolated neighbor,
  * then the cell becomes percolated with a probability specified at construction.
+ * @author Tatum McKinnis
  */
 public class Percolation extends Simulation {
 
@@ -102,8 +103,11 @@ public class Percolation extends Simulation {
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
-    return Map.of(OPEN_ID, PercolationState.OPEN, PERCOLATED_ID, PercolationState.PERCOLATED,
-        BLOCKED_ID, PercolationState.BLOCKED);
+    return Map.of(
+        BLOCKED_ID, PercolationState.BLOCKED,
+        OPEN_ID, PercolationState.OPEN,
+        PERCOLATED_ID, PercolationState.PERCOLATED
+    );
   }
 
   /**
@@ -127,8 +131,10 @@ public class Percolation extends Simulation {
 
         if (isStaticState(currentState)) {
           cell.setNextState(currentState);
-        } else {
+        } else if (currentState == PercolationState.OPEN) {
           cell.setNextState(determineNextStateForOpenCell(row, col));
+        } else {
+          cell.setNextState(currentState);
         }
       }
     }
@@ -169,6 +175,11 @@ public class Percolation extends Simulation {
    * @return PERCOLATED if conditions are met, otherwise remains OPEN
    */
   private PercolationState determineNextStateForOpenCell(int row, int col) {
+    Cell cell = getGrid().getCell(row, col);
+    if (validateAndGetState(cell) != PercolationState.OPEN) {
+      return validateAndGetState(cell);
+    }
+
     List<Cell> neighbors = getGrid().getNeighbors(row, col);
     for (Cell neighbor : neighbors) {
       if (isPercolatedNeighbor(neighbor) && shouldPercolate()) {

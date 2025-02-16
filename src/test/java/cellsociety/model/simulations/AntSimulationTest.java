@@ -18,6 +18,9 @@ import java.util.Map;
  * <p>
  * Verifies colony behavior including pheromone dynamics, food collection, and obstacle avoidance.
  * </p>
+ *  Naming convention:
+ *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * @author Tatum McKinnis
  */
 class AntSimulationTest {
   private static final int GRID_SIZE = 5;

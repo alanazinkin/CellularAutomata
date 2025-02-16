@@ -128,6 +128,7 @@ public class Fire extends Simulation {
    * @param cell The cell to check
    * @return Valid FireState of the cell
    * @throws IllegalStateException If cell has unexpected state type
+   * @author Tatum McKinnis
    */
   private FireState validateAndGetState(Cell cell) {
     StateInterface state = cell.getCurrentState();

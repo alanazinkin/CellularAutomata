@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the Fire simulation. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * @author Tatum McKinnis
  */
 class FireTest {
 
