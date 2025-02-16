@@ -4,11 +4,13 @@ import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Grid;
 
-public class FireGridView extends GridView {
+public class DefaultGridView extends GridView {
 
-  public FireGridView(SimulationController simulationController, SimulationConfig simulationConfig, Grid grid) {
+  /**
+   * construct a new instance of GameOfLifeGridView
+   */
+  public DefaultGridView(SimulationController simulationController, SimulationConfig simulationConfig, Grid grid) {
     super(simulationController, simulationConfig, grid);
   }
-
 
 }

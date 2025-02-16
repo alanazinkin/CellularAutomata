@@ -26,13 +26,13 @@ public class SimulationUI {
         this.config = config;
     }
 
-    public void initialize(Stage stage, SimController controller,
+    public void initialize(Stage stage, SimulationController controller,
                            SimulationConfig config, Simulation simulation, Grid grid) {
         this.stage = stage;
         initializeSplashScreen(stage, controller);
     }
 
-    private void initializeSplashScreen(Stage stage, SimController controller) {
+    private void initializeSplashScreen(Stage stage, SimulationController controller) {
         SplashScreen screen = new SplashScreen();
         Stage splashStage = screen.showSplashScreen(
                 new Stage(),
@@ -45,7 +45,7 @@ public class SimulationUI {
     }
 
     private void setupSplashScreenControls(SplashScreen screen, Stage splashStage,
-                                           Stage mainStage, SimController controller) {
+                                           Stage mainStage, SimulationController controller) {
         ComboBox<String> languageSelector = screen.makeComboBox(
                 config.getString("language.selector"),
                 Arrays.asList(config.getString("available.languages").split(","))
@@ -64,7 +64,7 @@ public class SimulationUI {
     private void handleSplashScreenEnter(ComboBox<String> languageSelector,
                                          ComboBox<String> themeSelector,
                                          Stage splashStage, Stage mainStage,
-                                         SimController controller) {
+                                         SimulationController controller) {
         try {
             String selectedLanguage = Optional.ofNullable(languageSelector.getValue())
                     .orElseThrow(() -> new IllegalStateException("Language not selected"));
@@ -81,12 +81,11 @@ public class SimulationUI {
     }
 
     private void setupSimulation(Stage stage, String language, String themeColor,
-                                 SimController controller) {
+                                 SimulationController controller) {
         try {
             Simulation simulation = controller.getSimulation();
             Grid grid = controller.getGrid();
             SimulationConfig config = controller.getSimulationConfig();
-
             simulationView = new SimulationView(config, controller, resources);
             Map<StateInterface, String> colorMap = simulation.getColorMap();
             simulationView.initView(stage, simulation, simulationView,
