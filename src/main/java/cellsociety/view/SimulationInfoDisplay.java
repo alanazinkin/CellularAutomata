@@ -1,13 +1,17 @@
 package cellsociety.view;
 
+import cellsociety.controller.SimulationController;
 import cellsociety.model.StateInterface;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -143,8 +147,8 @@ public class SimulationInfoDisplay {
    * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a
    * BorderPane root as the root element
    */
-  public void createDisplayBox(Stage stage, String title, String themeColor) {
-    // create display box to hold relevant information
+  public void createDisplayBox(Stage stage, String title, String themeColor, SimulationView simView)
+      throws FileNotFoundException {
     stage.setTitle(title);
     BorderPane root = new BorderPane();
     VBox vbox = new VBox();
@@ -153,6 +157,8 @@ public class SimulationInfoDisplay {
     // create and set the scene
     myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
     stage.setScene(myScene);
+    // create display box to hold relevant information
+    simView.setTheme(themeColor, myScene);
     // add relevant text to scene
     addSimulationInformationToScene(vbox, themeColor);
     stage.show();
@@ -177,12 +183,13 @@ public class SimulationInfoDisplay {
       addTextToScene(vbox, param + ": " + myParameters.get(param));
     }
     addTextToScene(vbox, myResources.getString("StateColors") + " ");
-    ResourceBundle colorResourceBundle = ResourceBundle.getBundle(
-        SimulationInfoDisplay.class.getPackageName() + "." + themeColor);
     for (StateInterface state : myStateColors.keySet()) {
-      String cssId = myStateColors.get(state);
-      String color = colorResourceBundle.getString(cssId);
-      addTextToScene(vbox, state.getStateValue() + ": " + color);
+      Text colorText = createText(state.getStateValue());
+      String cssID = myStateColors.get(state);
+      colorText.setId(cssID);
+      System.out.println(cssID);
+      System.out.println("Assigned ID: " + colorText.getId());
+      vbox.getChildren().add(colorText);
     }
   }
 

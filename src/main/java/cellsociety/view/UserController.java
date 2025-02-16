@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -75,7 +76,7 @@ public class UserController {
     });
   }
 
-  public ComboBox<String> makeThemeComboBox(SimulationView simulationView) {
+  public ComboBox<String> makeThemeComboBox(SimulationView simulationView, Scene scene) {
     ComboBox<String> themeSelector = new ComboBox<>();
     themeSelector.setPromptText(myResources.getString("SelectTheme"));
     themeSelector.getItems().addAll("Dark", "Light");
@@ -83,7 +84,7 @@ public class UserController {
       String selectedThemeColor = themeSelector.getValue();
       if (selectedThemeColor != null) {
         try {
-          simulationView.setTheme(selectedThemeColor);
+          simulationView.setTheme(selectedThemeColor, scene);
         } catch (FileNotFoundException ex) {
           throw new RuntimeException(ex);
         }

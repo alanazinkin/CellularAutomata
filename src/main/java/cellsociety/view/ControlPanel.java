@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
@@ -26,6 +27,7 @@ public class ControlPanel {
   private static final int CONTROL_BAR_HEIGHT = 60;
 
   private final Stage myStage;
+  private final Scene myScene;
   private final SimulationController myController;
   private final ResourceBundle myResources;
   private final SimulationView mySimView;
@@ -40,9 +42,10 @@ public class ControlPanel {
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
    * possible exception from occuring.
    */
-  public ControlPanel(Stage stage, String language, SimulationController controller,
+  public ControlPanel(Stage stage, Scene scene, String language, SimulationController controller,
       SimulationView simulationView, ResourceBundle resources) {
     myStage = stage;
+    myScene = scene;
     myController = controller;
     myResources = resources;
     mySimView = simulationView;
@@ -116,7 +119,7 @@ public class ControlPanel {
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
-    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView);
+    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
 
     myUserControl.addElementToPane(speedSlider, myCustomizationBar);
     myUserControl.addElementToPane(themeSelector, myCustomizationBar);

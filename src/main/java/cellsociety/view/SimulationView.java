@@ -57,10 +57,10 @@ public class SimulationView {
       Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor)
       throws FileNotFoundException {
     createSimulationWindow(primaryStage);
-    setTheme(themeColor);
+    setTheme(themeColor, myScene);
     // make control panel
-    ControlPanel myControlPanel = new ControlPanel(primaryStage, language, myController, simView,
-        myResources);
+    ControlPanel myControlPanel = new ControlPanel(primaryStage, myScene, language, myController,
+        simView, myResources);
     myControlPanel.setupControlBar(simView.getRoot());
     myControlPanel.makeLowerBar(simView.getRoot());
     try {
@@ -78,7 +78,7 @@ public class SimulationView {
         myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(), simulation.getColorMap(), language,
         myResources
     );
-    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor);
+    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor, simView);
   }
 
   /**
@@ -97,9 +97,9 @@ public class SimulationView {
     return myScene;
   }
 
-  public void setTheme(String themeColor) throws FileNotFoundException {
+  public void setTheme(String themeColor, Scene scene) throws FileNotFoundException {
     myThemeColor = themeColor;
-    updateTheme();
+    updateTheme(scene);
   }
 
   /**
@@ -108,44 +108,24 @@ public class SimulationView {
    * Ony way to update the theme is to call setTheme()
    * </p>
    */
-  private void updateTheme() throws FileNotFoundException {
-    myScene.getStylesheets().clear();
+  private void updateTheme(Scene scene) throws FileNotFoundException {
+    scene.getStylesheets().clear();
     FileRetriever retriever = new FileRetriever();
     String themeFile = retriever.getSimulationTypeFolderExtension(myConfig.getType());
     List<String> cssFiles = List.of(myThemeColor, getSimulationFile(themeFile, myThemeColor));
-    addCSSFiles(cssFiles);
-  }
-
-  //TODO: get rid of thiss method
-  private String getThemeFolderOrFile(String simulationType) {
-    switch (simulationType) {
-      case "Game of Life":
-        return "GameOfLife";
-      case "Spreading of Fire":
-        return "Fire";
-      case "Percolation":
-        return "Percolation";
-      case "Schelling Segregation":
-        return "Schelling";
-      case "Wa-Tor World":
-        return "WaTorWorld";
-      default:
-        myController.displayAlert(myResources.getString("Error"),
-            myResources.getString("InvalidSimulationType"));
-        return "";
-    }
+    addCSSFiles(cssFiles, scene);
   }
 
   private String getSimulationFile(String themeFile, String selectedThemeColor) {
     return themeFile + "/" + themeFile + selectedThemeColor;
   }
 
-  private void addCSSFiles(List<String> files) {
+  private void addCSSFiles(List<String> files, Scene scene) {
     String basePath = "/cellsociety/CSS/";
     for (String file : files) {
       String completePath = basePath + file + ".css";
       System.out.println(completePath);
-      myScene.getStylesheets().add(getClass().getResource(completePath).toExternalForm());
+      scene.getStylesheets().add(getClass().getResource(completePath).toExternalForm());
     }
   }
 
