@@ -1,6 +1,10 @@
 #gameoflife-state-alive {
   -fx-fill: midnightblue;
+  -fx-text-fill: midnightblue;
+  -fx-stroke: black;
 }
 #gameoflife-state-dead {
-  -fx-fill: steelblue
+  -fx-fill: steelblue;
+  -fx-text-fill: steelblue;
+  -fx-stroke: black;
 }

@@ -3,10 +3,12 @@ package cellsociety.view;
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationMaker;
 import cellsociety.controller.SimulationController;
+import cellsociety.view.gridview.GridView;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
@@ -26,6 +28,7 @@ public class ControlPanel {
   private static final int CONTROL_BAR_HEIGHT = 60;
 
   private final Stage myStage;
+  private final Scene myScene;
   private final SimulationController myController;
   private final ResourceBundle myResources;
   private final SimulationView mySimView;
@@ -35,17 +38,20 @@ public class ControlPanel {
   private HBox myCustomizationBar;
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
+  private GridView myGridView;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
    * possible exception from occuring.
    */
-  public ControlPanel(Stage stage, String language, SimulationController controller,
-      SimulationView simulationView, ResourceBundle resources) {
+  public ControlPanel(Stage stage, Scene scene, SimulationController controller,
+      SimulationView simulationView, ResourceBundle resources, GridView gridView) {
     myStage = stage;
+    myScene = scene;
     myController = controller;
     myResources = resources;
     mySimView = simulationView;
+    myGridView = gridView;
     initializeFileRetriever();
     initializeUserControl();
   }
@@ -116,10 +122,12 @@ public class ControlPanel {
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
-    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView);
+    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
+    Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(myResources.getString("ToggleGrid"), myGridView);
 
     myUserControl.addElementToPane(speedSlider, myCustomizationBar);
     myUserControl.addElementToPane(themeSelector, myCustomizationBar);
+    myUserControl.addElementToPane(gridLinesToggle, myCustomizationBar);
   }
 
   /**
@@ -176,7 +184,7 @@ public class ControlPanel {
   }
 
   private void makeCustomizationBar() {
-    myCustomizationBar = new HBox(200);
+    myCustomizationBar = new HBox(100);
     myCustomizationBar.setAlignment(Pos.CENTER);
     addCustomizationBarToLowerBar();
   }

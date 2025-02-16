@@ -1,12 +1,16 @@
 #fire-state-empty {
-  -fx-fill: grey
+  -fx-fill: grey;
+  -fx-stroke: black;
 }
 #fire-state-tree {
-  -fx-fill: darkgreen
+  -fx-fill: darkgreen;
+  -fx-stroke: black;
 }
 #fire-state-burning {
-  -fx-fill: red
+  -fx-fill: red;
+  -fx-stroke: black;
 }
 #fire-state-burnt {
-  -fx-fill: maroon
+  -fx-fill: maroon;
+  -fx-stroke: black;
 }

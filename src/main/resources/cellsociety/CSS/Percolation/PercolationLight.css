@@ -1,9 +1,12 @@
 #percolation-state-open {
-  -fx-fill: seashell
+  -fx-fill: seashell;
+  -fx-stroke: black;
 }
 #percolation-state-percolated {
-  -fx-fill: skyblue
+  -fx-fill: skyblue;
+  -fx-stroke: black;
 }
 #percolation-state-blocked {
-  -fx-fill: dimgray
+  -fx-fill: dimgray;
+  -fx-stroke: black;
 }

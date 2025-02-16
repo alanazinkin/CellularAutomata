@@ -120,4 +120,22 @@ public abstract class GridView {
     }
   }
 
+  /**
+   * visually removes the grid lines y setting stroke outline of cells to 0 pixels
+   */
+  public void removeGridLines() {
+    for (Shape shape : myCells) {
+      shape.setStrokeWidth(0);
+    }
+  }
+
+  /**
+   * visually adds the grid lines by setting stroke outline of cells to 1 pixels
+   */
+  public void addGridLines() {
+    for (Shape shape : myCells) {
+      shape.setStrokeWidth(1);
+    }
+  }
+
 }

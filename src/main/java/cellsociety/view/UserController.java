@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
+import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
@@ -19,6 +21,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class UserController {
+
+  private boolean hasGridLines = true;
 
   private ResourceBundle myResources;
   private SimulationController myController;
@@ -57,7 +61,7 @@ public class UserController {
   public Slider makeSpeedSlider() {
     Slider slider = new Slider(0.1, 5, 1);
     slider.setPrefWidth(
-        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .5);
+        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .4);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
@@ -75,7 +79,7 @@ public class UserController {
     });
   }
 
-  public ComboBox<String> makeThemeComboBox(SimulationView simulationView) {
+  public ComboBox<String> makeThemeComboBox(SimulationView simulationView, Scene scene) {
     ComboBox<String> themeSelector = new ComboBox<>();
     themeSelector.setPromptText(myResources.getString("SelectTheme"));
     themeSelector.getItems().addAll("Dark", "Light");
@@ -83,7 +87,7 @@ public class UserController {
       String selectedThemeColor = themeSelector.getValue();
       if (selectedThemeColor != null) {
         try {
-          simulationView.setTheme(selectedThemeColor);
+          simulationView.setTheme(selectedThemeColor, scene);
         } catch (FileNotFoundException ex) {
           throw new RuntimeException(ex);
         }
@@ -137,7 +141,8 @@ public class UserController {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         } catch (Exception ex) {
-          myController.displayAlert(myResources.getString("Error"), myResources.getString("SimOrFileNOtSelected"));
+          myController.displayAlert(myResources.getString("Error"),
+              myResources.getString("SimOrFileNOtSelected"));
         }
       }
     });
@@ -149,5 +154,23 @@ public class UserController {
     Collection<String> fileNames = fileRetriever.getFileNames(simulationType);
     configFileComboBox.getItems().setAll(fileNames);
     configFileComboBox.setDisable(false);
+  }
+
+  public Button makeGridLinesToggleButton(String label, GridView gridView) {
+    Button toggleButton = new Button(label);
+    setGridLinesToggleButtonAction(gridView, toggleButton);
+    return toggleButton;
+  }
+
+  private void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
+    toggleButton.setOnAction(e -> {
+      if (hasGridLines) {
+        gridView.removeGridLines();
+        hasGridLines = false;
+      } else {
+        gridView.addGridLines();
+        hasGridLines = true;
+      }
+    });
   }
 }
