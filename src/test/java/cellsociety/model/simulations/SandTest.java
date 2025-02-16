@@ -21,6 +21,7 @@ import java.util.HashMap;
  * - Error conditions and edge cases
  * - State transitions and stability
  * </p>
+ * @author Tatum McKinnis
  */
 public class SandTest {
   private Sand simulation;

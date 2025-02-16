@@ -21,6 +21,7 @@ import java.util.Random;
  * The rules for movement and reproduction are encapsulated in helper methods to reduce
  * duplication.
  * </p>
+ * @author Tatum McKinnis
  */
 public class WaTorWorld extends Simulation {
 

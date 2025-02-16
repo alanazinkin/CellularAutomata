@@ -26,7 +26,6 @@ public class Ant {
     this.orientation = Objects.requireNonNull(orientation, "Orientation cannot be null");
     this.row = row;
     this.col = col;
-    this.orientation = orientation;
     this.hasFood = hasFood;
   }
 

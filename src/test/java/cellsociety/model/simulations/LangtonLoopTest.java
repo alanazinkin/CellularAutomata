@@ -15,6 +15,7 @@ import java.util.HashMap;
  * Test class for LangtonLoop.
  * Tests the functionality of Langton's Loop cellular automaton including state transitions,
  * neighborhood interactions, and basic loop formation patterns.
+ * @author Tatum McKinnis
  */
 public class LangtonLoopTest {
 
@@ -28,7 +29,6 @@ public class LangtonLoopTest {
    */
   @BeforeEach
   void setUp() {
-    // Create basic 5x5 grid with empty states
     int[] initialStates = new int[GRID_SIZE * GRID_SIZE];
     for (int i = 0; i < initialStates.length; i++) {
       initialStates[i] = 0; // 0 represents EMPTY state
