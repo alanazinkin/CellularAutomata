@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
+import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
 import java.util.Collection;
@@ -27,11 +28,13 @@ public class UserController {
   private ResourceBundle myResources;
   private SimulationController myController;
   private Map<String, String> mySimulationResourceMap;
+  private SimulationUI myUI;
 
   public UserController(ResourceBundle resources, SimulationController simulationController) {
     myResources = resources;
     myController = simulationController;
     mySimulationResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
+    myUI = myController.getUI();
   }
 
   //TODO write better error message
@@ -92,7 +95,7 @@ public class UserController {
           throw new RuntimeException(ex);
         }
       } else {
-        myController.displayAlert(myResources.getString("Error"),
+        myUI.displayAlert(myResources.getString("Error"),
             myResources.getString("NoThemeSelected"));
       }
     });
@@ -122,7 +125,7 @@ public class UserController {
         try {
           displayNewFileOptions(configFileComboBox, simulationType);
         } catch (FileNotFoundException e) {
-          myController.displayAlert(myResources.getString("Error"),
+          myUI.displayAlert(myResources.getString("Error"),
               myResources.getString("NoFilesToRun") + " " + simulationType + ". "
                   + myResources.getString("SelectDifSim"));
           configFileComboBox.getItems().clear();
@@ -141,7 +144,7 @@ public class UserController {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         } catch (Exception ex) {
-          myController.displayAlert(myResources.getString("Error"),
+          myUI.displayAlert(myResources.getString("Error"),
               myResources.getString("SimOrFileNOtSelected"));
         }
       }

@@ -3,6 +3,7 @@ package cellsociety.view;
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationMaker;
 import cellsociety.controller.SimulationController;
+import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,6 +40,7 @@ public class ControlPanel {
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
   private GridView myGridView;
+  private SimulationUI myUI;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -52,6 +54,7 @@ public class ControlPanel {
     myResources = resources;
     mySimView = simulationView;
     myGridView = gridView;
+    myUI = myController.getUI();
     initializeFileRetriever();
     initializeUserControl();
   }
@@ -80,7 +83,7 @@ public class ControlPanel {
         SimulationMaker maker = new SimulationMaker();
         maker.makeNewSimulation();
       } catch (Exception ex) {
-        myController.displayAlert(myResources.getString("Error"),
+        myUI.displayAlert(myResources.getString("Error"),
             myResources.getString("CantMakeNewSimulation"));
       }
     });
@@ -91,7 +94,7 @@ public class ControlPanel {
         myUserControl.addElementToPane(button, myControlBar);
       }
     } catch (Exception e) {
-      myController.displayAlert(myResources.getString("Error"),
+      myUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeNewSimulation"));
     }
     //TODO add "one step back"
@@ -104,7 +107,7 @@ public class ControlPanel {
         myUserControl.addElementToPane(dropDownBox, myControlBar);
       }
     } catch (Exception e) {
-      myController.displayAlert(myResources.getString("Error"),
+      myUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeSimSelector"));
     }
   }
