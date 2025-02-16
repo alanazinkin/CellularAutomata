@@ -1,18 +1,8 @@
-<<<<<<<< HEAD:src/main/java/cellsociety/view/gridviews/GridView.java
-package cellsociety.view.gridviews;
-
-import static cellsociety.view.SimulationView.SIMULATION_HEIGHT;
-import static cellsociety.view.SimulationView.SIMULATION_WIDTH;
-
-import cellsociety.controller.SimulationConfig;
-========
 package cellsociety.view.gridview;
+import cellsociety.controller.SimulationConfig;
 
 import static java.lang.Integer.parseInt;
-
-import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
->>>>>>>> ec52206e6cf257bef892fbcf38e1770fd264cd47:src/main/java/cellsociety/view/gridview/GridView.java
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;

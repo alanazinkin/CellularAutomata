@@ -1,9 +1,9 @@
 package cellsociety.view.gridviews;
 
-import static cellsociety.view.SimulationView.SIMULATION_HEIGHT;
-import static cellsociety.view.SimulationView.SIMULATION_WIDTH;
+import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.SimulationConfig;
+import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
@@ -19,9 +19,11 @@ import javafx.scene.shape.Shape;
 public abstract class GridView {
   protected static final int SLIDER_BAR_HEIGHT = 150;
 
-  protected Grid myGrid;
-  protected List<Shape> myCells;
-  protected GridPane gridPane;
+  private Grid myGrid;
+  private SimulationController myController;
+  private Map<String, String> myConfigResourceMap;
+  private List<Shape> myCells;
+  private GridPane gridPane;
   int numRows;
   int numCols;
   int cellWidth;
@@ -33,12 +35,14 @@ public abstract class GridView {
    * @param simulationConfig configuration object containing relevant simulation details such as type, title, description etc.
    * @param grid the grid of cells of the simulation
    */
-  public GridView(SimulationConfig simulationConfig, Grid grid) {
+  public GridView(SimulationController simulationController, SimulationConfig simulationConfig, Grid grid) {
+    myController = simulationController;
+    myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
     myGrid = grid;
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = SIMULATION_WIDTH / numCols;
-    cellHeight = (SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT) / numRows;
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numCols;
+    cellHeight = (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT) / numRows;
     gridPane = new GridPane();
   }
 
@@ -50,8 +54,8 @@ public abstract class GridView {
    */
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap) {
     myRoot.setCenter(gridPane);
-    gridPane.setMaxWidth(SIMULATION_WIDTH);
-    gridPane.setMaxHeight(SIMULATION_HEIGHT - SLIDER_BAR_HEIGHT);
+    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
+    gridPane.setMaxHeight(parseInt(myConfigResourceMap.getOrDefault("window.height", "1000")) - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);
     myCells = new ArrayList<>();
     renderGrid(colorMap);
