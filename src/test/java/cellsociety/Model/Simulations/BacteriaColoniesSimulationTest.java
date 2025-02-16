@@ -1,8 +1,9 @@
-package cellsociety.Model;
+package cellsociety.Model.Simulations;
 
 import cellsociety.Controller.SimulationConfig;
-import cellsociety.Model.Simulations.BacteriaColoniesSimulation;
+import cellsociety.Model.Grid;
 import cellsociety.Model.State.BacteriaState;
+import cellsociety.Model.StateInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,14 +30,14 @@ class BacteriaColoniesSimulationTest {
     // 0 represents ROCK state
 
     config = new SimulationConfig(
-        "Bacteria",           // type
-        "Bacteria Colonies",  // title
-        "Test Author",        // author
-        "Test Description",   // description
-        GRID_SIZE,           // width
-        GRID_SIZE,           // height
-        initialStates,       // initialStates
-        parameters          // parameters
+        "Bacteria",
+        "Bacteria Colonies",
+        "Test Author",
+        "Test Description",
+        GRID_SIZE,
+        GRID_SIZE,
+        initialStates,
+        parameters
     );
 
     simulation = new BacteriaColoniesSimulation(config);
