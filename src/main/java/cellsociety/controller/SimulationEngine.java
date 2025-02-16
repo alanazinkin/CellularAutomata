@@ -17,6 +17,8 @@ public class SimulationEngine {
     private Grid grid;
     private SimulationConfig simulationConfig;
     private Stage stage;
+    private SimulationController simulationController;
+    private SimulationUI simulationUI;
 
     public SimulationEngine(ResourceBundle config) {
         this.config = config;
@@ -36,14 +38,17 @@ public class SimulationEngine {
         return timeline;
     }
 
-    public void initializeSimulation(SimulationConfig config, SimulationParameters params) {
+    public void initializeSimulation(SimulationConfig config, SimulationParameters params, SimulationController simulationController) {
         this.simulationConfig = config;
         this.grid = new Grid(config.getWidth(), config.getHeight(), GameOfLifeState.ALIVE);
         this.simulation = SimulationFactory.createSimulation(config.getType(), config, grid, params);
+        this.simulationController = simulationController;
+        this.simulationUI = simulationController.getUI();
     }
 
     public void step() {
         simulation.step();
+        simulationUI.updateView(getSimulation().getColorMap());
     }
 
     public void resetGrid() {

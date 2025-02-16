@@ -3,9 +3,9 @@ package cellsociety.view;
 import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.FileRetriever;
-import cellsociety.controller.SimController;
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
+import cellsociety.controller.SimulationUI;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
@@ -31,6 +31,7 @@ public class SimulationView {
   private SimulationConfig myConfig;
   private String myThemeColor;
   private Map<String, String> mySimulationResourceMap;
+  private SimulationUI myUI;
 
   /**
    * @param simulationConfig  the simulation configuration containing all information about the
@@ -38,10 +39,11 @@ public class SimulationView {
    * @param controller        simulation controller responsible for handling events
    * @param languageResources the language file for user-selected language
    */
-  public SimulationView(SimulationConfig simulationConfig, SimController controller,
+  public SimulationView(SimulationConfig simulationConfig, SimulationController controller,
                         ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
+    myUI = controller.getUI();
     myResources = languageResources;
     mySimulationResourceMap = controller.retrieveImmutableConfigResourceBundle();
   }
@@ -70,7 +72,7 @@ public class SimulationView {
     try {
       myControlPanel.setUpLowerBar(simView.getRoot());
     } catch (Exception e) {
-      myController.displayAlert(myResources.getString("Error"),
+      myUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }

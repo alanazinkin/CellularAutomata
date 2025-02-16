@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/*
 public class SimController {
     private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
             SimController.class.getPackageName() + ".Simulation");
@@ -105,3 +106,5 @@ public class SimController {
         return engine.getConfig();
     }
 }
+
+ */
