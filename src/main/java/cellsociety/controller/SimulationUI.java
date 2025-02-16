@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
+import cellsociety.model.StateInterface;
 import cellsociety.view.SimulationView;
 import cellsociety.view.SplashScreen;
 import cellsociety.view.UserController;
@@ -31,7 +32,7 @@ public class SimulationUI {
         initializeSplashScreen(stage, controller);
     }
 
-    private void initializeSplashScreen(Stage stage, SimulationController controller) {
+    private void initializeSplashScreen(Stage stage, SimController controller) {
         SplashScreen screen = new SplashScreen();
         Stage splashStage = screen.showSplashScreen(
                 new Stage(),
@@ -44,7 +45,7 @@ public class SimulationUI {
     }
 
     private void setupSplashScreenControls(SplashScreen screen, Stage splashStage,
-                                           Stage mainStage, SimulationController controller) {
+                                           Stage mainStage, SimController controller) {
         ComboBox<String> languageSelector = screen.makeComboBox(
                 config.getString("language.selector"),
                 Arrays.asList(config.getString("available.languages").split(","))
@@ -63,7 +64,7 @@ public class SimulationUI {
     private void handleSplashScreenEnter(ComboBox<String> languageSelector,
                                          ComboBox<String> themeSelector,
                                          Stage splashStage, Stage mainStage,
-                                         SimulationController controller) {
+                                         SimController controller) {
         try {
             String selectedLanguage = Optional.ofNullable(languageSelector.getValue())
                     .orElseThrow(() -> new IllegalStateException("Language not selected"));
@@ -80,21 +81,22 @@ public class SimulationUI {
     }
 
     private void setupSimulation(Stage stage, String language, String themeColor,
-                                 SimulationController controller) {
+                                 SimController controller) {
         try {
-            Simulation simulation = controller.getEngine().getSimulation();
-            Grid grid = controller.getEngine().getGrid();
-            SimulationConfig config = controller.getEngine().getConfig();
+            Simulation simulation = controller.getSimulation();
+            Grid grid = controller.getGrid();
+            SimulationConfig config = controller.getSimulationConfig();
 
             simulationView = new SimulationView(config, controller, resources);
+            Map<StateInterface, String> colorMap = simulation.getColorMap();
             simulationView.initView(stage, simulation, simulationView,
-                    simulation.getColorMap(), grid, language, themeColor);
+                    colorMap, grid, language, themeColor);
         } catch (Exception e) {
             handleError("SetupError", e);
         }
     }
 
-    public void updateView(Map<Point2D, Color> colorMap) {
+    public void updateView(Map<StateInterface, String> colorMap) {
         simulationView.updateGrid(colorMap);
     }
 
@@ -121,6 +123,5 @@ public class SimulationUI {
                 .orElse(key);
     }
 
-    // Getters
     public ResourceBundle getResources() { return resources; }
 }

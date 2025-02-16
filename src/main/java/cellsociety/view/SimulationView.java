@@ -3,6 +3,7 @@ package cellsociety.view;
 import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.FileRetriever;
+import cellsociety.controller.SimController;
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Grid;
@@ -37,8 +38,8 @@ public class SimulationView {
    * @param controller        simulation controller responsible for handling events
    * @param languageResources the language file for user-selected language
    */
-  public SimulationView(SimulationConfig simulationConfig, SimulationController controller,
-      ResourceBundle languageResources) {
+  public SimulationView(SimulationConfig simulationConfig, SimController controller,
+                        ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
     myResources = languageResources;

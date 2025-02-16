@@ -1,5 +1,7 @@
 package cellsociety.controller;
 
+import cellsociety.model.Grid;
+import cellsociety.model.Simulation;
 import javafx.stage.Stage;
 
 import java.util.Collections;
@@ -89,5 +91,17 @@ public class SimController {
             copy.put(key, bundle.getString(key));
         }
         return Collections.unmodifiableMap(copy);
+    }
+
+    public Simulation getSimulation() {
+        return engine.getSimulation();
+    }
+
+    public Grid getGrid() {
+        return engine.getGrid();
+    }
+
+    public SimulationConfig getSimulationConfig() {
+        return engine.getConfig();
     }
 }
