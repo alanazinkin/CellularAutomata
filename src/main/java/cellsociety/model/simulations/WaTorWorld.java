@@ -151,7 +151,9 @@ public class WaTorWorld extends Simulation {
     // Process agents in shuffled order
     for (int[] coord : agentCoords) {
       int r = coord[0], c = coord[1];
-      if (moved[r][c]) continue;
+      if (moved[r][c]) {
+        continue;
+      }
 
       Cell cell = getGrid().getCell(r, c);
       WaTorWorldState state = (WaTorWorldState) cell.getCurrentState();
@@ -205,7 +207,8 @@ public class WaTorWorld extends Simulation {
    * @param newBreedVal new breeding counter value (after increment)
    * @param moved       grid marking moved cells
    */
-  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal, boolean[][] moved) {
+  private void moveFish(int currentR, int currentC, int targetR, int targetC, int newBreedVal,
+      boolean[][] moved) {
     if (newBreedVal >= fishBreedTime) {
       // Parent moves to target, child remains in current cell
       setFish(targetR, targetC, 0); // Parent (moved) resets counter
@@ -348,7 +351,8 @@ public class WaTorWorld extends Simulation {
    * @param energy   updated energy value for the shark
    * @param moved    grid marking moved cells
    */
-  private void moveShark(int currentR, int currentC, int targetR, int targetC, int breedVal, int energy, boolean[][] moved) {
+  private void moveShark(int currentR, int currentC, int targetR, int targetC, int breedVal,
+      int energy, boolean[][] moved) {
     if (breedVal >= sharkBreedTime) {
       // Parent moves to target, child remains in current cell
       setShark(targetR, targetC, 0, energy); // Parent (moved)

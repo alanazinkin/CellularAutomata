@@ -10,6 +10,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SplashScreen {
+
   private Pane layout;
 
   public Stage showSplashScreen(Stage stage, String title, double width, double height) {

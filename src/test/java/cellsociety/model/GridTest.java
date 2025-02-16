@@ -1,8 +1,8 @@
-package cellsociety.Model;
+package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.Model.State.MockState;
+import cellsociety.model.state.MockState;
 import org.junit.jupiter.api.Test;
 
 /**

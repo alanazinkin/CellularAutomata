@@ -1,5 +1,5 @@
 #gameoflife-state-alive {
-  -fx-fill: midnightblue
+  -fx-fill: midnightblue;
 }
 #gameoflife-state-dead {
   -fx-fill: steelblue
