@@ -1,6 +1,6 @@
-package cellsociety.Controller;
+package cellsociety.controller;
 
-import cellsociety.Model.Grid;
+import cellsociety.model.Grid;
 
 import java.io.IOException;
 import java.nio.file.Files;

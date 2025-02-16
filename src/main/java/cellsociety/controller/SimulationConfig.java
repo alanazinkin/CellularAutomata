@@ -1,7 +1,6 @@
-package cellsociety.Controller;
+package cellsociety.controller;
 
-import cellsociety.Model.StateInterface;
-import java.util.List;
+import cellsociety.model.StateInterface;
 import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;

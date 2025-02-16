@@ -1,4 +1,4 @@
-package cellsociety.Controller;
+package cellsociety.controller;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;

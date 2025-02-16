@@ -1,4 +1,4 @@
-package cellsociety.Controller;
+package cellsociety.controller;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,18 +1,16 @@
-package cellsociety.Controller;
+package cellsociety.controller;
 
-import cellsociety.Model.Grid;
-import cellsociety.Model.Simulation;
-import cellsociety.Model.Simulations.*;
-import cellsociety.Model.State.GameOfLifeState;
-import cellsociety.Model.State.SchellingState;
-import cellsociety.View.SimulationView;
-import cellsociety.View.SplashScreen;
+import cellsociety.model.Grid;
+import cellsociety.model.Simulation;
+import cellsociety.model.simulations.*;
+import cellsociety.model.state.GameOfLifeState;
+import cellsociety.view.SimulationView;
+import cellsociety.view.SplashScreen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
