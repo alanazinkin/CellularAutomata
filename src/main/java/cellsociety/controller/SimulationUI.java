@@ -14,6 +14,11 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
+/**
+ * The SimulationUI class handles the graphical user interface for the simulation.
+ * It manages the splash screen, main simulation window, and user interactions.
+ * @author angelapredolac
+ */
 public class SimulationUI {
 
   private final ResourceBundle config;
@@ -25,16 +30,35 @@ public class SimulationUI {
   private String myLanguage;
   private String myThemeColor;
 
+  /**
+   * Constructs a SimulationUI instance with the specified configuration.
+   *
+   * @param config the resource bundle containing configuration settings.
+   */
   public SimulationUI(ResourceBundle config) {
     this.config = config;
   }
 
+  /**
+   * Initializes the main simulation window.
+   *
+   * @param stage the primary stage of the application.
+   * @param controller the simulation controller.
+   * @throws Exception if an error occurs during initialization.
+   */
   public void initialize(Stage stage, SimulationController controller) throws Exception {
     this.stage = stage;
     fileRetriever = new FileRetriever();
     setupSimulation(stage, myLanguage, myThemeColor, controller);
   }
 
+  /**
+   * Initializes and displays the splash screen.
+   *
+   * @param stage the primary stage of the application.
+   * @param controller the simulation controller.
+   * @throws Exception if an error occurs during initialization.
+   */
   public void initializeSplashScreen(Stage stage, SimulationController controller)
       throws Exception {
     this.stage = stage;
@@ -48,6 +72,15 @@ public class SimulationUI {
     setupSplashScreenControls(screen, splashStage, stage, controller);
   }
 
+  /**
+   * Configures the controls on the splash screen.
+   *
+   * @param screen the splash screen instance.
+   * @param splashStage the splash screen stage.
+   * @param mainStage the main application stage.
+   * @param controller the simulation controller.
+   * @throws Exception if an error occurs while setting up controls.
+   */
   private void setupSplashScreenControls(SplashScreen screen, Stage splashStage,
       Stage mainStage, SimulationController controller)
       throws Exception {
@@ -69,6 +102,17 @@ public class SimulationUI {
         simulationComboBoxes.get(1)));
   }
 
+  /**
+   * Handles the user input when entering the simulation from the splash screen.
+   *
+   * @param languageSelector the language selection combo box.
+   * @param themeSelector the theme selection combo box.
+   * @param splashStage the splash screen stage.
+   * @param mainStage the main application stage.
+   * @param controller the simulation controller.
+   * @param simulationTypeSelector the simulation type selection combo box.
+   * @param configFileComboBox the configuration file selection combo box.
+   */
   private void handleSplashScreenEnter(ComboBox<String> languageSelector,
       ComboBox<String> themeSelector,
       Stage splashStage, Stage mainStage,
@@ -97,6 +141,14 @@ public class SimulationUI {
     }
   }
 
+  /**
+   * Sets up the simulation view.
+   *
+   * @param stage the application stage.
+   * @param language the selected language.
+   * @param themeColor the selected theme color.
+   * @param controller the simulation controller.
+   */
   private void setupSimulation(Stage stage, String language, String themeColor,
       SimulationController controller) {
     try {
@@ -112,10 +164,21 @@ public class SimulationUI {
     }
   }
 
+  /**
+   * Updates the simulation view with the given color mapping.
+   *
+   * @param colorMap the mapping of states to colors.
+   */
   public void updateView(Map<StateInterface, String> colorMap) {
     simulationView.updateGrid(colorMap);
   }
 
+  /**
+   * Handles errors by displaying an alert with the error message.
+   *
+   * @param key the error message key.
+   * @param e the exception that occurred.
+   */
   public void handleError(String key, Exception e) {
     Platform.runLater(() -> {
       String title = getResourceString("Error");
@@ -126,6 +189,12 @@ public class SimulationUI {
     });
   }
 
+  /**
+   * Displays an alert message.
+   *
+   * @param title the title of the alert.
+   * @param content the content of the alert message.
+   */
   public void displayAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
@@ -133,12 +202,23 @@ public class SimulationUI {
     alert.showAndWait();
   }
 
+  /**
+   * Retrieves a localized string from the resource bundle.
+   *
+   * @param key the key for the string.
+   * @return the localized string.
+   */
   private String getResourceString(String key) {
     return Optional.ofNullable(resources)
         .map(r -> r.getString(key))
         .orElse(key);
   }
 
+  /**
+   * Returns the resource bundle used by the simulation.
+   *
+   * @return the resource bundle.
+   */
   public ResourceBundle getResources() {
     return resources;
   }
