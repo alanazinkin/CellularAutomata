@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
@@ -22,6 +23,9 @@ public class XMLParser {
   private static final String DEFAULT_PROPERTIES_PATH = "cellsociety.controller.simulation";
   private static final String PROB_PREFIX = "default.";
   private static final String PROB_SUFFIX = ".prob";
+  private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
+          "GameOfLife", "SpreadingFire", "Segregation", "Percolation", "WaTor"
+  );
 
     public XMLParser() {
       this.defaultProperties = ResourceBundle.getBundle(DEFAULT_PROPERTIES_PATH);
@@ -37,37 +41,127 @@ public class XMLParser {
    */
   public SimulationConfig parseXMLFile(String filePath) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document document = builder.parse(new File(filePath));
-    document.getDocumentElement().normalize();
-
+    Document document;
     SimulationConfig config = new SimulationConfig();
-    validateRequiredFields(document);
 
-    config.setSimulationType(getElementContent(document, "type"));
-    config.setTitle(getElementContent(document, "title"));
-    config.setAuthor(getElementContent(document, "author"));
-    config.setDescription(getElementContent(document, "description"));
+    try {
+      factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      document = builder.parse(new File(filePath));
+      document.getDocumentElement().normalize();
 
-    String initialStatesStr = getElementContent(document, "initial_states");
-    if (initialStatesStr == null || initialStatesStr.isEmpty()) {
-      throw new IllegalArgumentException("Initial states must be specified in the configuration");
+      validateXMLStructure(document);
+      validateRequiredFields(document);
+
+      String simType = getElementContent(document, "type");
+      validateSimulationType(simType);
+      config.setSimulationType(simType);
+
+      config.setTitle(getElementContent(document, "title"));
+      config.setAuthor(getElementContent(document, "author"));
+      config.setDescription(getElementContent(document, "description"));
+
+      String initialStatesStr = getElementContent(document, "initial_states");
+      validateInitialStates(initialStatesStr);
+      int[] initialStates = parseInitialStates(initialStatesStr);
+      config.setInitialStates(initialStates);
+
+      String widthStr = getElementContent(document, "width");
+      String heightStr = getElementContent(document, "height");
+
+      if ((widthStr == null || widthStr.isEmpty()) && (heightStr == null || heightStr.isEmpty())) {
+        calculateGridDimensions(initialStates, config);
+      } else {
+        setProvidedDimensions(widthStr, heightStr, config);
+      }
+
+      validateGridSize(config);
+
+      config.setParameters(parseParametersWithValidation(document, config.getType()));
+
+    } catch (ParserConfigurationException e) {
+      throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
+    } catch (SAXException e) {
+      throw new ConfigurationException("Invalid XML format: " + e.getMessage());
+    } catch (IOException e) {
+      throw new ConfigurationException("Error reading file: " + e.getMessage());
     }
-    int[] initialStates = parseInitialStates(initialStatesStr);
-    config.setInitialStates(initialStates);
-
-    String widthStr = getElementContent(document, "width");
-    String heightStr = getElementContent(document, "height");
-
-    if ((widthStr == null || widthStr.isEmpty()) && (heightStr == null || heightStr.isEmpty())) {
-      calculateGridDimensions(initialStates, config);
-    } else {
-      setProvidedDimensions(widthStr, heightStr, config);
-    }
-
-    config.setParameters(parseParametersWithDefaults(document, config.getType()));
 
     return config;
+  }
+
+
+  private void validateXMLStructure(Document doc) throws ConfigurationException {
+    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
+      throw new ConfigurationException("Root element must be 'simulation'");
+    }
+  }
+
+  private void validateSimulationType(String type) throws ConfigurationException {
+    if (!VALID_SIMULATION_TYPES.contains(type)) {
+      throw new ConfigurationException("Invalid simulation type: " + type +
+              ". Valid types are: " + String.join(", ", VALID_SIMULATION_TYPES));
+    }
+  }
+
+  private void validateInitialStates(String states) throws ConfigurationException {
+    if (states == null || states.trim().isEmpty()) {
+      throw new ConfigurationException("Initial states cannot be empty");
+    }
+
+    if (!states.trim().matches("^[0-9\\s]+$")) {
+      throw new ConfigurationException("Initial states can only contain numbers and whitespace");
+    }
+  }
+
+  private void validateGridSize(SimulationConfig config) throws ConfigurationException {
+    int totalCells = config.getWidth() * config.getHeight();
+    if (totalCells != config.getInitialStates().length) {
+      throw new ConfigurationException(String.format(
+              "Grid size (%dx%d = %d cells) does not match number of initial states (%d)",
+              config.getWidth(), config.getHeight(), totalCells, config.getInitialStates().length
+      ));
+    }
+  }
+
+  private Map<String, Double> parseParametersWithValidation(Document doc, String simulationType)
+          throws ConfigurationException {
+    Map<String, Double> parameters = new HashMap<>();
+    loadDefaultParameters(parameters, simulationType);
+
+    NodeList paramNodes = doc.getElementsByTagName("parameter");
+    for (int i = 0; i < paramNodes.getLength(); i++) {
+      Element paramElement = (Element) paramNodes.item(i);
+      String name = paramElement.getAttribute("name");
+      String valueStr = paramElement.getAttribute("value");
+
+      if (name.isEmpty()) {
+        throw new ConfigurationException("Parameter name cannot be empty");
+      }
+
+      try {
+        double value = Double.parseDouble(valueStr);
+        validateParameterValue(name, value);
+        parameters.put(name, value);
+      } catch (NumberFormatException e) {
+        throw new ConfigurationException(
+                String.format("Invalid numerical value for parameter '%s': %s", name, valueStr));
+      }
+    }
+
+    return parameters;
+  }
+
+  private void validateParameterValue(String name, double value) throws ConfigurationException {
+    if (name.toLowerCase().contains("prob") && (value < 0 || value > 1)) {
+      throw new ConfigurationException(
+              String.format("Probability parameter '%s' must be between 0 and 1, got: %f", name, value));
+    }
+
+    if (value < 0) {
+      throw new ConfigurationException(
+              String.format("Parameter '%s' cannot be negative, got: %f", name, value));
+    }
   }
 
   private void calculateGridDimensions(int[] initialStates, SimulationConfig config) {
@@ -208,38 +302,6 @@ public class XMLParser {
     }
 
     return parameters;
-  }
-
-  /**
-   * Validates a simulation configuration to ensure it meets the requirements for a Game of Life
-   * simulation.
-   * <p>
-   * Performs the following validations: - Ensures all cell states are either 0 (DEAD) or 1 (ALIVE)
-   * - Verifies the simulation type is "Game of Life" - Confirms grid dimensions are positive
-   * numbers
-   *
-   * @param config The SimulationConfig object to validate
-   * @throws IllegalArgumentException if any validation check fails, with a message describing the
-   *                                  specific validation error
-   */
-  public void validateConfig(SimulationConfig config) throws IllegalArgumentException {
-
-    for (int state : config.getInitialStates()) {
-      if (state != 0 && state != 1) {
-        throw new IllegalArgumentException("Invalid state value found: " + state +
-            ". Game of Life only accepts 0 (DEAD) or 1 (ALIVE)");
-      }
-    }
-
-    if (!"Game of Life".equals(config.getType())) {
-      throw new IllegalArgumentException(
-          "Invalid simulation type. Expected 'Game of Life', found: " +
-              config.getType());
-    }
-
-    if (config.getWidth() <= 0 || config.getHeight() <= 0) {
-      throw new IllegalArgumentException("Grid dimensions must be positive");
-    }
   }
 
   static class ConfigurationException extends Exception {
