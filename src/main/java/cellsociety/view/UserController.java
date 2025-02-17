@@ -102,63 +102,6 @@ public class UserController {
     return themeSelector;
   }
 
-  public List<ComboBox<String>> makeSimSelectorComboBoxes(String label, String secondBoxLabel,
-      List<String> simulationTypeOptions, Stage stage) throws Exception {
-    ComboBox<String> simulationTypes = new ComboBox<>();
-    simulationTypes.setPromptText(label);
-    simulationTypes.getItems().addAll(simulationTypeOptions);
-    ComboBox<String> configFileComboBox = new ComboBox<>();
-    configFileComboBox.setPromptText(secondBoxLabel);
-    // Update available files when simulation type is selected
-    updateFileOptions(simulationTypes, configFileComboBox, stage);
-    respondToFileSelection(simulationTypes, configFileComboBox, stage);
-    return List.of(simulationTypes, configFileComboBox);
-  }
-
-  private void updateFileOptions(ComboBox<String> simulationTypes,
-      ComboBox<String> configFileComboBox, Stage stage) {
-    simulationTypes.valueProperty().addListener((obs, oldValue, simulationType) -> {
-      if (simulationType == null) {
-        configFileComboBox.getItems().clear();
-        configFileComboBox.setDisable(true);
-      } else {
-        try {
-          displayNewFileOptions(configFileComboBox, simulationType);
-        } catch (FileNotFoundException e) {
-          myUI.displayAlert(myResources.getString("Error"),
-              myResources.getString("NoFilesToRun") + " " + simulationType + ". "
-                  + myResources.getString("SelectDifSim"));
-          configFileComboBox.getItems().clear();
-          configFileComboBox.setDisable(true);
-        }
-      }
-    });
-  }
-
-  public void respondToFileSelection(ComboBox<String> simulationTypes,
-      ComboBox<String> configFileComboBox, Stage stage) {
-    configFileComboBox.setOnAction(e -> {
-      String fileName = configFileComboBox.getValue();
-      String simulationType = simulationTypes.getValue();
-      if (simulationType != null && fileName != null) {
-        try {
-          myController.selectSimulation(simulationType, fileName, stage, myController);
-        } catch (Exception ex) {
-          myUI.displayAlert(myResources.getString("Error"),
-              myResources.getString("SimOrFileNOtSelected"));
-        }
-      }
-    });
-  }
-
-  private static void displayNewFileOptions(ComboBox<String> configFileComboBox,
-      String simulationType) throws FileNotFoundException {
-    FileRetriever fileRetriever = new FileRetriever();
-    Collection<String> fileNames = fileRetriever.getFileNames(simulationType);
-    configFileComboBox.getItems().setAll(fileNames);
-    configFileComboBox.setDisable(false);
-  }
-
   public Button makeGridLinesToggleButton(String label, GridView gridView) {
     Button toggleButton = new Button(label);
     setGridLinesToggleButtonAction(gridView, toggleButton);

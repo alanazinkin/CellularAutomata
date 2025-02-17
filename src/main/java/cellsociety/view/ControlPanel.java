@@ -100,12 +100,14 @@ public class ControlPanel {
     //TODO add "one step back"
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
     try {
-      List<ComboBox<String>> dropDownBoxes = myUserControl.makeSimSelectorComboBoxes(
+      SimulationSelector simulationSelector = new SimulationSelector(myResources, myController);
+      List<ComboBox<String>> dropDownBoxes = simulationSelector.makeSimSelectorComboBoxes(
           myResources.getString("SelectSim"), myResources.getString("SelectConfig"),
-          simulationTypes, myStage);
+          simulationTypes);
       for (ComboBox<String> dropDownBox : dropDownBoxes) {
         myUserControl.addElementToPane(dropDownBox, myControlBar);
       }
+      simulationSelector.respondToFileSelection(dropDownBoxes.get(0), dropDownBoxes.get(1), myStage, myResources);
     } catch (Exception e) {
       myUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeSimSelector"));
