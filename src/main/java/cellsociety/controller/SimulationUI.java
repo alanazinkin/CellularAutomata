@@ -37,6 +37,7 @@ public class SimulationUI {
 
   public void initializeSplashScreen(Stage stage, SimulationController controller)
       throws Exception {
+    this.stage = stage;
     SplashScreen screen = new SplashScreen();
     Stage splashStage = screen.showSplashScreen(
         new Stage(),
@@ -54,11 +55,12 @@ public class SimulationUI {
         config.getString("language.selector"),
         Arrays.asList(config.getString("available.languages").split(","))
     );
-
+    languageSelector.setValue(config.getString("default.language"));
     ComboBox<String> themeSelector = screen.makeComboBox(
         config.getString("theme.selector"),
         Arrays.asList(config.getString("available.themes").split(","))
     );
+    themeSelector.setValue(config.getString("default.theme"));
     List<ComboBox<String>> simulationComboBoxes = screen.makeSimulationComboBoxes(controller);
     Button enterButton = screen.makeEnterButton();
     enterButton.setOnAction(e -> handleSplashScreenEnter(
@@ -90,7 +92,6 @@ public class SimulationUI {
       simulationSelector.respondToFileSelection(simulationTypeSelector, configFileComboBox, stage, resources);
       controller.selectSimulation(selectedSimType, selectedConfigFile, mainStage, controller);
       splashStage.close();
-      setupSimulation(mainStage, selectedLanguage, selectedTheme, controller);
     } catch (Exception ex) {
       handleError("SetupError", ex);
     }

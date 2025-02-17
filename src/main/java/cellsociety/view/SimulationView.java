@@ -87,16 +87,16 @@ public class SimulationView {
   /**
    * Creates a new main pane to hold the grid view and control bar.
    *
-   * @param primaryStage holds all main panes and views for simulation except the Simulation
+   * @param stage holds all main panes and views for simulation except the Simulation
    *                     Information
    * @return myScene
    */
-  public Scene createSimulationWindow(Stage primaryStage) {
+  public Scene createSimulationWindow(Stage stage) {
     myRoot = new BorderPane();
     myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")),
         parseInt(mySimulationResourceMap.get("window.height")));
-    primaryStage.setScene(myScene);
-    primaryStage.show();
+    stage.setScene(myScene);
+    stage.show();
     return myScene;
   }
 
