@@ -37,6 +37,7 @@ public class SimulationUI {
 
   public void initializeSplashScreen(Stage stage, SimulationController controller)
       throws Exception {
+    this.stage = stage;
     SplashScreen screen = new SplashScreen();
     Stage splashStage = screen.showSplashScreen(
         new Stage(),
@@ -91,7 +92,6 @@ public class SimulationUI {
       simulationSelector.respondToFileSelection(simulationTypeSelector, configFileComboBox, stage, resources);
       controller.selectSimulation(selectedSimType, selectedConfigFile, mainStage, controller);
       splashStage.close();
-      setupSimulation(mainStage, selectedLanguage, selectedTheme, controller);
     } catch (Exception ex) {
       handleError("SetupError", ex);
     }
