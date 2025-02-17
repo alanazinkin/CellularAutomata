@@ -59,9 +59,9 @@ public class BacteriaColoniesSimulation extends Simulation {
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     Map<StateInterface, String> colorMap = new HashMap<>();
-    colorMap.put(BacteriaState.ROCK, "#FF0000");    // Red
-    colorMap.put(BacteriaState.PAPER, "#00FF00");   // Green
-    colorMap.put(BacteriaState.SCISSORS, "#0000FF"); // Blue
+    colorMap.put(BacteriaState.ROCK, "bacteria-state-rock");    // Red
+    colorMap.put(BacteriaState.PAPER, "bacteria-state-paper");   // Green
+    colorMap.put(BacteriaState.SCISSORS, "bacteria-state-scissors"); // Blue
     return colorMap;
   }
 
