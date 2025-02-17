@@ -45,14 +45,14 @@ public class LangtonLoop extends Simulation {
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     Map<StateInterface, String> colorMap = new HashMap<>();
-    colorMap.put(LangtonState.EMPTY, "#FFFFFF");     // White
-    colorMap.put(LangtonState.SHEATH, "#FF0000");    // Red
-    colorMap.put(LangtonState.CORE, "#0000FF");      // Blue
-    colorMap.put(LangtonState.TEMP, "#FFA500");      // Orange
-    colorMap.put(LangtonState.TURN, "#00FF00");      // Green
-    colorMap.put(LangtonState.EXTEND, "#800080");    // Purple
-    colorMap.put(LangtonState.INIT, "#FFFF00");      // Yellow
-    colorMap.put(LangtonState.ADVANCE, "#808080");   // Gray
+    colorMap.put(LangtonState.EMPTY, "langton-state-empty");
+    colorMap.put(LangtonState.SHEATH, "langton-state-sheath");
+    colorMap.put(LangtonState.CORE, "langton-state-core");
+    colorMap.put(LangtonState.TEMP, "langton-state-temp");
+    colorMap.put(LangtonState.TURN, "langton-state-turn");
+    colorMap.put(LangtonState.EXTEND, "langton-state-extend");
+    colorMap.put(LangtonState.INIT, "langton-state-init");
+    colorMap.put(LangtonState.ADVANCE, "langton-state-advance");
     return colorMap;
   }
 
