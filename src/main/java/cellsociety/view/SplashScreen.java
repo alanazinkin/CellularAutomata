@@ -1,6 +1,9 @@
 package cellsociety.view;
 
+import cellsociety.controller.FileRetriever;
+import cellsociety.controller.SimulationController;
 import java.util.List;
+import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -11,6 +14,8 @@ import javafx.stage.Stage;
 
 public class SplashScreen {
 
+  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
+      SimulationController.class.getPackageName() + ".Simulation");
   private Pane layout;
 
   public Stage showSplashScreen(Stage stage, String title, double width, double height) {
@@ -40,5 +45,17 @@ public class SplashScreen {
     return enterButton;
   }
 
-
+  public List<ComboBox<String>> makeSimulationComboBoxes(SimulationController simulationController) throws Exception {
+    SimulationSelector simSelector = new SimulationSelector(null, simulationController);
+    FileRetriever fileRetriever = new FileRetriever();
+    List<ComboBox<String>> simulationComboBoxes = simSelector.makeSimSelectorComboBoxes(
+        "Select Simulation Type",
+        "Select Config File",
+        fileRetriever.getSimulationTypes()
+    );
+    for (ComboBox<String> simulationComboBox : simulationComboBoxes) {
+      layout.getChildren().add(simulationComboBox);
+    }
+    return simulationComboBoxes;
+  }
 }
