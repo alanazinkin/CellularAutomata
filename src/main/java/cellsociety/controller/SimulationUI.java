@@ -54,11 +54,12 @@ public class SimulationUI {
         config.getString("language.selector"),
         Arrays.asList(config.getString("available.languages").split(","))
     );
-
+    languageSelector.setValue(config.getString("default.language"));
     ComboBox<String> themeSelector = screen.makeComboBox(
         config.getString("theme.selector"),
         Arrays.asList(config.getString("available.themes").split(","))
     );
+    themeSelector.setValue(config.getString("default.theme"));
     List<ComboBox<String>> simulationComboBoxes = screen.makeSimulationComboBoxes(controller);
     Button enterButton = screen.makeEnterButton();
     enterButton.setOnAction(e -> handleSplashScreenEnter(

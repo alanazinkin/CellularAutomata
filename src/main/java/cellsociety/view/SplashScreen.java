@@ -31,7 +31,6 @@ public class SplashScreen {
   }
 
   public ComboBox<String> makeComboBox(String prompt, List<String> options) {
-    // make language selector combo Box
     ComboBox<String> selector = new ComboBox<>();
     selector.setPromptText(prompt);
     selector.getItems().addAll(options);
