@@ -30,6 +30,13 @@ public class UserController {
   private Map<String, String> mySimulationResourceMap;
   private SimulationUI myUI;
 
+  /**
+   * constructor to make a new UserController instance
+   *
+   * @param resources            ResourceBundle used to display the text in the user-selected
+   *                             language
+   * @param simulationController the simulation controller that manages the simulation
+   */
   public UserController(ResourceBundle resources, SimulationController simulationController) {
     myResources = resources;
     myController = simulationController;
@@ -37,8 +44,14 @@ public class UserController {
     myUI = myController.getUI();
   }
 
-  //TODO write better error message
-  public void addElementToPane(Control element, Pane pane) throws Exception {
+  /**
+   * adds an element to a specified pane
+   *
+   * @param element a Control object (button, slider, combobox etc.)
+   * @param pane    a Pane object (gridPane, VBox, HBox etc.)
+   * @throws Exception throws a null pointer exception if the pane is null or uninitialized
+   */
+  public void addElementToPane(Control element, Pane pane) throws NullPointerException {
     if (pane != null) {
       pane.getChildren().add(element);
     } else {
@@ -82,10 +95,27 @@ public class UserController {
     });
   }
 
-  public ComboBox<String> makeThemeComboBox(SimulationView simulationView, Scene scene) {
+  /**
+   * initializes and sets the action to set the theme of the simulation
+   *
+   * @return a new ComboBox<String> with the theme options
+   */
+  public ComboBox<String> makeThemeComboBox() {
     ComboBox<String> themeSelector = new ComboBox<>();
     themeSelector.setPromptText(myResources.getString("SelectTheme"));
     themeSelector.getItems().addAll("Dark", "Light");
+    return themeSelector;
+  }
+
+  /**
+   * sets the action of the ComboBox to select the theme chosen by the user
+   *
+   * @param simulationView the SimulatonView object holding all the simulation information
+   * @param scene          the Scene of the simulation
+   * @param themeSelector  comboBox with the theme options
+   */
+  public void selectTheme(SimulationView simulationView, Scene scene,
+      ComboBox<String> themeSelector) {
     themeSelector.setOnAction(e -> {
       String selectedThemeColor = themeSelector.getValue();
       if (selectedThemeColor != null) {
@@ -99,9 +129,15 @@ public class UserController {
             myResources.getString("NoThemeSelected"));
       }
     });
-    return themeSelector;
   }
 
+  /**
+   * creates toggle button that switches on/off the grid lines
+   *
+   * @param label    label of the button
+   * @param gridView GridView object
+   * @return a new GridLines toggle button
+   */
   public Button makeGridLinesToggleButton(String label, GridView gridView) {
     Button toggleButton = new Button(label);
     setGridLinesToggleButtonAction(gridView, toggleButton);
