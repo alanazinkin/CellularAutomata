@@ -107,7 +107,8 @@ public class ControlPanel {
       for (ComboBox<String> dropDownBox : dropDownBoxes) {
         myUserControl.addElementToPane(dropDownBox, myControlBar);
       }
-      simulationSelector.respondToFileSelection(dropDownBoxes.get(0), dropDownBoxes.get(1), myStage, myResources);
+      simulationSelector.respondToFileSelection(dropDownBoxes.get(0), dropDownBoxes.get(1), myStage,
+          myResources);
     } catch (Exception e) {
       myUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeSimSelector"));
@@ -127,8 +128,10 @@ public class ControlPanel {
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
-    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
-    Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(myResources.getString("ToggleGrid"), myGridView);
+    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox();
+    myUserControl.selectTheme(mySimView, myScene, themeSelector);
+    Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
+        myResources.getString("ToggleGrid"), myGridView);
 
     myUserControl.addElementToPane(speedSlider, myCustomizationBar);
     myUserControl.addElementToPane(themeSelector, myCustomizationBar);
