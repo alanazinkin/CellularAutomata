@@ -2,13 +2,10 @@ package cellsociety.view;
 
 import static java.lang.Integer.parseInt;
 
-import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
 import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -19,7 +16,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class UserController {
 
@@ -76,8 +72,6 @@ public class UserController {
    */
   public Slider makeSpeedSlider() {
     Slider slider = new Slider(0.1, 5, 1);
-    slider.setPrefWidth(
-        parseInt(mySimulationResourceMap.getOrDefault("window.width", "1000")) * .4);
     slider.setSnapToTicks(true);
     slider.setShowTickLabels(true);
     slider.setShowTickMarks(true);
@@ -150,4 +144,16 @@ public class UserController {
       if (hasGridLines) {
         gridView.removeGridLines();
         hasGridLines = false;
-  
+      } else {
+        gridView.addGridLines();
+        hasGridLines = true;
+      }
+    });
+  }
+
+  public Button makeSettingsButton(String label) {
+    Button settingsButton = new Button(label);
+    //settingsButton.setOnAction(e -> {openSettings()})
+    return settingsButton;
+  }
+}

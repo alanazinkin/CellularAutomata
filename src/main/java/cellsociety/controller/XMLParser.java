@@ -30,7 +30,7 @@ public class XMLParser {
           "Game of Life", Set.of(0, 1),
           "Spreading of Fire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
           "Schelling State", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
-          "Percolation", Set.of(0, 1),
+          "Percolation", Set.of(0, 1, 2),
           "Wa-Tor World", Set.of(0, 1, 2)           // 0: empty, 1: fish, 2: shark
   );
 
@@ -340,3 +340,7 @@ public class XMLParser {
 
   static class ConfigurationException extends Exception {
     public ConfigurationException(String message) {
+      super(message);
+    }
+  }
+}
