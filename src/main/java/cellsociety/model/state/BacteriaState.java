@@ -3,8 +3,8 @@ package cellsociety.model.state;
 import cellsociety.model.StateInterface;
 
 /**
- * Represents the possible states in the Bacteria Colonies simulation.
- * Each state represents a different type of bacteria that competes in a rock-paper-scissors fashion.
+ * Represents the possible states in the Bacteria Colonies simulation. Each state represents a
+ * different type of bacteria that competes in a rock-paper-scissors fashion.
  */
 public enum BacteriaState implements StateInterface {
   ROCK("Rock"),

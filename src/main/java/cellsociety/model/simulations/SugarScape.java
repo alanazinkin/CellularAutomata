@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SugarScape extends Simulation {
+
   private final List<Agent> agents;
   private final List<Loan> activeLoans;
   private final Random random;
@@ -75,7 +76,7 @@ public class SugarScape extends Simulation {
         double distance1 = Math.sqrt(r * r + c * c);
         double distance2 = Math.sqrt((size - r - 1) * (size - r - 1) +
             (size - c - 1) * (size - c - 1));
-        int sugarCapacity = (int)(Math.max(15 - Math.min(distance1, distance2), 1));
+        int sugarCapacity = (int) (Math.max(15 - Math.min(distance1, distance2), 1));
 
         Cell cell = grid.getCell(r, c);
         if (cell instanceof SugarCell sugarCell) {
@@ -171,7 +172,9 @@ public class SugarScape extends Simulation {
     List<Agent> newAgents = new ArrayList<>();
 
     for (Agent agent : shuffledAgents) {
-      if (!agent.isFertile()) continue;
+      if (!agent.isFertile()) {
+        continue;
+      }
 
       List<Agent> neighbors = getNeighbors(agent);
       Collections.shuffle(neighbors, random);
@@ -218,6 +221,7 @@ public class SugarScape extends Simulation {
       }
     }
   }
+
   private boolean canCreateLoan(Agent lender, Agent borrower) {
     return lender.canLend() && borrower.needsBorrow() && !hasExistingLoan(lender, borrower);
   }
@@ -261,7 +265,9 @@ public class SugarScape extends Simulation {
           break;
         }
       }
-      if (row != -1) break;
+      if (row != -1) {
+        break;
+      }
     }
 
     return getGrid().getNeighbors(row, col).stream()
@@ -273,10 +279,11 @@ public class SugarScape extends Simulation {
   private Cell findBestMove(Agent agent, List<Cell> validMoves) {
     return validMoves.stream()
         .max(Comparator
-            .comparingInt(cell -> ((SugarCell)cell).getSugar())
+            .comparingInt(cell -> ((SugarCell) cell).getSugar())
             .thenComparing(cell -> -calculateDistance(agent.getPosition(), (Cell) cell)))
         .orElse(null);
   }
+
   private int calculateDistance(Cell cell1, Cell cell2) {
     Grid grid = getGrid();
     int row1 = -1, col1 = -1, row2 = -1, col2 = -1;
@@ -293,7 +300,9 @@ public class SugarScape extends Simulation {
           col2 = c;
         }
       }
-      if (row1 != -1 && row2 != -1) break;
+      if (row1 != -1 && row2 != -1) {
+        break;
+      }
     }
 
     return Math.abs(row1 - row2) + Math.abs(col1 - col2);  // Manhattan distance
@@ -313,7 +322,9 @@ public class SugarScape extends Simulation {
           break;
         }
       }
-      if (agentPos[0] != -1) break;
+      if (agentPos[0] != -1) {
+        break;
+      }
     }
 
     return agents.stream()
@@ -364,7 +375,9 @@ public class SugarScape extends Simulation {
           break;
         }
       }
-      if (row != -1) break;
+      if (row != -1) {
+        break;
+      }
     }
 
     return getGrid().getNeighbors(row, col).stream()
@@ -430,7 +443,7 @@ public class SugarScape extends Simulation {
     if (p >= 1) {
       agent1.tradeSugarForSpice(agent2, 1, p);
     } else {
-      agent1.tradeSpiceForSugar(agent2, 1, 1/p);
+      agent1.tradeSpiceForSugar(agent2, 1, 1 / p);
     }
   }
 
@@ -484,8 +497,8 @@ public class SugarScape extends Simulation {
     double paymentDue = loan.getAmount() * (1 + loan.getInterest());
 
     if (borrower.getSugar() >= paymentDue) {
-      borrower.removeSugar((int)paymentDue);
-      lender.addSugar((int)paymentDue);
+      borrower.removeSugar((int) paymentDue);
+      lender.addSugar((int) paymentDue);
     } else {
       // Partial payment
       int partialPayment = borrower.getSugar() / 2;
@@ -494,7 +507,8 @@ public class SugarScape extends Simulation {
 
       // Create new loan for remaining amount
       double remainingDebt = (paymentDue - partialPayment) * (1 + LOAN_INTEREST_RATE);
-      Loan newLoan = new Loan(lender, borrower, (int)remainingDebt, currentTick, LOAN_INTEREST_RATE);
+      Loan newLoan = new Loan(lender, borrower, (int) remainingDebt, currentTick,
+          LOAN_INTEREST_RATE);
       activeLoans.add(newLoan);
     }
   }
@@ -626,7 +640,7 @@ public class SugarScape extends Simulation {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
         if (cell instanceof SugarCell) {
-          gridSugar += ((SugarCell)cell).getSugar();
+          gridSugar += ((SugarCell) cell).getSugar();
         }
       }
     }

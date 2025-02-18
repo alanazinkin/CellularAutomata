@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * JUnit tests for the {@link Percolation} class. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ *
  * @author Tatum McKinnis
  */
 class PercolationTest {
@@ -134,7 +135,8 @@ class PercolationTest {
     assertAll("State Map Validity",
         () -> assertEquals("percolation-state-open", stateMap.get(PercolationState.OPEN),
             "PercolationState.OPEN should map to percolation-state-open"),
-        () -> assertEquals("percolation-state-percolated", stateMap.get(PercolationState.PERCOLATED),
+        () -> assertEquals("percolation-state-percolated",
+            stateMap.get(PercolationState.PERCOLATED),
             "PercolationState.PERCOLATED should map to percolation-state-percolated"),
         () -> assertEquals("percolation-state-blocked", stateMap.get(PercolationState.BLOCKED),
             "PercolationState.BLOCKED should map to percolation-state-blocked")

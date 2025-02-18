@@ -7,8 +7,8 @@ import java.util.Random;
 /**
  * Represents a disease in the SugarScape simulation.
  * <p>
- * A disease is represented as a binary pattern that can interact with agents' immune systems.
- * The disease can:
+ * A disease is represented as a binary pattern that can interact with agents' immune systems. The
+ * disease can:
  * <ul>
  *   <li>Store and manipulate its genetic pattern</li>
  *   <li>Be transmitted between agents</li>
@@ -21,6 +21,7 @@ import java.util.Random;
  * @author Tatum McKinnis
  */
 public class Disease implements Cloneable {
+
   private List<Integer> pattern;
   private static final int DEFAULT_PATTERN_LENGTH = 8;
   private static final double MUTATION_RATE = 0.1;
@@ -106,8 +107,8 @@ public class Disease implements Cloneable {
   /**
    * Checks if this disease's pattern matches part of another pattern.
    * <p>
-   * The match is considered successful if this disease's pattern appears as a
-   * continuous subsequence in the target pattern.
+   * The match is considered successful if this disease's pattern appears as a continuous
+   * subsequence in the target pattern.
    * </p>
    *
    * @param targetPattern pattern to check for matches
@@ -144,8 +145,12 @@ public class Disease implements Cloneable {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
     Disease other = (Disease) obj;
     return pattern.equals(other.pattern);
   }

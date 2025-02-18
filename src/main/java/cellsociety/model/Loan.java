@@ -18,6 +18,7 @@ package cellsociety.model;
  * @author Tatum McKinnis
  */
 public class Loan {
+
   private final Agent lender;
   private final Agent borrower;
   private int amount;
@@ -31,11 +32,11 @@ public class Loan {
    * positive, and the lender and borrower must be different agents.
    * </p>
    *
-   * @param lender the agent providing the loan
-   * @param borrower the agent receiving the loan
-   * @param amount the amount of sugar being loaned
+   * @param lender    the agent providing the loan
+   * @param borrower  the agent receiving the loan
+   * @param amount    the amount of sugar being loaned
    * @param issueTick the simulation tick when the loan was issued
-   * @param interest the interest rate of the loan
+   * @param interest  the interest rate of the loan
    * @throws IllegalArgumentException if any parameters are invalid
    */
   public Loan(Agent lender, Agent borrower, int amount, int issueTick, double interest) {
@@ -47,7 +48,8 @@ public class Loan {
     this.interest = interest;
   }
 
-  private void validateConstructorParams(Agent lender, Agent borrower, int amount, double interest) {
+  private void validateConstructorParams(Agent lender, Agent borrower, int amount,
+      double interest) {
     if (lender == null) {
       throw new IllegalArgumentException("Lender cannot be null");
     }

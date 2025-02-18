@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link AgentCell} functionality.
  * <p>
  * This class verifies proper initialization and manipulation of the agent group in an
- * {@link AgentCell} instance.
- *  Naming convention:
- *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * {@link AgentCell} instance. Naming convention: * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
+ *
  * @author Tatum McKinnis
  */
 class AgentCellTest {
@@ -34,8 +33,8 @@ class AgentCellTest {
   /**
    * Tests constructor with a negative agent group.
    * <p>
-   * Verifies that constructing an {@link AgentCell} with a negative agent group
-   * throws an {@link IllegalArgumentException}.
+   * Verifies that constructing an {@link AgentCell} with a negative agent group throws an
+   * {@link IllegalArgumentException}.
    * </p>
    */
   @Test
@@ -61,7 +60,8 @@ class AgentCellTest {
   /**
    * Tests setting the agent group with a negative value.
    * <p>
-   * Verifies that attempting to set a negative agent group throws an {@link IllegalArgumentException}.
+   * Verifies that attempting to set a negative agent group throws an
+   * {@link IllegalArgumentException}.
    * </p>
    */
   @Test
@@ -75,7 +75,8 @@ class AgentCellTest {
   /**
    * Tests retrieval of the agent group immediately after construction.
    * <p>
-   * Verifies that {@link AgentCell#getAgentGroup()} returns the initial value set in the constructor.
+   * Verifies that {@link AgentCell#getAgentGroup()} returns the initial value set in the
+   * constructor.
    * </p>
    */
   @Test

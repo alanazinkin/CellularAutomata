@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link Ant} functionality.
  * <p>
  * This class verifies core ant behavior including initialization, movement, orientation changes,
- * and food state transitions.
- *  Naming convention:
- *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * and food state transitions. Naming convention: * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
+ *
  * @author Tatum McKinnis
  */
 class AntTest {
+
   private static final int TEST_ROW = 5;
   private static final int TEST_COL = 5;
   private static final Orientation TEST_ORIENTATION = Orientation.N;
@@ -84,7 +84,8 @@ class AntTest {
   /**
    * Tests constructor behavior with a null orientation.
    * <p>
-   * Verifies that passing a null orientation to the constructor throws a {@link NullPointerException}.
+   * Verifies that passing a null orientation to the constructor throws a
+   * {@link NullPointerException}.
    * </p>
    */
   @Test
@@ -96,8 +97,8 @@ class AntTest {
   /**
    * Tests setting negative position coordinates.
    * <p>
-   * Verifies that updating the ant's position with negative values does not throw an exception,
-   * as boundary enforcement is managed elsewhere.
+   * Verifies that updating the ant's position with negative values does not throw an exception, as
+   * boundary enforcement is managed elsewhere.
    * </p>
    */
   @Test

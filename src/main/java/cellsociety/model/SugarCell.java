@@ -3,9 +3,10 @@ package cellsociety.model;
 /**
  * Represents a cell in the SugarScape simulation that contains sugar.
  * <p>
- * This cell extends the basic Cell class to add sugar-specific properties and behavior,
- * including tracking sugar amounts and maximum sugar capacity.
+ * This cell extends the basic Cell class to add sugar-specific properties and behavior, including
+ * tracking sugar amounts and maximum sugar capacity.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class SugarCell extends Cell {
@@ -30,8 +31,8 @@ public class SugarCell extends Cell {
   /**
    * Creates a new SugarCell with specified position and initial state.
    *
-   * @param row the row position of the cell
-   * @param col the column position of the cell
+   * @param row          the row position of the cell
+   * @param col          the column position of the cell
    * @param initialState the initial state of the cell
    * @throws IllegalArgumentException if the initial state is null
    */

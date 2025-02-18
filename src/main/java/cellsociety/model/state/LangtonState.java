@@ -1,9 +1,10 @@
 package cellsociety.model.state;
+
 import cellsociety.model.StateInterface;
 
 /**
- * Represents the possible states in Langton's Loop simulation.
- * Each state represents different components and stages of the self-replicating loop structure.
+ * Represents the possible states in Langton's Loop simulation. Each state represents different
+ * components and stages of the self-replicating loop structure.
  */
 public enum LangtonState implements StateInterface {
   EMPTY("Empty"),           // State 0: Background state

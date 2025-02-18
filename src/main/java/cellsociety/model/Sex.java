@@ -3,8 +3,8 @@ package cellsociety.model;
 /**
  * Represents the biological sex of agents in the SugarScape simulation.
  * <p>
- * This enum is used to facilitate reproduction rules in the simulation, where agents of
- * opposite sexes can reproduce when other conditions are met.
+ * This enum is used to facilitate reproduction rules in the simulation, where agents of opposite
+ * sexes can reproduce when other conditions are met.
  * </p>
  *
  * @author Tatum McKinnis

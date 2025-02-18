@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * JUnit tests for the {@link Schelling} simulation. Naming convention:
  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ *
  * @author Tatum McKinnis
  */
 public class SchellingTest {

@@ -14,16 +14,14 @@ import java.util.HashMap;
 /**
  * Test class for Sand implementing comprehensive test coverage for particle behavior.
  * <p>
- * This test suite verifies:
- * - Basic particle movement and interactions
- * - Water flow behavior
- * - Wall interactions
- * - Error conditions and edge cases
- * - State transitions and stability
+ * This test suite verifies: - Basic particle movement and interactions - Water flow behavior - Wall
+ * interactions - Error conditions and edge cases - State transitions and stability
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class SandTest {
+
   private Sand simulation;
   private Grid grid;
   private SimulationConfig config;
@@ -31,8 +29,8 @@ public class SandTest {
   /**
    * Sets up the test environment before each test.
    * <p>
-   * Creates a 5x5 grid with all cells initially empty and
-   * initializes the simulation with test configuration.
+   * Creates a 5x5 grid with all cells initially empty and initializes the simulation with test
+   * configuration.
    * </p>
    */
   @Before
@@ -47,8 +45,8 @@ public class SandTest {
   /**
    * Tests that sand particles fall straight down when space is available.
    * <p>
-   * Places a sand particle at the top of the grid and verifies it falls
-   * one cell down after a single step.
+   * Places a sand particle at the top of the grid and verifies it falls one cell down after a
+   * single step.
    * </p>
    */
   @Test
@@ -63,8 +61,8 @@ public class SandTest {
   /**
    * Tests that sand particles properly stack on top of each other.
    * <p>
-   * Places two sand particles and verifies they form a stable stack
-   * after multiple simulation steps.
+   * Places two sand particles and verifies they form a stable stack after multiple simulation
+   * steps.
    * </p>
    */
   @Test
@@ -83,8 +81,8 @@ public class SandTest {
   /**
    * Tests that water particles spread horizontally when blocked.
    * <p>
-   * Places a water particle above a wall and verifies it flows
-   * to at least one side when blocked from falling.
+   * Places a water particle above a wall and verifies it flows to at least one side when blocked
+   * from falling.
    * </p>
    */
   @Test
@@ -105,8 +103,8 @@ public class SandTest {
   /**
    * Tests that water flows more readily horizontally than sand.
    * <p>
-   * Compares the horizontal spread of water versus sand when both
-   * are blocked from falling directly downward.
+   * Compares the horizontal spread of water versus sand when both are blocked from falling directly
+   * downward.
    * </p>
    */
   @Test
@@ -128,7 +126,7 @@ public class SandTest {
   /**
    * Helper method to count how far a particle type has spread horizontally.
    *
-   * @param row The row to check for particle spread
+   * @param row   The row to check for particle spread
    * @param state The state type to count
    * @return The number of cells in the row containing the specified state
    */
@@ -145,8 +143,7 @@ public class SandTest {
   /**
    * Tests that particles cannot move through walls.
    * <p>
-   * Places a sand particle above a wall and verifies it stops
-   * moving when it reaches the wall.
+   * Places a sand particle above a wall and verifies it stops moving when it reaches the wall.
    * </p>
    */
   @Test
@@ -165,8 +162,8 @@ public class SandTest {
   /**
    * Tests that simulation throws exception with null grid.
    * <p>
-   * Verifies that attempting to create a simulation with a null grid
-   * results in an IllegalArgumentException.
+   * Verifies that attempting to create a simulation with a null grid results in an
+   * IllegalArgumentException.
    * </p>
    *
    * @throws IllegalArgumentException expected when grid is null
@@ -179,8 +176,8 @@ public class SandTest {
   /**
    * Tests that simulation throws exception with empty initial states.
    * <p>
-   * Verifies that attempting to create a simulation with an empty
-   * initial states array results in an IllegalArgumentException.
+   * Verifies that attempting to create a simulation with an empty initial states array results in
+   * an IllegalArgumentException.
    * </p>
    *
    * @throws IllegalArgumentException expected when initial states array is empty
@@ -195,8 +192,8 @@ public class SandTest {
   /**
    * Tests that water particles follow the path of least resistance.
    * <p>
-   * Creates a scenario where water has multiple possible paths and
-   * verifies it takes the easiest available route.
+   * Creates a scenario where water has multiple possible paths and verifies it takes the easiest
+   * available route.
    * </p>
    */
   @Test
@@ -217,8 +214,8 @@ public class SandTest {
   /**
    * Tests that multiple particles can form a diagonal pile.
    * <p>
-   * Places multiple sand particles and verifies they form a
-   * stable diagonal arrangement when blocked on one side.
+   * Places multiple sand particles and verifies they form a stable diagonal arrangement when
+   * blocked on one side.
    * </p>
    */
   @Test
@@ -243,8 +240,8 @@ public class SandTest {
   /**
    * Tests the stability of a wall configuration.
    * <p>
-   * Verifies that wall particles remain stationary and don't
-   * get affected by other particle movements.
+   * Verifies that wall particles remain stationary and don't get affected by other particle
+   * movements.
    * </p>
    */
   @Test
@@ -272,32 +269,31 @@ public class SandTest {
   /**
    * Tests particle behavior at grid boundaries.
    * <p>
-   * Verifies that particles behave correctly when they reach
-   * the edges of the simulation grid.
+   * Verifies that particles behave correctly when they reach the edges of the simulation grid.
    * </p>
    */
   @Test
   public void step_GridBoundary_ParticlesStopAtEdge() {
     // Place particles at grid edges
-    simulation.setCellState(grid.getRows()-1, 0, 1);  // Sand at bottom
-    simulation.setCellState(0, grid.getCols()-1, 3);  // Water at right edge
+    simulation.setCellState(grid.getRows() - 1, 0, 1);  // Sand at bottom
+    simulation.setCellState(0, grid.getCols() - 1, 3);  // Water at right edge
 
     simulation.step();
 
     // Verify particles remain at boundaries
     assertEquals("Sand should stay at bottom",
-        SandState.SAND, grid.getCell(grid.getRows()-1, 0).getCurrentState());
+        SandState.SAND, grid.getCell(grid.getRows() - 1, 0).getCurrentState());
     assertTrue("Water should not move beyond grid bounds",
-        grid.getCell(0, grid.getCols()-1).getCurrentState() == SandState.WATER ||
-            grid.getCell(1, grid.getCols()-1).getCurrentState() == SandState.WATER
+        grid.getCell(0, grid.getCols() - 1).getCurrentState() == SandState.WATER ||
+            grid.getCell(1, grid.getCols() - 1).getCurrentState() == SandState.WATER
     );
   }
 
   /**
    * Tests that invalid state values are handled appropriately.
    * <p>
-   * Attempts to set an invalid state value and verifies that
-   * the cell maintains its previous valid state.
+   * Attempts to set an invalid state value and verifies that the cell maintains its previous valid
+   * state.
    * </p>
    */
   @Test

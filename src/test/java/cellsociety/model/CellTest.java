@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link Cell} functionality.
  * <p>
- * This class verifies proper state management in a cell including retrieval,
- * updates, application of the next state, resetting, and string representation.
- *  Naming convention:
- *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * This class verifies proper state management in a cell including retrieval, updates, application
+ * of the next state, resetting, and string representation. Naming convention: *
+ * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
+ *
  * @author Tatum McKinnis
  */
 class CellTest {
@@ -125,7 +125,8 @@ class CellTest {
   /**
    * Tests resetting the next state.
    * <p>
-   * Verifies that calling {@link Cell#resetNextState()} resets the next state to the current state.
+   * Verifies that calling {@link Cell#resetNextState()} resets the next state to the current
+   * state.
    * </p>
    */
   @Test
@@ -190,7 +191,8 @@ class CellTest {
   /**
    * Tests retrieval of the next state.
    * <p>
-   * Verifies that {@link Cell#getNextState()} returns the correct next state after it has been set.
+   * Verifies that {@link Cell#getNextState()} returns the correct next state after it has been
+   * set.
    * </p>
    */
   @Test

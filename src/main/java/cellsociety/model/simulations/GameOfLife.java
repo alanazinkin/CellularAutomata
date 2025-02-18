@@ -21,6 +21,7 @@ import java.util.Map;
  * Maintains strict encapsulation through private fields and final constants, with validation
  * for cell states and neighbor calculations.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class GameOfLife extends Simulation {
