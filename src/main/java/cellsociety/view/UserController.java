@@ -100,10 +100,11 @@ public class UserController {
    *
    * @return a new ComboBox<String> with the theme options
    */
-  public ComboBox<String> makeThemeComboBox() {
+  public ComboBox<String> makeThemeComboBox(SimulationView simulationView, Scene scene) {
     ComboBox<String> themeSelector = new ComboBox<>();
     themeSelector.setPromptText(myResources.getString("SelectTheme"));
     themeSelector.getItems().addAll("Dark", "Light");
+    selectTheme(simulationView, scene, themeSelector);
     return themeSelector;
   }
 

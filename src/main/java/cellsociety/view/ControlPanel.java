@@ -128,7 +128,7 @@ public class ControlPanel {
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
-    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox();
+    ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
     myUserControl.selectTheme(mySimView, myScene, themeSelector);
     Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
         myResources.getString("ToggleGrid"), myGridView);
