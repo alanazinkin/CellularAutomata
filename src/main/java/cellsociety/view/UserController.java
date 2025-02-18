@@ -24,7 +24,6 @@ public class UserController {
   private ResourceBundle myResources;
   private SimulationController myController;
   private Map<String, String> mySimulationResourceMap;
-  private SimulationUI myUI;
 
   /**
    * constructor to make a new UserController instance
@@ -37,7 +36,6 @@ public class UserController {
     myResources = resources;
     myController = simulationController;
     mySimulationResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
-    myUI = myController.getUI();
   }
 
   /**
@@ -120,7 +118,7 @@ public class UserController {
           throw new RuntimeException(ex);
         }
       } else {
-        myUI.displayAlert(myResources.getString("Error"),
+        SimulationUI.displayAlert(myResources.getString("Error"),
             myResources.getString("NoThemeSelected"));
       }
     });
