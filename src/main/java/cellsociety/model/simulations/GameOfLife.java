@@ -70,7 +70,7 @@ public class GameOfLife extends Simulation {
    * @param cell Cell to validate
    * @throws IllegalStateException if cell contains an invalid state type
    */
-  private void validateCellState(Cell cell) {
+  void validateCellState(Cell cell) {
     StateInterface state = cell.getCurrentState();
     if (!(state instanceof GameOfLifeState)) {
       throw new IllegalStateException("Invalid cell state for Game of Life: " + state.getClass());
@@ -83,7 +83,7 @@ public class GameOfLife extends Simulation {
    * @param neighbors List of neighboring cells to evaluate
    * @return Number of neighbors in ALIVE state
    */
-  private int countLiveNeighbors(List<Cell> neighbors) {
+  int countLiveNeighbors(List<Cell> neighbors) {
     return (int) neighbors.stream()
         .filter(neighbor -> neighbor.getCurrentState() == GameOfLifeState.ALIVE)
         .count();
