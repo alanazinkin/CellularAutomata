@@ -49,9 +49,9 @@ public class SugarScapeTest {
     Map<StateInterface, String> colorMap = simulation.getColorMap();
 
     assertNotNull(colorMap);
-    assertEquals("white", colorMap.get(SugarScapeState.EMPTY));
-    assertEquals("yellow", colorMap.get(SugarScapeState.SUGAR));
-    assertEquals("blue", colorMap.get(SugarScapeState.AGENT));
+    assertEquals("sugar-state-empty", colorMap.get(SugarScapeState.EMPTY));
+    assertEquals("sugar-state-sugar", colorMap.get(SugarScapeState.SUGAR));
+    assertEquals("sugar-state-agent", colorMap.get(SugarScapeState.AGENT));
   }
 
   /**
@@ -159,23 +159,40 @@ public class SugarScapeTest {
    */
   @Test
   void getStatistics_WithActiveSimulation_ReturnsValidStats() {
-    // Set up cells
+    // Set all grid cells to empty SugarCells with 0 sugar
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        SugarCell cell = new SugarCell(r, c, SugarScapeState.EMPTY);
+        cell.setMaxSugar(0);  // Set max sugar to 0 to prevent growth
+        cell.setSugar(0);     // Explicitly set sugar to 0
+        grid.setCellAt(r, c, cell);
+      }
+    }
+
+    // Set up our test cells
     SugarCell cell1 = new SugarCell(0, 0, SugarScapeState.EMPTY);
     SugarCell cell2 = new SugarCell(0, 1, SugarScapeState.EMPTY);
+    cell1.setMaxSugar(0);  // Prevent sugar growth
+    cell2.setMaxSugar(0);
+    cell1.setSugar(0);
+    cell2.setSugar(0);
     grid.setCellAt(0, 0, cell1);
     grid.setCellAt(0, 1, cell2);
 
-    // Create agents with proper sex values
+    // Clear existing agents
+    while (!simulation.getAgents().isEmpty()) {
+      simulation.getAgents().remove(0);
+    }
+
+    // Create and add agents with exact sugar amounts
     Agent agent1 = new Agent(cell1, 100, 1, 1);
     Agent agent2 = new Agent(cell2, 50, 1, 1);
     agent1.setSex(Sex.MALE);
     agent2.setSex(Sex.FEMALE);
 
-    // Add agents
     simulation.addAgent(agent1);
     simulation.addAgent(agent2);
 
-    // Get and verify statistics
     Map<String, Object> stats = simulation.getStatistics();
 
     assertNotNull(stats);
@@ -184,7 +201,6 @@ public class SugarScapeTest {
     assertEquals(1L, stats.get("femaleCount"));
     assertEquals(150, stats.get("totalSugar")); // 100 + 50
   }
-
   /**
    * Tests step execution and growth patterns. Verifies that sugar grows back correctly.
    */
