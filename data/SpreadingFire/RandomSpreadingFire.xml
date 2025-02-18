@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Spreading of Fire</type>
+    <title>Random Fire Spread</title>
+    <author>Angela Predolac</author>
+    <description>Random initial state with burning and tree cells</description>
+    <width>5</width>
+    <height>5</height>
+    <random_states>
+        <state value="1" count="15"/>  <!-- Trees -->
+        <state value="2" count="3"/>   <!-- Burning -->
+        <!-- Empty cells (state 0) will fill the remaining 7 positions -->
+    </random_states>
+    <parameter name="probCatch" value="0.4"/>
+</simulation>
