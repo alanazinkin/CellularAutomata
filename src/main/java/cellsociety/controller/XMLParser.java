@@ -24,14 +24,14 @@ public class XMLParser {
   private static final String PROB_PREFIX = "default.";
   private static final String PROB_SUFFIX = ".prob";
   private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
-          "GameOfLife", "SpreadingFire", "Segregation", "Percolation", "WaTor"
+          "Game of Life", "Spreading of Fire", "Schelling State", "Percolation", "Wa-Tor World"
   );
   private static final Map<String, Set<Integer>> VALID_STATES = Map.of(
-          "GameOfLife", Set.of(0, 1),
-          "SpreadingFire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
-          "Segregation", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
+          "Game of Life", Set.of(0, 1),
+          "Spreading of Fire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
+          "Schelling State", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
           "Percolation", Set.of(0, 1),
-          "WaTor", Set.of(0, 1, 2)           // 0: empty, 1: fish, 2: shark
+          "Wa-Tor World", Set.of(0, 1, 2)           // 0: empty, 1: fish, 2: shark
   );
 
     public XMLParser() {
