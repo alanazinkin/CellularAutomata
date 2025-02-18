@@ -25,7 +25,7 @@ public class XMLParser {
   private static final String PROB_SUFFIX = ".prob";
   private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
           "Game of Life", "Spreading of Fire", "Schelling Segregation", "Percolation", "Wa-Tor World",
-          "Sand", "Langton Loop", "Sugar Scape", "Bacteria"
+      "Langton Loop", "Sugar Scape", "Bacteria"
   );
   private static final Map<String, Set<Integer>> VALID_STATES = Map.of(
           "Game of Life", Set.of(0, 1),
@@ -33,7 +33,6 @@ public class XMLParser {
           "Schelling Segregation", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
           "Percolation", Set.of(0, 1, 2),
           "Wa-Tor World", Set.of(0, 1, 2),
-      "Sand", Set.of(0, 1, 2, 3),
       "Langton Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7),
       "Sugar Scape", Set.of(0, 1, 2),
       "Bacteria", Set.of(0, 1, 2)

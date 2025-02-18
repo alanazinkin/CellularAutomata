@@ -29,8 +29,6 @@ public class SimulationFactory {
                     case WATOR_WORLD ->
                         new WaTorWorld(config, grid, parameters.get("fishBreedTime"), parameters.get("sharkBreedTime"),
                             parameters.get("sharkInitialEnergy"), parameters.get("sharkEnergyGain"));
-                    case SAND ->
-                      new Sand(config, grid);
                     case LANGTON_LOOP ->
                       new LangtonLoop(config, grid);
                     case SUGAR_SCAPE ->

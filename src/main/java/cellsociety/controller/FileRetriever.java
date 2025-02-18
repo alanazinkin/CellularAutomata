@@ -15,7 +15,6 @@ public class FileRetriever {
       "Percolation",
       "Wa-Tor World",
       "Schelling Segregation",
-      "Sand",
       "Langton Loop",
       "Sugar Scape",
       "Bacteria"
