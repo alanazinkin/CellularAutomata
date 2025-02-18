@@ -8,6 +8,7 @@ import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
 import cellsociety.model.simulations.Sand;
 import cellsociety.model.simulations.Schelling;
+import cellsociety.model.simulations.SugarScape;
 import cellsociety.model.simulations.WaTorWorld;
 import java.util.Map;
 
@@ -31,6 +32,8 @@ public class SimulationFactory {
                       new Sand(config, grid);
                     case LANGTON_LOOP ->
                       new LangtonLoop(config, grid);
+                    case SUGAR_SCAPE ->
+                      new SugarScape(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
