@@ -13,17 +13,34 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Rule-based implementation of the Game of Life simulation. In this version, cells have specific
+ * rules governing birth and survival conditions.
+ *
+ * @author Tatum McKinnis
+ */
 public class RuleBasedGameOfLife extends Simulation {
 
   private final Set<Integer> surviveConditions = new HashSet<>();
   private final Set<Integer> birthConditions = new HashSet<>();
 
+  /**
+   * Constructor that initializes the Game of Life simulation with a given configuration and grid.
+   * It parses the rule code to determine the birth and survival conditions.
+   *
+   * @param config The simulation configuration containing parameters like ruleCode.
+   * @param grid   The grid representing the environment in which the simulation takes place.
+   */
   public RuleBasedGameOfLife(SimulationConfig config, Grid grid) {
     super(config, grid);
     parseRuleCode(config.getParameters().getOrDefault("ruleCode", 323.0));
   }
 
-  // Add these required methods from Simulation abstract class
+  /**
+   * Initializes the color map for the simulation, mapping each cell state to a specific color.
+   *
+   * @return A map of cell states to CSS class names representing colors.
+   */
   @Override
   public Map<StateInterface, String> initializeColorMap() {
     return Map.of(
@@ -32,6 +49,11 @@ public class RuleBasedGameOfLife extends Simulation {
     );
   }
 
+  /**
+   * Initializes the state map, associating integers with the corresponding GameOfLifeState.
+   *
+   * @return A map of integer values to GameOfLifeState (0 -> DEAD, 1 -> ALIVE).
+   */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
     return Map.of(
@@ -40,7 +62,10 @@ public class RuleBasedGameOfLife extends Simulation {
     );
   }
 
-  // Rest of the existing implementation remains the same
+  /**
+   * Applies the rules of the Game of Life to all cells in the grid. For each cell, the next state
+   * is determined based on the current state and the number of live neighbors.
+   */
   @Override
   public void applyRules() {
     Grid grid = getGrid();
@@ -56,6 +81,12 @@ public class RuleBasedGameOfLife extends Simulation {
     }
   }
 
+  /**
+   * Validates the current state of a cell to ensure it is of type GameOfLifeState.
+   *
+   * @param cell The cell whose state needs to be validated.
+   * @throws IllegalStateException if the cell's state is not a valid GameOfLifeState.
+   */
   private void validateCellState(Cell cell) {
     StateInterface state = cell.getCurrentState();
     if (!(state instanceof GameOfLifeState)) {
@@ -63,12 +94,26 @@ public class RuleBasedGameOfLife extends Simulation {
     }
   }
 
+  /**
+   * Counts the number of live neighbors of a given cell.
+   *
+   * @param neighbors The list of neighboring cells.
+   * @return The number of live neighbors.
+   */
   private int countLiveNeighbors(List<Cell> neighbors) {
     return (int) neighbors.stream()
         .filter(c -> c.getCurrentState() == GameOfLifeState.ALIVE)
         .count();
   }
 
+  /**
+   * Determines the next state of a cell based on its current state and the number of live
+   * neighbors.
+   *
+   * @param current   The current state of the cell.
+   * @param neighbors The number of live neighbors.
+   * @return The next state of the cell.
+   */
   private GameOfLifeState determineNextState(GameOfLifeState current, int neighbors) {
     if (current == GameOfLifeState.ALIVE) {
       return surviveConditions.contains(neighbors) ?
@@ -79,10 +124,16 @@ public class RuleBasedGameOfLife extends Simulation {
     }
   }
 
+  /**
+   * Parses the rule code to determine the birth and survival conditions. The rule code is split
+   * into two parts: one for birth and one for survival conditions.
+   *
+   * @param code The rule code (a double value representing a string-based rule).
+   * @throws IllegalArgumentException if the rule code format is invalid.
+   */
   private void parseRuleCode(double code) {
     String codeString = String.valueOf((int) code);
 
-    // Split into birth (first digit) and survival (remaining digits)
     if (codeString.length() < 2) {
       throw new IllegalArgumentException("Invalid rule code format");
     }
@@ -94,6 +145,13 @@ public class RuleBasedGameOfLife extends Simulation {
     parseNumbers(survivePart, surviveConditions);
   }
 
+  /**
+   * Parses a rule string in the format "B<number>/S<number>" to determine the birth and survival
+   * conditions.
+   *
+   * @param ruleString The rule string representing birth and survival conditions.
+   * @throws IllegalArgumentException if the rule string format is invalid.
+   */
   private void parseRuleString(String ruleString) {
     Matcher matcher = Pattern.compile("B(\\d+)/S(\\d+)").matcher(ruleString);
     if (!matcher.find()) {
@@ -104,13 +162,22 @@ public class RuleBasedGameOfLife extends Simulation {
     parseNumbers(matcher.group(2), surviveConditions);
   }
 
+  /**
+   * Parses a string of digits and adds them to a set, ensuring the digits represent valid neighbor
+   * counts (0-8).
+   *
+   * @param input  The input string of digits.
+   * @param output The set to store the valid neighbor counts.
+   * @throws IllegalArgumentException if any character in the string is not a digit or if the digit
+   *                                  is out of range.
+   */
   private void parseNumbers(String input, Set<Integer> output) {
     for (char c : input.toCharArray()) {
       if (!Character.isDigit(c)) {
         throw new IllegalArgumentException("Invalid character in rule: " + c);
       }
       int num = Character.getNumericValue(c);
-      if (num < 0 || num > 8) {  // Neighbor counts must be 0-8
+      if (num < 0 || num > 8) {
         throw new IllegalArgumentException("Invalid neighbor count: " + num);
       }
       output.add(num);

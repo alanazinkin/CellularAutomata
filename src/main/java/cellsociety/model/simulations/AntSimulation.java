@@ -37,7 +37,7 @@ public class AntSimulation extends Simulation {
   private static final int MAX_ANTS_PER_CELL = 10;
   private static final double MAX_PHEROMONE = 100.0;
 
-  private List<Ant> ants;
+  private final List<Ant> ants;
 
   /**
    * Constructs a new AntSimulation with specified configuration and grid.

@@ -35,6 +35,7 @@ import java.util.Objects;
  * @author Tatum McKinnis
  */
 public class Schelling extends Simulation {
+
   private static final int EMPTY_AGENT_GROUP = 0;
   private static final int NO_NEIGHBORS = 0;
   private static final int EMPTY_STATE_KEY = 0;
@@ -43,6 +44,14 @@ public class Schelling extends Simulation {
   private final double tolerance;
   private final Random randomNumGenerator;
 
+  /**
+   * Constructs a Schelling simulation with the specified parameters.
+   *
+   * @param simulationConfig Configuration settings for the simulation.
+   * @param grid             The grid on which the simulation will run.
+   * @param tolerance        The tolerance threshold for agent satisfaction (0.0 to 1.0).
+   * @throws IllegalArgumentException if tolerance is outside the range [0.0, 1.0].
+   */
   public Schelling(SimulationConfig simulationConfig, Grid grid, double tolerance) {
     super(simulationConfig, grid);
     validateTolerance(tolerance);
@@ -50,12 +59,23 @@ public class Schelling extends Simulation {
     this.randomNumGenerator = new Random();
   }
 
+  /**
+   * Validates the tolerance value to ensure it is within the acceptable range [0.0, 1.0].
+   *
+   * @param tolerance The tolerance value to validate.
+   * @throws IllegalArgumentException if the tolerance is outside the valid range.
+   */
   private void validateTolerance(double tolerance) {
     if (tolerance < 0.0 || tolerance > 1.0) {
       throw new IllegalArgumentException("Tolerance must be between 0.0 and 1.0.");
     }
   }
 
+  /**
+   * Initializes the color map for visualizing the Schelling model.
+   *
+   * @return A map of states to color strings.
+   */
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     return Map.of(
@@ -64,6 +84,11 @@ public class Schelling extends Simulation {
     );
   }
 
+  /**
+   * Initializes the state map, associating state keys with Schelling state objects.
+   *
+   * @return A map of state keys to SchellingState objects.
+   */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
     return Map.of(
@@ -73,6 +98,10 @@ public class Schelling extends Simulation {
     );
   }
 
+  /**
+   * Applies the rules of the Schelling model for one iteration of the simulation. This includes
+   * identifying unsatisfied agents and moving them to available empty cells.
+   */
   @Override
   public void applyRules() {
     List<Coordinate> emptyCells = collectEmptyCells();
@@ -80,6 +109,11 @@ public class Schelling extends Simulation {
     executeMoves(moves);
   }
 
+  /**
+   * Collects all empty cells in the grid.
+   *
+   * @return A list of coordinates for all empty cells.
+   */
   private List<Coordinate> collectEmptyCells() {
     List<Coordinate> emptyCells = new ArrayList<>();
     for (int row = 0; row < getGrid().getRows(); row++) {
@@ -93,11 +127,16 @@ public class Schelling extends Simulation {
     return emptyCells;
   }
 
+  /**
+   * Collects the moves for unsatisfied agents, randomly selecting empty cells for relocation.
+   *
+   * @param emptyCells A list of available empty cells.
+   * @return A list of moves, each consisting of a source and destination coordinate.
+   */
   private List<Move> collectMoves(List<Coordinate> emptyCells) {
     List<Move> moves = new ArrayList<>();
     List<Coordinate> unsatisfiedAgents = new ArrayList<>();
 
-    // First pass: find all unsatisfied agents
     for (int row = 0; row < getGrid().getRows(); row++) {
       for (int col = 0; col < getGrid().getCols(); col++) {
         AgentCell cell = getAgentCell(row, col);
@@ -108,14 +147,11 @@ public class Schelling extends Simulation {
       }
     }
 
-    // Shuffle for random processing
     Collections.shuffle(unsatisfiedAgents, randomNumGenerator);
     Set<Coordinate> availableEmpties = new HashSet<>(emptyCells);
 
-    // Find moves for unsatisfied agents
     for (Coordinate agentCoord : unsatisfiedAgents) {
       AgentCell cell = getAgentCell(agentCoord.row, agentCoord.col);
-      // Always try to move unsatisfied agent to first available empty cell
       if (!availableEmpties.isEmpty()) {
         Coordinate destination = availableEmpties.iterator().next();
         moves.add(new Move(agentCoord, destination, cell.getAgentGroup()));
@@ -126,30 +162,40 @@ public class Schelling extends Simulation {
     return moves;
   }
 
+  /**
+   * Determines if the agent at the given coordinates is satisfied with its current neighborhood.
+   *
+   * @param row        The row of the agent's current position.
+   * @param col        The column of the agent's current position.
+   * @param agentGroup The group to which the agent belongs.
+   * @return True if the agent is satisfied, false otherwise.
+   */
   boolean isAgentSatisfied(int row, int col, int agentGroup) {
     List<AgentCell> neighbors = getAgentNeighbors(row, col);
     int totalAgents = countAgentNeighbors(neighbors);
 
-    // If no neighbors, agent is satisfied
     if (totalAgents == NO_NEIGHBORS) {
       return true;
     }
 
-    // Calculate satisfaction based on number of same-group neighbors
     int sameGroup = countSameGroupNeighbors(neighbors, agentGroup);
     double ratio = (double) sameGroup / totalAgents;
     return ratio >= tolerance;
   }
 
+  /**
+   * Executes the moves, updating the grid by marking source cells as empty and destination cells
+   * with the relocated agents.
+   *
+   * @param moves A list of moves to execute.
+   */
   private void executeMoves(List<Move> moves) {
-    // First mark all source cells as empty in their next state
     for (Move move : moves) {
       AgentCell sourceCell = getAgentCell(move.source.row, move.source.col);
       sourceCell.setNextState(SchellingState.EMPTY_CELL);
       sourceCell.setAgentGroup(EMPTY_AGENT_GROUP);
     }
 
-    // Then mark all destination cells with the moving agents
     for (Move move : moves) {
       AgentCell destCell = getAgentCell(move.destination.row, move.destination.col);
       destCell.setNextState(SchellingState.AGENT);
@@ -157,6 +203,14 @@ public class Schelling extends Simulation {
     }
   }
 
+  /**
+   * Retrieves the agent cell at the specified coordinates.
+   *
+   * @param row The row of the desired cell.
+   * @param col The column of the desired cell.
+   * @return The AgentCell at the specified coordinates.
+   * @throws ClassCastException if the cell at the specified coordinates is not an AgentCell.
+   */
   private AgentCell getAgentCell(int row, int col) {
     Cell cell = getGrid().getCell(row, col);
     if (!(cell instanceof AgentCell)) {
@@ -166,6 +220,14 @@ public class Schelling extends Simulation {
     return (AgentCell) cell;
   }
 
+  /**
+   * Retrieves a list of agent neighbors for the specified coordinates.
+   *
+   * @param row The row of the desired cell.
+   * @param col The column of the desired cell.
+   * @return A list of AgentCell neighbors.
+   * @throws ClassCastException if any neighbor cell is not an AgentCell.
+   */
   private List<AgentCell> getAgentNeighbors(int row, int col) {
     List<AgentCell> neighbors = new ArrayList<>();
     for (Cell cell : getGrid().getNeighbors(row, col)) {
@@ -177,6 +239,13 @@ public class Schelling extends Simulation {
     return neighbors;
   }
 
+  /**
+   * Counts the number of same-group neighbors for an agent.
+   *
+   * @param neighbors  A list of agent neighbors.
+   * @param agentGroup The group to which the agent belongs.
+   * @return The number of same-group neighbors.
+   */
   private int countSameGroupNeighbors(List<AgentCell> neighbors, int agentGroup) {
     int count = 0;
     for (AgentCell neighbor : neighbors) {
@@ -188,6 +257,12 @@ public class Schelling extends Simulation {
     return count;
   }
 
+  /**
+   * Counts the total number of agent neighbors.
+   *
+   * @param neighbors A list of agent neighbors.
+   * @return The number of agent neighbors.
+   */
   private int countAgentNeighbors(List<AgentCell> neighbors) {
     int count = 0;
     for (AgentCell neighbor : neighbors) {
@@ -198,10 +273,20 @@ public class Schelling extends Simulation {
     return count;
   }
 
+  /**
+   * Represents a coordinate in the grid with a row and column.
+   */
   private static class Coordinate {
+
     final int row;
     final int col;
 
+    /**
+     * Constructs a coordinate with the specified row and column.
+     *
+     * @param row The row of the coordinate.
+     * @param col The column of the coordinate.
+     */
     Coordinate(int row, int col) {
       this.row = row;
       this.col = col;
@@ -209,8 +294,12 @@ public class Schelling extends Simulation {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Coordinate)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof Coordinate)) {
+        return false;
+      }
       Coordinate that = (Coordinate) o;
       return row == that.row && col == that.col;
     }
@@ -221,11 +310,23 @@ public class Schelling extends Simulation {
     }
   }
 
+  /**
+   * Represents a move from a source coordinate to a destination coordinate, along with the agent's
+   * group information.
+   */
   private static class Move {
+
     final Coordinate source;
     final Coordinate destination;
     final int agentGroup;
 
+    /**
+     * Constructs a move with the specified source, destination, and agent group.
+     *
+     * @param source      The source coordinate of the move.
+     * @param destination The destination coordinate of the move.
+     * @param agentGroup  The group to which the agent belongs.
+     */
     Move(Coordinate source, Coordinate destination, int agentGroup) {
       this.source = source;
       this.destination = destination;
