@@ -1,6 +1,8 @@
 package cellsociety.model.simulations;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.AgentCell;
@@ -10,34 +12,16 @@ import cellsociety.model.state.SchellingState;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
-/**
- * JUnit tests for the {@link Schelling} simulation. Naming convention:
- * [UnitOfWork_StateUnderTest_ExpectedBehavior]
- *
- * @author Tatum McKinnis
- */
 public class SchellingTest {
+  // Add constants to match Schelling class
+  private static final int EMPTY_AGENT_GROUP = 0;
+  private static final int AGENT_STATE_KEY = 1;
 
-  /**
-   * Helper method to replace a cell in the grid using the public API.
-   *
-   * @param grid the grid whose cell will be replaced
-   * @param row  the row index of the cell to replace
-   * @param col  the column index of the cell to replace
-   * @param cell the new cell to insert at the specified location
-   */
+  // Keep existing helper methods exactly as they are
   private void replaceCell(Grid grid, int row, int col, Cell cell) {
     grid.setCellAt(row, col, cell);
   }
 
-  /**
-   * Creates a SimulationConfig instance for Schelling simulation tests. Dummy values are provided
-   * for type, title, author, description, dimensions, initialStates, and parameters.
-   *
-   * @param rows the number of rows in the grid
-   * @param cols the number of columns in the grid
-   * @return a new SimulationConfig instance
-   */
   private SimulationConfig createSchellingSimConfig(int rows, int cols) {
     return new SimulationConfig(
         "Schelling",
@@ -50,80 +34,84 @@ public class SchellingTest {
     );
   }
 
-  /**
-   * applyRules: In a 1×1 grid the lone agent has no neighbors and is automatically satisfied.
-   * Input: Single agent in a 1x1 grid. Expected: The agent remains unchanged.
-   */
   @Test
   void applyRules_LoneAgentWithNoNeighbors_RemainsSatisfied() {
+    // Create a grid with all empty cells initially
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
-    AgentCell testCell = new AgentCell(SchellingState.AGENT, 1);
+
+    // Create test cell as an agent with state key 1 (type A)
+    AgentCell testCell = new AgentCell(SchellingState.AGENT, AGENT_STATE_KEY);
     replaceCell(grid, 0, 0, testCell);
 
+    // Create simulation config for 1x1 grid
     SimulationConfig simConfig = createSchellingSimConfig(1, 1);
-    Schelling simulation = new Schelling(simConfig, grid, 0.5);
-    simulation.applyRules();
 
-    AgentCell cell = (AgentCell) grid.getCell(0, 0);
-    assertEquals(SchellingState.AGENT, cell.getCurrentState(),
+    // Create Schelling simulation with low tolerance
+    Schelling simulation = new Schelling(simConfig, grid, 0.3);
+
+    // Verify initial state
+    AgentCell initialCell = (AgentCell) grid.getCell(0, 0);
+    assertEquals(SchellingState.AGENT, initialCell.getCurrentState(), "Initial state should be AGENT");
+    assertEquals(AGENT_STATE_KEY, initialCell.getAgentGroup(), "Initial group should be AGENT_STATE_KEY");
+
+    // Apply rules and update grid
+    simulation.applyRules();
+    grid.applyNextStates();
+
+    // Check final state
+    AgentCell finalCell = (AgentCell) grid.getCell(0, 0);
+    assertEquals(SchellingState.AGENT, finalCell.getCurrentState(),
         "Agent should remain in place as it has no neighbors.");
-    assertEquals(1, cell.getAgentGroup(), "Agent group should remain unchanged.");
+    assertEquals(AGENT_STATE_KEY, finalCell.getAgentGroup(),
+        "Agent group should remain unchanged.");
   }
 
-  /**
-   * applyRules: An unsatisfied agent in a 2×2 grid moves to an empty cell where it is satisfied.
-   * Input: 2×2 grid with an unsatisfied agent (group 1) and a neighbor agent (group 2); two cells
-   * are empty. Expected: The unsatisfied agent leaves its original cell and moves to one of the
-   * empty cells.
-   */
   @Test
   void applyRules_UnsatisfiedAgentIn2x2_MovesToEmptyCell() {
+    // Create 2x2 grid
     Grid grid = new Grid(2, 2, SchellingState.EMPTY_CELL);
-    AgentCell agentCell1 = new AgentCell(SchellingState.AGENT,
-        1); // unsatisfied due to neighbor group mismatch
-    AgentCell agentCell2 = new AgentCell(SchellingState.AGENT, 2);
-    AgentCell emptyCell1 = new AgentCell(SchellingState.EMPTY_CELL, 0);
-    AgentCell emptyCell2 = new AgentCell(SchellingState.EMPTY_CELL, 0);
 
-    replaceCell(grid, 0, 0, agentCell1);
-    replaceCell(grid, 0, 1, agentCell2);
-    replaceCell(grid, 1, 0, emptyCell1);
-    replaceCell(grid, 1, 1, emptyCell2);
+    // Create cells with specific states and groups
+    AgentCell agent1 = new AgentCell(SchellingState.AGENT, AGENT_STATE_KEY);
+    AgentCell agent2 = new AgentCell(SchellingState.AGENT, 2);
+    AgentCell empty1 = new AgentCell(SchellingState.EMPTY_CELL, EMPTY_AGENT_GROUP);
+    AgentCell empty2 = new AgentCell(SchellingState.EMPTY_CELL, EMPTY_AGENT_GROUP);
+
+    // Place cells in grid
+    replaceCell(grid, 0, 0, agent1);  // Type A agent
+    replaceCell(grid, 0, 1, agent2);  // Type B agent
+    replaceCell(grid, 1, 0, empty1);  // Empty cell
+    replaceCell(grid, 1, 1, empty2);  // Empty cell
 
     SimulationConfig simConfig = createSchellingSimConfig(2, 2);
-    Schelling simulation = new Schelling(simConfig, grid, 0.5);
-    simulation.applyRules();
+    Schelling simulation = new Schelling(simConfig, grid, 0.8);  // High tolerance to force movement
 
+    // Verify initial setup
+    assertEquals(SchellingState.AGENT, ((AgentCell)grid.getCell(0, 0)).getCurrentState(),
+        "Initial state of (0,0) should be AGENT");
+    assertEquals(AGENT_STATE_KEY, ((AgentCell)grid.getCell(0, 0)).getAgentGroup(),
+        "Initial group of (0,0) should be AGENT_STATE_KEY");
+
+    // Apply rules
+    simulation.applyRules();
+    grid.applyNextStates();
+
+    // Verify agent moved from original position
     AgentCell sourceCell = (AgentCell) grid.getCell(0, 0);
     assertEquals(SchellingState.EMPTY_CELL, sourceCell.getCurrentState(),
-        "The unsatisfied agent should leave its original cell.");
+        "Original cell should now be empty");
+    assertEquals(EMPTY_AGENT_GROUP, sourceCell.getAgentGroup(),
+        "Original cell should have empty group");
 
+    // Check that agent moved to one of the empty cells
     AgentCell destCell1 = (AgentCell) grid.getCell(1, 0);
     AgentCell destCell2 = (AgentCell) grid.getCell(1, 1);
-    boolean moved =
-        (destCell1.getCurrentState() == SchellingState.AGENT && destCell1.getAgentGroup() == 1) ||
-            (destCell2.getCurrentState() == SchellingState.AGENT && destCell2.getAgentGroup() == 1);
-    assertTrue(moved, "One of the empty cells should now contain the moving agent from (0,0).");
+    boolean moved = (destCell1.getCurrentState() == SchellingState.AGENT &&
+        destCell1.getAgentGroup() == AGENT_STATE_KEY) ||
+        (destCell2.getCurrentState() == SchellingState.AGENT &&
+            destCell2.getAgentGroup() == AGENT_STATE_KEY);
+    assertTrue(moved, "Agent should have moved to one of the empty cells");
   }
-
-  /**
-   * Tests the behavior of {@code applyRules()} when a {@code null} grid is passed to the
-   * {@code Schelling} simulation.
-   * <p>
-   * This test verifies that attempting to invoke {@code applyRules()} on a {@code Schelling}
-   * simulation instantiated with a {@code null} grid results in an
-   * {@code IllegalArgumentException}.
-   * </p>
-   * <p>
-   * Expected behavior:
-   * <ul>
-   *   <li>When the simulation is created with a {@code null} grid, an {@code IllegalArgumentException} should be thrown in the constructor.</li>
-   * </ul>
-   * </p>
-   *
-   * @throws IllegalArgumentException if a {@code null} grid is provided to the {@code Schelling}
-   *                                  simulation.
-   */
   @Test
   void applyRules_NullGrid_ThrowsIllegalArgumentException() {
     SimulationConfig simConfig = createSchellingSimConfig(1, 1);
@@ -131,29 +119,20 @@ public class SchellingTest {
         "Schelling simulation constructor should throw IllegalArgumentException when grid is null.");
   }
 
-  /**
-   * applyRules: If the grid contains a cell that is not an AgentCell, applyRules() should throw a
-   * ClassCastException. Input: A grid cell is replaced with a non-AgentCell.
-   */
   @Test
   void applyRules_InvalidCellTypeInGrid_ThrowsClassCastException() {
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
-    // Insert a non-AgentCell into the grid.
+
+    // Place a regular Cell instead of an AgentCell
     Cell invalidCell = new Cell(SchellingState.AGENT);
     replaceCell(grid, 0, 0, invalidCell);
 
     SimulationConfig simConfig = createSchellingSimConfig(1, 1);
     Schelling simulation = new Schelling(simConfig, grid, 0.5);
-    assertThrows(ClassCastException.class, simulation::applyRules,
-        "applyRules() should throw ClassCastException when a cell is not an AgentCell.");
+
+    assertThrows(ClassCastException.class, simulation::applyRules, "Should throw ClassCastException when trying to process non-AgentCell");
   }
 
-  /**
-   * constructor: Verifies that creating a Schelling simulation with a negative tolerance throws an
-   * IllegalArgumentException. Input: A valid grid and SimulationConfig, but with a negative
-   * tolerance value. Expected: The constructor throws an IllegalArgumentException with the message
-   * "Tolerance must be between 0.0 and 1.0."
-   */
   @Test
   void constructor_NegativeTolerance_ThrowsIllegalArgumentException() {
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
@@ -165,6 +144,3 @@ public class SchellingTest {
         "Exception message should indicate the valid tolerance range.");
   }
 }
-
-
-
