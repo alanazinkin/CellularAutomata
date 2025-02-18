@@ -7,6 +7,7 @@ import java.util.Random;
 /**
  * Represents the eight possible directions an ant can face. Each direction includes delta row (dr)
  * and delta column (dc) values for grid navigation.
+ *
  * @author Tatum McKinnis
  */
 public enum Orientation {

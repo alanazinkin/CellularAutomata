@@ -5,9 +5,9 @@ import cellsociety.model.StateInterface;
 /**
  * Enum representing different states in the SugarScape simulation.
  * <p>
- * This enum implements the StateInterface to provide consistent state representation
- * across different simulations. Each state represents a different condition of a cell
- * in the SugarScape grid.
+ * This enum implements the StateInterface to provide consistent state representation across
+ * different simulations. Each state represents a different condition of a cell in the SugarScape
+ * grid.
  * </p>
  */
 public enum SugarScapeState implements StateInterface {
@@ -29,8 +29,8 @@ public enum SugarScapeState implements StateInterface {
   /**
    * Returns the string representation of the state.
    * <p>
-   * This implementation provides a human-readable version of the state,
-   * fulfilling the contract specified by StateInterface.
+   * This implementation provides a human-readable version of the state, fulfilling the contract
+   * specified by StateInterface.
    * </p>
    *
    * @return the string value representing this state

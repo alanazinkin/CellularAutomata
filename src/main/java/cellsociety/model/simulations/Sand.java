@@ -12,17 +12,15 @@ import java.util.Map;
 /**
  * Simulates granular materials like sand and water, implementing physics-based particle behavior.
  * <p>
- * This simulation allows particles to fall under gravity, spread, and interact with walls and other particles.
- * Particles exhibit realistic behavior such as:
- * - Falling under gravity
- * - Stacking and forming piles
- * - Flowing around obstacles
- * - Different behaviors for sand and water particles
+ * This simulation allows particles to fall under gravity, spread, and interact with walls and other
+ * particles. Particles exhibit realistic behavior such as: - Falling under gravity - Stacking and
+ * forming piles - Flowing around obstacles - Different behaviors for sand and water particles
  * </p>
  *
  * @author Tatum McKinnis
  */
 public class Sand extends Simulation {
+
   /**
    * Mapping of states to their visual color representations in hex format.
    */
@@ -47,7 +45,7 @@ public class Sand extends Simulation {
    * Constructs a new Sand with the specified configuration and grid.
    *
    * @param simulationConfig Initial configuration parameters
-   * @param grid The grid structure for the simulation
+   * @param grid             The grid structure for the simulation
    * @throws IllegalArgumentException if grid is null or initial states are invalid
    */
   public Sand(SimulationConfig simulationConfig, Grid grid) {
@@ -77,8 +75,8 @@ public class Sand extends Simulation {
   /**
    * Applies the simulation rules to all cells in the grid.
    * <p>
-   * The rules are applied from bottom to top to simulate gravity properly.
-   * Each row alternates processing direction for more natural particle flow.
+   * The rules are applied from bottom to top to simulate gravity properly. Each row alternates
+   * processing direction for more natural particle flow.
    * </p>
    */
   @Override
@@ -123,14 +121,12 @@ public class Sand extends Simulation {
   /**
    * Applies physics rules to a particle at the specified location.
    * <p>
-   * The rules include:
-   * - Falling straight down if possible
-   * - Special water flow behavior
-   * - Diagonal movement for both sand and water
+   * The rules include: - Falling straight down if possible - Special water flow behavior - Diagonal
+   * movement for both sand and water
    * </p>
    *
-   * @param row Current row of the particle
-   * @param col Current column of the particle
+   * @param row  Current row of the particle
+   * @param col  Current column of the particle
    * @param cell The cell containing the particle
    */
   private void applyParticlePhysics(int row, int col, Cell cell) {
@@ -174,10 +170,10 @@ public class Sand extends Simulation {
   /**
    * Attempts to flow water particles horizontally in a given direction.
    *
-   * @param row Current row of the water particle
-   * @param col Current column of the water particle
+   * @param row       Current row of the water particle
+   * @param col       Current column of the water particle
    * @param direction Direction to try (-1 for left, 1 for right)
-   * @param cell The cell containing the water particle
+   * @param cell      The cell containing the water particle
    * @return true if water was able to flow
    */
   private boolean tryWaterFlow(int row, int col, int direction, Cell cell) {

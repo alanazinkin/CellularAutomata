@@ -11,16 +11,12 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 /**
- * Test class for SugarScape simulation.
- * Tests various aspects of the simulation including:
- * - Initialization
- * - Agent movement and interactions
- * - Resource management
- * - Loan system
- * - Disease transmission
- * Adheres to [UnitOfWork_StateUnderTest_ExpectedBehavior] naming convention.
+ * Test class for SugarScape simulation. Tests various aspects of the simulation including: -
+ * Initialization - Agent movement and interactions - Resource management - Loan system - Disease
+ * transmission Adheres to [UnitOfWork_StateUnderTest_ExpectedBehavior] naming convention.
  */
 public class SugarScapeTest {
+
   private SugarScape simulation;
   private SimulationConfig config;
   private Grid grid;
@@ -46,8 +42,7 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests initialization of color map.
-   * Verifies that all states have corresponding colors.
+   * Tests initialization of color map. Verifies that all states have corresponding colors.
    */
   @Test
   void initializeColorMap_WhenCalled_ReturnsValidColorMapping() {
@@ -60,8 +55,8 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests initialization of state map.
-   * Verifies that all numeric states map to correct SugarScapeStates.
+   * Tests initialization of state map. Verifies that all numeric states map to correct
+   * SugarScapeStates.
    */
   @Test
   void initializeStateMap_WhenCalled_ReturnsValidStateMapping() {
@@ -74,8 +69,8 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests adding an agent to an empty cell.
-   * Verifies successful agent addition and grid state update.
+   * Tests adding an agent to an empty cell. Verifies successful agent addition and grid state
+   * update.
    */
   @Test
   void addAgent_ToEmptyCell_SuccessfullyAddsAgent() {
@@ -90,8 +85,7 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests adding an agent to an occupied cell.
-   * Verifies that appropriate exception is thrown.
+   * Tests adding an agent to an occupied cell. Verifies that appropriate exception is thrown.
    */
   @Test
   void addAgent_ToOccupiedCell_ThrowsException() {
@@ -103,8 +97,8 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests adding a valid loan between two agents.
-   * Verifies successful loan creation and resource transfer.
+   * Tests adding a valid loan between two agents. Verifies successful loan creation and resource
+   * transfer.
    */
   @Test
   void addLoan_BetweenValidAgents_SuccessfullyAddsLoan() {
@@ -132,8 +126,7 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests adding a duplicate loan between agents.
-   * Verifies that appropriate exception is thrown.
+   * Tests adding a duplicate loan between agents. Verifies that appropriate exception is thrown.
    */
   @Test
   void addLoan_DuplicateLoan_ThrowsException() {
@@ -161,8 +154,8 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests retrieving simulation statistics.
-   * Verifies that all expected statistics are present and accurate.
+   * Tests retrieving simulation statistics. Verifies that all expected statistics are present and
+   * accurate.
    */
   @Test
   void getStatistics_WithActiveSimulation_ReturnsValidStats() {
@@ -193,8 +186,7 @@ public class SugarScapeTest {
   }
 
   /**
-   * Tests step execution and growth patterns.
-   * Verifies that sugar grows back correctly.
+   * Tests step execution and growth patterns. Verifies that sugar grows back correctly.
    */
   @Test
   void step_WithEmptyGrid_GrowsBackSugar() {

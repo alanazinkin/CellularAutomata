@@ -11,16 +11,18 @@ import java.util.Map;
 
 /**
  * Simulates Langton's Loop cellular automaton, a self-replicating pattern that demonstrates
- * emergent behavior in cellular automata. The simulation uses 8 states and operates on a
- * von Neumann neighborhood (4 adjacent cells).
+ * emergent behavior in cellular automata. The simulation uses 8 states and operates on a von
+ * Neumann neighborhood (4 adjacent cells).
  * <p>
- * The automaton demonstrates self-replication through a complex interaction of states that
- * form a loop structure capable of creating copies of itself. The replication process uses
- * a "genome" encoded as state sequences, with signals traveling along sheathed pathways.
+ * The automaton demonstrates self-replication through a complex interaction of states that form a
+ * loop structure capable of creating copies of itself. The replication process uses a "genome"
+ * encoded as state sequences, with signals traveling along sheathed pathways.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class LangtonLoop extends Simulation {
+
   private static final LangtonState DEFAULT_STATE = LangtonState.EMPTY;
 
   /**
@@ -37,18 +39,20 @@ public class LangtonLoop extends Simulation {
    * Constructs a new Langton's Loop simulation with specified configuration.
    *
    * @param simulationConfig Contains initial simulation parameters and grid dimensions
-   * @throws IllegalArgumentException if grid dimensions are invalid or initial states array is empty
+   * @throws IllegalArgumentException if grid dimensions are invalid or initial states array is
+   *                                  empty
    */
   public LangtonLoop(SimulationConfig simulationConfig) {
-    super(simulationConfig, new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
+    super(simulationConfig,
+        new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
   }
 
   /**
    * Initializes a mapping of Langton's Ant states to their corresponding color representations.
    * This map is used for visualization purposes, assigning a unique color to each state.
    *
-   * @return A map where keys are {@code StateInterface} values representing different states
-   *         and values are hexadecimal color codes as strings.
+   * @return A map where keys are {@code StateInterface} values representing different states and
+   * values are hexadecimal color codes as strings.
    */
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
@@ -65,12 +69,12 @@ public class LangtonLoop extends Simulation {
   }
 
   /**
-   * Initializes a mapping of integer values to their corresponding Langton's Ant states.
-   * This map is used to associate numerical representations with specific states,
-   * which can be useful for grid-based simulations.
+   * Initializes a mapping of integer values to their corresponding Langton's Ant states. This map
+   * is used to associate numerical representations with specific states, which can be useful for
+   * grid-based simulations.
    *
-   * @return A map where keys are integer values representing different states
-   *         and values are {@code StateInterface} objects defining those states.
+   * @return A map where keys are integer values representing different states and values are
+   * {@code StateInterface} objects defining those states.
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
@@ -87,8 +91,8 @@ public class LangtonLoop extends Simulation {
   }
 
   /**
-   * Applies the rules of the simulation to update the states of cells in the grid.
-   * Iterates through each cell and updates its state based on predefined rules.
+   * Applies the rules of the simulation to update the states of cells in the grid. Iterates through
+   * each cell and updates its state based on predefined rules.
    */
   @Override
   protected void applyRules() {
@@ -102,8 +106,8 @@ public class LangtonLoop extends Simulation {
 
 
   /**
-   * Updates the state of a single cell based on its von Neumann neighborhood configuration
-   * and the Langton's Loop transition rules.
+   * Updates the state of a single cell based on its von Neumann neighborhood configuration and the
+   * Langton's Loop transition rules.
    *
    * @param row The row index of the cell
    * @param col The column index of the cell
@@ -143,11 +147,11 @@ public class LangtonLoop extends Simulation {
   }
 
   /**
-   * Applies Langton's Loop transition rules to determine the next state of a cell.
-   * The rules are based on the current state and the configuration of neighboring states.
+   * Applies Langton's Loop transition rules to determine the next state of a cell. The rules are
+   * based on the current state and the configuration of neighboring states.
    *
    * @param currentState The current state of the cell
-   * @param neighbors Array of neighbor states in von Neumann neighborhood
+   * @param neighbors    Array of neighbor states in von Neumann neighborhood
    * @return The next state for the cell
    */
   private LangtonState applyTransitionRules(LangtonState currentState, LangtonState[] neighbors) {
@@ -170,13 +174,15 @@ public class LangtonLoop extends Simulation {
    * Counts the number of neighbors that match a specific state.
    *
    * @param neighbors Array of neighbor states
-   * @param state State to count
+   * @param state     State to count
    * @return Number of neighbors matching the specified state
    */
   private int countNeighborType(LangtonState[] neighbors, LangtonState state) {
     int count = 0;
     for (LangtonState neighbor : neighbors) {
-      if (neighbor == state) count++;
+      if (neighbor == state) {
+        count++;
+      }
     }
     return count;
   }

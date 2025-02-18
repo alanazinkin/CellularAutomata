@@ -18,11 +18,12 @@ import java.util.Map;
  * <p>
  * Verifies colony behavior including pheromone dynamics, food collection, and obstacle avoidance.
  * </p>
- *  Naming convention:
- *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * Naming convention: * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ *
  * @author Tatum McKinnis
  */
 class AntSimulationTest {
+
   private static final int GRID_SIZE = 5;
   private static final int NEST_ROW = 2;
   private static final int NEST_COL = 2;
@@ -46,6 +47,7 @@ class AntSimulationTest {
 
   /**
    * Creates a test grid with predefined nest and food positions.
+   *
    * @return Configured grid for testing
    */
   private Grid createTestGrid() {
@@ -74,6 +76,7 @@ class AntSimulationTest {
 
   /**
    * Creates a test configuration with ant parameters.
+   *
    * @return Basic simulation configuration
    */
   private SimulationConfig createTestConfig() {
@@ -146,7 +149,7 @@ class AntSimulationTest {
 
     simulation.applyRules(); // Let ants reinforce gradient
 
-    for(int i = 0; i < (FOOD_ROW - NEST_ROW); i++) {
+    for (int i = 0; i < (FOOD_ROW - NEST_ROW); i++) {
       int currentRow = NEST_ROW + i;
       int currentCol = NEST_COL + i;
       int nextRow = currentRow + 1;
@@ -208,6 +211,7 @@ class AntSimulationTest {
           "Ants should only pass through gap at row " + NEST_ROW);
     });
   }
+
   /**
    * Tests null grid initialization handling.
    * <p>

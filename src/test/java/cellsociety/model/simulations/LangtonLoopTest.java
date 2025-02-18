@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Test class for LangtonLoop.
- * Tests the functionality of Langton's Loop cellular automaton including state transitions,
- * neighborhood interactions, and basic loop formation patterns.
+ * Test class for LangtonLoop. Tests the functionality of Langton's Loop cellular automaton
+ * including state transitions, neighborhood interactions, and basic loop formation patterns.
+ *
  * @author Tatum McKinnis
  */
 public class LangtonLoopTest {

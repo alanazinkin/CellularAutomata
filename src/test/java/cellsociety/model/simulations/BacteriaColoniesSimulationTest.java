@@ -6,17 +6,20 @@ import cellsociety.model.state.BacteriaState;
 import cellsociety.model.StateInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Test class for BacteriaColoniesSimulation.
- * Tests the functionality of the bacteria colonies simulation including state transitions,
- * neighbor interactions, and edge cases.
+ * Test class for BacteriaColoniesSimulation. Tests the functionality of the bacteria colonies
+ * simulation including state transitions, neighbor interactions, and edge cases.
+ *
  * @author Tatum McKinnis
  */
 class BacteriaColoniesSimulationTest {
+
   private static final int GRID_SIZE = 3;
   private SimulationConfig config;
   private BacteriaColoniesSimulation simulation;

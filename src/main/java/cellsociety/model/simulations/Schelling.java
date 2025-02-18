@@ -31,6 +31,7 @@ import java.util.Objects;
  *   <li>Stochastic selection of relocation targets</li>
  * </ul>
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class Schelling extends Simulation {

@@ -8,14 +8,15 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link Grid} functionality.
  * <p>
- * This class verifies grid operations such as cell retrieval, neighbor determination,
- * state transitions, grid reset, and grid printing.
- *  Naming convention:
- *  * [UnitOfWork_StateUnderTest_ExpectedBehavior]
+ * This class verifies grid operations such as cell retrieval, neighbor determination, state
+ * transitions, grid reset, and grid printing. Naming convention: *
+ * [UnitOfWork_StateUnderTest_ExpectedBehavior]
  * </p>
+ *
  * @author Tatum McKinnis
  */
 class GridTest {
+
   /**
    * Tests cell retrieval with valid indices.
    * <p>
@@ -106,8 +107,8 @@ class GridTest {
   /**
    * Tests cell retrieval with out-of-bounds indices.
    * <p>
-   * Verifies that {@link Grid#getCell(int, int)} throws an {@link IndexOutOfBoundsException}
-   * for invalid indices.
+   * Verifies that {@link Grid#getCell(int, int)} throws an {@link IndexOutOfBoundsException} for
+   * invalid indices.
    * </p>
    */
   @Test

@@ -3,14 +3,12 @@ package cellsociety.model.state;
 import cellsociety.model.StateInterface;
 
 /**
- * Enumeration representing the possible states of cells in the Sand simulation.
- * Each state represents a different type of particle or space in the simulation.
+ * Enumeration representing the possible states of cells in the Sand simulation. Each state
+ * represents a different type of particle or space in the simulation.
  * <p>
- * The simulation includes:
- * - EMPTY: Represents empty space where particles can move
- * - SAND: Represents sand particles that fall and stack
- * - WALL: Represents immovable barriers
- * - WATER: Represents water particles that flow more freely than sand
+ * The simulation includes: - EMPTY: Represents empty space where particles can move - SAND:
+ * Represents sand particles that fall and stack - WALL: Represents immovable barriers - WATER:
+ * Represents water particles that flow more freely than sand
  * </p>
  */
 public enum SandState implements StateInterface {
