@@ -53,9 +53,8 @@ public class BacteriaColoniesSimulation extends Simulation {
    * @throws IllegalArgumentException if grid dimensions are invalid or initial states array is
    *                                  empty
    */
-  public BacteriaColoniesSimulation(SimulationConfig simulationConfig) {
-    super(simulationConfig,
-        new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
+  public BacteriaColoniesSimulation(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
     this.neighborThreshold = simulationConfig.getParameters()
         .getOrDefault("neighborThreshold", (double) DEFAULT_THRESHOLD);
   }

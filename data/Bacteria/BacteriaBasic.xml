@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Bacteria</type>
+  <title>Basic Bacteria</title>
+  <author>Alana Zinkin</author>
+  <description>A simulation that models competing bacteria colonies.s</description>
+  <width>6</width>
+  <height>6</height>
+  <!-- 0 : ROCK      1 : PAPER      2 : SCISSORS   -->
+  <initial_states>
+    1 2 1 1 0 1
+    1 0 2 0 1 1
+    1 1 2 0 1 0
+    1 0 1 1 1 0
+    1 2 1 0 1 1
+    1 0 1 1 1 1
+  </initial_states>
+</simulation>

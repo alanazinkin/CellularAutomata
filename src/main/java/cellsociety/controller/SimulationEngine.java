@@ -41,7 +41,7 @@ public class SimulationEngine {
 
     public void initializeSimulation(SimulationConfig config, SimulationController simulationController) {
         this.simulationConfig = config;
-        this.grid = new Grid(config.getWidth(), config.getHeight(), MockState.STATE_ONE);
+        this.grid = new Grid(config.getWidth(), config.getHeight(), MockState.STATE_TWO);
         this.simulation = SimulationFactory.createSimulation(config.getType(), config, grid);
         this.simulationController = simulationController;
         this.simulationUI = simulationController.getUI();
