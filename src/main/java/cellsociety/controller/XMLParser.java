@@ -46,55 +46,143 @@ public class XMLParser {
    * @throws Exception if there are errors reading the file, parsing the XML, or converting values
    *                   to the expected types
    */
-  public SimulationConfig parseXMLFile(String filePath) throws Exception {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    Document document;
-    SimulationConfig config = new SimulationConfig();
+    public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      Document document;
+      SimulationConfig config = new SimulationConfig();
 
-    try {
-      factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(filePath));
-      document.getDocumentElement().normalize();
+      try {
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        document = builder.parse(new File(filePath));
+        document.getDocumentElement().normalize();
 
-      validateXMLStructure(document);
-      validateRequiredFields(document);
+        validateXMLStructure(document);
+        validateRequiredFields(document);
 
-      String simType = getElementContent(document, "type");
-      validateSimulationType(simType);
-      config.setSimulationType(simType);
+        String simType = getElementContent(document, "type");
+        validateSimulationType(simType);
+        config.setSimulationType(simType);
 
-      config.setTitle(getElementContent(document, "title"));
-      config.setAuthor(getElementContent(document, "author"));
-      config.setDescription(getElementContent(document, "description"));
+        config.setTitle(getElementContent(document, "title"));
+        config.setAuthor(getElementContent(document, "author"));
+        config.setDescription(getElementContent(document, "description"));
 
-      String initialStatesStr = getElementContent(document, "initial_states");
-      validateInitialStates(initialStatesStr);
-      int[] initialStates = parseInitialStates(initialStatesStr);
-      validateCellStates(initialStates, simType);
-      config.setInitialStates(initialStates);
+        String widthStr = getElementContent(document, "width");
+        String heightStr = getElementContent(document, "height");
+        setGridDimensions(widthStr, heightStr, config);
 
-      String widthStr = getElementContent(document, "width");
-      String heightStr = getElementContent(document, "height");
+        NodeList cellNodes = document.getElementsByTagName("cell");
+        if (cellNodes.getLength() > 0) {
+          validateAndSetCellLocations(cellNodes, config);
+        } else {
+          String initialStatesStr = getElementContent(document, "initial_states");
+          validateInitialStates(initialStatesStr);
+          int[] initialStates = parseInitialStates(initialStatesStr);
+          validateCellStates(initialStates, simType);
+          validateGridSize(config, initialStates.length);
+          config.setInitialStates(initialStates);
+        }
 
-      if ((widthStr == null || widthStr.isEmpty()) && (heightStr == null || heightStr.isEmpty())) {
-        calculateGridDimensions(initialStates, config);
-      } else {
-        setProvidedDimensions(widthStr, heightStr, config);
+        config.setParameters(parseParametersWithValidation(document, config.getType()));
+
+      } catch (ParserConfigurationException e) {
+        throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
+      } catch (SAXException e) {
+        throw new ConfigurationException("Invalid XML format: " + e.getMessage());
+      } catch (Exception e) {
+        throw new ConfigurationException("Error reading file: " + e.getMessage());
       }
 
-      validateGridSize(config);
-      config.setParameters(parseParametersWithValidation(document, config.getType()));
-
-    } catch (ParserConfigurationException e) {
-      throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
-    } catch (SAXException e) {
-      throw new ConfigurationException("Invalid XML format: " + e.getMessage());
-    } catch (IOException e) {
-      throw new ConfigurationException("Error reading file: " + e.getMessage());
+      return config;
     }
 
-    return config;
+  private void setGridDimensions(String widthStr, String heightStr, SimulationConfig config)
+          throws ConfigurationException {
+    if (widthStr == null || heightStr == null || widthStr.isEmpty() || heightStr.isEmpty()) {
+      throw new ConfigurationException("Width and height must be specified in the configuration");
+    }
+
+    try {
+      int width = Integer.parseInt(widthStr.trim());
+      int height = Integer.parseInt(heightStr.trim());
+
+      if (width <= 0 || height <= 0) {
+        throw new ConfigurationException(
+                String.format("Invalid grid dimensions: width=%d, height=%d. Must be positive values.",
+                        width, height));
+      }
+
+      config.setWidth(width);
+      config.setHeight(height);
+    } catch (NumberFormatException e) {
+      throw new ConfigurationException("Grid dimensions must be valid integers");
+    }
+  }
+
+  private void validateAndSetCellLocations(NodeList cellNodes, SimulationConfig config)
+          throws ConfigurationException {
+    int width = config.getWidth();
+    int height = config.getHeight();
+    int[] states = new int[width * height];
+    Set<String> usedLocations = new HashSet<>();
+    List<String> outOfBoundsCells = new ArrayList<>();
+    List<String> duplicateLocations = new ArrayList<>();
+
+    Arrays.fill(states, 0);
+
+    for (int i = 0; i < cellNodes.getLength(); i++) {
+      Element cellElement = (Element) cellNodes.item(i);
+
+      try {
+        int row = Integer.parseInt(cellElement.getAttribute("row"));
+        int col = Integer.parseInt(cellElement.getAttribute("col"));
+        int state = Integer.parseInt(cellElement.getAttribute("state"));
+
+        if (row < 0 || row >= height || col < 0 || col >= width) {
+          outOfBoundsCells.add(String.format("(row=%d, col=%d)", row, col));
+          continue;
+        }
+
+        String location = row + "," + col;
+        if (!usedLocations.add(location)) {
+          duplicateLocations.add(String.format("(row=%d, col=%d)", row, col));
+          continue;
+        }
+
+        states[row * width + col] = state;
+
+      } catch (NumberFormatException e) {
+        throw new ConfigurationException(
+                "Invalid number format in cell definition at index " + i);
+      }
+    }
+
+    if (!outOfBoundsCells.isEmpty() || !duplicateLocations.isEmpty()) {
+      StringBuilder errorMsg = new StringBuilder();
+      if (!outOfBoundsCells.isEmpty()) {
+        errorMsg.append(String.format("Cells outside grid bounds %dx%d: %s\n",
+                width, height, String.join(", ", outOfBoundsCells)));
+      }
+      if (!duplicateLocations.isEmpty()) {
+        errorMsg.append("Duplicate cell locations: ")
+                .append(String.join(", ", duplicateLocations));
+      }
+      throw new ConfigurationException(errorMsg.toString());
+    }
+
+    validateCellStates(states, config.getType());
+    config.setInitialStates(states);
+  }
+
+  private void validateGridSize(SimulationConfig config, int statesLength)
+          throws ConfigurationException {
+    int expectedCells = config.getWidth() * config.getHeight();
+    if (statesLength != expectedCells) {
+      throw new ConfigurationException(String.format(
+              "Number of states (%d) does not match grid size (%dx%d = %d cells)",
+              statesLength, config.getWidth(), config.getHeight(), expectedCells));
+    }
   }
 
   private void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
@@ -148,16 +236,6 @@ public class XMLParser {
     }
   }
 
-  private void validateGridSize(SimulationConfig config) throws ConfigurationException {
-    int totalCells = config.getWidth() * config.getHeight();
-    if (totalCells != config.getInitialStates().length) {
-      throw new ConfigurationException(String.format(
-              "Grid size (%dx%d = %d cells) does not match number of initial states (%d)",
-              config.getWidth(), config.getHeight(), totalCells, config.getInitialStates().length
-      ));
-    }
-  }
-
   private Map<String, Double> parseParametersWithValidation(Document doc, String simulationType)
           throws ConfigurationException {
     Map<String, Double> parameters = new HashMap<>();
@@ -182,7 +260,6 @@ public class XMLParser {
                 String.format("Invalid numerical value for parameter '%s': %s", name, valueStr));
       }
     }
-
     return parameters;
   }
 
@@ -196,47 +273,6 @@ public class XMLParser {
       throw new ConfigurationException(
               String.format("Parameter '%s' cannot be negative, got: %f", name, value));
     }
-  }
-
-  private void calculateGridDimensions(int[] initialStates, SimulationConfig config) {
-    int totalCells = initialStates.length;
-    int gridSize = (int) Math.sqrt(totalCells);
-    if (gridSize * gridSize == totalCells) {
-      config.setWidth(gridSize);
-      config.setHeight(gridSize);
-    } else {
-      throw new IllegalArgumentException("Cannot determine grid dimensions from non-square initial states array");
-    }
-  }
-
-  private void setProvidedDimensions(String widthStr, String heightStr, SimulationConfig config) {
-    if (widthStr == null || heightStr == null || widthStr.isEmpty() || heightStr.isEmpty()) {
-      throw new IllegalArgumentException("Both width and height must be specified if either is provided");
-    }
-    config.setWidth(Integer.parseInt(widthStr.trim()));
-    config.setHeight(Integer.parseInt(heightStr.trim()));
-  }
-
-  private Map<String, Double> parseParametersWithDefaults(Document doc, String simulationType) {
-    Map<String, Double> parameters = new HashMap<>();
-
-    loadDefaultParameters(parameters, simulationType);
-
-    NodeList paramNodes = doc.getElementsByTagName("parameter");
-    for (int i = 0; i < paramNodes.getLength(); i++) {
-      Element paramElement = (Element) paramNodes.item(i);
-      String name = paramElement.getAttribute("name");
-      String valueStr = paramElement.getAttribute("value");
-
-      try {
-        double value = Double.parseDouble(valueStr);
-        parameters.put(name, value);
-      } catch (NumberFormatException e) {
-        System.out.printf("Warning: Invalid value for parameter '%s', using default value from properties%n", name);
-      }
-    }
-
-    return parameters;
   }
 
   private void loadDefaultParameters(Map<String, Double> parameters, String simulationType) {
@@ -307,35 +343,6 @@ public class XMLParser {
     } catch (NumberFormatException e) {
       throw new ConfigurationException("Invalid state value format. All states must be integers.");
     }
-  }
-
-
-  /**
-   * Parses parameter values from the XML configuration
-   *
-   * @param doc The XML document
-   * @return Map of parameter names to their double values
-   */
-  private Map<String, Double> parseParameters(Document doc) {
-    Map<String, Double> parameters = new HashMap<>();
-    NodeList paramNodes = doc.getElementsByTagName("parameter");
-
-    for (int i = 0; i < paramNodes.getLength(); i++) {
-      Element paramElement = (Element) paramNodes.item(i);
-      String name = paramElement.getAttribute("name");
-      String valueStr = paramElement.getAttribute("value");
-
-      try {
-        double value = Double.parseDouble(valueStr);
-        parameters.put(name, value);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException(
-            String.format("Parameter '%s' has invalid numerical value: %s", name, valueStr)
-        );
-      }
-    }
-
-    return parameters;
   }
 
   static class ConfigurationException extends Exception {
