@@ -14,7 +14,8 @@ public class FileRetriever {
       "Spreading of Fire",
       "Percolation",
       "Wa-Tor World",
-      "Schelling Segregation"
+      "Schelling Segregation",
+      "Sand"
   );
 
   /**
@@ -61,6 +62,9 @@ public class FileRetriever {
         break;
       case "Wa-Tor World":
         folderExtension = "WaTorWorld";
+        break;
+      case "Sand":
+        folderExtension = "Sand";
         break;
       // potential point of abuse! Handle edge case:
       default:

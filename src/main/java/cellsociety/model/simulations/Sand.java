@@ -25,10 +25,10 @@ public class Sand extends Simulation {
    * Mapping of states to their visual color representations in hex format.
    */
   private static final Map<StateInterface, String> COLORS = Map.of(
-      SandState.EMPTY, "sugar-state-empty",
-      SandState.SAND, "sugar-state-sand",
-      SandState.WALL, "sugar-state-wall",
-      SandState.WATER, "sugar-state-water"
+      SandState.EMPTY, "sand-state-empty",
+      SandState.SAND, "sand-state-sand",
+      SandState.WALL, "sand-state-wall",
+      SandState.WATER, "sand-state-water"
   );
 
   /**
