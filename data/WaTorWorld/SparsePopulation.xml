@@ -6,9 +6,10 @@
     <description>Sharks and fish are randomly scattered with many empty spaces.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="fishReproductionTime" value="4"/>
-    <parameter name="sharkReproductionTime" value="6"/>
-    <parameter name="sharkStarvationTime" value="3"/>
+    <parameter name="fishBreedTime" value="4"/>
+    <parameter name="sharkBreedTime" value="6"/>
+    <parameter name="sharkInitialEnergy" value="2"/>
+    <parameter name="sharkEnergyGain" value="3"/>
     <initial_states>
         0 1 0 2 0 0
         1 0 0 0 2 0

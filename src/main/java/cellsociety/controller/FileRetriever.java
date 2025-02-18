@@ -14,7 +14,7 @@ public class FileRetriever {
       "Spreading of Fire",
       "Percolation",
       "Wa-Tor World",
-      "Schelling State"
+      "Schelling Segregation"
   );
 
   /**
@@ -56,8 +56,8 @@ public class FileRetriever {
       case "Percolation":
         folderExtension = "Percolation";
         break;
-      case "Schelling State":
-        folderExtension = "SchellingState";
+      case "Schelling Segregation":
+        folderExtension = "Schelling";
         break;
       case "Wa-Tor World":
         folderExtension = "WaTorWorld";

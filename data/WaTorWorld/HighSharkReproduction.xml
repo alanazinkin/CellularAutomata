@@ -6,9 +6,10 @@
     <description>Sharks reproduce very quickly.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="fishReproductionTime" value="3"/>
-    <parameter name="sharkReproductionTime" value="2"/>
-    <parameter name="sharkStarvationTime" value="3"/>
+    <parameter name="fishBreedTime" value="3"/>
+    <parameter name="sharkBreedTime" value="2"/>
+    <parameter name="sharkInitialEnergy" value="4"/>
+    <parameter name="sharkEnergyGain" value="3"/>
     <initial_states>
         2 0 2 0 2 0
         0 2 0 2 0 2

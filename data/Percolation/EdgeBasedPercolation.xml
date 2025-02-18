@@ -6,6 +6,7 @@
   <description>Water enters from the left edge and should spread through the open paths.</description>
   <width>5</width>
   <height>5</height>
+  <parameter name="percolationProb" value="0.5"/>
   <!-- 0 : BLOCKED      1 : OPEN      2 : FULL (Water) -->
   <initial_states>
     2 1 0 1 1

@@ -6,9 +6,10 @@
     <description>Few sharks mean the fish population will explode.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="fishReproductionTime" value="2"/>
-    <parameter name="sharkReproductionTime" value="6"/>
-    <parameter name="sharkStarvationTime" value="4"/>
+    <parameter name="fishBreedTime" value="2"/>
+    <parameter name="sharkBreedTime" value="6"/>
+    <parameter name="sharkInitialEnergy" value="2"/>
+    <parameter name="sharkEnergyGain" value="4"/>
     <initial_states>
         1 1 1 1 1 1
         1 1 1 0 1 1

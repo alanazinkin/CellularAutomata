@@ -6,9 +6,10 @@
   <description>Sharks start along the edges, testing their movement and hunting behavior.</description>
   <width>6</width>
   <height>6</height>
-  <parameter name="fishReproductionTime" value="3"/>
-  <parameter name="sharkReproductionTime" value="5"/>
-  <parameter name="sharkStarvationTime" value="3"/>
+  <parameter name="fishBreedTime" value="3"/>
+  <parameter name="sharkBreedTime" value="5"/>
+  <parameter name="sharkInitialEnergy" value="1"/>
+  <parameter name="sharkEnergyGain" value="3"/>
   <initial_states>
     2 2 2 2 2 2
     2 0 0 0 0 2
