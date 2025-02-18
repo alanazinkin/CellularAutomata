@@ -54,7 +54,10 @@ public class SimulationController {
     PERCOLATION("Percolation"),
     SCHELLING("Schelling Segregation"),
     WATOR_WORLD("Wa-Tor World"),
-    SAND("Sand");
+    SAND("Sand"),
+    LANGTON_LOOP("Langton Loop"),
+    SUGAR_SCAPE("Sugar Scape"),
+    BACTERIA("Bacteria");
 
     private final String displayName;
 

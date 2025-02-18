@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Sand</type>
+  <title>Basic Sand</title>
+  <author>Alana Zinkin</author>
+  <description>A simulation that mimics granular materials like sand or water. Particles fall, interact, and form structures under simulated gravity.</description>
+  <width>10</width>
+  <height>6</height>
+  <!-- 0 : EMPTY      1 : SAND      2 : WALL    3 : WATER -->
+  <initial_states>
+    3 2 1 1 3 1 1 1 3 1
+    1 0 3 0 1 1 1 1 3 1
+    1 3 2 3 1 0 2 1 0 3
+    1 0 1 1 1 3 2 2 2 2
+    1 2 1 0 1 1 1 1 1 1
+    1 0 1 1 1 1 0 0 0 0
+  </initial_states>
+</simulation>

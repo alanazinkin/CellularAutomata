@@ -44,7 +44,7 @@ class BacteriaColoniesSimulationTest {
         parameters
     );
 
-    simulation = new BacteriaColoniesSimulation(config);
+    simulation = new BacteriaColoniesSimulation(config, new Grid(3, 3, BacteriaState.ROCK));
   }
 
   /**
@@ -134,7 +134,8 @@ class BacteriaColoniesSimulationTest {
         GRID_SIZE, GRID_SIZE, new int[GRID_SIZE * GRID_SIZE], parameters
     );
 
-    BacteriaColoniesSimulation sim = new BacteriaColoniesSimulation(invalidConfig);
+    BacteriaColoniesSimulation sim = new BacteriaColoniesSimulation(invalidConfig, new Grid(invalidConfig.getWidth(),
+        invalidConfig.getHeight(), BacteriaState.PAPER));
 
     // Set up a situation where 3 neighbors (default threshold) should cause a change
     Grid grid = sim.getGrid();
@@ -158,7 +159,8 @@ class BacteriaColoniesSimulationTest {
     );
 
     assertThrows(IllegalArgumentException.class, () ->
-        new BacteriaColoniesSimulation(invalidConfig));
+        new BacteriaColoniesSimulation(invalidConfig, new Grid(invalidConfig.getWidth(),
+            invalidConfig.getHeight(), BacteriaState.PAPER)));
   }
 
   /**

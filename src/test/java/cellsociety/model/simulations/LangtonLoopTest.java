@@ -45,7 +45,7 @@ public class LangtonLoopTest {
         new HashMap<>()
     );
 
-    simulation = new LangtonLoop(config);
+    simulation = new LangtonLoop(config, new Grid(3, 3, LangtonState.CORE));
   }
 
   /**

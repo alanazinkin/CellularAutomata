@@ -42,9 +42,8 @@ public class LangtonLoop extends Simulation {
    * @throws IllegalArgumentException if grid dimensions are invalid or initial states array is
    *                                  empty
    */
-  public LangtonLoop(SimulationConfig simulationConfig) {
-    super(simulationConfig,
-        new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
+  public LangtonLoop(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
   }
 
   /**
