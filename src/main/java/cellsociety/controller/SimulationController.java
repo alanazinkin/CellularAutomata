@@ -55,7 +55,8 @@ public class SimulationController {
     SCHELLING("Schelling Segregation"),
     WATOR_WORLD("Wa-Tor World"),
     SAND("Sand"),
-    LANGTON_LOOP("Langton Loop");
+    LANGTON_LOOP("Langton Loop"),
+    SUGAR_SCAPE("Sugar Scape");
 
     private final String displayName;
 

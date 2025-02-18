@@ -16,7 +16,8 @@ public class FileRetriever {
       "Wa-Tor World",
       "Schelling Segregation",
       "Sand",
-      "Langton Loop"
+      "Langton Loop",
+      "Sugar Scape"
   );
 
   /**
@@ -69,6 +70,9 @@ public class FileRetriever {
         break;
       case "Langton Loop":
         folderExtension = "LangtonLoop";
+        break;
+      case "Sugar Scape":
+        folderExtension = "SugarScape";
         break;
       // potential point of abuse! Handle edge case:
       default:
