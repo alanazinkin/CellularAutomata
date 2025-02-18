@@ -18,6 +18,7 @@ import java.util.Map;
  * form a loop structure capable of creating copies of itself. The replication process uses
  * a "genome" encoded as state sequences, with signals traveling along sheathed pathways.
  * </p>
+ * @author Tatum McKinnis
  */
 public class LangtonLoop extends Simulation {
   private static final LangtonState DEFAULT_STATE = LangtonState.EMPTY;
@@ -42,6 +43,13 @@ public class LangtonLoop extends Simulation {
     super(simulationConfig, new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
   }
 
+  /**
+   * Initializes a mapping of Langton's Ant states to their corresponding color representations.
+   * This map is used for visualization purposes, assigning a unique color to each state.
+   *
+   * @return A map where keys are {@code StateInterface} values representing different states
+   *         and values are hexadecimal color codes as strings.
+   */
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     Map<StateInterface, String> colorMap = new HashMap<>();
@@ -56,6 +64,14 @@ public class LangtonLoop extends Simulation {
     return colorMap;
   }
 
+  /**
+   * Initializes a mapping of integer values to their corresponding Langton's Ant states.
+   * This map is used to associate numerical representations with specific states,
+   * which can be useful for grid-based simulations.
+   *
+   * @return A map where keys are integer values representing different states
+   *         and values are {@code StateInterface} objects defining those states.
+   */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
     Map<Integer, StateInterface> stateMap = new HashMap<>();
@@ -70,6 +86,10 @@ public class LangtonLoop extends Simulation {
     return stateMap;
   }
 
+  /**
+   * Applies the rules of the simulation to update the states of cells in the grid.
+   * Iterates through each cell and updates its state based on predefined rules.
+   */
   @Override
   protected void applyRules() {
     Grid grid = getGrid();
@@ -79,6 +99,7 @@ public class LangtonLoop extends Simulation {
       }
     }
   }
+
 
   /**
    * Updates the state of a single cell based on its von Neumann neighborhood configuration
@@ -92,7 +113,6 @@ public class LangtonLoop extends Simulation {
     LangtonState currentState = (LangtonState) currentCell.getCurrentState();
     LangtonState[] neighbors = getVonNeumannNeighborStates(row, col);
 
-    // Apply Langton's Loop transition rules
     LangtonState newState = applyTransitionRules(currentState, neighbors);
     currentCell.setNextState(newState);
   }
@@ -115,7 +135,7 @@ public class LangtonLoop extends Simulation {
       if (grid.isValidPosition(newRow, newCol)) {
         neighbors[i] = (LangtonState) grid.getCell(newRow, newCol).getCurrentState();
       } else {
-        neighbors[i] = LangtonState.EMPTY; // Treat out-of-bounds as empty cells
+        neighbors[i] = LangtonState.EMPTY;
       }
     }
 
@@ -131,10 +151,6 @@ public class LangtonLoop extends Simulation {
    * @return The next state for the cell
    */
   private LangtonState applyTransitionRules(LangtonState currentState, LangtonState[] neighbors) {
-    // Implement Langton's Loop transition rules here
-    // This is a simplified version - full implementation would include complete transition table
-
-    // Basic rules for demonstration:
     if (currentState == LangtonState.EMPTY) {
       // Check for loop extension pattern
       if (countNeighborType(neighbors, LangtonState.EXTEND) >= 1) {
@@ -147,7 +163,7 @@ public class LangtonLoop extends Simulation {
       }
     }
 
-    return currentState; // Default: maintain current state
+    return currentState;
   }
 
   /**

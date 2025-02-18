@@ -14,6 +14,7 @@ import java.util.HashMap;
  * Test class for BacteriaColoniesSimulation.
  * Tests the functionality of the bacteria colonies simulation including state transitions,
  * neighbor interactions, and edge cases.
+ * @author Tatum McKinnis
  */
 class BacteriaColoniesSimulationTest {
   private static final int GRID_SIZE = 3;

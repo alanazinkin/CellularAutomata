@@ -16,6 +16,7 @@ import java.util.Random;
  *   <li>Tree cells catch fire if neighbors are burning or through spontaneous combustion</li>
  *   <li>Empty/burnt cells may regrow trees based on probability</li>
  * </ul>
+ * @author Tatum McKinnis
  */
 public class Fire extends Simulation {
 
