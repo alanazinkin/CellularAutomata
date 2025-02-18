@@ -53,7 +53,8 @@ public class SimulationController {
     SPREADING_FIRE("Spreading of Fire"),
     PERCOLATION("Percolation"),
     SCHELLING("Schelling Segregation"),
-    WATOR_WORLD("Wa-Tor World");
+    WATOR_WORLD("Wa-Tor World"),
+    SAND("Sand");
 
     private final String displayName;
 

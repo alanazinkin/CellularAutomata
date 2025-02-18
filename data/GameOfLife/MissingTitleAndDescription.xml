@@ -1,0 +1,9 @@
+<simulation>
+    <type>Game of Life</type>
+    <!-- missing title -->
+    <author>Angela Predolac</author>
+    <!-- missing description -->
+    <width>10</width>
+    <height>10</height>
+    <initial_states>0 0 0 1 1 0 0 0 1 0</initial_states>
+</simulation>

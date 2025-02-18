@@ -24,14 +24,15 @@ public class XMLParser {
   private static final String PROB_PREFIX = "default.";
   private static final String PROB_SUFFIX = ".prob";
   private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
-          "Game of Life", "Spreading of Fire", "Schelling Segregation", "Percolation", "Wa-Tor World"
+          "Game of Life", "Spreading of Fire", "Schelling Segregation", "Percolation", "Wa-Tor World", "Sand"
   );
   private static final Map<String, Set<Integer>> VALID_STATES = Map.of(
           "Game of Life", Set.of(0, 1),
           "Spreading of Fire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
           "Schelling Segregation", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
           "Percolation", Set.of(0, 1, 2),
-          "Wa-Tor World", Set.of(0, 1, 2)           // 0: empty, 1: fish, 2: shark
+          "Wa-Tor World", Set.of(0, 1, 2),
+      "Sand", Set.of(0, 1, 2, 3)// 0: empty, 1: fish, 2: shark
   );
 
     public XMLParser() {
@@ -47,6 +48,8 @@ public class XMLParser {
    *                   to the expected types
    */
     public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
+      validateFile(filePath);
+
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       Document document;
       SimulationConfig config = new SimulationConfig();
@@ -72,19 +75,9 @@ public class XMLParser {
         String heightStr = getElementContent(document, "height");
         setGridDimensions(widthStr, heightStr, config);
 
-        NodeList cellNodes = document.getElementsByTagName("cell");
-        if (cellNodes.getLength() > 0) {
-          validateAndSetCellLocations(cellNodes, config);
-        } else {
-          String initialStatesStr = getElementContent(document, "initial_states");
-          validateInitialStates(initialStatesStr);
-          int[] initialStates = parseInitialStates(initialStatesStr);
-          validateCellStates(initialStates, simType);
-          validateGridSize(config, initialStates.length);
-          config.setInitialStates(initialStates);
-        }
+        validateAndSetInitialStates(document, config);
 
-        config.setParameters(parseParametersWithValidation(document, config.getType()));
+        config.setParameters(parseParametersWithValidation(document));
 
       } catch (ParserConfigurationException e) {
         throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
@@ -96,6 +89,137 @@ public class XMLParser {
 
       return config;
     }
+
+  private void parseRandomStates(Document doc, SimulationConfig config) throws ConfigurationException {
+    NodeList randomStateNodes = doc.getElementsByTagName("random_states");
+    if (randomStateNodes.getLength() == 0) {
+      return;
+    }
+
+    if (doc.getElementsByTagName("cell").getLength() > 0 ||
+            getElementContent(doc, "initial_states") != null) {
+      throw new ConfigurationException(
+              "Cannot specify both random states and explicit initial states");
+    }
+
+    Element randomStatesElement = (Element) randomStateNodes.item(0);
+    NodeList stateNodes = randomStatesElement.getElementsByTagName("state");
+
+    Map<Integer, Integer> stateCounts = new HashMap<>();
+    int totalSpecifiedCells = 0;
+    int gridSize = config.getWidth() * config.getHeight();
+
+    for (int i = 0; i < stateNodes.getLength(); i++) {
+      Element stateElement = (Element) stateNodes.item(i);
+
+      int stateValue = Integer.parseInt(stateElement.getAttribute("value"));
+      int count = Integer.parseInt(stateElement.getAttribute("count"));
+
+      Set<Integer> validStates = VALID_STATES.get(config.getType());
+      if (!validStates.contains(stateValue)) {
+        throw new ConfigurationException(
+                String.format("Invalid state value %d for %s simulation",
+                        stateValue, config.getType()));
+      }
+
+      if (count < 0) {
+        throw new ConfigurationException(
+                String.format("State count cannot be negative: %d", count));
+      }
+
+      totalSpecifiedCells += count;
+      stateCounts.put(stateValue, count);
+    }
+
+    if (totalSpecifiedCells > gridSize) {
+      throw new ConfigurationException(
+              String.format("Total specified cells (%d) exceeds grid size (%d)",
+                      totalSpecifiedCells, gridSize));
+    }
+
+    int[] states = generateRandomStates(config.getWidth(), config.getHeight(),
+            stateCounts);
+    config.setInitialStates(states);
+  }
+
+  /**
+   * Generates random state assignments based on specified counts
+   *
+   * @param width       Grid width
+   * @param height      Grid height
+   * @param stateCounts Map of state values to their desired counts
+   * @return Array of randomly assigned states
+   */
+  private int[] generateRandomStates(int width, int height,
+                                     Map<Integer, Integer> stateCounts) {
+    int gridSize = width * height;
+    int[] states = new int[gridSize];
+    Random random = new Random();
+
+    Arrays.fill(states, 0);
+
+    for (Map.Entry<Integer, Integer> entry : stateCounts.entrySet()) {
+      int stateValue = entry.getKey();
+      int count = entry.getValue();
+
+      for (int i = 0; i < count; i++) {
+        int position;
+        do {
+          position = random.nextInt(gridSize);
+        } while (states[position] != 0);
+        states[position] = stateValue;
+      }
+    }
+
+    return states;
+  }
+
+  private void validateAndSetInitialStates(Document doc, SimulationConfig config)
+          throws ConfigurationException {
+    NodeList cellNodes = doc.getElementsByTagName("cell");
+    String initialStatesStr = getElementContent(doc, "initial_states");
+
+    if (cellNodes.getLength() > 0) {
+      validateAndSetCellLocations(cellNodes, config);
+    } else if (initialStatesStr != null) {
+      validateInitialStates(initialStatesStr);
+      int[] initialStates = parseInitialStates(initialStatesStr);
+      validateCellStates(initialStates, config.getType());
+      validateGridSize(config, initialStates.length);
+      config.setInitialStates(initialStates);
+    } else {
+      parseRandomStates(doc, config);
+    }
+  }
+
+  private void validateFile(String filePath) throws ConfigurationException {
+    File file = new File(filePath);
+
+    if (!file.exists()) {
+      throw new ConfigurationException("Configuration file not found: " + filePath);
+    }
+
+    if (!file.canRead()) {
+      throw new ConfigurationException("Cannot read configuration file: " + filePath);
+    }
+
+    if (file.length() == 0) {
+      throw new ConfigurationException("Configuration file is empty: " + filePath);
+    }
+
+    String extension = getFileExtension(filePath);
+    if (!extension.equalsIgnoreCase("xml")) {
+      throw new ConfigurationException("Invalid file type. Expected XML file, got: " + extension);
+    }
+  }
+
+  private String getFileExtension(String filePath) {
+    int lastDotIndex = filePath.lastIndexOf('.');
+    if (lastDotIndex > 0 && lastDotIndex < filePath.length() - 1) {
+      return filePath.substring(lastDotIndex + 1);
+    }
+    return "";
+  }
 
   private void setGridDimensions(String widthStr, String heightStr, SimulationConfig config)
           throws ConfigurationException {
@@ -214,9 +338,31 @@ public class XMLParser {
   }
 
   private void validateXMLStructure(Document doc) throws ConfigurationException {
-    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
-      throw new ConfigurationException("Root element must be 'simulation'");
+    if (doc.getDocumentElement() == null) {
+      throw new ConfigurationException("Empty or malformed XML document");
     }
+
+    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
+      throw new ConfigurationException("Root element must be 'simulation', found: " +
+              doc.getDocumentElement().getTagName());
+    }
+
+    NodeList rootChildren = doc.getDocumentElement().getChildNodes();
+    for (int i = 0; i < rootChildren.getLength(); i++) {
+      Node child = rootChildren.item(i);
+      if (child.getNodeType() == Node.ELEMENT_NODE) {
+        String nodeName = child.getNodeName();
+        if (!isValidRootChild(nodeName)) {
+          throw new ConfigurationException("Unexpected element in simulation configuration: " + nodeName);
+        }
+      }
+    }
+  }
+
+  private boolean isValidRootChild(String nodeName) {
+    Set<String> validElements = Set.of("type", "title", "author", "description",
+            "width", "height", "cell", "initial_states", "parameter");
+    return validElements.contains(nodeName);
   }
 
   private void validateSimulationType(String type) throws ConfigurationException {
@@ -236,10 +382,9 @@ public class XMLParser {
     }
   }
 
-  private Map<String, Double> parseParametersWithValidation(Document doc, String simulationType)
+  private Map<String, Double> parseParametersWithValidation(Document doc)
           throws ConfigurationException {
     Map<String, Double> parameters = new HashMap<>();
-    //loadDefaultParameters(parameters, simulationType);
 
     NodeList paramNodes = doc.getElementsByTagName("parameter");
     for (int i = 0; i < paramNodes.getLength(); i++) {
@@ -275,40 +420,28 @@ public class XMLParser {
     }
   }
 
-  private void loadDefaultParameters(Map<String, Double> parameters, String simulationType) {
-    String simTypeKey = simulationType.toLowerCase().replaceAll("\\s+", ".");
-
-    Map<String, String[]> simParamKeys = new HashMap<>();
-    simParamKeys.put("spreadingfire", new String[]{"fire", "tree"});
-    simParamKeys.put("schelling", new String[]{"satisfaction"});
-    simParamKeys.put("percolation", new String[]{"percolation"});
-
-    String[] paramKeys = simParamKeys.getOrDefault(simTypeKey, new String[0]);
-    for (String key : paramKeys) {
-      String propertyKey = PROB_PREFIX + key + PROB_SUFFIX;
-      try {
-        String defaultValue = defaultProperties.getString(propertyKey);
-        parameters.put(key + "Prob", Double.parseDouble(defaultValue));
-      } catch (MissingResourceException | NumberFormatException e) {
-        System.out.printf("Warning: Could not load default value for %s from properties file%n", propertyKey);
-      }
-    }
-  }
-
-  private void validateRequiredFields(Document doc) throws Exception {
-    List<String> missingFields = new ArrayList<>();
+  private void validateRequiredFields(Document doc) throws ConfigurationException {
+    Map<String, String> missingOrEmptyFields = new HashMap<>();
     String[] requiredFields = {"type", "title", "author", "description"};
 
     for (String field : requiredFields) {
-      Node node = doc.getElementsByTagName(field).item(0);
-      if (node == null || node.getTextContent().trim().isEmpty()) {
-        missingFields.add(field);
+      NodeList nodes = doc.getElementsByTagName(field);
+      if (nodes.getLength() == 0) {
+        missingOrEmptyFields.put(field, "Missing field");
+      } else {
+        String content = nodes.item(0).getTextContent().trim();
+        if (content.isEmpty()) {
+          missingOrEmptyFields.put(field, "Empty field");
+        }
       }
     }
 
-    if (!missingFields.isEmpty()) {
-      throw new ConfigurationException("Missing required fields: " +
-              String.join(", ", missingFields));
+    if (!missingOrEmptyFields.isEmpty()) {
+      StringBuilder errorMsg = new StringBuilder("Configuration errors found:");
+      for (Map.Entry<String, String> entry : missingOrEmptyFields.entrySet()) {
+        errorMsg.append("\n- ").append(entry.getKey()).append(": ").append(entry.getValue());
+      }
+      throw new ConfigurationException(errorMsg.toString());
     }
   }
 

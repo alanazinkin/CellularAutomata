@@ -5,6 +5,7 @@ import cellsociety.model.Simulation;
 import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.simulations.Percolation;
+import cellsociety.model.simulations.Sand;
 import cellsociety.model.simulations.Schelling;
 import cellsociety.model.simulations.WaTorWorld;
 import java.util.Map;
@@ -25,6 +26,8 @@ public class SimulationFactory {
                     case WATOR_WORLD ->
                         new WaTorWorld(config, grid, parameters.get("fishBreedTime"), parameters.get("sharkBreedTime"),
                             parameters.get("sharkInitialEnergy"), parameters.get("sharkEnergyGain"));
+                    case SAND ->
+                      new Sand(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
