@@ -181,6 +181,19 @@ public class XMLParser {
           throws ConfigurationException {
     NodeList cellNodes = doc.getElementsByTagName("cell");
     String initialStatesStr = getElementContent(doc, "initial_states");
+    NodeList randomStateNodes = doc.getElementsByTagName("random_states");
+    NodeList randomProportionNodes = doc.getElementsByTagName("random_proportions");
+
+    int initializationMethods = 0;
+    if (cellNodes.getLength() > 0) initializationMethods++;
+    if (initialStatesStr != null) initializationMethods++;
+    if (randomStateNodes.getLength() > 0) initializationMethods++;
+    if (randomProportionNodes.getLength() > 0) initializationMethods++;
+
+    if (initializationMethods > 1) {
+      throw new ConfigurationException(
+              "Only one initialization method (cells, initial_states, random_states, or random_proportions) can be specified");
+    }
 
     if (cellNodes.getLength() > 0) {
       validateAndSetCellLocations(cellNodes, config);
@@ -190,9 +203,67 @@ public class XMLParser {
       validateCellStates(initialStates, config.getType());
       validateGridSize(config, initialStates.length);
       config.setInitialStates(initialStates);
-    } else {
+    } else if (randomStateNodes.getLength() > 0) {
       parseRandomStates(doc, config);
+    } else if (randomProportionNodes.getLength() > 0) {
+      parseRandomProportions(doc, config);
+    } else {
+      int[] defaultStates = new int[config.getWidth() * config.getHeight()];
+      Arrays.fill(defaultStates, 0);
+      config.setInitialStates(defaultStates);
     }
+  }
+
+  private void parseRandomProportions(Document doc, SimulationConfig config) throws ConfigurationException {
+    Element randomPropsElement = (Element) doc.getElementsByTagName("random_proportions").item(0);
+    NodeList stateNodes = randomPropsElement.getElementsByTagName("state");
+
+    Map<Integer, Double> stateProportions = new HashMap<>();
+    double totalProportion = 0.0;
+    int gridSize = config.getWidth() * config.getHeight();
+
+    for (int i = 0; i < stateNodes.getLength(); i++) {
+      Element stateElement = (Element) stateNodes.item(i);
+
+      try {
+        int stateValue = Integer.parseInt(stateElement.getAttribute("value"));
+        double proportion = Double.parseDouble(stateElement.getAttribute("proportion"));
+
+        Set<Integer> validStates = VALID_STATES.get(config.getType());
+        if (!validStates.contains(stateValue)) {
+          throw new ConfigurationException(
+                  String.format("Invalid state value %d for %s simulation",
+                          stateValue, config.getType()));
+        }
+
+        if (proportion < 0.0 || proportion > 1.0) {
+          throw new ConfigurationException(
+                  String.format("Proportion must be between 0 and 1, got: %.2f", proportion));
+        }
+
+        totalProportion += proportion;
+        stateProportions.put(stateValue, proportion);
+
+      } catch (NumberFormatException e) {
+        throw new ConfigurationException(
+                "Invalid number format in random proportion definition: " + e.getMessage());
+      }
+    }
+
+    if (totalProportion > 1.0) {
+      throw new ConfigurationException(
+              String.format("Total proportion (%.2f) exceeds 1.0", totalProportion));
+    }
+
+    Map<Integer, Integer> stateCounts = new HashMap<>();
+    for (Map.Entry<Integer, Double> entry : stateProportions.entrySet()) {
+      int cellCount = (int) Math.round(entry.getValue() * gridSize);
+      stateCounts.put(entry.getKey(), cellCount);
+    }
+
+    int[] states = generateRandomStates(config.getWidth(), config.getHeight(),
+            stateCounts);
+    config.setInitialStates(states);
   }
 
   private void validateFile(String filePath) throws ConfigurationException {
@@ -364,7 +435,7 @@ public class XMLParser {
 
   private boolean isValidRootChild(String nodeName) {
     Set<String> validElements = Set.of("type", "title", "author", "description",
-            "width", "height", "cell", "initial_states", "parameter");
+            "width", "height", "cell", "initial_states", "parameter", "random_states", "random_proportions");
     return validElements.contains(nodeName);
   }
 

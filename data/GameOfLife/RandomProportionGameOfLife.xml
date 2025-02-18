@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Game of Life</type>
+    <title>Random Game of Life - Proportional</title>
+    <author>Angela Predolac</author>
+    <description>Random initial state with 66% alive cells</description>
+    <width>3</width>
+    <height>3</height>
+    <random_proportions>
+        <state value="1" proportion="0.66"/>
+        <!-- Dead cells (state 0) will fill the remaining ~34% -->
+    </random_proportions>
+</simulation>
