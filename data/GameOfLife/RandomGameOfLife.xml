@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+    <type>Game of Life</type>
+    <title>Random Game of Life</title>
+    <author>Angela Predolac</author>
+    <description>Random initial state with 6 alive cells</description>
+    <width>4</width>
+    <height>4</height>
+    <random_states>
+        <state value="1" count="6"/>
+        <!-- Dead cells (state 0) will fill the remaining 10 positions -->
+    </random_states>
+</simulation>

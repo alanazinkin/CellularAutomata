@@ -1,7 +1,7 @@
 <simulation>
     <type>Game of Life</type>
     <!-- missing title -->
-    <author>Test Author</author>
+    <author>Angela Predolac</author>
     <!-- missing description -->
     <width>10</width>
     <height>10</height>

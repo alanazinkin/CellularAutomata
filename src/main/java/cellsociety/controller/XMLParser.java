@@ -74,19 +74,9 @@ public class XMLParser {
         String heightStr = getElementContent(document, "height");
         setGridDimensions(widthStr, heightStr, config);
 
-        NodeList cellNodes = document.getElementsByTagName("cell");
-        if (cellNodes.getLength() > 0) {
-          validateAndSetCellLocations(cellNodes, config);
-        } else {
-          String initialStatesStr = getElementContent(document, "initial_states");
-          validateInitialStates(initialStatesStr);
-          int[] initialStates = parseInitialStates(initialStatesStr);
-          validateCellStates(initialStates, simType);
-          validateGridSize(config, initialStates.length);
-          config.setInitialStates(initialStates);
-        }
+        validateAndSetInitialStates(document, config);
 
-        config.setParameters(parseParametersWithValidation(document, config.getType()));
+        config.setParameters(parseParametersWithValidation(document));
 
       } catch (ParserConfigurationException e) {
         throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
@@ -98,6 +88,108 @@ public class XMLParser {
 
       return config;
     }
+
+  private void parseRandomStates(Document doc, SimulationConfig config) throws ConfigurationException {
+    NodeList randomStateNodes = doc.getElementsByTagName("random_states");
+    if (randomStateNodes.getLength() == 0) {
+      return;
+    }
+
+    if (doc.getElementsByTagName("cell").getLength() > 0 ||
+            getElementContent(doc, "initial_states") != null) {
+      throw new ConfigurationException(
+              "Cannot specify both random states and explicit initial states");
+    }
+
+    Element randomStatesElement = (Element) randomStateNodes.item(0);
+    NodeList stateNodes = randomStatesElement.getElementsByTagName("state");
+
+    Map<Integer, Integer> stateCounts = new HashMap<>();
+    int totalSpecifiedCells = 0;
+    int gridSize = config.getWidth() * config.getHeight();
+
+    for (int i = 0; i < stateNodes.getLength(); i++) {
+      Element stateElement = (Element) stateNodes.item(i);
+
+      int stateValue = Integer.parseInt(stateElement.getAttribute("value"));
+      int count = Integer.parseInt(stateElement.getAttribute("count"));
+
+      Set<Integer> validStates = VALID_STATES.get(config.getType());
+      if (!validStates.contains(stateValue)) {
+        throw new ConfigurationException(
+                String.format("Invalid state value %d for %s simulation",
+                        stateValue, config.getType()));
+      }
+
+      if (count < 0) {
+        throw new ConfigurationException(
+                String.format("State count cannot be negative: %d", count));
+      }
+
+      totalSpecifiedCells += count;
+      stateCounts.put(stateValue, count);
+    }
+
+    if (totalSpecifiedCells > gridSize) {
+      throw new ConfigurationException(
+              String.format("Total specified cells (%d) exceeds grid size (%d)",
+                      totalSpecifiedCells, gridSize));
+    }
+
+    int[] states = generateRandomStates(config.getWidth(), config.getHeight(),
+            stateCounts);
+    config.setInitialStates(states);
+  }
+
+  /**
+   * Generates random state assignments based on specified counts
+   *
+   * @param width       Grid width
+   * @param height      Grid height
+   * @param stateCounts Map of state values to their desired counts
+   * @return Array of randomly assigned states
+   */
+  private int[] generateRandomStates(int width, int height,
+                                     Map<Integer, Integer> stateCounts) {
+    int gridSize = width * height;
+    int[] states = new int[gridSize];
+    Random random = new Random();
+
+    Arrays.fill(states, 0);
+
+    for (Map.Entry<Integer, Integer> entry : stateCounts.entrySet()) {
+      int stateValue = entry.getKey();
+      int count = entry.getValue();
+
+      for (int i = 0; i < count; i++) {
+        int position;
+        do {
+          position = random.nextInt(gridSize);
+        } while (states[position] != 0);
+        states[position] = stateValue;
+      }
+    }
+
+    return states;
+  }
+
+  private void validateAndSetInitialStates(Document doc, SimulationConfig config)
+          throws ConfigurationException {
+    NodeList cellNodes = doc.getElementsByTagName("cell");
+    String initialStatesStr = getElementContent(doc, "initial_states");
+
+    if (cellNodes.getLength() > 0) {
+      validateAndSetCellLocations(cellNodes, config);
+    } else if (initialStatesStr != null) {
+      validateInitialStates(initialStatesStr);
+      int[] initialStates = parseInitialStates(initialStatesStr);
+      validateCellStates(initialStates, config.getType());
+      validateGridSize(config, initialStates.length);
+      config.setInitialStates(initialStates);
+    } else {
+      parseRandomStates(doc, config);
+    }
+  }
 
   private void validateFile(String filePath) throws ConfigurationException {
     File file = new File(filePath);
@@ -289,10 +381,9 @@ public class XMLParser {
     }
   }
 
-  private Map<String, Double> parseParametersWithValidation(Document doc, String simulationType)
+  private Map<String, Double> parseParametersWithValidation(Document doc)
           throws ConfigurationException {
     Map<String, Double> parameters = new HashMap<>();
-    //loadDefaultParameters(parameters, simulationType);
 
     NodeList paramNodes = doc.getElementsByTagName("parameter");
     for (int i = 0; i < paramNodes.getLength(); i++) {
@@ -325,26 +416,6 @@ public class XMLParser {
     if (value < 0) {
       throw new ConfigurationException(
               String.format("Parameter '%s' cannot be negative, got: %f", name, value));
-    }
-  }
-
-  private void loadDefaultParameters(Map<String, Double> parameters, String simulationType) {
-    String simTypeKey = simulationType.toLowerCase().replaceAll("\\s+", ".");
-
-    Map<String, String[]> simParamKeys = new HashMap<>();
-    simParamKeys.put("spreadingfire", new String[]{"fire", "tree"});
-    simParamKeys.put("schelling", new String[]{"satisfaction"});
-    simParamKeys.put("percolation", new String[]{"percolation"});
-
-    String[] paramKeys = simParamKeys.getOrDefault(simTypeKey, new String[0]);
-    for (String key : paramKeys) {
-      String propertyKey = PROB_PREFIX + key + PROB_SUFFIX;
-      try {
-        String defaultValue = defaultProperties.getString(propertyKey);
-        parameters.put(key + "Prob", Double.parseDouble(defaultValue));
-      } catch (MissingResourceException | NumberFormatException e) {
-        System.out.printf("Warning: Could not load default value for %s from properties file%n", propertyKey);
-      }
     }
   }
 
