@@ -54,7 +54,6 @@ class AntSimulationTest {
     Grid grid = new Grid(GRID_SIZE, GRID_SIZE,
         new AntState(false, false, false, 0, 0, 0));
 
-    // Clear path from nest to food
     for (int i = 0; i <= FOOD_ROW - NEST_ROW; i++) {
       int row = NEST_ROW + i;
       int col = NEST_COL + i;
@@ -63,7 +62,6 @@ class AntSimulationTest {
       );
     }
 
-    // Nest and food
     grid.getCell(NEST_ROW, NEST_COL).setCurrentState(
         new AntState(true, false, false, AntSimulation.getMaxPheromone(), 0, 0)
     );
@@ -88,13 +86,13 @@ class AntSimulationTest {
   }
 
   /**
-   * Tests ant initialization at nest locations.
+   * Tests that ants initialize at nest locations.
    * <p>
    * Verifies that all ants start at the predefined nest coordinates.
    * </p>
    */
   @Test
-  void testAntsInitializeAtNest() {
+  void AntSimulation_AntsAtNest_InitializedAtCorrectPosition() {
     AntSimulation simulation = new AntSimulation(testConfig, testGrid);
 
     simulation.getAnts().forEach(ant -> {
@@ -104,17 +102,16 @@ class AntSimulationTest {
   }
 
   /**
-   * Tests pheromone deposition mechanics.
+   * Tests pheromone deposition at the current location.
    * <p>
    * Verifies that ants deposit pheromones at their current location during simulation steps.
    * </p>
    */
   @Test
-  void testPheromoneDepositionAtCurrentLocation() {
+  void AntSimulation_PheromoneDeposition_AtCurrentLocation() {
     AntSimulation simulation = new AntSimulation(testConfig, testGrid);
     Ant testAnt = simulation.getAnts().get(0);
 
-    // Move ant away from nest
     testAnt.setRow(NEST_ROW + 1);
     testAnt.setCol(NEST_COL + 1);
 
@@ -127,17 +124,16 @@ class AntSimulationTest {
   }
 
   /**
-   * Tests pheromone gradient formation.
+   * Tests food pheromone gradient creation.
    * <p>
    * Verifies that food pheromone levels decrease with distance from the food source.
    * </p>
    */
   @Test
-  void testFoodPheromoneGradientCreation() {
+  void AntSimulation_FoodPheromoneGradient_Creation() {
     Grid testGrid = createTestGrid();
     AntSimulation simulation = new AntSimulation(testConfig, testGrid);
 
-    // Pre-seed gradient for reliable testing
     for (int i = 0; i <= FOOD_ROW - NEST_ROW; i++) {
       int row = NEST_ROW + i;
       int col = NEST_COL + i;
@@ -147,7 +143,7 @@ class AntSimulationTest {
       );
     }
 
-    simulation.applyRules(); // Let ants reinforce gradient
+    simulation.applyRules();
 
     for (int i = 0; i < (FOOD_ROW - NEST_ROW); i++) {
       int currentRow = NEST_ROW + i;
@@ -165,34 +161,33 @@ class AntSimulationTest {
   }
 
   /**
-   * Tests pheromone-guided movement.
+   * Tests ant movement toward the strongest pheromone.
    * <p>
    * Verifies that ants move from their initial position when following pheromone trails.
    * </p>
    */
   @Test
-  void testAntMovementTowardStrongestPheromone() {
+  void AntSimulation_AntMovement_TowardStrongestPheromone() {
     AntSimulation simulation = new AntSimulation(testConfig, testGrid);
     Ant testAnt = simulation.getAnts().get(0);
 
     simulation.applyRules();
-    simulation.applyRules(); // Ensure at least 2 steps
+    simulation.applyRules();
 
     assertTrue(testAnt.getRow() > NEST_ROW || testAnt.getCol() > NEST_COL,
         "Ant should move toward increasing food pheromones");
   }
 
   /**
-   * Tests obstacle avoidance behavior.
+   * Tests obstacle avoidance.
    * <p>
    * Verifies that ants don't move into cells marked as obstacles.
    * </p>
    */
   @Test
-  void testObstacleAvoidance() {
+  void AntSimulation_AntMovement_AvoidsObstacles() {
     Grid testGrid = createTestGrid();
 
-    // Create obstacle wall in column 3, blocking all rows except row 2 (NEST_ROW)
     for (int r = 0; r < GRID_SIZE; r++) {
       if (r != NEST_ROW) {
         testGrid.getCell(r, 3).setCurrentState(
@@ -203,35 +198,34 @@ class AntSimulationTest {
 
     AntSimulation simulation = new AntSimulation(testConfig, testGrid);
     simulation.applyRules();
-    simulation.applyRules(); // Let ants move
+    simulation.applyRules();
 
     simulation.getAnts().forEach(ant -> {
-      // Ants should only pass through column 3 at row 2
       assertTrue(ant.getCol() != 3 || ant.getRow() == NEST_ROW,
           "Ants should only pass through gap at row " + NEST_ROW);
     });
   }
 
   /**
-   * Tests null grid initialization handling.
+   * Tests that null grid initialization throws an exception.
    * <p>
    * Verifies that passing a null grid to the constructor throws IllegalArgumentException.
    * </p>
    */
   @Test
-  void testNullGridInitializationThrowsException() {
+  void AntSimulation_GridInitialization_NullGridThrowsException() {
     assertThrows(IllegalArgumentException.class,
         () -> new AntSimulation(testConfig, null));
   }
 
   /**
-   * Tests missing nest handling.
+   * Tests that missing nest in grid is handled gracefully.
    * <p>
    * Verifies that simulations with grids containing no nests initialize with zero ants.
    * </p>
    */
   @Test
-  void testMissingNestInGridHandledGracefully() {
+  void AntSimulation_GridWithoutNest_HandlesMissingNestGracefully() {
     Grid emptyGrid = new Grid(GRID_SIZE, GRID_SIZE,
         new AntState(false, false, false, 0, 0, 0));
 

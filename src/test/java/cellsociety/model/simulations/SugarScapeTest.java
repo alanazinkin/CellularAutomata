@@ -14,6 +14,8 @@ import java.util.*;
  * Test class for SugarScape simulation. Tests various aspects of the simulation including: -
  * Initialization - Agent movement and interactions - Resource management - Loan system - Disease
  * transmission Adheres to [UnitOfWork_StateUnderTest_ExpectedBehavior] naming convention.
+ *
+ * @author Tatum McKinnis
  */
 public class SugarScapeTest {
 
@@ -27,13 +29,11 @@ public class SugarScapeTest {
     config = mock(SimulationConfig.class);
     when(config.getInitialStates()).thenReturn(new int[GRID_SIZE * GRID_SIZE]);
 
-    // Create grid with SugarCells
     grid = new Grid(GRID_SIZE, GRID_SIZE, SugarScapeState.EMPTY);
-    // Manually set SugarCells after grid creation
     for (int r = 0; r < GRID_SIZE; r++) {
       for (int c = 0; c < GRID_SIZE; c++) {
         SugarCell cell = new SugarCell(r, c, SugarScapeState.EMPTY);
-        cell.setMaxSugar(10); // Set a default max sugar value
+        cell.setMaxSugar(10);
         grid.setCellAt(r, c, cell);
       }
     }
@@ -159,32 +159,28 @@ public class SugarScapeTest {
    */
   @Test
   void getStatistics_WithActiveSimulation_ReturnsValidStats() {
-    // Set all grid cells to empty SugarCells with 0 sugar
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
         SugarCell cell = new SugarCell(r, c, SugarScapeState.EMPTY);
-        cell.setMaxSugar(0);  // Set max sugar to 0 to prevent growth
-        cell.setSugar(0);     // Explicitly set sugar to 0
+        cell.setMaxSugar(0);
+        cell.setSugar(0);
         grid.setCellAt(r, c, cell);
       }
     }
 
-    // Set up our test cells
     SugarCell cell1 = new SugarCell(0, 0, SugarScapeState.EMPTY);
     SugarCell cell2 = new SugarCell(0, 1, SugarScapeState.EMPTY);
-    cell1.setMaxSugar(0);  // Prevent sugar growth
+    cell1.setMaxSugar(0);
     cell2.setMaxSugar(0);
     cell1.setSugar(0);
     cell2.setSugar(0);
     grid.setCellAt(0, 0, cell1);
     grid.setCellAt(0, 1, cell2);
 
-    // Clear existing agents
     while (!simulation.getAgents().isEmpty()) {
       simulation.getAgents().remove(0);
     }
 
-    // Create and add agents with exact sugar amounts
     Agent agent1 = new Agent(cell1, 100, 1, 1);
     Agent agent2 = new Agent(cell2, 50, 1, 1);
     agent1.setSex(Sex.MALE);
@@ -199,26 +195,23 @@ public class SugarScapeTest {
     assertEquals(2, stats.get("agentCount"));
     assertEquals(1L, stats.get("maleCount"));
     assertEquals(1L, stats.get("femaleCount"));
-    assertEquals(150, stats.get("totalSugar")); // 100 + 50
+    assertEquals(150, stats.get("totalSugar"));
   }
+
   /**
    * Tests step execution and growth patterns. Verifies that sugar grows back correctly.
    */
   @Test
   void step_WithEmptyGrid_GrowsBackSugar() {
-    // Set up cell with proper initial state
     SugarCell cell = new SugarCell(0, 0, SugarScapeState.EMPTY);
     cell.setMaxSugar(5);
     cell.setSugar(0);
     grid.setCellAt(0, 0, cell);
 
-    // Force cell to be in correct state for sugar growth
     cell.setCurrentState(SugarScapeState.EMPTY);
 
-    // Execute step
     simulation.step();
 
-    // Verify sugar growth
-    assertEquals(1, cell.getSugar()); // Default grow back rate is 1
+    assertEquals(1, cell.getSugar());
   }
 }
