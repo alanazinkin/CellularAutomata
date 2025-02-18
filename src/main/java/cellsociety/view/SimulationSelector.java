@@ -17,15 +17,32 @@ public class SimulationSelector {
   private SimulationController myController;
   private SimulationUI myUI;
 
+  /**
+   * Constructor for making a new SimulationSelector
+   *
+   * @param resources            ResourceBundle for user-selected language
+   * @param simulationController SimulationController object for managing the simulation
+   */
   public SimulationSelector(ResourceBundle resources, SimulationController simulationController) {
     myResources = resources;
     myController = simulationController;
     myUI = myController.getUI();
   }
-  public List<ComboBox<String>> makeSimSelectorComboBoxes(String label, String secondBoxLabel,
+
+  /**
+   * creates combo boxes for selecting a new simulation
+   *
+   * @param firstLabel            label for first combo box
+   * @param secondBoxLabel        label for second combo box
+   * @param simulationTypeOptions list of the different types of simulations to choose from
+   * @return a list of two comboBoxes, the first is the TypeSelector, the second is the
+   * ConfigFileSelector
+   * @throws Exception
+   */
+  public List<ComboBox<String>> makeSimSelectorComboBoxes(String firstLabel, String secondBoxLabel,
       List<String> simulationTypeOptions) throws Exception {
     ComboBox<String> simulationTypes = new ComboBox<>();
-    simulationTypes.setPromptText(label);
+    simulationTypes.setPromptText(firstLabel);
     simulationTypes.getItems().addAll(simulationTypeOptions);
     ComboBox<String> configFileComboBox = new ComboBox<>();
     configFileComboBox.setPromptText(secondBoxLabel);
@@ -54,6 +71,14 @@ public class SimulationSelector {
     });
   }
 
+  /**
+   * sets the action of the second combobox to selecting a simulation
+   *
+   * @param simulationTypes    combobox holding the different simulation types
+   * @param configFileComboBox combobox holding the specific files for the selected simulation type
+   * @param stage              current stage for holding the new simulation
+   * @param resources          ResourceBundle for user-selected language
+   */
   public void respondToFileSelection(ComboBox<String> simulationTypes,
       ComboBox<String> configFileComboBox, Stage stage, ResourceBundle resources) {
     configFileComboBox.setOnAction(e -> {

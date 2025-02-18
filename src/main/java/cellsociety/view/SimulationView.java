@@ -40,7 +40,7 @@ public class SimulationView {
    * @param languageResources the language file for user-selected language
    */
   public SimulationView(SimulationConfig simulationConfig, SimulationController controller,
-                        ResourceBundle languageResources) {
+      ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
     myUI = controller.getUI();
@@ -77,18 +77,20 @@ public class SimulationView {
       throw new NullPointerException(e.getMessage());
     }
     // make simulation information pop-up window
-    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(), myConfig.getTitle(),
-        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(), simulation.getColorMap(), language,
+    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
+        myConfig.getTitle(),
+        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
+        simulation.getColorMap(), language,
         myResources
     );
-    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor, simView);
+    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
+        simView);
   }
 
   /**
    * Creates a new main pane to hold the grid view and control bar.
    *
-   * @param stage holds all main panes and views for simulation except the Simulation
-   *                     Information
+   * @param stage holds all main panes and views for simulation except the Simulation Information
    * @return myScene
    */
   public Scene createSimulationWindow(Stage stage) {
@@ -151,6 +153,11 @@ public class SimulationView {
     return myRoot;
   }
 
+  /**
+   * updates the cell colors of the grid
+   *
+   * @param stateMap holds the mapping for retrieving the CSS ids for a given cell state
+   */
   public void updateGrid(Map<StateInterface, String> stateMap) {
     if (myGridView != null) {
       myGridView.updateCellColors(stateMap);
