@@ -56,7 +56,8 @@ public class SimulationController {
     WATOR_WORLD("Wa-Tor World"),
     SAND("Sand"),
     LANGTON_LOOP("Langton Loop"),
-    SUGAR_SCAPE("Sugar Scape");
+    SUGAR_SCAPE("Sugar Scape"),
+    BACTERIA("Bacteria");
 
     private final String displayName;
 

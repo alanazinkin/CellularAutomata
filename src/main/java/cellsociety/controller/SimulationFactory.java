@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
+import cellsociety.model.simulations.BacteriaColoniesSimulation;
 import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.simulations.LangtonLoop;
@@ -34,6 +35,8 @@ public class SimulationFactory {
                       new LangtonLoop(config, grid);
                     case SUGAR_SCAPE ->
                       new SugarScape(config, grid);
+                    case BACTERIA ->
+                      new BacteriaColoniesSimulation(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
