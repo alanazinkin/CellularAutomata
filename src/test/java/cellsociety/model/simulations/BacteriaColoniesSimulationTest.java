@@ -134,8 +134,9 @@ class BacteriaColoniesSimulationTest {
         GRID_SIZE, GRID_SIZE, new int[GRID_SIZE * GRID_SIZE], parameters
     );
 
-    BacteriaColoniesSimulation sim = new BacteriaColoniesSimulation(invalidConfig, new Grid(invalidConfig.getWidth(),
-        invalidConfig.getHeight(), BacteriaState.PAPER));
+    BacteriaColoniesSimulation sim = new BacteriaColoniesSimulation(invalidConfig,
+        new Grid(invalidConfig.getWidth(),
+            invalidConfig.getHeight(), BacteriaState.PAPER));
 
     // Set up a situation where 3 neighbors (default threshold) should cause a change
     Grid grid = sim.getGrid();

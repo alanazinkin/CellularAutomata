@@ -17,7 +17,7 @@ public class SimulationFactory {
     public static Simulation createSimulation(String type, SimulationConfig config,
                                               Grid grid) {
         Map<String, Double> parameters = config.getParameters();
-        return SimulationController.SimulationType.fromString(type)
+        return (Simulation) SimulationController.SimulationType.fromString(type)
                 .map(simType -> switch (simType) {
                     case GAME_OF_LIFE -> new GameOfLife(config, grid);
                     case SPREADING_FIRE ->

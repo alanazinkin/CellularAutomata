@@ -685,3 +685,4 @@ public class SugarScape extends Simulation {
             .orElse(0);
   }
 }
+
