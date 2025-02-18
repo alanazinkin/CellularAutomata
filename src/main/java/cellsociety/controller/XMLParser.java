@@ -26,6 +26,13 @@ public class XMLParser {
   private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
           "GameOfLife", "SpreadingFire", "Segregation", "Percolation", "WaTor"
   );
+  private static final Map<String, Set<Integer>> VALID_STATES = Map.of(
+          "GameOfLife", Set.of(0, 1),
+          "SpreadingFire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
+          "Segregation", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
+          "Percolation", Set.of(0, 1),
+          "WaTor", Set.of(0, 1, 2)           // 0: empty, 1: fish, 2: shark
+  );
 
     public XMLParser() {
       this.defaultProperties = ResourceBundle.getBundle(DEFAULT_PROPERTIES_PATH);
@@ -64,6 +71,7 @@ public class XMLParser {
       String initialStatesStr = getElementContent(document, "initial_states");
       validateInitialStates(initialStatesStr);
       int[] initialStates = parseInitialStates(initialStatesStr);
+      validateCellStates(initialStates, simType);
       config.setInitialStates(initialStates);
 
       String widthStr = getElementContent(document, "width");
@@ -76,7 +84,6 @@ public class XMLParser {
       }
 
       validateGridSize(config);
-
       config.setParameters(parseParametersWithValidation(document, config.getType()));
 
     } catch (ParserConfigurationException e) {
@@ -90,6 +97,33 @@ public class XMLParser {
     return config;
   }
 
+  private void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
+    Set<Integer> validStates = VALID_STATES.get(simulationType);
+    if (validStates == null) {
+      throw new ConfigurationException("No valid states defined for simulation type: " + simulationType);
+    }
+
+    List<Integer> invalidStates = new ArrayList<>();
+    Set<Integer> foundInvalidStates = new HashSet<>();
+
+    for (int i = 0; i < states.length; i++) {
+      if (!validStates.contains(states[i])) {
+        foundInvalidStates.add(states[i]);
+        invalidStates.add(i);
+      }
+    }
+
+    if (!invalidStates.isEmpty()) {
+      String errorMsg = String.format(
+              "Invalid cell states found at positions %s. Found invalid values: %s. Valid states for %s are: %s",
+              invalidStates,
+              foundInvalidStates,
+              simulationType,
+              validStates
+      );
+      throw new ConfigurationException(errorMsg);
+    }
+  }
 
   private void validateXMLStructure(Document doc) throws ConfigurationException {
     if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
@@ -256,23 +290,23 @@ public class XMLParser {
    * @param statesStr The string containing space-separated state values
    * @return Array of integer state values
    */
-  private int[] parseInitialStates(String statesStr) {
-    String[] values = statesStr.trim().split("\\s+");
-    int[] states = new int[values.length];
+  private int[] parseInitialStates(String statesStr) throws ConfigurationException {
+    try {
+      String[] values = statesStr.trim().split("\\s+");
+      int[] states = new int[values.length];
 
-    for (int i = 0; i < values.length; i++) {
-      if (!values[i].isEmpty()) {
-        try {
+      for (int i = 0; i < values.length; i++) {
+        if (!values[i].isEmpty()) {
           states[i] = Integer.parseInt(values[i].trim());
-        } catch (NumberFormatException e) {
-          throw new IllegalArgumentException("Invalid state value: " + values[i]);
+        } else {
+          throw new ConfigurationException("Empty state value found at position " + i);
         }
-      } else {
-        throw new IllegalArgumentException("Empty state value found in position " + i);
       }
-    }
 
-    return states;
+      return states;
+    } catch (NumberFormatException e) {
+      throw new ConfigurationException("Invalid state value format. All states must be integers.");
+    }
   }
 
 
