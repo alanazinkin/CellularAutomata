@@ -31,9 +31,6 @@ public class SugarScape extends Simulation {
   private static final int SUGAR_STATE = 1;
   private static final int AGENT_STATE = 2;
 
-  private static final String EMPTY_COLOR = "white";
-  private static final String SUGAR_COLOR = "yellow";
-  private static final String AGENT_COLOR = "blue";
 
   public SugarScape(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
@@ -51,9 +48,9 @@ public class SugarScape extends Simulation {
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
     Map<StateInterface, String> colorMap = new HashMap<>();
-    colorMap.put(SugarScapeState.EMPTY, EMPTY_COLOR);
-    colorMap.put(SugarScapeState.SUGAR, SUGAR_COLOR);
-    colorMap.put(SugarScapeState.AGENT, AGENT_COLOR);
+    colorMap.put(SugarScapeState.EMPTY, "sugar-state-empty");
+    colorMap.put(SugarScapeState.SUGAR, "sugar-state-sugar");
+    colorMap.put(SugarScapeState.AGENT, "sugar-state-agent");
     return colorMap;
   }
 

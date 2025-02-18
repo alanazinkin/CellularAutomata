@@ -1,0 +1,9 @@
+#sugar-state-empty {
+  -fx-fill: white;
+}
+#sugar-state-sugar {
+  -fx-fill: yellow;
+}
+#sugar-state-agent {
+  -fx-fill: skyblue;
+}
