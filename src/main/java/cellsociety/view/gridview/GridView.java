@@ -47,10 +47,10 @@ public abstract class GridView {
     myGrid = grid;
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numCols;
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numRows;
     cellHeight =
         (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT)
-            / numRows;
+            / numCols;
     gridPane = new GridPane();
   }
 
@@ -64,7 +64,7 @@ public abstract class GridView {
     myRoot.setCenter(gridPane);
     gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
     gridPane.setMaxHeight(
-        parseInt(myConfigResourceMap.getOrDefault("window.height", "1000")) - SLIDER_BAR_HEIGHT);
+        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);
     myCells = new ArrayList<>();
     renderGrid(colorMap);
