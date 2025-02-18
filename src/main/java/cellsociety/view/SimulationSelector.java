@@ -15,7 +15,6 @@ public class SimulationSelector {
 
   private ResourceBundle myResources;
   private SimulationController myController;
-  private SimulationUI myUI;
 
   /**
    * Constructor for making a new SimulationSelector
@@ -26,7 +25,6 @@ public class SimulationSelector {
   public SimulationSelector(ResourceBundle resources, SimulationController simulationController) {
     myResources = resources;
     myController = simulationController;
-    myUI = myController.getUI();
   }
 
   /**
@@ -62,12 +60,12 @@ public class SimulationSelector {
           displayNewFileOptions(configFileComboBox, simulationType);
         } catch (FileNotFoundException e) {
           if (myResources != null) {
-            myUI.displayAlert(myResources.getString("Error"),
+            SimulationUI.displayAlert(myResources.getString("Error"),
                 myResources.getString("NoFilesToRun") + " " + simulationType + ". "
                     + myResources.getString("SelectDifSim"));
           }
           else{
-            myUI.displayAlert("Error","No Files To Run" + " " + simulationType + ". "
+            SimulationUI.displayAlert("Error","No Files To Run" + " " + simulationType + ". "
                     + "Select a different simulation type");
           }
           configFileComboBox.getItems().clear();
@@ -94,7 +92,7 @@ public class SimulationSelector {
         try {
           myController.selectSimulation(simulationType, fileName, stage, myController);
         } catch (Exception ex) {
-          myUI.displayAlert(resources.getString("Error"),
+          SimulationUI.displayAlert(resources.getString("Error"),
               resources.getString("SimOrFileNOtSelected"));
         }
       }

@@ -83,7 +83,7 @@ public class ControlPanel {
         SimulationMaker maker = new SimulationMaker();
         maker.makeNewSimulation();
       } catch (Exception ex) {
-        myUI.displayAlert(myResources.getString("Error"),
+        SimulationUI.displayAlert(myResources.getString("Error"),
             myResources.getString("CantMakeNewSimulation"));
       }
     });
@@ -94,7 +94,7 @@ public class ControlPanel {
         myUserControl.addElementToPane(button, myControlBar);
       }
     } catch (Exception e) {
-      myUI.displayAlert(myResources.getString("Error"),
+      SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeNewSimulation"));
     }
     //TODO add "one step back"
@@ -110,7 +110,7 @@ public class ControlPanel {
       simulationSelector.respondToFileSelection(dropDownBoxes.get(0), dropDownBoxes.get(1), myStage,
           myResources);
     } catch (Exception e) {
-      myUI.displayAlert(myResources.getString("Error"),
+      SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeSimSelector"));
     }
   }

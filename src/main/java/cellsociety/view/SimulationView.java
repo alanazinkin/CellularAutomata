@@ -31,7 +31,6 @@ public class SimulationView {
   private SimulationConfig myConfig;
   private String myThemeColor;
   private Map<String, String> mySimulationResourceMap;
-  private SimulationUI myUI;
 
   /**
    * @param simulationConfig  the simulation configuration containing all information about the
@@ -43,7 +42,6 @@ public class SimulationView {
       ResourceBundle languageResources) {
     myConfig = simulationConfig;
     myController = controller;
-    myUI = controller.getUI();
     myResources = languageResources;
     mySimulationResourceMap = controller.retrieveImmutableConfigResourceBundle();
   }
@@ -72,7 +70,7 @@ public class SimulationView {
     try {
       myControlPanel.setUpLowerBar(simView.getRoot());
     } catch (Exception e) {
-      myUI.displayAlert(myResources.getString("Error"),
+      SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }

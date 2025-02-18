@@ -195,7 +195,7 @@ public class SimulationUI {
    * @param title the title of the alert.
    * @param content the content of the alert message.
    */
-  public void displayAlert(String title, String content) {
+  public static void displayAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
     alert.setContentText(content);
