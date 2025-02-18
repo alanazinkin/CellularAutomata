@@ -61,9 +61,15 @@ public class SimulationSelector {
         try {
           displayNewFileOptions(configFileComboBox, simulationType);
         } catch (FileNotFoundException e) {
-          myUI.displayAlert(myResources.getString("Error"),
-              myResources.getString("NoFilesToRun") + " " + simulationType + ". "
-                  + myResources.getString("SelectDifSim"));
+          if (myResources != null) {
+            myUI.displayAlert(myResources.getString("Error"),
+                myResources.getString("NoFilesToRun") + " " + simulationType + ". "
+                    + myResources.getString("SelectDifSim"));
+          }
+          else{
+            myUI.displayAlert("Error","No Files To Run" + " " + simulationType + ". "
+                    + "Select a different simulation type");
+          }
           configFileComboBox.getItems().clear();
           configFileComboBox.setDisable(true);
         }
