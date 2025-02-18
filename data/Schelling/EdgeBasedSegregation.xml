@@ -6,7 +6,7 @@
     <description>Agents segregate along the edges of the grid.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="satisfactionThreshold" value="0.4"/>
+    <parameter name="satisfaction" value="0.4"/>
     <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
     <initial_states>
         1 1 1 0 2 2

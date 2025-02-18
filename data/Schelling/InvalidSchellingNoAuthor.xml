@@ -6,7 +6,7 @@
     <width>6</width>
     <height>6</height>
     <!-- Invalid parameter value - will use default from properties -->
-    <parameter name="satisfactionThreshold" value="Invalid"/>
+    <parameter name="satisfaction" value="Invalid"/>
     <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
     <initial_states>
         1 0 2 1 0 2

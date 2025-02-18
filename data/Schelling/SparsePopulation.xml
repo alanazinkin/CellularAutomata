@@ -6,7 +6,7 @@
     <description>Agents are sparsely placed, testing how movement leads to clustering.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="satisfactionThreshold" value="0.5"/>
+    <parameter name="satisfaction" value="0.5"/>
     <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
     <initial_states>
         0 1 0 2 0 0

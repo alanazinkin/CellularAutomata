@@ -6,14 +6,14 @@
     <description>Basic test where agents of two types move based on a satisfaction threshold.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="satisfactionThreshold" value="0.3"/>
+    <parameter name="satisfaction" value="0.3"/>
     <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
     <initial_states>
-        1 0 2 1 0 2
-        2 1 0 2 1 0
-        0 2 1 0 2 1
-        1 0 2 1 0 2
-        2 1 0 2 1 0
-        0 2 1 0 2 1
+        1 1 1 1 1 1
+        1 0 1 0 1 1
+        1 1 1 1 1 0
+        1 0 1 1 1 1
+        1 1 1 0 1 1
+        1 0 1 1 1 1
     </initial_states>
 </simulation>

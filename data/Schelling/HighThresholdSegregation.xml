@@ -6,7 +6,7 @@
     <description>Agents require a high percentage of similar neighbors to stay.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="satisfactionThreshold" value="0.7"/>
+    <parameter name="satisfaction" value="0.7"/>
     <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
     <initial_states>
         1 1 2 2 0 0
