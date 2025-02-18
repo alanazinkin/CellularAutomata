@@ -198,8 +198,4 @@ public class ControlPanel {
   }
 
   private void addCustomizationBarToLowerBar() {
-    myLowerBar.getChildren().add(myCustomizationBar);
-  }
-
-
-}
+    myLowerBar.getChildren().add(myCustomiza

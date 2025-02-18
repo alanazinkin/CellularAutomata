@@ -150,10 +150,4 @@ public class UserController {
       if (hasGridLines) {
         gridView.removeGridLines();
         hasGridLines = false;
-      } else {
-        gridView.addGridLines();
-        hasGridLines = true;
-      }
-    });
-  }
-}
+  

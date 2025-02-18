@@ -340,7 +340,3 @@ public class XMLParser {
 
   static class ConfigurationException extends Exception {
     public ConfigurationException(String message) {
-      super(message);
-    }
-  }
-}
