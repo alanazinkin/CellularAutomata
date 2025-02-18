@@ -4,6 +4,7 @@ import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
+import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
 import cellsociety.model.simulations.Sand;
 import cellsociety.model.simulations.Schelling;
@@ -28,6 +29,8 @@ public class SimulationFactory {
                             parameters.get("sharkInitialEnergy"), parameters.get("sharkEnergyGain"));
                     case SAND ->
                       new Sand(config, grid);
+                    case LANGTON_LOOP ->
+                      new LangtonLoop(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
