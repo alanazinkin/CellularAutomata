@@ -2,30 +2,14 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
-import cellsociety.model.simulations.*;
-import cellsociety.model.state.GameOfLifeState;
-import cellsociety.view.SimulationView;
-import cellsociety.view.SplashScreen;
-
-import cellsociety.view.UserController;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+
 
 /**
  * Class responsible for connecting frontend and backend to make the simulation work as a whole.
@@ -105,7 +89,6 @@ public class SimulationController {
    * Constructs a SimulationController and initializes key components.
    */
   public SimulationController() {
-    this.stage = new Stage();
     this.parameters = cellsociety.controller.SimulationParameters.fromConfig();
     this.engine = new SimulationEngine(CONFIG);
     this.ui = new SimulationUI(CONFIG);
@@ -124,7 +107,7 @@ public class SimulationController {
   public void init(Stage stage, SimulationController controller) throws Exception {
     SimulationConfig config = fileManager.parseConfiguration();
     engine.initializeSimulation(config, parameters, controller);
-    ui.initialize(stage, this, config, engine.getSimulation(), engine.getGrid());
+    ui.initialize(stage, this);
   }
 
   public void stepSimulation(double elapsedTime) {
@@ -187,5 +170,9 @@ public class SimulationController {
 
   public SimulationUI getUI() {
     return ui;
+  }
+
+  public static ResourceBundle getResourceConfig() {
+    return CONFIG;
   }
 }

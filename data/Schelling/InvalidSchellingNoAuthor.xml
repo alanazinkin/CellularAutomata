@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Schelling Segregation</type>
+    <title>Invalid Segregation</title>
+    <description>Basic test where agents of two types move based on a satisfaction threshold.</description>
+    <width>6</width>
+    <height>6</height>
+    <!-- Invalid parameter value - will use default from properties -->
+    <parameter name="satisfactionThreshold" value="Invalid"/>
+    <!-- 0 : EMPTY      1 : TYPE A      2 : TYPE B -->
+    <initial_states>
+        1 0 2 1 0 2
+        2 1 0 2 1 0
+        0 2 1 0 2 1
+        1 0 2 1 0 2
+        2 1 0 2 1 0
+        0 2 1 0 2 1
+    </initial_states>
+</simulation>

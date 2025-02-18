@@ -128,4 +128,20 @@ public abstract class GridView {
     }
   }
 
+  /*
+  public void flipGridCellsVertically() {
+    for (int i = 0; i < numCols; i++) {
+      for (int j = 0; j < numRows; j++) {
+        Cell cell = myGrid.getCell(i, j);
+        StateInterface cellState = cell.getCurrentState();
+        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
+        rectCell.setId(colorMap.get(cellState));
+        rectCell.setStroke(Color.BLACK);
+        rectCell.setStrokeWidth(1);
+        myCells.add(rectCell);
+        gridPane.add(rectCell, i * cellWidth, j * cellHeight);
+      }
+    }
+  }
+   */
 }

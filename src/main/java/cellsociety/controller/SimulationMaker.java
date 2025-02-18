@@ -10,7 +10,8 @@ public class SimulationMaker {
    * @throws Exception
    */
   public void makeNewSimulation() throws Exception {
-    SimulationController controller = new SimulationController();
-    controller.selectSimulation("Game of Life", "Glider.xml", new Stage(), controller);
+    SimulationController simulationController = new SimulationController();
+    SimulationUI simulationUI = simulationController.getUI();
+    simulationUI.initializeSplashScreen(new Stage(), simulationController);
   }
 }
