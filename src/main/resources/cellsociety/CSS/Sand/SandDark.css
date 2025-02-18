@@ -1,0 +1,13 @@
+#sand-state-empty {
+  -fx-fill: gray;
+  -fx-stroke: black;
+}
+#sand-state-sand {
+  -fx-fill: darkgoldenrod;
+}
+#sand-state-wall {
+  -fx-fill: maroon;
+}
+#sand-state-water {
+  -fx-fill: midnightblue;
+}
