@@ -6,6 +6,7 @@
     <description>A scenario where water cannot pass due to a fully blocked layer.</description>
     <width>6</width>
     <height>6</height>
+    <parameter name="percolationProb" value="0.8"/>
     <!-- 0 : BLOCKED      1 : OPEN      2 : FULL (Water) -->
     <initial_states>
         2 1 1 1 1 1

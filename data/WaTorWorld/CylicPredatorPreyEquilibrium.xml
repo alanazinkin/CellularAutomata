@@ -6,9 +6,10 @@
     <description>Fish and sharks are positioned to maintain a natural predator-prey cycle.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="fishReproductionTime" value="3"/>
-    <parameter name="sharkReproductionTime" value="4"/>
-    <parameter name="sharkStarvationTime" value="3"/>
+    <parameter name="fishBreedTime" value="3"/>
+    <parameter name="sharkBreedTime" value="4"/>
+    <parameter name="sharkInitialEnergy" value="3"/>
+    <parameter name="sharkEnergyGain" value="3"/>
     <initial_states>
         1 0 2 0 1 0
         0 2 0 1 0 2
