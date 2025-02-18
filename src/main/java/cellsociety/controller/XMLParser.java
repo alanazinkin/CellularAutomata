@@ -47,6 +47,8 @@ public class XMLParser {
    *                   to the expected types
    */
     public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
+      validateFile(filePath);
+
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       Document document;
       SimulationConfig config = new SimulationConfig();
@@ -96,6 +98,35 @@ public class XMLParser {
 
       return config;
     }
+
+  private void validateFile(String filePath) throws ConfigurationException {
+    File file = new File(filePath);
+
+    if (!file.exists()) {
+      throw new ConfigurationException("Configuration file not found: " + filePath);
+    }
+
+    if (!file.canRead()) {
+      throw new ConfigurationException("Cannot read configuration file: " + filePath);
+    }
+
+    if (file.length() == 0) {
+      throw new ConfigurationException("Configuration file is empty: " + filePath);
+    }
+
+    String extension = getFileExtension(filePath);
+    if (!extension.equalsIgnoreCase("xml")) {
+      throw new ConfigurationException("Invalid file type. Expected XML file, got: " + extension);
+    }
+  }
+
+  private String getFileExtension(String filePath) {
+    int lastDotIndex = filePath.lastIndexOf('.');
+    if (lastDotIndex > 0 && lastDotIndex < filePath.length() - 1) {
+      return filePath.substring(lastDotIndex + 1);
+    }
+    return "";
+  }
 
   private void setGridDimensions(String widthStr, String heightStr, SimulationConfig config)
           throws ConfigurationException {
@@ -214,9 +245,31 @@ public class XMLParser {
   }
 
   private void validateXMLStructure(Document doc) throws ConfigurationException {
-    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
-      throw new ConfigurationException("Root element must be 'simulation'");
+    if (doc.getDocumentElement() == null) {
+      throw new ConfigurationException("Empty or malformed XML document");
     }
+
+    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
+      throw new ConfigurationException("Root element must be 'simulation', found: " +
+              doc.getDocumentElement().getTagName());
+    }
+
+    NodeList rootChildren = doc.getDocumentElement().getChildNodes();
+    for (int i = 0; i < rootChildren.getLength(); i++) {
+      Node child = rootChildren.item(i);
+      if (child.getNodeType() == Node.ELEMENT_NODE) {
+        String nodeName = child.getNodeName();
+        if (!isValidRootChild(nodeName)) {
+          throw new ConfigurationException("Unexpected element in simulation configuration: " + nodeName);
+        }
+      }
+    }
+  }
+
+  private boolean isValidRootChild(String nodeName) {
+    Set<String> validElements = Set.of("type", "title", "author", "description",
+            "width", "height", "cell", "initial_states", "parameter");
+    return validElements.contains(nodeName);
   }
 
   private void validateSimulationType(String type) throws ConfigurationException {
@@ -295,20 +348,28 @@ public class XMLParser {
     }
   }
 
-  private void validateRequiredFields(Document doc) throws Exception {
-    List<String> missingFields = new ArrayList<>();
+  private void validateRequiredFields(Document doc) throws ConfigurationException {
+    Map<String, String> missingOrEmptyFields = new HashMap<>();
     String[] requiredFields = {"type", "title", "author", "description"};
 
     for (String field : requiredFields) {
-      Node node = doc.getElementsByTagName(field).item(0);
-      if (node == null || node.getTextContent().trim().isEmpty()) {
-        missingFields.add(field);
+      NodeList nodes = doc.getElementsByTagName(field);
+      if (nodes.getLength() == 0) {
+        missingOrEmptyFields.put(field, "Missing field");
+      } else {
+        String content = nodes.item(0).getTextContent().trim();
+        if (content.isEmpty()) {
+          missingOrEmptyFields.put(field, "Empty field");
+        }
       }
     }
 
-    if (!missingFields.isEmpty()) {
-      throw new ConfigurationException("Missing required fields: " +
-              String.join(", ", missingFields));
+    if (!missingOrEmptyFields.isEmpty()) {
+      StringBuilder errorMsg = new StringBuilder("Configuration errors found:");
+      for (Map.Entry<String, String> entry : missingOrEmptyFields.entrySet()) {
+        errorMsg.append("\n- ").append(entry.getKey()).append(": ").append(entry.getValue());
+      }
+      throw new ConfigurationException(errorMsg.toString());
     }
   }
 
