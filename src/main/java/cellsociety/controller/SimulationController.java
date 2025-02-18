@@ -52,7 +52,8 @@ public class SimulationController {
     GAME_OF_LIFE("Game of Life"),
     SPREADING_FIRE("Spreading of Fire"),
     PERCOLATION("Percolation"),
-    SCHELLING("Schelling Segregation");
+    SCHELLING("Schelling Segregation"),
+    WATOR_WORLD("Wa-Tor World");
 
     private final String displayName;
 
@@ -106,7 +107,7 @@ public class SimulationController {
 
   public void init(Stage stage, SimulationController controller) throws Exception {
     SimulationConfig config = fileManager.parseConfiguration();
-    engine.initializeSimulation(config, parameters, controller);
+    engine.initializeSimulation(config, controller);
     ui.initialize(stage, this);
   }
 

@@ -239,7 +239,7 @@ public class XMLParser {
   private Map<String, Double> parseParametersWithValidation(Document doc, String simulationType)
           throws ConfigurationException {
     Map<String, Double> parameters = new HashMap<>();
-    loadDefaultParameters(parameters, simulationType);
+    //loadDefaultParameters(parameters, simulationType);
 
     NodeList paramNodes = doc.getElementsByTagName("parameter");
     for (int i = 0; i < paramNodes.getLength(); i++) {

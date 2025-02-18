@@ -6,9 +6,10 @@
     <description>Balanced fish and shark population with default reproduction and starvation rates.</description>
     <width>6</width>
     <height>6</height>
-    <parameter name="fishReproductionTime" value="3"/>
-    <parameter name="sharkReproductionTime" value="5"/>
-    <parameter name="sharkStarvationTime" value="3"/>
+    <parameter name="fishBreedTime" value="3"/>
+    <parameter name="sharkBreedTime" value="5"/>
+    <parameter name="sharkInitialEnergy" value="10"/>
+    <parameter name="sharkEnergyGain" value="2"/>
     <!-- 0 : EMPTY      1 : FISH      2 : SHARK -->
     <initial_states>
         1 0 2 0 1 2

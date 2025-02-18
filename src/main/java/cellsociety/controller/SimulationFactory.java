@@ -6,19 +6,25 @@ import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.simulations.Percolation;
 import cellsociety.model.simulations.Schelling;
+import cellsociety.model.simulations.WaTorWorld;
+import java.util.Map;
 
 public class SimulationFactory {
     public static Simulation createSimulation(String type, SimulationConfig config,
-                                              Grid grid, SimulationParameters params) {
+                                              Grid grid) {
+        Map<String, Double> parameters = config.getParameters();
         return SimulationController.SimulationType.fromString(type)
                 .map(simType -> switch (simType) {
                     case GAME_OF_LIFE -> new GameOfLife(config, grid);
                     case SPREADING_FIRE ->
-                            new Fire(config, grid, params.fireProb(), params.treeProb());
+                            new Fire(config, grid, parameters.get("fireProb"), parameters.get("treeProb"));
                     case PERCOLATION ->
-                            new Percolation(config, grid, params.percolationProb());
+                            new Percolation(config, grid, parameters.get("percolationProb"));
                     case SCHELLING ->
-                            new Schelling(config, grid, params.satisfaction());
+                            new Schelling(config, grid, parameters.get("satisfaction"));
+                    case WATOR_WORLD ->
+                        new WaTorWorld(config, grid, parameters.get("fishBreedTime"), parameters.get("sharkBreedTime"),
+                            parameters.get("sharkInitialEnergy"), parameters.get("sharkEnergyGain"));
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }

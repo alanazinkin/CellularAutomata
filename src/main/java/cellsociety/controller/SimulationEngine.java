@@ -3,6 +3,7 @@ package cellsociety.controller;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.GameOfLifeState;
+import cellsociety.model.state.MockState;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.stage.Stage;
@@ -38,10 +39,10 @@ public class SimulationEngine {
         return timeline;
     }
 
-    public void initializeSimulation(SimulationConfig config, SimulationParameters params, SimulationController simulationController) {
+    public void initializeSimulation(SimulationConfig config, SimulationController simulationController) {
         this.simulationConfig = config;
-        this.grid = new Grid(config.getWidth(), config.getHeight(), GameOfLifeState.ALIVE);
-        this.simulation = SimulationFactory.createSimulation(config.getType(), config, grid, params);
+        this.grid = new Grid(config.getWidth(), config.getHeight(), MockState.STATE_ONE);
+        this.simulation = SimulationFactory.createSimulation(config.getType(), config, grid);
         this.simulationController = simulationController;
         this.simulationUI = simulationController.getUI();
     }
