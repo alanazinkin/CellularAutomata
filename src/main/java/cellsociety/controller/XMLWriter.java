@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author Angela Predolac
  */
-public class XMLWriter {
+public class XMLWriter extends BaseFileWriter {
 
   private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
   private static final String SIMULATION_TAG = "simulation";
@@ -27,22 +27,19 @@ public class XMLWriter {
   private static final String PARAMETERS_TAG = "parameters";
   private static final String PARAMETER_TAG = "parameter";
 
-  /**
-   * Saves the current simulation state to an XML file
-   *
-   * @param config   The current simulation configuration
-   * @param grid     The current grid state
-   * @param filePath The path where the XML file should be saved
-   * @throws IOException If there's an error writing the file
-   */
-  public void saveToXML(SimulationConfig config, Grid grid, String filePath) throws IOException {
+  @Override
+  public void save(SimulationConfig config, Grid grid, String filePath) throws IOException {
+    String content = formatContent(config, grid);
+    writeToFile(filePath, content);
+  }
+
+  @Override
+  protected String formatContent(SimulationConfig config, Grid grid) {
     StringBuilder xmlContent = new StringBuilder();
     xmlContent.append(XML_DECLARATION);
 
-    // Start simulation tag
     xmlContent.append(String.format("<%s>\n", SIMULATION_TAG));
 
-    // Add basic configuration
     appendTag(xmlContent, TYPE_TAG, config.getType());
     appendTag(xmlContent, TITLE_TAG, config.getTitle());
     appendTag(xmlContent, AUTHOR_TAG, config.getAuthor());
@@ -50,15 +47,13 @@ public class XMLWriter {
     appendTag(xmlContent, WIDTH_TAG, String.valueOf(config.getWidth()));
     appendTag(xmlContent, HEIGHT_TAG, String.valueOf(config.getHeight()));
 
-    // Add parameters
     xmlContent.append(String.format("  <%s>\n", PARAMETERS_TAG));
     for (Map.Entry<String, Double> parameter : config.getParameters().entrySet()) {
       xmlContent.append(String.format("    <%s name=\"%s\" value=\"%f\"/>\n",
-          PARAMETER_TAG, parameter.getKey(), parameter.getValue()));
+              PARAMETER_TAG, parameter.getKey(), parameter.getValue()));
     }
     xmlContent.append(String.format("  </%s>\n", PARAMETERS_TAG));
 
-    // Add grid state
     xmlContent.append(String.format("  <%s>\n", GRID_TAG));
     for (int row = 0; row < grid.getRows(); row++) {
       StringBuilder rowContent = new StringBuilder("    ");
@@ -72,11 +67,9 @@ public class XMLWriter {
     }
     xmlContent.append(String.format("  </%s>\n", GRID_TAG));
 
-    // Close simulation tag
     xmlContent.append(String.format("</%s>", SIMULATION_TAG));
 
-    // Write to file
-    Files.write(Paths.get(filePath), xmlContent.toString().getBytes());
+    return xmlContent.toString();
   }
 
   /**
