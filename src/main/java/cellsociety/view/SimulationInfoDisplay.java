@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import cellsociety.controller.SimulationController;
 import cellsociety.model.StateInterface;
 
 import java.io.FileNotFoundException;
@@ -8,10 +7,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
