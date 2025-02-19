@@ -17,30 +17,57 @@ import java.util.*;
  *
  * @author Angela Predolac
  */
-public class XMLParser {
+public class XMLParser extends BaseConfigParser{
 
-  private final ResourceBundle defaultProperties;
   private static final String DEFAULT_PROPERTIES_PATH = "cellsociety.controller.simulation";
-  private static final String PROB_PREFIX = "default.";
-  private static final String PROB_SUFFIX = ".prob";
-  private static final Set<String> VALID_SIMULATION_TYPES = Set.of(
-          "Game of Life", "Spreading of Fire", "Schelling Segregation", "Percolation", "Wa-Tor World",
-      "Langton Loop", "Sugar Scape", "Bacteria"
-  );
-  private static final Map<String, Set<Integer>> VALID_STATES = Map.of(
-          "Game of Life", Set.of(0, 1),
-          "Spreading of Fire", Set.of(0, 1, 2), // 0: empty, 1: tree, 2: burning
-          "Schelling Segregation", Set.of(0, 1, 2),    // 0: empty, 1: agent A, 2: agent B
-          "Percolation", Set.of(0, 1, 2),
-          "Wa-Tor World", Set.of(0, 1, 2),
-      "Langton Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7),
-      "Sugar Scape", Set.of(0, 1, 2),
-      "Bacteria", Set.of(0, 1, 2)
+  private static final String SIMULATION_TAG = "simulation";
+  private static final Set<String> VALID_ROOT_CHILDREN = Set.of(
+          "type", "title", "author", "description", "width", "height",
+          "cell", "initial_states", "parameter", "random_states", "random_proportions"
   );
 
     public XMLParser() {
-      this.defaultProperties = ResourceBundle.getBundle(DEFAULT_PROPERTIES_PATH);
+      super(new XMLFileValidator(), DEFAULT_PROPERTIES_PATH);
     }
+
+  @Override
+  protected SimulationConfig parseConfig(String filePath) throws ConfigurationException {
+    try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document document = builder.parse(new File(filePath));
+      document.getDocumentElement().normalize();
+
+      validateXMLStructure(document);
+      validateRequiredFields(document);
+
+      SimulationConfig config = new SimulationConfig();
+
+      String simType = getElementContent(document, "type");
+      validateSimulationType(simType);
+      config.setSimulationType(simType);
+
+      config.setTitle(getElementContent(document, "title"));
+      config.setAuthor(getElementContent(document, "author"));
+      config.setDescription(getElementContent(document, "description"));
+
+      String widthStr = getElementContent(document, "width");
+      String heightStr = getElementContent(document, "height");
+      setGridDimensions(widthStr, heightStr, config);
+
+      validateAndSetInitialStates(document, config);
+      config.setParameters(parseParametersWithValidation(document));
+
+      return config;
+    } catch (ParserConfigurationException e) {
+      throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
+    } catch (SAXException e) {
+      throw new ConfigurationException("Invalid XML format: " + e.getMessage());
+    } catch (IOException e) {
+      throw new ConfigurationException("Error reading file: " + e.getMessage());
+    }
+  }
 
     /**
    * Parses an XML file containing Game of Life simulation configuration.
@@ -383,7 +410,8 @@ public class XMLParser {
     }
   }
 
-  private void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
+  @Override
+  protected void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
     Set<Integer> validStates = VALID_STATES.get(simulationType);
     if (validStates == null) {
       throw new ConfigurationException("No valid states defined for simulation type: " + simulationType);
@@ -416,7 +444,7 @@ public class XMLParser {
       throw new ConfigurationException("Empty or malformed XML document");
     }
 
-    if (!"simulation".equals(doc.getDocumentElement().getTagName())) {
+    if (!SIMULATION_TAG.equals(doc.getDocumentElement().getTagName())) {
       throw new ConfigurationException("Root element must be 'simulation', found: " +
               doc.getDocumentElement().getTagName());
     }
@@ -424,11 +452,10 @@ public class XMLParser {
     NodeList rootChildren = doc.getDocumentElement().getChildNodes();
     for (int i = 0; i < rootChildren.getLength(); i++) {
       Node child = rootChildren.item(i);
-      if (child.getNodeType() == Node.ELEMENT_NODE) {
-        String nodeName = child.getNodeName();
-        if (!isValidRootChild(nodeName)) {
-          throw new ConfigurationException("Unexpected element in simulation configuration: " + nodeName);
-        }
+      if (child.getNodeType() == Node.ELEMENT_NODE &&
+              !VALID_ROOT_CHILDREN.contains(child.getNodeName())) {
+        throw new ConfigurationException(
+                "Unexpected element in simulation configuration: " + child.getNodeName());
       }
     }
   }
@@ -439,7 +466,8 @@ public class XMLParser {
     return validElements.contains(nodeName);
   }
 
-  private void validateSimulationType(String type) throws ConfigurationException {
+  @Override
+  protected void validateSimulationType(String type) throws ConfigurationException {
     if (!VALID_SIMULATION_TYPES.contains(type)) {
       throw new ConfigurationException("Invalid simulation type: " + type +
               ". Valid types are: " + String.join(", ", VALID_SIMULATION_TYPES));
@@ -482,7 +510,8 @@ public class XMLParser {
     return parameters;
   }
 
-  private void validateParameterValue(String name, double value) throws ConfigurationException {
+  @Override
+  protected void validateParameterValue(String name, double value) throws ConfigurationException {
     if (name.toLowerCase().contains("prob") && (value < 0 || value > 1)) {
       throw new ConfigurationException(
               String.format("Probability parameter '%s' must be between 0 and 1, got: %f", name, value));
@@ -549,12 +578,6 @@ public class XMLParser {
       return states;
     } catch (NumberFormatException e) {
       throw new ConfigurationException("Invalid state value format. All states must be integers.");
-    }
-  }
-
-  static class ConfigurationException extends Exception {
-    public ConfigurationException(String message) {
-      super(message);
     }
   }
 }
