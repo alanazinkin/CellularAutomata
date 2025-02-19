@@ -55,10 +55,35 @@ public class Schelling extends Simulation {
   public Schelling(SimulationConfig simulationConfig, Grid grid, double tolerance) {
     super(simulationConfig, grid);
     validateTolerance(tolerance);
+
+    // Add this conversion method
+    convertGridToAgentCells(grid);
+
     this.tolerance = tolerance;
     this.randomNumGenerator = new Random();
   }
 
+  /**
+   * Converts all cells in the grid to AgentCells while preserving their states.
+   *
+   * @param grid the grid whose cells need to be converted
+   */
+  private void convertGridToAgentCells(Grid grid) {
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        Cell cell = grid.getCell(r, c);
+        if (!(cell instanceof AgentCell)) {
+          int agentGroup = 0;  // Default to 0 for empty cells
+          if (cell.getCurrentState() == SchellingState.AGENT) {
+            // If it's an agent state, assign it to group 1 (or determine from config)
+            agentGroup = 1;  // You might want to get this from configuration
+          }
+          AgentCell agentCell = new AgentCell(cell.getCurrentState(), agentGroup);
+          grid.setCellAt(r, c, agentCell);
+        }
+      }
+    }
+  }
   /**
    * Validates the tolerance value to ensure it is within the acceptable range [0.0, 1.0].
    *
