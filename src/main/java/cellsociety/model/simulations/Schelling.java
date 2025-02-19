@@ -73,10 +73,9 @@ public class Schelling extends Simulation {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
         if (!(cell instanceof AgentCell)) {
-          int agentGroup = 0;  // Default to 0 for empty cells
+          int agentGroup = 0;
           if (cell.getCurrentState() == SchellingState.AGENT) {
-            // If it's an agent state, assign it to group 1 (or determine from config)
-            agentGroup = 1;  // You might want to get this from configuration
+            agentGroup = ((r + c) % 2) + 1;
           }
           AgentCell agentCell = new AgentCell(cell.getCurrentState(), agentGroup);
           grid.setCellAt(r, c, agentCell);
@@ -226,6 +225,8 @@ public class Schelling extends Simulation {
       destCell.setNextState(SchellingState.AGENT);
       destCell.setAgentGroup(move.agentGroup);
     }
+
+    getGrid().applyNextStates();
   }
 
   /**

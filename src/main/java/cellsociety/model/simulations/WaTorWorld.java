@@ -165,9 +165,6 @@ public class WaTorWorld extends Simulation {
         default -> moved[r][c] = true;
       }
     }
-
-    // Process empty cells (if needed)
-    // ...
   }
 
   // ===================== Fish Behavior =====================
