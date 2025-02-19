@@ -19,7 +19,6 @@ import javafx.scene.layout.Pane;
 
 public class UserController {
 
-  private boolean hasGridLines = true;
 
   private ResourceBundle myResources;
   private SimulationController myController;
@@ -133,21 +132,10 @@ public class UserController {
    */
   public Button makeGridLinesToggleButton(String label, GridView gridView) {
     Button toggleButton = new Button(label);
-    setGridLinesToggleButtonAction(gridView, toggleButton);
+    gridView.setGridLinesToggleButtonAction(gridView, toggleButton);
     return toggleButton;
   }
 
-  private void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
-    toggleButton.setOnAction(e -> {
-      if (hasGridLines) {
-        gridView.removeGridLines();
-        hasGridLines = false;
-      } else {
-        gridView.addGridLines();
-        hasGridLines = true;
-      }
-    });
-  }
 
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);
