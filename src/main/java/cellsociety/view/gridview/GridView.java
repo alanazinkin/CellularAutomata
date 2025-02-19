@@ -9,6 +9,7 @@ import cellsociety.model.StateInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Shape;
 public abstract class GridView {
 
   private static final int SLIDER_BAR_HEIGHT = 150;
+  private boolean hasGridLines = true;
 
   private Grid myGrid;
   private List<Shape> myCells;
@@ -29,6 +31,7 @@ public abstract class GridView {
   int numCols;
   int cellWidth;
   int cellHeight;
+  boolean flipped = false;
 
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the
@@ -81,15 +84,19 @@ public abstract class GridView {
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
-        rectCell.setId(colorMap.get(cellState));
-        rectCell.setStroke(Color.BLACK);
-        rectCell.setStrokeWidth(1);
-        myCells.add(rectCell);
-        gridPane.add(rectCell, i * cellWidth, j * cellHeight);
+        addCellShapeToGridView(colorMap, cell, j, i);
       }
     }
+  }
+
+  private void addCellShapeToGridView(Map<StateInterface, String> colorMap, Cell cell, int j, int i) {
+    StateInterface cellState = cell.getCurrentState();
+    Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
+    rectCell.setId(colorMap.get(cellState));
+    rectCell.setStroke(Color.BLACK);
+    rectCell.setStrokeWidth(1);
+    myCells.add(rectCell);
+    gridPane.add(rectCell, j, i);
   }
 
   /**
@@ -111,9 +118,26 @@ public abstract class GridView {
   }
 
   /**
+   * sets the action call of the grid lines toggle button
+   * @param gridView the gridview object that will be changed by the button press
+   * @param toggleButton the toggle button
+   */
+  public void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
+    toggleButton.setOnAction(e -> {
+      if (hasGridLines) {
+        gridView.removeGridLines();
+        hasGridLines = false;
+      } else {
+        gridView.addGridLines();
+        hasGridLines = true;
+      }
+    });
+  }
+
+  /**
    * visually removes the grid lines y setting stroke outline of cells to 0 pixels
    */
-  public void removeGridLines() {
+  private void removeGridLines() {
     for (Shape shape : myCells) {
       shape.setStrokeWidth(0);
     }
@@ -122,26 +146,41 @@ public abstract class GridView {
   /**
    * visually adds the grid lines by setting stroke outline of cells to 1 pixels
    */
-  public void addGridLines() {
+  private void addGridLines() {
     for (Shape shape : myCells) {
       shape.setStrokeWidth(1);
     }
   }
 
-  /*
-  public void flipGridCellsVertically() {
-    for (int i = 0; i < numCols; i++) {
-      for (int j = 0; j < numRows; j++) {
-        Cell cell = myGrid.getCell(i, j);
-        StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
-        rectCell.setId(colorMap.get(cellState));
-        rectCell.setStroke(Color.BLACK);
-        rectCell.setStrokeWidth(1);
-        myCells.add(rectCell);
-        gridPane.add(rectCell, i * cellWidth, j * cellHeight);
+  public void renderGridFlippedVertically() {
+    gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
+    if (!flipped) {
+      applyGridFlip();
+    } else {
+      flipGridBack();
+    }
+    flipped = !flipped;
+  }
+
+  private void applyGridFlip() {
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+        Shape rectCell = myCells.get(i * numCols + j);
+        gridPane.add(rectCell, j, numRows - i - 1);
       }
     }
   }
-   */
+
+  private void flipGridBack() {
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+        Shape rectCell = myCells.get(i * numCols + j);
+        gridPane.add(rectCell, j, i);
+      }
+    }
+  }
+
+
+
+
 }

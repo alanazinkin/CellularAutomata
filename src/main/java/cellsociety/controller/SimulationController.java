@@ -23,29 +23,6 @@ public class SimulationController {
       SimulationController.class.getPackageName() + ".";
 
   /**
-   * Record representing various parameters required for simulations.
-   */
-  public record SimulationParameters(
-      double fireProb,
-      double treeProb,
-      double satisfaction,
-      double percolationProb
-  ) {
-    /**
-     * Creates a SimulationParameters instance using default values from the configuration file.
-     * @return a new SimulationParameters object populated with default values.
-     */
-    public static SimulationParameters fromConfig() {
-      return new SimulationParameters(
-          Double.parseDouble(CONFIG.getString("default.fire.prob")),
-          Double.parseDouble(CONFIG.getString("default.tree.prob")),
-          Double.parseDouble(CONFIG.getString("default.satisfaction")),
-          Double.parseDouble(CONFIG.getString("default.percolation.prob"))
-      );
-    }
-  }
-
-  /**
    * Enum representing the different types of simulations available.
    */
   public enum SimulationType {
@@ -86,7 +63,6 @@ public class SimulationController {
   private final SimulationFileManager fileManager;
   private final cellsociety.controller.SimulationParameters parameters;
   private Stage stage;
-  private ResourceBundle resources;
   private SimulationController myController;
 
   /**
@@ -114,7 +90,7 @@ public class SimulationController {
     ui.initialize(stage, this);
   }
 
-  public void stepSimulation(double elapsedTime) {
+  public void stepSimulation() {
     try {
       engine.step();
     } catch (Exception e) {
