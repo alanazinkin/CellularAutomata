@@ -73,32 +73,22 @@ public class ControlPanel {
     Button pauseButton = myUserControl.makeButton(myResources.getString("Pause"),
         e -> myController.pauseSimulation());
     Button stepForwardButton = myUserControl.makeButton(myResources.getString("Step"),
-        e -> myController.stepSimulation(1));
+        e -> myController.stepSimulation());
     Button resetButton = myUserControl.makeButton(myResources.getString("Reset"),
         e -> myController.resetGrid());
     Button saveButton = myUserControl.makeButton(myResources.getString("Save"),
         e -> myController.saveSimulation());
     Button addSimButton = myUserControl.makeButton(myResources.getString("AddSimulation"), e -> {
-      try {
-        SimulationMaker maker = new SimulationMaker();
-        maker.makeNewSimulation();
-      } catch (Exception ex) {
-        SimulationUI.displayAlert(myResources.getString("Error"),
-            myResources.getString("CantMakeNewSimulation"));
-      }
+      makeANewSim();
     });
     List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, resetButton,
         saveButton, addSimButton);
-    try {
-      for (Button button : buttons) {
-        myUserControl.addElementToPane(button, myControlBar);
-      }
-    } catch (Exception e) {
-      SimulationUI.displayAlert(myResources.getString("Error"),
-          myResources.getString("CantMakeNewSimulation"));
-    }
-    //TODO add "one step back"
+    addButtonsToPane(buttons);
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
+    updateSelectorWidgetsAndRespond(simulationTypes);
+  }
+
+  private void updateSelectorWidgetsAndRespond(List<String> simulationTypes) {
     try {
       SimulationSelector simulationSelector = new SimulationSelector(myResources, myController);
       List<ComboBox<String>> dropDownBoxes = simulationSelector.makeSimSelectorComboBoxes(
@@ -112,6 +102,27 @@ public class ControlPanel {
     } catch (Exception e) {
       SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CantMakeSimSelector"));
+    }
+  }
+
+  private void addButtonsToPane(List<Button> buttons) {
+    try {
+      for (Button button : buttons) {
+        myUserControl.addElementToPane(button, myControlBar);
+      }
+    } catch (Exception e) {
+      SimulationUI.displayAlert(myResources.getString("Error"),
+          myResources.getString("CantMakeNewSimulation"));
+    }
+  }
+
+  private void makeANewSim() {
+    try {
+      SimulationMaker maker = new SimulationMaker();
+      maker.makeNewSimulation();
+    } catch (Exception ex) {
+      SimulationUI.displayAlert(myResources.getString("Error"),
+          myResources.getString("CantMakeNewSimulation"));
     }
   }
 
