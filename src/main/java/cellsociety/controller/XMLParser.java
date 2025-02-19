@@ -11,11 +11,11 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Parser for reading and validating Game of Life simulation configuration files in XML format. This
- * class handles parsing of simulation parameters, grid dimensions, and initial states from an XML
+ * Parser for reading and validating configuration files in XML format.
+ * This class handles parsing of simulation parameters, grid dimensions, and initial states from an XML
  * file and provides validation of the configuration.
  *
- * @author Angela Predolac
+ * @author angelapredolac
  */
 public class XMLParser extends BaseConfigParser{
 
@@ -26,10 +26,20 @@ public class XMLParser extends BaseConfigParser{
           "cell", "initial_states", "parameter", "random_states", "random_proportions"
   );
 
-    public XMLParser() {
-      super(new XMLFileValidator(), DEFAULT_PROPERTIES_PATH);
-    }
+  /**
+   * Constructs an XMLParser with a default XMLFileValidator and properties path.
+   */
+  public XMLParser() {
+    super(new XMLFileValidator(), DEFAULT_PROPERTIES_PATH);
+  }
 
+  /**
+   * Parses an XML configuration file and converts it into a SimulationConfig object.
+   *
+   * @param filePath The path to the XML file containing simulation configuration.
+   * @return A SimulationConfig object populated with parsed values.
+   * @throws ConfigurationException If there are issues with XML parsing or validation.
+   */
   @Override
   protected SimulationConfig parseConfig(String filePath) throws ConfigurationException {
     try {
@@ -69,13 +79,12 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
-    /**
-   * Parses an XML file containing Game of Life simulation configuration.
+  /**
+   * Parses an XML file and returns a SimulationConfig object with configuration details.
    *
-   * @param filePath Path to the XML configuration file to be parsed
-   * @return SimulationConfig object containing the parsed configuration
-   * @throws Exception if there are errors reading the file, parsing the XML, or converting values
-   *                   to the expected types
+   * @param filePath The path to the XML configuration file.
+   * @return A populated SimulationConfig object.
+   * @throws ConfigurationException If an error occurs during parsing or validation.
    */
     public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
       validateFile(filePath);
@@ -120,6 +129,13 @@ public class XMLParser extends BaseConfigParser{
       return config;
     }
 
+  /**
+   * Parses and validates random state assignments for cells in the simulation grid.
+   *
+   * @param doc The XML Document containing simulation configuration.
+   * @param config The SimulationConfig object to store parsed data.
+   * @throws ConfigurationException If an error occurs during parsing or validation.
+   */
   private void parseRandomStates(Document doc, SimulationConfig config) throws ConfigurationException {
     NodeList randomStateNodes = doc.getElementsByTagName("random_states");
     if (randomStateNodes.getLength() == 0) {
@@ -204,6 +220,14 @@ public class XMLParser extends BaseConfigParser{
     return states;
   }
 
+  /**
+   * Validates and sets the initial states for the simulation based on the XML configuration.
+   * Ensures only one initialization method is used and applies appropriate validations.
+   *
+   * @param doc    The XML document containing the simulation configuration.
+   * @param config The simulation configuration object to be updated.
+   * @throws ConfigurationException If multiple initialization methods are specified or the configuration is invalid.
+   */
   private void validateAndSetInitialStates(Document doc, SimulationConfig config)
           throws ConfigurationException {
     NodeList cellNodes = doc.getElementsByTagName("cell");
@@ -241,6 +265,14 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Parses and applies random state proportions for initialization.
+   * Ensures the proportions sum up to at most 1.0 and assigns states accordingly.
+   *
+   * @param doc    The XML document containing the configuration.
+   * @param config The simulation configuration object to be updated.
+   * @throws ConfigurationException If state values or proportions are invalid.
+   */
   private void parseRandomProportions(Document doc, SimulationConfig config) throws ConfigurationException {
     Element randomPropsElement = (Element) doc.getElementsByTagName("random_proportions").item(0);
     NodeList stateNodes = randomPropsElement.getElementsByTagName("state");
@@ -293,6 +325,12 @@ public class XMLParser extends BaseConfigParser{
     config.setInitialStates(states);
   }
 
+  /**
+   * Validates if a file exists, is readable, and has the correct format.
+   *
+   * @param filePath The path to the file to be validated.
+   * @throws ConfigurationException If the file does not exist, is unreadable, empty, or not an XML file.
+   */
   private void validateFile(String filePath) throws ConfigurationException {
     File file = new File(filePath);
 
@@ -314,6 +352,12 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Extracts and returns the file extension from a given file path.
+   *
+   * @param filePath The file path from which to extract the extension.
+   * @return The file extension as a string.
+   */
   private String getFileExtension(String filePath) {
     int lastDotIndex = filePath.lastIndexOf('.');
     if (lastDotIndex > 0 && lastDotIndex < filePath.length() - 1) {
@@ -322,6 +366,14 @@ public class XMLParser extends BaseConfigParser{
     return "";
   }
 
+  /**
+   * Parses and sets the grid dimensions from the provided configuration values.
+   *
+   * @param widthStr  The width value as a string.
+   * @param heightStr The height value as a string.
+   * @param config    The simulation configuration object to be updated.
+   * @throws ConfigurationException If dimensions are missing, invalid, or non-positive.
+   */
   private void setGridDimensions(String widthStr, String heightStr, SimulationConfig config)
           throws ConfigurationException {
     if (widthStr == null || heightStr == null || widthStr.isEmpty() || heightStr.isEmpty()) {
@@ -345,6 +397,14 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Validates and sets specific cell locations and their states based on XML input.
+   * Ensures locations are within bounds and do not overlap.
+   *
+   * @param cellNodes The list of cell nodes from the XML document.
+   * @param config    The simulation configuration object to be updated.
+   * @throws ConfigurationException If locations are out of bounds, duplicated, or states are invalid.
+   */
   private void validateAndSetCellLocations(NodeList cellNodes, SimulationConfig config)
           throws ConfigurationException {
     int width = config.getWidth();
@@ -400,6 +460,13 @@ public class XMLParser extends BaseConfigParser{
     config.setInitialStates(states);
   }
 
+  /**
+   * Validates that the number of provided states matches the expected grid size.
+   *
+   * @param config       The simulation configuration containing grid dimensions.
+   * @param statesLength The number of states provided.
+   * @throws ConfigurationException If the number of states does not match the grid size.
+   */
   private void validateGridSize(SimulationConfig config, int statesLength)
           throws ConfigurationException {
     int expectedCells = config.getWidth() * config.getHeight();
@@ -410,6 +477,13 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Validates that the given cell states are valid for the specified simulation type.
+   *
+   * @param states         An array of cell states.
+   * @param simulationType The type of simulation being run.
+   * @throws ConfigurationException If any state is not valid for the simulation type.
+   */
   @Override
   protected void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
     Set<Integer> validStates = VALID_STATES.get(simulationType);
@@ -439,6 +513,13 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Validates the structure of the provided XML document.
+   * Ensures it contains the expected root element and structure.
+   *
+   * @param doc The XML document to be validated.
+   * @throws ConfigurationException If the document is empty, malformed, or missing required elements.
+   */
   private void validateXMLStructure(Document doc) throws ConfigurationException {
     if (doc.getDocumentElement() == null) {
       throw new ConfigurationException("Empty or malformed XML document");
@@ -460,20 +541,12 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
-  private boolean isValidRootChild(String nodeName) {
-    Set<String> validElements = Set.of("type", "title", "author", "description",
-            "width", "height", "cell", "initial_states", "parameter", "random_states", "random_proportions");
-    return validElements.contains(nodeName);
-  }
-
-  @Override
-  protected void validateSimulationType(String type) throws ConfigurationException {
-    if (!VALID_SIMULATION_TYPES.contains(type)) {
-      throw new ConfigurationException("Invalid simulation type: " + type +
-              ". Valid types are: " + String.join(", ", VALID_SIMULATION_TYPES));
-    }
-  }
-
+  /**
+   * Validates the initial states string to ensure it is non-empty and contains only numbers and whitespace.
+   *
+   * @param states The string representing initial states.
+   * @throws ConfigurationException if the states string is empty or contains invalid characters.
+   */
   private void validateInitialStates(String states) throws ConfigurationException {
     if (states == null || states.trim().isEmpty()) {
       throw new ConfigurationException("Initial states cannot be empty");
@@ -484,6 +557,13 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Parses parameters from the given XML document and validates them.
+   *
+   * @param doc The XML document containing parameter elements.
+   * @return A map of parameter names to their corresponding double values.
+   * @throws ConfigurationException if a parameter is missing, has an empty name, or contains an invalid value.
+   */
   private Map<String, Double> parseParametersWithValidation(Document doc)
           throws ConfigurationException {
     Map<String, Double> parameters = new HashMap<>();
@@ -510,19 +590,12 @@ public class XMLParser extends BaseConfigParser{
     return parameters;
   }
 
-  @Override
-  protected void validateParameterValue(String name, double value) throws ConfigurationException {
-    if (name.toLowerCase().contains("prob") && (value < 0 || value > 1)) {
-      throw new ConfigurationException(
-              String.format("Probability parameter '%s' must be between 0 and 1, got: %f", name, value));
-    }
-
-    if (value < 0) {
-      throw new ConfigurationException(
-              String.format("Parameter '%s' cannot be negative, got: %f", name, value));
-    }
-  }
-
+  /**
+   * Validates that required fields exist and are non-empty in the given XML document.
+   *
+   * @param doc The XML document to validate.
+   * @throws ConfigurationException if any required field is missing or empty.
+   */
   private void validateRequiredFields(Document doc) throws ConfigurationException {
     Map<String, String> missingOrEmptyFields = new HashMap<>();
     String[] requiredFields = {"type", "title", "author", "description"};
@@ -548,6 +621,13 @@ public class XMLParser extends BaseConfigParser{
     }
   }
 
+  /**
+   * Retrieves the text content of the first occurrence of the specified tag from the XML document.
+   *
+   * @param doc The XML document to search.
+   * @param tagName The name of the tag to retrieve content from.
+   * @return The text content of the tag, or {@code null} if the tag does not exist.
+   */
   private String getElementContent(Document doc, String tagName) {
     NodeList nodes = doc.getElementsByTagName(tagName);
     if (nodes.getLength() > 0) {
