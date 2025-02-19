@@ -13,7 +13,7 @@ public class SimulationFileManager {
     private String configFilePath;
     private FileRetriever fileRetriever;
     private XMLParser xmlParser;
-    private XMLWriter xmlWriter;
+    private SimulationWriter xmlWriter;
     private ResourceBundle resources;
 
     public SimulationFileManager() {
@@ -74,7 +74,8 @@ public class SimulationFileManager {
 
     private void saveConfigurationToFile(SimulationConfig config, Grid grid,
                                          SaveSimulationDescription.SimulationMetadata metadata) throws IOException {
-        xmlWriter.saveToXML(config, grid, metadata.saveLocation().getAbsolutePath());
+
+        xmlWriter.save(config, grid, metadata.saveLocation().getAbsolutePath());
     }
 
     private void displaySuccessMessage(String fileName) {

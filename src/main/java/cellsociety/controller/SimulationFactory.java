@@ -7,7 +7,6 @@ import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
-import cellsociety.model.simulations.Sand;
 import cellsociety.model.simulations.Schelling;
 import cellsociety.model.simulations.SugarScape;
 import cellsociety.model.simulations.WaTorWorld;
