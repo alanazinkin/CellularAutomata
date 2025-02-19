@@ -133,7 +133,7 @@ public abstract class GridView {
     }
   }
 
-  public void renderGridFlippedVertically(Map<StateInterface, String> colorMap) {
+  public void renderGridFlippedVertically() {
     gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
     if (!flipped) {
       // Apply flip

@@ -16,11 +16,20 @@ public class SimulationFileManager {
     private SimulationWriter xmlWriter;
     private ResourceBundle resources;
 
+    /**
+     * initializes a file manager
+     */
     public SimulationFileManager() {
         this.xmlParser = new XMLParser();
         this.xmlWriter = new XMLWriter();
     }
 
+    /**
+     * loads a file given a simulation type and a file name
+     * @param simulationType type of simulation selected
+     * @param fileName specific simulation config file
+     * @throws FileNotFoundException if the file does not exist in the path
+     */
     public void loadFile(String simulationType, String fileName) throws FileNotFoundException {
         fileRetriever = new FileRetriever();
         try {
