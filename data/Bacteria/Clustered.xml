@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Bacteria</type>
+  <title>Clustered RPS</title>
+  <author>Alana Zinkin</author>
+  <description>A simulation that models competing bacteria colonies with clustered states.</description>
+  <width>10</width>
+  <height>10</height>
+  <parameter name="neighborThreshold" value="2"/>
+  <!-- 0 : ROCK      1 : PAPER      2 : SCISSORS   -->
+  <initial_states>
+    0 0 0 0 0 1 1 1 1 1
+    0 0 0 0 0 1 1 1 1 1
+    0 0 0 0 0 1 1 1 1 1
+    0 0 0 0 0 1 1 1 1 1
+    0 0 0 0 0 1 1 1 1 1
+    2 2 2 2 2 0 0 0 0 0
+    2 2 2 2 2 0 0 0 0 0
+    2 2 2 2 2 0 0 0 0 0
+    2 2 2 2 2 0 0 0 0 0
+    2 2 2 2 2 0 0 0 0 0
+  </initial_states>
+</simulation>

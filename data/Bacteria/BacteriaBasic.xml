@@ -6,6 +6,7 @@
   <description>A simulation that models competing bacteria colonies.s</description>
   <width>6</width>
   <height>6</height>
+  <parameter name="neighborThreshold" value="1"/>
   <!-- 0 : ROCK      1 : PAPER      2 : SCISSORS   -->
   <initial_states>
     1 2 1 1 0 1
