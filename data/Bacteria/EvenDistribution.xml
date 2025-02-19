@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Bacteria</type>
+  <title>Basic RPS Distribution</title>
+  <author>Alana Zinkin</author>
+  <description>An even distribution of rock, paper, and scissors</description>
+  <width>10</width>
+  <height>10</height>
+  <parameter name="neighborThreshold" value="3"/>
+  <!-- 0 : ROCK      1 : PAPER      2 : SCISSORS   -->
+  <initial_states>
+    0 1 2 0 1 2 0 1 2 0
+    1 2 0 1 2 0 1 2 0 1
+    2 0 1 2 0 1 2 0 1 2
+    0 1 2 0 1 2 0 1 2 0
+    1 2 0 1 2 0 1 2 0 1
+    2 0 1 2 0 1 2 0 1 2
+    0 1 2 0 1 2 0 1 2 0
+    1 2 0 1 2 0 1 2 0 1
+    2 0 1 2 0 1 2 0 1 2
+    0 1 2 0 1 2 0 1 2 0
+  </initial_states>
+</simulation>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Langton Loop</type>
+  <title>10x10 Loop</title>
+  <author>Alana Zinkin</author>
+  <description>A 10x10 grid version of Langton’s Loop, a self-replicating automaton.</description>
+  <width>10</width>
+  <height>10</height>
+  <!-- 0 : EMPTY      1 : SHEATH      2 : CORE    3 : TEMP    4 : TURN    5 : EXTEND
+       6 : INIT   7 : ADVANCE -->
+  <initial_states>
+    1 1 1 1 1 1 1 1 1 1
+    1 6 5 5 5 5 5 5 5 1
+    1 5 2 2 2 2 2 2 5 1
+    1 5 2 0 0 0 0 2 5 1
+    1 5 2 0 1 1 0 2 5 1
+    1 5 2 0 1 1 0 2 5 1
+    1 5 2 0 0 0 0 2 5 1
+    1 5 2 2 2 2 2 2 5 1
+    1 5 5 5 5 5 5 5 5 1
+    1 1 1 1 1 1 1 1 1 1
+  </initial_states>
+</simulation>
