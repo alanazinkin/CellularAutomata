@@ -44,6 +44,42 @@ public class LangtonLoop extends Simulation {
    */
   public LangtonLoop(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
+    initializeLoop(grid.getRows() / 2, grid.getCols() / 2); // Place initial loop in center
+  }
+
+  /**
+   * Creates the initial Langton's Loop pattern in the center of the grid.
+   * This is the minimal pattern that can self-replicate.
+   */
+  private void initializeLoop(int centerX, int centerY) {
+    // Core pathway (forms a loop)
+    setState(centerX, centerY, LangtonState.CORE);
+    setState(centerX-1, centerY, LangtonState.CORE);
+    setState(centerX-1, centerY+1, LangtonState.CORE);
+    setState(centerX, centerY+1, LangtonState.CORE);
+
+    // Sheath around core (protective layer)
+    setState(centerX-2, centerY-1, LangtonState.SHEATH);
+    setState(centerX-2, centerY, LangtonState.SHEATH);
+    setState(centerX-2, centerY+1, LangtonState.SHEATH);
+    setState(centerX-2, centerY+2, LangtonState.SHEATH);
+    setState(centerX-1, centerY-1, LangtonState.SHEATH);
+    setState(centerX-1, centerY+2, LangtonState.SHEATH);
+    setState(centerX, centerY-1, LangtonState.SHEATH);
+    setState(centerX, centerY+2, LangtonState.SHEATH);
+    setState(centerX+1, centerY-1, LangtonState.SHEATH);
+    setState(centerX+1, centerY, LangtonState.SHEATH);
+    setState(centerX+1, centerY+1, LangtonState.SHEATH);
+    setState(centerX+1, centerY+2, LangtonState.SHEATH);
+
+    // Initial replication signal
+    setState(centerX-1, centerY-1, LangtonState.INIT);
+  }
+
+  private void setState(int x, int y, LangtonState state) {
+    if (getGrid().isValidPosition(x, y)) {
+      getGrid().getCell(x, y).setCurrentState(state);
+    }
   }
 
   /**
@@ -101,8 +137,8 @@ public class LangtonLoop extends Simulation {
         updateCellState(row, col);
       }
     }
+    grid.applyNextStates();
   }
-
 
   /**
    * Updates the state of a single cell based on its von Neumann neighborhood configuration and the
@@ -146,26 +182,77 @@ public class LangtonLoop extends Simulation {
   }
 
   /**
-   * Applies Langton's Loop transition rules to determine the next state of a cell. The rules are
-   * based on the current state and the configuration of neighboring states.
+   * Applies Langton's Loop transition rules to determine the next state of a cell.
    *
    * @param currentState The current state of the cell
    * @param neighbors    Array of neighbor states in von Neumann neighborhood
    * @return The next state for the cell
    */
   private LangtonState applyTransitionRules(LangtonState currentState, LangtonState[] neighbors) {
-    if (currentState == LangtonState.EMPTY) {
-      // Check for loop extension pattern
-      if (countNeighborType(neighbors, LangtonState.EXTEND) >= 1) {
-        return LangtonState.SHEATH;
+    // Get states in NESW order for easier pattern matching
+    LangtonState N = neighbors[0];
+    LangtonState E = neighbors[1];
+    LangtonState S = neighbors[2];
+    LangtonState W = neighbors[3];
+
+    // Core loop maintenance rules
+    if (currentState == LangtonState.CORE) {
+      if (N == LangtonState.SHEATH && E == LangtonState.SHEATH &&
+          S == LangtonState.CORE && W == LangtonState.SHEATH) {
+        return LangtonState.CORE;  // Maintain core pathway
       }
-    } else if (currentState == LangtonState.ADVANCE) {
-      // Signal propagation
-      if (countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
-        return LangtonState.EXTEND;
+      if (N == LangtonState.CORE && E == LangtonState.SHEATH &&
+          S == LangtonState.SHEATH && W == LangtonState.SHEATH) {
+        return LangtonState.TURN;  // Turn corner in core pathway
       }
     }
 
+    // Sheath growth and maintenance
+    if (currentState == LangtonState.EMPTY) {
+      if (countNeighborType(neighbors, LangtonState.CORE) >= 1 &&
+          countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
+        return LangtonState.SHEATH;  // Create new sheath around core
+      }
+    }
+
+    // Signal propagation for replication
+    if (currentState == LangtonState.INIT) {
+      if (N == LangtonState.CORE && S == LangtonState.SHEATH) {
+        return LangtonState.ADVANCE;  // Start replication signal
+      }
+    }
+
+    if (currentState == LangtonState.ADVANCE) {
+      if (countNeighborType(neighbors, LangtonState.CORE) >= 1 &&
+          countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
+        return LangtonState.EXTEND;  // Extend replication arm
+      }
+    }
+
+    // Growth control
+    if (currentState == LangtonState.EXTEND) {
+      if (countNeighborType(neighbors, LangtonState.EMPTY) >= 3) {
+        return LangtonState.TEMP;  // Prepare for new growth
+      }
+    }
+
+    if (currentState == LangtonState.TEMP) {
+      boolean hasCorePath = (N == LangtonState.CORE || S == LangtonState.CORE) &&
+          (E == LangtonState.CORE || W == LangtonState.CORE);
+      if (hasCorePath) {
+        return LangtonState.CORE;  // Complete new segment
+      }
+    }
+
+    // Turn corners in replication path
+    if (currentState == LangtonState.TURN) {
+      if (N == LangtonState.CORE && E == LangtonState.SHEATH &&
+          W == LangtonState.SHEATH) {
+        return LangtonState.INIT;  // Initialize new replication
+      }
+    }
+
+    // Default: maintain current state if no rules match
     return currentState;
   }
 
