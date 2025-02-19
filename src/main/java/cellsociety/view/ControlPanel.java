@@ -132,12 +132,12 @@ public class ControlPanel {
     myUserControl.selectTheme(mySimView, myScene, themeSelector);
     Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
         myResources.getString("ToggleGrid"), myGridView);
-    Button settingsButton = myUserControl.makeSettingsButton(myResources.getString("Settings"));
+    Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
 
     myUserControl.addElementToPane(speedSlider, myCustomizationBar);
     myUserControl.addElementToPane(themeSelector, myCustomizationBar);
     myUserControl.addElementToPane(gridLinesToggle, myCustomizationBar);
-    myUserControl.addElementToPane(settingsButton, myCustomizationBar);
+    myUserControl.addElementToPane(flipGridButton, myCustomizationBar);
   }
 
   /**

@@ -29,6 +29,7 @@ public abstract class GridView {
   int numCols;
   int cellWidth;
   int cellHeight;
+  boolean flipped = false;
 
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the
@@ -81,15 +82,19 @@ public abstract class GridView {
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
-        rectCell.setId(colorMap.get(cellState));
-        rectCell.setStroke(Color.BLACK);
-        rectCell.setStrokeWidth(1);
-        myCells.add(rectCell);
-        gridPane.add(rectCell, i * cellWidth, j * cellHeight);
+        addCellShapeToGridView(colorMap, cell, j, i);
       }
     }
+  }
+
+  private void addCellShapeToGridView(Map<StateInterface, String> colorMap, Cell cell, int j, int i) {
+    StateInterface cellState = cell.getCurrentState();
+    Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
+    rectCell.setId(colorMap.get(cellState));
+    rectCell.setStroke(Color.BLACK);
+    rectCell.setStrokeWidth(1);
+    myCells.add(rectCell);
+    gridPane.add(rectCell, j, i);
   }
 
   /**
@@ -128,20 +133,28 @@ public abstract class GridView {
     }
   }
 
-  /*
-  public void flipGridCellsVertically() {
-    for (int i = 0; i < numCols; i++) {
-      for (int j = 0; j < numRows; j++) {
-        Cell cell = myGrid.getCell(i, j);
-        StateInterface cellState = cell.getCurrentState();
-        Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
-        rectCell.setId(colorMap.get(cellState));
-        rectCell.setStroke(Color.BLACK);
-        rectCell.setStrokeWidth(1);
-        myCells.add(rectCell);
-        gridPane.add(rectCell, i * cellWidth, j * cellHeight);
+  public void renderGridFlippedVertically(Map<StateInterface, String> colorMap) {
+    gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
+    if (!flipped) {
+      // Apply flip
+      for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+          Shape rectCell = myCells.get(i * numCols + j);
+          gridPane.add(rectCell, j, numRows - i - 1);
+        }
+      }
+    } else {
+      // Restore original positions
+      for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+          Shape rectCell = myCells.get(i * numCols + j);
+          gridPane.add(rectCell, j, i); // Restore original
+        }
       }
     }
+    flipped = !flipped; // Toggle state
   }
-   */
+
+
+
 }

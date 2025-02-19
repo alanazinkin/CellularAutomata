@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 import cellsociety.controller.SimulationController;
 import cellsociety.controller.SimulationUI;
+import cellsociety.model.StateInterface;
 import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -149,9 +150,10 @@ public class UserController {
     });
   }
 
-  public Button makeSettingsButton(String label) {
-    Button settingsButton = new Button(label);
-    //settingsButton.setOnAction(e -> {openSettings()})
-    return settingsButton;
+  public Button makeFlipGridButton(String label, GridView gridView) {
+    Button flipGrid = new Button(label);
+    flipGrid.setOnAction(e -> {gridView.renderGridFlippedVertically(myController.getSimulation()
+        .getColorMap());});
+    return flipGrid;
   }
 }
