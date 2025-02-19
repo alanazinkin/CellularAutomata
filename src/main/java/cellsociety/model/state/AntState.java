@@ -1,6 +1,7 @@
 package cellsociety.model.state;
 
 import cellsociety.model.StateInterface;
+import java.util.Objects;
 
 /**
  * Represents the state of a cell in the ant foraging simulation. This includes pheromone levels,
@@ -138,4 +139,38 @@ public class AntState implements StateInterface {
     }
     return "Empty";
   }
+
+  /**
+   * Compares this AntState with another object for equality. Two AntStates are considered equal
+   * if they represent the same type of cell (nest, food, obstacle, or empty), regardless of their
+   * pheromone levels or ant count. This allows for proper color mapping while maintaining dynamic state.
+   *
+   * @param o the object to compare with
+   * @return true if the objects represent the same type of cell
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AntState other = (AntState) o;
+    return isNest == other.isNest &&
+        isFood == other.isFood &&
+        isObstacle == other.isObstacle;
+  }
+
+  /**
+   * Generates a hash code for this AntState. The hash code is based only on the cell type
+   * flags (nest, food, obstacle) to maintain consistency with equals().
+   *
+   * @return hash code value for this object
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(isNest, isFood, isObstacle);
+  }
 }
+
