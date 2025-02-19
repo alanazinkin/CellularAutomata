@@ -31,17 +31,51 @@ public class SugarScape extends Simulation {
   private static final int SUGAR_STATE = 1;
   private static final int AGENT_STATE = 2;
 
-
   public SugarScape(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
+
+    // Convert all cells to SugarCells first
+    convertGridToSugarCells(grid);
+
     this.agents = new ArrayList<>();
     this.activeLoans = new ArrayList<>();
     this.random = new Random();
     this.currentTick = 0;
     this.sugarGrowBackInterval = DEFAULT_SUGAR_GROW_BACK_INTERVAL;
     this.sugarGrowBackRate = DEFAULT_SUGAR_GROW_BACK_RATE;
+
+    // Initialize the sugar distribution first
     initializeGrowthPatterns();
-    initializeAgents(10);  // Default to 10 initial agents
+
+    // Then place agents based on initial states
+    initializeFromStates();
+  }
+
+  private void initializeFromStates() {
+    Grid grid = getGrid();
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        Cell cell = grid.getCell(r, c);
+        if (cell.getCurrentState() == SugarScapeState.AGENT) {
+          // Create and add agent at this position
+          Agent agent = createAgent(cell);
+          agents.add(agent);
+        }
+      }
+    }
+    getGrid().applyNextStates();
+  }
+
+  private void convertGridToSugarCells(Grid grid) {
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        Cell cell = grid.getCell(r, c);
+        if (!(cell instanceof SugarCell)) {
+          SugarCell sugarCell = new SugarCell(r, c, cell.getCurrentState());
+          grid.setCellAt(r, c, sugarCell);
+        }
+      }
+    }
   }
 
 
@@ -84,18 +118,6 @@ public class SugarScape extends Simulation {
       }
     }
     grid.applyNextStates();
-  }
-
-  private void initializeAgents(int count) {
-    for (int i = 0; i < count; i++) {
-      Cell randomCell = findRandomEmptyCell();
-      if (randomCell != null) {
-        Agent agent = createAgent(randomCell);
-        agents.add(agent);
-        randomCell.setNextState(SugarScapeState.AGENT);
-      }
-    }
-    getGrid().applyNextStates();
   }
 
   @Override
@@ -275,9 +297,18 @@ public class SugarScape extends Simulation {
 
   private Cell findBestMove(Agent agent, List<Cell> validMoves) {
     return validMoves.stream()
-        .max(Comparator
-            .comparingInt(cell -> ((SugarCell) cell).getSugar())
-            .thenComparing(cell -> -calculateDistance(agent.getPosition(), (Cell) cell)))
+        .map(cell -> (Cell)cell)
+        .filter(cell -> cell instanceof SugarCell)
+        .max((cell1, cell2) -> {
+          SugarCell sugar1 = (SugarCell) cell1;
+          SugarCell sugar2 = (SugarCell) cell2;
+          int sugarCompare = Integer.compare(sugar1.getSugar(), sugar2.getSugar());
+          if (sugarCompare != 0) return sugarCompare;
+          return Integer.compare(
+              -calculateDistance(agent.getPosition(), cell1),
+              -calculateDistance(agent.getPosition(), cell2)
+          );
+        })
         .orElse(null);
   }
 
