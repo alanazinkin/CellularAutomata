@@ -10,8 +10,10 @@ import java.util.Map;
 /**
  * The XMLWriter class is responsible for saving the current simulation state to an XML file. It
  * constructs the XML structure based on the provided simulation configuration and grid state.
+ * This class extends {@code BaseFileWriter} and overrides the {@code save} and {@code formatContent}
+ * methods to generate XML-formatted content representing the simulation details and grid layout.
  *
- * @author Angela Predolac
+ * @author angelapredolac
  */
 public class XMLWriter extends BaseFileWriter {
 
@@ -27,12 +29,27 @@ public class XMLWriter extends BaseFileWriter {
   private static final String PARAMETERS_TAG = "parameters";
   private static final String PARAMETER_TAG = "parameter";
 
+  /**
+   * Saves the simulation configuration and grid state to an XML file at the specified file path.
+   *
+   * @param config   The simulation configuration containing metadata and parameters.
+   * @param grid     The grid representing the current simulation state.
+   * @param filePath The path to save the XML file.
+   * @throws IOException If an error occurs while writing to the file.
+   */
   @Override
   public void save(SimulationConfig config, Grid grid, String filePath) throws IOException {
     String content = formatContent(config, grid);
     writeToFile(filePath, content);
   }
 
+  /**
+   * Formats the simulation configuration and grid state into an XML string representation.
+   *
+   * @param config The simulation configuration containing metadata and parameters.
+   * @param grid   The grid representing the current simulation state.
+   * @return A string containing the XML representation of the simulation.
+   */
   @Override
   protected String formatContent(SimulationConfig config, Grid grid) {
     StringBuilder xmlContent = new StringBuilder();
