@@ -45,8 +45,8 @@ public class LangtonLoopTest {
         new HashMap<>()
     );
 
-    simulation = new LangtonLoop(config, new Grid(GRID_SIZE, GRID_SIZE, LangtonState.CORE));
-
+    // Initialize grid with EMPTY state instead of CORE
+    simulation = new LangtonLoop(config, new Grid(GRID_SIZE, GRID_SIZE, LangtonState.EMPTY));
   }
 
   /**
@@ -95,6 +95,9 @@ public class LangtonLoopTest {
   void step_EmptyCellWithExtendSignal_CreatesSheathCell() {
     Grid grid = simulation.getGrid();
 
+    // Clear any initial state and set center cell to EMPTY
+    grid.getCell(2, 2).setCurrentState(LangtonState.EMPTY);
+
     // Set up a pattern with EXTEND signals around an EMPTY cell
     grid.getCell(2, 1).setCurrentState(LangtonState.EXTEND);  // West
     grid.getCell(2, 3).setCurrentState(LangtonState.EXTEND);  // East
@@ -112,6 +115,13 @@ public class LangtonLoopTest {
   @Test
   void step_AdvanceSignalNearSheath_TransformsToExtend() {
     Grid grid = simulation.getGrid();
+
+    // Clear any initial states
+    for (int r = 1; r <= 3; r++) {
+      for (int c = 1; c <= 3; c++) {
+        grid.getCell(r, c).setCurrentState(LangtonState.EMPTY);
+      }
+    }
 
     // Set up a pattern with ADVANCE signal near SHEATH cells
     grid.getCell(2, 2).setCurrentState(LangtonState.ADVANCE);
@@ -131,6 +141,13 @@ public class LangtonLoopTest {
   void step_NoTransitionRules_MaintainsState() {
     Grid grid = simulation.getGrid();
 
+    // Clear surrounding cells to ensure no rules apply
+    for (int r = 1; r <= 3; r++) {
+      for (int c = 1; c <= 3; c++) {
+        grid.getCell(r, c).setCurrentState(LangtonState.EMPTY);
+      }
+    }
+
     // Set up an isolated CORE cell
     grid.getCell(2, 2).setCurrentState(LangtonState.CORE);
 
@@ -145,5 +162,20 @@ public class LangtonLoopTest {
    */
   @Test
   void constructor_InvalidGridDimensions_ThrowsException() {
+    int[] invalidStates = new int[2 * 2];  // Too small for a valid Langton's Loop
+    SimulationConfig invalidConfig = new SimulationConfig(
+        "Langton",
+        "Langton's Loop",
+        "Test Author",
+        "Test Description",
+        2,
+        2,
+        invalidStates,
+        new HashMap<>()
+    );
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      new LangtonLoop(invalidConfig, new Grid(2, 2, LangtonState.EMPTY));
+    }, "Should throw IllegalArgumentException for grid too small to contain a loop");
   }
 }
