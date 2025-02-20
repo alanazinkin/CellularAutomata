@@ -33,7 +33,9 @@ public class SimulationController {
     WATOR_WORLD("Wa-Tor World"),
     LANGTON_LOOP("Langton Loop"),
     SUGAR_SCAPE("Sugar Scape"),
-    BACTERIA("Bacteria");
+    BACTERIA("Bacteria"),
+    ANT("Foraging Ants"),
+    TEMPESTI_LOOP("Tempesti Loop");
 
     private final String displayName;
 
@@ -61,7 +63,6 @@ public class SimulationController {
   private final SimulationUI ui;
   private final SimulationEngine engine;
   private final SimulationFileManager fileManager;
-  private final cellsociety.controller.SimulationParameters parameters;
   private Stage stage;
   private SimulationController myController;
 
@@ -69,7 +70,6 @@ public class SimulationController {
    * Constructs a SimulationController and initializes key components.
    */
   public SimulationController() {
-    this.parameters = cellsociety.controller.SimulationParameters.fromConfig();
     this.engine = new SimulationEngine(CONFIG);
     this.ui = new SimulationUI(CONFIG);
     this.fileManager = new SimulationFileManager();
@@ -152,7 +152,4 @@ public class SimulationController {
     return ui;
   }
 
-  public static ResourceBundle getResourceConfig() {
-    return CONFIG;
-  }
 }

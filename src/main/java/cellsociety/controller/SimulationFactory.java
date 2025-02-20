@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
+import cellsociety.model.simulations.AntSimulation;
 import cellsociety.model.simulations.BacteriaColoniesSimulation;
 import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
@@ -9,6 +10,7 @@ import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
 import cellsociety.model.simulations.Schelling;
 import cellsociety.model.simulations.SugarScape;
+import cellsociety.model.simulations.TempestiLoop;
 import cellsociety.model.simulations.WaTorWorld;
 import java.util.Map;
 
@@ -34,6 +36,10 @@ public class SimulationFactory {
                       new SugarScape(config, grid);
                     case BACTERIA ->
                       new BacteriaColoniesSimulation(config, grid);
+                    case ANT ->
+                      new AntSimulation(config, grid);
+                    case TEMPESTI_LOOP ->
+                        new TempestiLoop(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }

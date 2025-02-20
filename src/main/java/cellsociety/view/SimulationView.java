@@ -78,7 +78,7 @@ public class SimulationView {
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
         myConfig.getTitle(),
         myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
-        simulation.getColorMap(), language,
+        simulation.getColorMap(),
         myResources
     );
     mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
