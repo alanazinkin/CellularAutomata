@@ -1,5 +1,7 @@
 package cellsociety.view;
 
+import static java.lang.Integer.parseInt;
+
 import cellsociety.model.StateInterface;
 
 import java.io.FileNotFoundException;
@@ -53,7 +55,10 @@ public class SimulationInfoDisplay {
    * resource bundle for given language
    */
   private ResourceBundle myResources;
-
+  /**
+   * resource bundle for the configuration
+   */
+  private Map<String, String> myConfigResources;
   /**
    * the scene holding all panes and elements of the view
    */
@@ -70,9 +75,10 @@ public class SimulationInfoDisplay {
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
   public SimulationInfoDisplay(String type, String title, String author, String description,
-      Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language,
-      ResourceBundle resources) {
+      Map<String, Double> parameters, Map<StateInterface, String> stateColors,
+      ResourceBundle resources, Map<String, String> configResources) {
     myResources = resources;
+    myConfigResources = configResources;
     setType(type);
     setTitle(title);
     setAuthor(author);
@@ -152,7 +158,7 @@ public class SimulationInfoDisplay {
     vbox.setAlignment(Pos.CENTER);
     root.setCenter(vbox);
     // create and set the scene
-    myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+    myScene = new Scene(root, parseInt(myConfigResources.get("sim.info.display.width")), parseInt(myConfigResources.get("sim.info.display.height")));
     stage.setScene(myScene);
     // create display box to hold relevant information
     simView.setTheme(themeColor, myScene);
