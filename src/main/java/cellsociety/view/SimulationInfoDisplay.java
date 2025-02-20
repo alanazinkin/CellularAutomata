@@ -2,7 +2,6 @@ package cellsociety.view;
 
 import static java.lang.Integer.parseInt;
 
-import cellsociety.controller.SimulationController;
 import cellsociety.model.StateInterface;
 
 import java.io.FileNotFoundException;
