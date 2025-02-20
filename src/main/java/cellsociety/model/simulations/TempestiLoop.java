@@ -34,9 +34,8 @@ public class TempestiLoop extends Simulation {
    *
    * @param simulationConfig Configuration object containing simulation parameters.
    */
-  public TempestiLoop(SimulationConfig simulationConfig) {
-    super(simulationConfig,
-        new Grid(simulationConfig.getHeight(), simulationConfig.getWidth(), DEFAULT_STATE));
+  public TempestiLoop(SimulationConfig simulationConfig, Grid grid) {
+    super(simulationConfig, grid);
   }
 
   /**

@@ -10,15 +10,16 @@ import java.util.List;
 public class FileRetriever {
   private static final String BASE_PATH = "data/";
   private static final List<String> SIMULATION_TYPES = List.of(
-      "Game of Life",
-      "Spreading of Fire",
-      "Percolation",
-      "Wa-Tor World",
-      "Schelling Segregation",
-      "Langton Loop",
-      "Sugar Scape",
       "Bacteria",
-      "Foraging Ants"
+      "Foraging Ants",
+      "Game of Life",
+      "Langton Loop",
+      "Percolation",
+      "Schelling Segregation",
+      "Spreading of Fire",
+      "Sugar Scape",
+      "Tempesti Loop",
+      "Wa-Tor World"
   );
 
   /**
@@ -80,6 +81,9 @@ public class FileRetriever {
         break;
       case "Foraging Ants":
         folderExtension = "ForagingAnts";
+        break;
+      case "Tempesti Loop":
+        folderExtension = "TempestiLoop";
         break;
       // potential point of abuse! Handle edge case:
       default:

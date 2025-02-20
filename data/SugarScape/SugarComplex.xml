@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Sugar Scape</type>
+  <title>Expanded Sugar</title>
+  <author>Alana Zinkin</author>
+  <description>SugarScape involves agents interacting in a virtual landscape, competing for resources like sugar.</description>
+  <width>10</width>
+  <height>10</height>
+  <!-- 0 : EMPTY      1 : SUGAR      2 : AGENT   -->
+  <initial_states>
+    0 2 2 1 2 1 0 0 1 0
+    1 0 0 0 0 0 2 1 0 0
+    0 0 2 0 1 0 0 0 0 2
+    1 0 1 0 2 0 1 0 1 0
+    0 2 1 0 0 1 0 2 0 0
+    0 0 0 2 0 0 1 0 0 1
+    1 0 0 1 0 2 0 1 2 0
+    0 1 2 0 0 0 0 0 0 2
+    2 0 0 0 1 0 2 1 0 0
+    0 0 1 0 0 2 0 0 1 0
+  </initial_states>
+</simulation>

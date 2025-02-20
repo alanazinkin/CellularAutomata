@@ -34,7 +34,8 @@ public class SimulationController {
     LANGTON_LOOP("Langton Loop"),
     SUGAR_SCAPE("Sugar Scape"),
     BACTERIA("Bacteria"),
-    ANT("Foraging Ants");
+    ANT("Foraging Ants"),
+    TEMPESTI_LOOP("Tempesti Loop");
 
     private final String displayName;
 

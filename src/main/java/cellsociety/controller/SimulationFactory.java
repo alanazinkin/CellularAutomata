@@ -10,6 +10,7 @@ import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
 import cellsociety.model.simulations.Schelling;
 import cellsociety.model.simulations.SugarScape;
+import cellsociety.model.simulations.TempestiLoop;
 import cellsociety.model.simulations.WaTorWorld;
 import java.util.Map;
 
@@ -37,6 +38,8 @@ public class SimulationFactory {
                       new BacteriaColoniesSimulation(config, grid);
                     case ANT ->
                       new AntSimulation(config, grid);
+                    case TEMPESTI_LOOP ->
+                        new TempestiLoop(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
