@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
+import cellsociety.model.simulations.AntSimulation;
 import cellsociety.model.simulations.BacteriaColoniesSimulation;
 import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
@@ -34,6 +35,8 @@ public class SimulationFactory {
                       new SugarScape(config, grid);
                     case BACTERIA ->
                       new BacteriaColoniesSimulation(config, grid);
+                    case ANT ->
+                      new AntSimulation(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }

@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class BaseConfigParser implements SimulationConfigParser {
     protected static final Set<String> VALID_SIMULATION_TYPES = Set.of(
             "Game of Life", "Spreading of Fire", "Schelling Segregation",
-            "Percolation", "Wa-Tor World", "Langton Loop", "Sugar Scape", "Bacteria"
+            "Percolation", "Wa-Tor World", "Langton Loop", "Sugar Scape", "Bacteria", "Foraging Ants"
     );
 
     protected static final Map<String, Set<Integer>> VALID_STATES = Map.of(
@@ -16,7 +16,8 @@ public abstract class BaseConfigParser implements SimulationConfigParser {
             "Wa-Tor World", Set.of(0, 1, 2),
             "Langton Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7),
             "Sugar Scape", Set.of(0, 1, 2),
-            "Bacteria", Set.of(0, 1, 2)
+            "Bacteria", Set.of(0, 1, 2),
+        "Foraging Ants", Set.of(0, 1, 2, 3)
     );
 
     protected final FileValidator fileValidator;

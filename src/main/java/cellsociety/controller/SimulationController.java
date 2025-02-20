@@ -33,7 +33,8 @@ public class SimulationController {
     WATOR_WORLD("Wa-Tor World"),
     LANGTON_LOOP("Langton Loop"),
     SUGAR_SCAPE("Sugar Scape"),
-    BACTERIA("Bacteria");
+    BACTERIA("Bacteria"),
+    ANT("Foraging Ants");
 
     private final String displayName;
 
