@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
@@ -143,10 +144,10 @@ public class ControlPanel {
         myResources.getString("ToggleGrid"), myGridView);
     Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
 
-    myUserControl.addElementToPane(speedSlider, myCustomizationBar);
-    myUserControl.addElementToPane(themeSelector, myCustomizationBar);
-    myUserControl.addElementToPane(gridLinesToggle, myCustomizationBar);
-    myUserControl.addElementToPane(flipGridButton, myCustomizationBar);
+    List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton);
+    for (Control element : elements) {
+      myUserControl.addElementToPane(element, myCustomizationBar);
+    }
   }
 
   /**
@@ -211,6 +212,4 @@ public class ControlPanel {
   private void addCustomizationBarToLowerBar() {
     myLowerBar.getChildren().add(myCustomizationBar);
   }
-
-
 }
