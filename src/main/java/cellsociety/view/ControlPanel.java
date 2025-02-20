@@ -40,7 +40,6 @@ public class ControlPanel {
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
   private GridView myGridView;
-  private SimulationUI myUI;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -54,7 +53,6 @@ public class ControlPanel {
     myResources = resources;
     mySimView = simulationView;
     myGridView = gridView;
-    myUI = myController.getUI();
     initializeFileRetriever();
     initializeUserControl();
   }
