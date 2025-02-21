@@ -35,7 +35,8 @@ public class SimulationController {
     SUGAR_SCAPE("Sugar Scape"),
     BACTERIA("Bacteria"),
     ANT("Foraging Ants"),
-    TEMPESTI_LOOP("Tempesti Loop");
+    TEMPESTI_LOOP("Tempesti Loop"),
+    RULES_GAME_OF_LIFE("Rules-Based Game of Life");
 
     private final String displayName;
 

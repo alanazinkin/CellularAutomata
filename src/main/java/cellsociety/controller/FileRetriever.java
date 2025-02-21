@@ -13,6 +13,7 @@ public class FileRetriever {
       "Bacteria",
       "Foraging Ants",
       "Game of Life",
+      "Rules-Based Game of Life",
       "Langton Loop",
       "Percolation",
       "Schelling Segregation",
@@ -53,6 +54,9 @@ public class FileRetriever {
     String folderExtension;
     switch (simulationType) {
       case "Game of Life":
+        folderExtension = "GameOfLife";
+        break;
+      case "Rules-Based Game of Life":
         folderExtension = "GameOfLife";
         break;
       case "Spreading of Fire":
