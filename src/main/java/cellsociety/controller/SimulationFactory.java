@@ -8,6 +8,7 @@ import cellsociety.model.simulations.Fire;
 import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.simulations.LangtonLoop;
 import cellsociety.model.simulations.Percolation;
+import cellsociety.model.simulations.RuleBasedGameOfLife;
 import cellsociety.model.simulations.Schelling;
 import cellsociety.model.simulations.SugarScape;
 import cellsociety.model.simulations.TempestiLoop;
@@ -40,6 +41,8 @@ public class SimulationFactory {
                       new AntSimulation(config, grid);
                     case TEMPESTI_LOOP ->
                         new TempestiLoop(config, grid);
+                    case RULES_GAME_OF_LIFE ->
+                      new RuleBasedGameOfLife(config, grid);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Invalid simulation type: " + type));
     }
