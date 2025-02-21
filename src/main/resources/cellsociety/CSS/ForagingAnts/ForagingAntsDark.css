@@ -7,7 +7,7 @@
   -fx-stroke: black;
 }
 #ant-state-food {
-  -fx-fill: dark green;
+  -fx-fill: darkgreen;
   -fx-stroke: black;
 }
 #ant-state-obstacle {

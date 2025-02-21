@@ -1,5 +1,7 @@
 package cellsociety.view;
 
+import static java.lang.Integer.parseInt;
+
 import cellsociety.model.StateInterface;
 
 import java.io.FileNotFoundException;
@@ -16,14 +18,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
- * This class creates a display window that informs the user of relevant simulation information such
+ * this class creates a display window that informs the user of relevant simulation information such
  * as its type, name, author, description, state colors, and relevant parameters
  */
 public class SimulationInfoDisplay {
-
-  private static int SCREEN_WIDTH = 800;
-  private static int SCREEN_HEIGHT = 600;
-  private static int TEXT_SIZE = 25;
+  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
+      SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");
 
   /**
    * type of simulation (ex: Fire, GameofLife, etc.)
@@ -53,7 +53,10 @@ public class SimulationInfoDisplay {
    * resource bundle for given language
    */
   private ResourceBundle myResources;
-
+  /**
+   * resource bundle for the configuration
+   */
+  private Map<String, String> myConfigResources;
   /**
    * the scene holding all panes and elements of the view
    */
@@ -70,7 +73,7 @@ public class SimulationInfoDisplay {
    * @param stateColors is a key that indicates the meaning of the color of each cell
    */
   public SimulationInfoDisplay(String type, String title, String author, String description,
-      Map<String, Double> parameters, Map<StateInterface, String> stateColors, String language,
+      Map<String, Double> parameters, Map<StateInterface, String> stateColors,
       ResourceBundle resources) {
     myResources = resources;
     setType(type);
@@ -152,7 +155,7 @@ public class SimulationInfoDisplay {
     vbox.setAlignment(Pos.CENTER);
     root.setCenter(vbox);
     // create and set the scene
-    myScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+    myScene = new Scene(root, parseInt(CONFIG.getString("sim.info.display.width")), parseInt(CONFIG.getString("sim.info.display.height")));
     stage.setScene(myScene);
     // create display box to hold relevant information
     simView.setTheme(themeColor, myScene);
@@ -197,8 +200,8 @@ public class SimulationInfoDisplay {
   private Text createText(String text) {
     Text infoText = new Text(text);
     infoText.setTextAlignment(TextAlignment.CENTER);
-    infoText.setFont(Font.font("Verdana", FontWeight.BOLD, TEXT_SIZE));
-    infoText.setWrappingWidth(SCREEN_WIDTH * .75);
+    infoText.setFont(Font.font("Verdana", FontWeight.BOLD, parseInt(CONFIG.getString("text.size"))));
+    infoText.setWrappingWidth(parseInt(CONFIG.getString("sim.info.display.width")) * .75);
     return infoText;
   }
 
