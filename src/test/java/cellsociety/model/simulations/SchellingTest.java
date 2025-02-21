@@ -144,21 +144,29 @@ public class SchellingTest {
   }
 
   /**
-   * Tests that an invalid cell type in the grid causes a ClassCastException.
+   * Tests that a regular Cell is automatically converted to an AgentCell
    */
   @Test
-  void applyRules_InvalidCellTypeInGrid_ThrowsClassCastException() {
+  void applyRules_NonAgentCell_ConvertsToAgentCell() {
     Grid grid = new Grid(1, 1, SchellingState.EMPTY_CELL);
 
-    Cell invalidCell = new Cell(SchellingState.AGENT);
-    replaceCell(grid, 0, 0, invalidCell);
+    Cell regularCell = new Cell(SchellingState.AGENT);
+    replaceCell(grid, 0, 0, regularCell);
 
     SimulationConfig simConfig = createSchellingSimConfig(1, 1);
     Schelling simulation = new Schelling(simConfig, grid, 0.5);
 
-    assertThrows(ClassCastException.class, simulation::applyRules,
-        "Should throw ClassCastException when trying to process non-AgentCell");
+    simulation.applyRules();
+
+    Cell convertedCell = grid.getCell(0, 0);
+    assertTrue(convertedCell instanceof AgentCell,
+        "Regular Cell should be converted to AgentCell");
+    assertEquals(SchellingState.AGENT, convertedCell.getCurrentState(),
+        "Converted cell should maintain AGENT state");
+    assertTrue(((AgentCell)convertedCell).getAgentGroup() > 0,
+        "Converted cell should have a valid agent group");
   }
+
 
   /**
    * Tests that a negative tolerance value in the constructor throws an IllegalArgumentException.

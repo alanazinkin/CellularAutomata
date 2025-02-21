@@ -385,8 +385,12 @@ public class WaTorWorld extends Simulation {
     for (int i = 0; i < DIRECTIONS_COUNT; i++) {
       int neighborRow = (r + DIRECTION_ROW_OFFSETS[i] + rows) % rows;
       int neighborCol = (c + DIRECTION_COL_OFFSETS[i] + cols) % cols;
-      if (!moved[neighborRow][neighborCol] &&
-          getGrid().getCell(neighborRow, neighborCol).getCurrentState() == targetState) {
+      boolean isValidNeighbor = targetState == WaTorWorldState.FISH ?
+          getGrid().getCell(neighborRow, neighborCol).getCurrentState() == targetState :
+          !moved[neighborRow][neighborCol] &&
+              getGrid().getCell(neighborRow, neighborCol).getCurrentState() == targetState;
+
+      if (isValidNeighbor) {
         neighbors.add(new int[]{neighborRow, neighborCol});
       }
     }

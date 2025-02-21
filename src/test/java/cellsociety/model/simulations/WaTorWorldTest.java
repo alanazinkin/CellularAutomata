@@ -104,18 +104,34 @@ class WaTorWorldTest {
    */
   @Test
   void step_SharkEatsFishAndReproduces_SharkCountEqualsTwoAndPreyCellConverted() {
+    // Setup - same as before
     grid.getCell(1, 1).setCurrentState(WaTorWorldState.SHARK);
     grid.getCell(1, 2).setCurrentState(WaTorWorldState.FISH);
     int fishBreedTime = 3, sharkBreedTime = 1, sharkInitialEnergy = 5, sharkEnergyGain = 2;
     WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
         sharkInitialEnergy, sharkEnergyGain);
 
+    System.out.println("Initial state:");
+    printGridState();
+
     simulation.step();
+
+    System.out.println("\nFinal state:");
+    printGridState();
 
     int sharkCount = countState(WaTorWorldState.SHARK);
     assertEquals(2, sharkCount, "After eating and reproduction, there should be two sharks");
     assertEquals("Shark", grid.getCell(1, 2).getCurrentState().getStateValue(),
         "The fish cell should now contain a shark");
+  }
+
+  private void printGridState() {
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        System.out.print(grid.getCell(r, c).getCurrentState().getStateValue() + " ");
+      }
+      System.out.println();
+    }
   }
 
   /**

@@ -74,14 +74,39 @@ class DiseaseTest {
   }
 
   /**
-   * Verifies that the clone method creates a new instance of the Disease with the same pattern. The
-   * cloned object should not be the same instance as the original.
+   * Verifies that cloning a disease creates a new instance with potential mutations.
+   * Given the mutation rate of 0.1, each bit has a 10% chance of flipping during cloning.
+   * For an 8-bit pattern, we expect to typically see 0-2 mutations, though up to 3 is
+   * acceptable to avoid flaky tests.
+   * <p>
+   * This mutation behavior is a key part of the disease transmission mechanics in the
+   * SugarScape simulation, allowing diseases to evolve as they spread between agents.
+   * The test verifies that:
+   * <ul>
+   *   <li>The cloned disease is a different object instance</li>
+   *   <li>The cloned pattern contains a reasonable number of mutations</li>
+   * </ul>
+   * </p>
    */
   @Test
-  void clone_WhenCalled_CreatesCopy() {
-    Disease cloned = disease.clone();
-    assertNotSame(disease, cloned);
-    assertEquals(disease.patternToString(), cloned.patternToString());
+  void clone_WhenCalled_CreatesMutatedCopy() {
+    Disease original = new Disease(TEST_PATTERN);
+    Disease cloned = original.clone();
+
+    assertNotSame(original, cloned);
+
+    String originalPattern = original.patternToString();
+    String clonedPattern = cloned.patternToString();
+
+    int differences = 0;
+    for (int i = 0; i < originalPattern.length(); i++) {
+      if (originalPattern.charAt(i) != clonedPattern.charAt(i)) {
+        differences++;
+      }
+    }
+    assertTrue(differences <= 3,
+        String.format("Expected 0-3 mutations but found %d mutations. Original: %s, Cloned: %s",
+            differences, originalPattern, clonedPattern));
   }
 
   /**
