@@ -3,7 +3,9 @@ package cellsociety.model.simulations;
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
+import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.state.LangtonState;
+import cellsociety.model.simulations.TempestiLoop;
 import cellsociety.model.StateInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,8 @@ class TempestiLoopTest {
   private static final int TEST_WIDTH = 5;
   private SimulationConfig validConfig;
   private TempestiLoop tempestiLoop;
+  private Grid validGrid = new Grid(validConfig.getWidth(), validConfig.getHeight(), GameOfLifeState.ALIVE);
+
 
   /**
    * Sets up the testing environment before each test. Initializes the valid configuration and
@@ -35,7 +39,7 @@ class TempestiLoopTest {
   @BeforeEach
   void setUp() {
     validConfig = new DummySimulationConfig(TEST_HEIGHT, TEST_WIDTH);
-    tempestiLoop = new TempestiLoop(validConfig);
+    tempestiLoop = new TempestiLoop(validConfig, validGrid);
   }
 
   /**
@@ -43,7 +47,7 @@ class TempestiLoopTest {
    */
   @Test
   void constructor_ValidDimensions_DoesNotThrowException() {
-    assertDoesNotThrow(() -> new TempestiLoop(validConfig));
+    assertDoesNotThrow(() -> new TempestiLoop(validConfig, validGrid));
   }
 
   /**
@@ -52,7 +56,7 @@ class TempestiLoopTest {
   @Test
   void constructor_NegativeWidth_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(5, -3);
-    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig));
+    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
   /**
@@ -61,7 +65,7 @@ class TempestiLoopTest {
   @Test
   void constructor_ZeroHeight_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(0, 5);
-    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig));
+    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
   /**

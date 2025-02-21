@@ -164,4 +164,7 @@ public class SimulationView {
     }
   }
 
+  public Scene getScene() {
+    return this.myScene;
+  }
 }
