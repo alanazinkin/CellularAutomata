@@ -1,7 +1,7 @@
 package cellsociety.model.simulations;
 
+
 import cellsociety.controller.SimulationConfig;
-import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.state.LangtonState;
 import cellsociety.model.StateInterface;
@@ -11,62 +11,89 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Map;
 
 /**
- * JUnit tests for the TempestiLoop simulation class. Verifies correct behavior of state
- * transitions, grid updates, and exception handling for invalid configurations. Covers both
- * positive and negative scenarios to ensure robustness and adherence to Tempesti's Loop rules.
+ * Test class for the TempestiLoop simulation implementation. Tests include validation of constructor
+ * parameters, initialization of state and color maps, and verification of state transition rules.
+ * Uses a 5x5 grid for testing basic functionality and edge cases.
  *
  * @author Tatum McKinnis
  */
 class TempestiLoopTest {
 
+  /**
+   * The height of the test grid used across all test cases.
+   */
   private static final int TEST_HEIGHT = 5;
+
+  /**
+   * The width of the test grid used across all test cases.
+   */
   private static final int TEST_WIDTH = 5;
+
+  /**
+   * Configuration object containing simulation parameters.
+   */
   private SimulationConfig validConfig;
+
+  /**
+   * Grid object used for testing the simulation.
+   */
+  private Grid testGrid;
+
+  /**
+   * Instance of TempestiLoop simulation being tested.
+   */
   private TempestiLoop tempestiLoop;
 
   /**
-   * Sets up the testing environment before each test. Initializes the valid configuration and
-   * TempestiLoop instance.
+   * Sets up the test environment before each test case.
+   * Initializes a valid configuration, creates a grid with default empty state,
+   * and instantiates a new TempestiLoop simulation.
    */
   @BeforeEach
   void setUp() {
     validConfig = new DummySimulationConfig(TEST_HEIGHT, TEST_WIDTH);
-    tempestiLoop = new TempestiLoop(validConfig);
+    testGrid = new Grid(TEST_HEIGHT, TEST_WIDTH, LangtonState.EMPTY);
+    tempestiLoop = new TempestiLoop(validConfig, testGrid);
   }
 
   /**
-   * Verifies that the constructor does not throw an exception when provided with valid dimensions.
+   * Tests that the constructor accepts valid dimensions without throwing exceptions.
+   * Creates a new grid with standard test dimensions and verifies successful instantiation.
    */
   @Test
   void constructor_ValidDimensions_DoesNotThrowException() {
-    assertDoesNotThrow(() -> new TempestiLoop(validConfig));
+    Grid grid = new Grid(TEST_HEIGHT, TEST_WIDTH, LangtonState.EMPTY);
+    assertDoesNotThrow(() -> new TempestiLoop(validConfig, grid));
   }
 
   /**
-   * Verifies that the constructor throws an IllegalArgumentException when the width is negative.
+   * Tests that the constructor properly handles negative width values.
+   * Expects an IllegalArgumentException to be thrown when creating a grid with negative width.
    */
   @Test
   void constructor_NegativeWidth_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(5, -3);
-    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig));
+    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);  // Use valid grid dimensions
+    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
   /**
-   * Verifies that the constructor throws an IllegalArgumentException when the height is zero.
+   * Tests that the constructor properly handles zero height values.
+   * Expects an IllegalArgumentException to be thrown when creating a grid with zero height.
    */
   @Test
   void constructor_ZeroHeight_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(0, 5);
-    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig));
+    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);  // Use valid grid dimensions
+    assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
   /**
-   * Verifies that the color map is initialized correctly with the expected number of states and
-   * that the LangtonState.EMPTY is present.
+   * Tests the initialization of the color map.
+   * Verifies that the map contains all expected states and proper color mappings.
    */
   @Test
   void initializeColorMap_ExpectedBehavior_ReturnsCorrectColorMap() {
@@ -76,8 +103,8 @@ class TempestiLoopTest {
   }
 
   /**
-   * Verifies that the state map is initialized correctly with the expected number of states and
-   * that the LangtonState.SHEATH state is present for the key 1.
+   * Tests the initialization of the state map.
+   * Verifies that the map contains all required states and proper integer mappings.
    */
   @Test
   void initializeStateMap_ExpectedBehavior_ReturnsCorrectStateMap() {
@@ -87,8 +114,10 @@ class TempestiLoopTest {
   }
 
   /**
-   * Verifies that the empty cell with an ADVANCE neighbor transitions to the SHEATH state after
-   * applying the rules.
+   * Tests the transition rule from empty state to sheath state.
+   * Verifies that an empty cell transitions to sheath state when adjacent to an advance cell.
+   *
+   * @throws Exception if there is an error invoking the applyRules method
    */
   @Test
   void applyRules_EmptyCellWithAdvanceNeighbor_TransitionsToSheath() throws Exception {
@@ -99,8 +128,10 @@ class TempestiLoopTest {
   }
 
   /**
-   * Verifies that the SHEATH cell with an INIT neighbor transitions to the TEMP state after
-   * applying the rules.
+   * Tests the transition rule from sheath state to temporary state.
+   * Verifies that a sheath cell transitions to temporary state when adjacent to an init cell.
+   *
+   * @throws Exception if there is an error invoking the applyRules method
    */
   @Test
   void applyRules_SheathCellWithInitNeighbor_TransitionsToTemp() throws Exception {
@@ -112,8 +143,10 @@ class TempestiLoopTest {
   }
 
   /**
-   * Verifies that the CORE cell with SHEATH neighbors transitions to the INIT state after applying
-   * the rules.
+   * Tests the transition rule from core state to init state.
+   * Verifies that a core cell transitions to init state when surrounded by sheath cells.
+   *
+   * @throws Exception if there is an error invoking the applyRules method
    */
   @Test
   void applyRules_CoreWithSheathNeighbors_TransitionsToInit() throws Exception {
@@ -127,8 +160,9 @@ class TempestiLoopTest {
 
   /**
    * Helper method to invoke the private applyRules method using reflection.
+   * This method is necessary for testing the internal behavior of the TempestiLoop class.
    *
-   * @throws Exception if an error occurs while invoking the method
+   * @throws Exception if there is an error accessing or invoking the method
    */
   private void invokeApplyRules() throws Exception {
     Method applyRules = TempestiLoop.class.getDeclaredMethod("applyRules");
@@ -137,14 +171,32 @@ class TempestiLoopTest {
   }
 
   /**
-   * Dummy implementation of SimulationConfig used for testing purposes.
+   * Dummy implementation of SimulationConfig for testing purposes.
+   * Provides basic configuration functionality without full simulation implementation.
    */
   private static class DummySimulationConfig extends SimulationConfig {
 
+    /**
+     * The height of the simulation grid.
+     */
     private final int height;
+
+    /**
+     * The width of the simulation grid.
+     */
     private final int width;
+
+    /**
+     * Array containing the initial states for all cells in the grid.
+     */
     private final int[] initialStates;
 
+    /**
+     * Constructs a new DummySimulationConfig with specified dimensions.
+     *
+     * @param height the height of the simulation grid
+     * @param width the width of the simulation grid
+     */
     public DummySimulationConfig(int height, int width) {
       this.height = height;
       this.width = width;
@@ -153,16 +205,31 @@ class TempestiLoopTest {
           new int[0];
     }
 
+    /**
+     * Gets the height of the simulation grid.
+     *
+     * @return the height value
+     */
     @Override
     public int getHeight() {
       return height;
     }
 
+    /**
+     * Gets the width of the simulation grid.
+     *
+     * @return the width value
+     */
     @Override
     public int getWidth() {
       return width;
     }
 
+    /**
+     * Gets the array of initial states for all cells in the grid.
+     *
+     * @return array of initial state values
+     */
     @Override
     public int[] getInitialStates() {
       return initialStates;
