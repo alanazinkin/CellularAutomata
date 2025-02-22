@@ -82,6 +82,16 @@ public abstract class Simulation {
     }
   }
 
+  /**
+   * Reinitializes the grid states based on the provided simulation configuration.
+   * This method assigns new states to each cell in the grid according to the initial states
+   * specified in the {@code simulationConfig}. It ensures that all required data structures
+   * (grid cells and state mappings) are properly initialized before proceeding.
+   *
+   * @param simulationConfig the configuration containing the initial states for the grid
+   * @throws NullPointerException if the initial states array is empty, a grid cell is null,
+   *                              or the state map is null
+   */
   public void reinitializeGridStates(SimulationConfig simulationConfig) {
     int cellCount = 0;
     if (simulationConfig.getInitialStates().length == 0) {

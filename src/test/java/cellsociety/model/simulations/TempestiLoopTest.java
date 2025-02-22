@@ -5,7 +5,6 @@ import cellsociety.controller.SimulationConfig;
 import cellsociety.model.Grid;
 import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.state.LangtonState;
-import cellsociety.model.simulations.TempestiLoop;
 import cellsociety.model.StateInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ class TempestiLoopTest {
    * Instance of TempestiLoop simulation being tested.
    */
   private TempestiLoop tempestiLoop;
-  private Grid validGrid = new Grid(validConfig.getWidth(), validConfig.getHeight(), GameOfLifeState.ALIVE);
+  private Grid validGrid;
 
 
   /**
@@ -60,8 +59,10 @@ class TempestiLoopTest {
   void setUp() {
     validConfig = new DummySimulationConfig(TEST_HEIGHT, TEST_WIDTH);
     testGrid = new Grid(TEST_HEIGHT, TEST_WIDTH, LangtonState.EMPTY);
+    validGrid = new Grid(validConfig.getWidth(), validConfig.getHeight(), GameOfLifeState.ALIVE);
     tempestiLoop = new TempestiLoop(validConfig, testGrid);
   }
+
 
   /**
    * Tests that the constructor accepts valid dimensions without throwing exceptions.

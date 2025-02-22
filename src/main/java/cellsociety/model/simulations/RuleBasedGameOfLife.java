@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Rule-based implementation of the Game of Life simulation. In this version, cells have specific
@@ -143,23 +141,6 @@ public class RuleBasedGameOfLife extends Simulation {
 
     parseNumbers(birthPart, birthConditions);
     parseNumbers(survivePart, surviveConditions);
-  }
-
-  /**
-   * Parses a rule string in the format "B<number>/S<number>" to determine the birth and survival
-   * conditions.
-   *
-   * @param ruleString The rule string representing birth and survival conditions.
-   * @throws IllegalArgumentException if the rule string format is invalid.
-   */
-  private void parseRuleString(String ruleString) {
-    Matcher matcher = Pattern.compile("B(\\d+)/S(\\d+)").matcher(ruleString);
-    if (!matcher.find()) {
-      throw new IllegalArgumentException("Invalid rule format: " + ruleString);
-    }
-
-    parseNumbers(matcher.group(1), birthConditions);
-    parseNumbers(matcher.group(2), surviveConditions);
   }
 
   /**

@@ -17,18 +17,6 @@ public class SugarCell extends Cell {
   private int col;
 
   /**
-   * Constructs a new SugarCell with the specified initial state.
-   *
-   * @param initialState the initial state of the cell
-   * @throws IllegalArgumentException if the initial state is null
-   */
-  public SugarCell(StateInterface initialState) {
-    super(initialState);
-    this.sugar = 0;
-    this.maxSugar = 0;
-  }
-
-  /**
    * Creates a new SugarCell with specified position and initial state.
    *
    * @param row          the row position of the cell
@@ -104,17 +92,6 @@ public class SugarCell extends Cell {
    */
   public int getCol() {
     return col;
-  }
-
-  /**
-   * Sets the position of the cell.
-   *
-   * @param row the new row position
-   * @param col the new column position
-   */
-  public void setPosition(int row, int col) {
-    this.row = row;
-    this.col = col;
   }
 
   /**
