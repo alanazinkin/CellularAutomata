@@ -35,6 +35,7 @@ public class ControlPanel {
   private final ResourceBundle myResources;
   private final SimulationView mySimView;
   private HBox myControlBar;
+  private VBox mySideBar;
   private VBox myLowerBar;
   private HBox myLabelBar;
   private HBox myCustomizationBar;
@@ -211,5 +212,13 @@ public class ControlPanel {
 
   private void addCustomizationBarToLowerBar() {
     myLowerBar.getChildren().add(myCustomizationBar);
+  }
+
+  public void makeSideBar(BorderPane root) {
+    mySideBar = new VBox(10);
+    mySideBar.setPadding(new Insets(0, 0, 10, 0));
+    mySideBar.setAlignment(Pos.CENTER);
+    mySideBar.setPrefWidth(300);
+    root.setRight(mySideBar);
   }
 }

@@ -74,6 +74,7 @@ public class SimulationView {
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
+    myControlPanel.makeSideBar(simView.getRoot());
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
         myConfig.getTitle(),
@@ -96,6 +97,7 @@ public class SimulationView {
     myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")),
         parseInt(mySimulationResourceMap.get("window.height")));
     stage.setScene(myScene);
+    stage.setMaximized(true);
     stage.show();
     return myScene;
   }

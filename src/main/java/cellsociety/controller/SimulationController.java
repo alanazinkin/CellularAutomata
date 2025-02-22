@@ -66,7 +66,7 @@ public class SimulationController {
   private final SimulationFileManager fileManager;
   private Stage stage;
   private SimulationController myController;
-
+  private int iterationCount;
   /**
    * Constructs a SimulationController and initializes key components.
    */
@@ -75,6 +75,7 @@ public class SimulationController {
     this.ui = new SimulationUI(CONFIG);
     this.fileManager = new SimulationFileManager();
     this.myController = this;
+    this.iterationCount = 0;
   }
 
   public void selectSimulation(String simulationType, String fileName, Stage stage,
@@ -94,6 +95,7 @@ public class SimulationController {
   public void stepSimulation() {
     try {
       engine.step();
+      iterationCount++;
     } catch (Exception e) {
       ui.handleError("StepError", e);
       pauseSimulation();
@@ -151,6 +153,10 @@ public class SimulationController {
 
   public SimulationUI getUI() {
     return ui;
+  }
+
+  public int getItterationCount() {
+    return iterationCount;
   }
 
 }

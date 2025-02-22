@@ -148,11 +148,4 @@ class UserControllerTest extends DukeApplicationTest {
     assertFalse(mySimulationView.getScene().getStylesheets().contains(lightGameOfLife));
   }
 
-  public Button makeFlipGridButton(String label, GridView gridView) {
-    Button flipGrid = new Button(label);
-    flipGrid.setOnAction(e -> {gridView.renderGridFlippedVertically();});
-    return flipGrid;
-  }
-
-
 }
