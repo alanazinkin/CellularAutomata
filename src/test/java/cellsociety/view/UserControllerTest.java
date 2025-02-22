@@ -1,6 +1,5 @@
 package cellsociety.view;
 
-import static java.lang.Integer.parseInt;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,9 +23,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import util.DukeApplicationTest;
 
 
@@ -151,7 +147,6 @@ class UserControllerTest extends DukeApplicationTest {
     String lightGameOfLife = getClass().getResource("/cellsociety/CSS/GameOfLife/GameOfLifeLight.css").toExternalForm();
     assertFalse(mySimulationView.getScene().getStylesheets().contains(lightGameOfLife));
   }
-
 
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);

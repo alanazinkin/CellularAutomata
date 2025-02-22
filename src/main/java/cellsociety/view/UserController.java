@@ -137,10 +137,18 @@ public class UserController {
     return toggleButton;
   }
 
-
+  /**
+   * creates toggle button that flips the grid horizontally
+   *
+   * @param label button label
+   * @param gridView gridview that is flipped horizontally
+   * @return newly created flip grid button
+   */
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);
     flipGrid.setOnAction(e -> {gridView.renderGridFlippedVertically();});
     return flipGrid;
   }
+
+
 }
