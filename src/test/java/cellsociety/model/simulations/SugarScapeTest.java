@@ -5,213 +5,247 @@ import static org.mockito.Mockito.*;
 
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.*;
+import cellsociety.model.state.LoanManager;
 import cellsociety.model.state.SugarScapeState;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.*;
 
 /**
- * Test class for SugarScape simulation. Tests various aspects of the simulation including: -
- * Initialization - Agent movement and interactions - Resource management - Loan system - Disease
- * transmission Adheres to [UnitOfWork_StateUnderTest_ExpectedBehavior] naming convention.
- *
- * @author Tatum McKinnis
+ * Test class for SugarScape simulation.
+ * Tests the core functionality of the SugarScape simulation including initialization,
+ * state management, and rule application.
  */
 public class SugarScapeTest {
 
-  private SugarScape simulation;
-  private SimulationConfig config;
-  private Grid grid;
-  private static final int GRID_SIZE = 5;
+  private SugarScape sugarScape;
+  private SimulationConfig mockConfig;
+  private Grid mockGrid;
+  private Cell mockCell;
+  private SugarCell mockSugarCell;
 
   @BeforeEach
   void setUp() {
-    config = mock(SimulationConfig.class);
-    when(config.getInitialStates()).thenReturn(new int[GRID_SIZE * GRID_SIZE]);
+    mockConfig = mock(SimulationConfig.class);
+    mockGrid = mock(Grid.class);
+    mockCell = mock(Cell.class);
+    mockSugarCell = mock(SugarCell.class);
 
-    grid = new Grid(GRID_SIZE, GRID_SIZE, SugarScapeState.EMPTY);
-    for (int r = 0; r < GRID_SIZE; r++) {
-      for (int c = 0; c < GRID_SIZE; c++) {
-        SugarCell cell = new SugarCell(r, c, SugarScapeState.EMPTY);
-        cell.setMaxSugar(10);
-        grid.setCellAt(r, c, cell);
-      }
-    }
+    // Mock grid dimensions
+    when(mockGrid.getRows()).thenReturn(10);
+    when(mockGrid.getCols()).thenReturn(10);
+    when(mockGrid.getCell(anyInt(), anyInt())).thenReturn(mockCell);
 
-    simulation = new SugarScape(config, grid);
+    // Mock initial states in config - need 100 states for 10x10 grid
+    int[] mockInitialStates = new int[100];  // 10x10 grid = 100 cells
+    // Fill with mostly empty (0), some sugar (1), and few agents (2)
+    Arrays.fill(mockInitialStates, 0);  // Fill all with empty first
+    Arrays.fill(mockInitialStates, 0, 15, 1);  // 15 sugar cells
+    Arrays.fill(mockInitialStates, 15, 20, 2);  // 5 agent cells
+    when(mockConfig.getInitialStates()).thenReturn(mockInitialStates);
+
+    // Set up cell state
+    when(mockCell.getCurrentState()).thenReturn(SugarScapeState.EMPTY);
+
+    sugarScape = new SugarScape(mockConfig, mockGrid);
   }
 
   /**
-   * Tests initialization of color map. Verifies that all states have corresponding colors.
+   * Tests that the simulation properly initializes the grid with SugarCells.
    */
   @Test
-  void initializeColorMap_WhenCalled_ReturnsValidColorMapping() {
-    Map<StateInterface, String> colorMap = simulation.getColorMap();
+  void initialize_NewSimulation_ConvertsCellsToSugarCells() {
+    verify(mockGrid, times(100)).setCellAt(anyInt(), anyInt(), any(SugarCell.class));
+  }
 
-    assertNotNull(colorMap);
+  /**
+   * Tests that growth patterns are correctly initialized on the grid.
+   */
+  @Test
+  void initialize_GrowthPatterns_SetsSugarLevelsCorrectly() {
+    // Create a real grid for testing patterns
+    Grid realGrid = new Grid(5, 5, SugarScapeState.EMPTY);
+
+    // Mock config for real grid
+    SimulationConfig realConfig = mock(SimulationConfig.class);
+    // Create real initial states for 5x5 grid = 25 cells
+    int[] realInitialStates = new int[25];
+    Arrays.fill(realInitialStates, 0);  // All empty cells for testing growth patterns
+    when(realConfig.getInitialStates()).thenReturn(realInitialStates);
+
+    SugarScape realSugarScape = new SugarScape(realConfig, realGrid);
+
+    // Check corner cells (should have maximum sugar due to pattern)
+    SugarCell corner = (SugarCell) realGrid.getCell(0, 0);
+    assertTrue(corner.getMaxSugar() > 10);
+    assertEquals(corner.getMaxSugar(), corner.getSugar());
+  }
+
+  /**
+   * Tests that agents are properly initialized from initial states.
+   */
+  @Test
+  void initialize_WithAgents_CreatesAgentsCorrectly() {
+    // Create a real grid with some agent cells
+    Grid realGrid = new Grid(5, 5, SugarScapeState.EMPTY);
+    Cell agentCell = realGrid.getCell(0, 0);
+    agentCell.setCurrentState(SugarScapeState.AGENT);
+
+    // Mock config for grid with agents
+    SimulationConfig agentConfig = mock(SimulationConfig.class);
+    // Create initial states for 5x5 grid with some agents
+    int[] agentInitialStates = new int[25];
+    Arrays.fill(agentInitialStates, 1);  // Fill with sugar
+    // Put some agents in specific positions
+    agentInitialStates[0] = 2;  // Agent in corner
+    agentInitialStates[12] = 2; // Agent in middle
+    when(agentConfig.getInitialStates()).thenReturn(agentInitialStates);
+
+    SugarScape agentSugarScape = new SugarScape(agentConfig, realGrid);
+
+    assertFalse(agentSugarScape.getAgents().isEmpty());
+  }
+
+  /**
+   * Tests that all managers are properly invoked during rule application.
+   */
+  @Test
+  void applyRules_AllManagers_InvokedInOrder() {
+    // Create mocks for all managers
+    MovementManager mockMovementManager = mock(MovementManager.class);
+    GrowthManager mockGrowthManager = mock(GrowthManager.class);
+    ReproductionManager mockReproductionManager = mock(ReproductionManager.class);
+    TradingManager mockTradingManager = mock(TradingManager.class);
+    LoanManager mockLoanManager = mock(LoanManager.class);
+    DiseaseManager mockDiseaseManager = mock(DiseaseManager.class);
+
+    // Create simulation with mocked managers using reflection
+    SugarScape spySugarScape = spy(sugarScape);
+    try {
+      var movementField = SugarScape.class.getDeclaredField("movementManager");
+      movementField.setAccessible(true);
+      movementField.set(spySugarScape, mockMovementManager);
+
+      var growthField = SugarScape.class.getDeclaredField("growthManager");
+      growthField.setAccessible(true);
+      growthField.set(spySugarScape, mockGrowthManager);
+
+      var reproductionField = SugarScape.class.getDeclaredField("reproductionManager");
+      reproductionField.setAccessible(true);
+      reproductionField.set(spySugarScape, mockReproductionManager);
+
+      var tradingField = SugarScape.class.getDeclaredField("tradingManager");
+      tradingField.setAccessible(true);
+      tradingField.set(spySugarScape, mockTradingManager);
+
+      var loanField = SugarScape.class.getDeclaredField("loanManager");
+      loanField.setAccessible(true);
+      loanField.set(spySugarScape, mockLoanManager);
+
+      var diseaseField = SugarScape.class.getDeclaredField("diseaseManager");
+      diseaseField.setAccessible(true);
+      diseaseField.set(spySugarScape, mockDiseaseManager);
+
+    } catch (Exception e) {
+      fail("Failed to set up test with reflection: " + e.getMessage());
+    }
+
+    // Execute rules
+    spySugarScape.applyRules();
+
+    // Verify all managers were called in correct order
+    var inOrder = inOrder(mockMovementManager, mockGrowthManager, mockReproductionManager,
+        mockTradingManager, mockLoanManager, mockDiseaseManager);
+
+    inOrder.verify(mockMovementManager).applyMovement(any());
+    inOrder.verify(mockGrowthManager).applyGrowBack(anyInt(), anyInt(), anyInt());
+    inOrder.verify(mockReproductionManager).applyReproduction(any());
+    inOrder.verify(mockTradingManager).applyTrading(any());
+    inOrder.verify(mockLoanManager).applyLending(any());
+    inOrder.verify(mockDiseaseManager).applyDiseaseRules(any());
+  }
+
+  /**
+   * Tests that dead agents are properly removed from the simulation.
+   */
+  @Test
+  void applyRules_DeadAgents_RemovedFromSimulation() {
+    Agent mockAgent = mock(Agent.class);
+    when(mockAgent.isDead()).thenReturn(true);
+    when(mockAgent.getPosition()).thenReturn(mockCell);
+
+    sugarScape.getAgents().add(mockAgent);
+    sugarScape.applyRules();
+
+    assertTrue(sugarScape.getAgents().isEmpty());
+    verify(mockCell).setNextState(SugarScapeState.EMPTY);
+  }
+
+  /**
+   * Tests that the color map is properly initialized with all states.
+   */
+  @Test
+  void initializeColorMap_AllStates_MappedToColors() {
+    var colorMap = sugarScape.getColorMap();
+
+    assertTrue(colorMap.containsKey(SugarScapeState.EMPTY));
+    assertTrue(colorMap.containsKey(SugarScapeState.SUGAR));
+    assertTrue(colorMap.containsKey(SugarScapeState.AGENT));
+
     assertEquals("sugar-state-empty", colorMap.get(SugarScapeState.EMPTY));
     assertEquals("sugar-state-sugar", colorMap.get(SugarScapeState.SUGAR));
     assertEquals("sugar-state-agent", colorMap.get(SugarScapeState.AGENT));
   }
 
   /**
-   * Tests initialization of state map. Verifies that all numeric states map to correct
-   * SugarScapeStates.
+   * Tests that the state map is properly initialized with all states.
    */
   @Test
-  void initializeStateMap_WhenCalled_ReturnsValidStateMapping() {
-    Map<Integer, StateInterface> stateMap = simulation.getStateMap();
+  void initializeStateMap_AllStates_MappedToIntegers() {
+    var stateMap = sugarScape.getStateMap();
 
-    assertNotNull(stateMap);
     assertEquals(SugarScapeState.EMPTY, stateMap.get(0));
     assertEquals(SugarScapeState.SUGAR, stateMap.get(1));
     assertEquals(SugarScapeState.AGENT, stateMap.get(2));
   }
 
   /**
-   * Tests adding an agent to an empty cell. Verifies successful agent addition and grid state
-   * update.
+   * Tests that an exception is thrown when config is null.
    */
   @Test
-  void addAgent_ToEmptyCell_SuccessfullyAddsAgent() {
-    SugarCell cell = (SugarCell) grid.getCell(0, 0);
-    cell.setCurrentState(SugarScapeState.EMPTY);
-
-    Agent agent = new Agent(cell, 10, 1, 1);
-    simulation.addAgent(agent);
-
-    assertTrue(simulation.getAgents().contains(agent));
-    assertEquals(SugarScapeState.AGENT, cell.getCurrentState());
+  void constructor_NullConfig_ThrowsException() {
+    Grid validGrid = new Grid(2, 2, SugarScapeState.EMPTY);
+    NullPointerException thrown = assertThrows(NullPointerException.class, () ->
+        new SugarScape(null, validGrid));
+    assertEquals("Cannot invoke \"cellsociety.controller.SimulationConfig.getInitialStates()\" because \"simulationConfig\" is null",
+        thrown.getMessage());
   }
 
   /**
-   * Tests adding an agent to an occupied cell. Verifies that appropriate exception is thrown.
+   * Tests that an exception is thrown when grid is null.
    */
   @Test
-  void addAgent_ToOccupiedCell_ThrowsException() {
-    SugarCell cell = (SugarCell) grid.getCell(0, 0);
-    cell.setCurrentState(SugarScapeState.AGENT);
-    Agent agent = new Agent(cell, 10, 1, 1);
+  void constructor_NullGrid_ThrowsException() {
+    int[] validStates = new int[4];  // 2x2 grid
+    Arrays.fill(validStates, 0);
+    when(mockConfig.getInitialStates()).thenReturn(validStates);
 
-    assertThrows(IllegalArgumentException.class, () -> simulation.addAgent(agent));
+    IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+        new SugarScape(mockConfig, null));
+    assertEquals("Grid cannot be null", thrown.getMessage());
   }
 
-  /**
-   * Tests adding a valid loan between two agents. Verifies successful loan creation and resource
-   * transfer.
-   */
-  @Test
-  void addLoan_BetweenValidAgents_SuccessfullyAddsLoan() {
-    // Set up cells
-    SugarCell cell1 = new SugarCell(0, 0, SugarScapeState.EMPTY);
-    SugarCell cell2 = new SugarCell(0, 1, SugarScapeState.EMPTY);
-    grid.setCellAt(0, 0, cell1);
-    grid.setCellAt(0, 1, cell2);
 
-    // Create agents
-    Agent lender = new Agent(cell1, 100, 1, 1);
-    Agent borrower = new Agent(cell2, 10, 1, 1);
+/**
+ * Tests that an IllegalArgumentException is thrown when initial states are invalid.
+ */
+@Test
+void constructor_InvalidInitialStates_ThrowsException() {
+  // Test with invalid array size
+  int[] invalidStates = new int[50];  // Wrong size for 10x10 grid
+  when(mockConfig.getInitialStates()).thenReturn(invalidStates);
 
-    // Add agents
-    simulation.addAgent(lender);
-    simulation.addAgent(borrower);
-
-    // Create and add loan
-    Loan loan = new Loan(lender, borrower, 50, 0, 0.1);
-    simulation.addLoan(loan);
-
-    assertEquals(1, simulation.getActiveLoans().size());
-    assertEquals(50, lender.getSugar());  // Started with 100, gave 50
-    assertEquals(60, borrower.getSugar()); // Started with 10, got 50
-  }
-
-  /**
-   * Tests adding a duplicate loan between agents. Verifies that appropriate exception is thrown.
-   */
-  @Test
-  void addLoan_DuplicateLoan_ThrowsException() {
-    // Set up cells
-    SugarCell cell1 = new SugarCell(0, 0, SugarScapeState.EMPTY);
-    SugarCell cell2 = new SugarCell(0, 1, SugarScapeState.EMPTY);
-    grid.setCellAt(0, 0, cell1);
-    grid.setCellAt(0, 1, cell2);
-
-    // Create agents
-    Agent lender = new Agent(cell1, 100, 1, 1);
-    Agent borrower = new Agent(cell2, 10, 1, 1);
-
-    // Add agents
-    simulation.addAgent(lender);
-    simulation.addAgent(borrower);
-
-    // Add first loan
-    Loan loan1 = new Loan(lender, borrower, 50, 0, 0.1);
-    simulation.addLoan(loan1);
-
-    // Try to add second loan
-    Loan loan2 = new Loan(lender, borrower, 30, 0, 0.1);
-    assertThrows(IllegalArgumentException.class, () -> simulation.addLoan(loan2));
-  }
-
-  /**
-   * Tests retrieving simulation statistics. Verifies that all expected statistics are present and
-   * accurate.
-   */
-  @Test
-  void getStatistics_WithActiveSimulation_ReturnsValidStats() {
-    for (int r = 0; r < grid.getRows(); r++) {
-      for (int c = 0; c < grid.getCols(); c++) {
-        SugarCell cell = new SugarCell(r, c, SugarScapeState.EMPTY);
-        cell.setMaxSugar(0);
-        cell.setSugar(0);
-        grid.setCellAt(r, c, cell);
-      }
-    }
-
-    SugarCell cell1 = new SugarCell(0, 0, SugarScapeState.EMPTY);
-    SugarCell cell2 = new SugarCell(0, 1, SugarScapeState.EMPTY);
-    cell1.setMaxSugar(0);
-    cell2.setMaxSugar(0);
-    cell1.setSugar(0);
-    cell2.setSugar(0);
-    grid.setCellAt(0, 0, cell1);
-    grid.setCellAt(0, 1, cell2);
-
-    while (!simulation.getAgents().isEmpty()) {
-      simulation.getAgents().remove(0);
-    }
-
-    Agent agent1 = new Agent(cell1, 100, 1, 1);
-    Agent agent2 = new Agent(cell2, 50, 1, 1);
-    agent1.setSex(Sex.MALE);
-    agent2.setSex(Sex.FEMALE);
-
-    simulation.addAgent(agent1);
-    simulation.addAgent(agent2);
-
-    Map<String, Object> stats = simulation.getStatistics();
-
-    assertNotNull(stats);
-    assertEquals(2, stats.get("agentCount"));
-    assertEquals(1L, stats.get("maleCount"));
-    assertEquals(1L, stats.get("femaleCount"));
-    assertEquals(150, stats.get("totalSugar"));
-  }
-
-  /**
-   * Tests step execution and growth patterns. Verifies that sugar grows back correctly.
-   */
-  @Test
-  void step_WithEmptyGrid_GrowsBackSugar() {
-    SugarCell cell = new SugarCell(0, 0, SugarScapeState.EMPTY);
-    cell.setMaxSugar(5);
-    cell.setSugar(0);
-    grid.setCellAt(0, 0, cell);
-
-    cell.setCurrentState(SugarScapeState.EMPTY);
-
-    simulation.step();
-
-    assertEquals(1, cell.getSugar());
-  }
+  assertThrows(IllegalArgumentException.class, () ->
+      new SugarScape(mockConfig, mockGrid));
+}
 }
