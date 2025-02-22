@@ -56,7 +56,6 @@ public class Schelling extends Simulation {
     super(simulationConfig, grid);
     validateTolerance(tolerance);
 
-    // Add this conversion method
     convertGridToAgentCells(grid);
 
     this.tolerance = tolerance;
@@ -72,7 +71,9 @@ public class Schelling extends Simulation {
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
         Cell cell = grid.getCell(r, c);
-        if (!(cell instanceof AgentCell)) {
+        if (!(cell instanceof AgentCell) &&
+            (cell.getCurrentState() == SchellingState.EMPTY_CELL ||
+                cell.getCurrentState() == SchellingState.AGENT)) {
           int agentGroup = 0;
           if (cell.getCurrentState() == SchellingState.AGENT) {
             agentGroup = ((r + c) % 2) + 1;
