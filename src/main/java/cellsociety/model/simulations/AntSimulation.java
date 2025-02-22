@@ -288,27 +288,6 @@ public class AntSimulation extends Simulation {
   }
 
   /**
-   * Gets forward-facing positions relative to ant's orientation.
-   *
-   * @param ant The ant to evaluate
-   * @return List of [row,col] positions in front of the ant
-   */
-  private List<int[]> getForwardPositions(Ant ant) {
-    List<int[]> positions = new ArrayList<>();
-    int currentRow = ant.getRow();
-    int currentCol = ant.getCol();
-
-    for (Orientation dir : ant.getOrientation().getForwardOrientations()) {
-      int nr = currentRow + dir.getDr();
-      int nc = currentCol + dir.getDc();
-      if (getGrid().isValidPosition(nr, nc)) {
-        positions.add(new int[]{nr, nc});
-      }
-    }
-    return positions;
-  }
-
-  /**
    * Gets all neighboring positions around a location.
    *
    * @param row Center row

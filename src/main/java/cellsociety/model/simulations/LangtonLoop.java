@@ -7,6 +7,7 @@ import cellsociety.model.Simulation;
 import cellsociety.model.state.LangtonState;
 import cellsociety.model.StateInterface;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +36,68 @@ public class LangtonLoop extends Simulation {
       {1, 0},   // South
       {0, -1}   // West
   };
+
+  /**
+   * Represents a single transition rule for the Langton Loop automaton.
+   * Each rule consists of a current state, the next state it should transition to,
+   * and a predicate that tests if the neighboring cells meet the required conditions.
+   */
+  private record TransitionRule(
+      LangtonState currentState,
+      LangtonState nextState,
+      NeighborPredicate neighborTest
+  ) {}
+
+  /**
+   * Functional interface for testing if a cell's neighbors meet specific conditions
+   * for a state transition. Used by TransitionRule to determine if a transition should occur.
+   */
+  @FunctionalInterface
+  private interface NeighborPredicate {
+    boolean test(LangtonState[] neighbors);
+  }
+
+  /**
+   * Defines all possible state transitions in the Langton's Loop automaton.
+   * Each rule specifies the current state, the next state, and the conditions
+   * under which the transition should occur based on the neighboring cells.
+   */
+  private static final List<TransitionRule> TRANSITION_RULES = List.of(
+      new TransitionRule(LangtonState.EMPTY, LangtonState.SHEATH,
+          neighbors -> countNeighborType(neighbors, LangtonState.EXTEND) >= 1 ||
+              countNeighborType(neighbors, LangtonState.CORE) >= 2),
+
+      new TransitionRule(LangtonState.INIT, LangtonState.ADVANCE,
+          neighbors -> neighbors[0] == LangtonState.CORE ||
+              neighbors[2] == LangtonState.CORE),
+
+      new TransitionRule(LangtonState.ADVANCE, LangtonState.EXTEND,
+          neighbors -> countNeighborType(neighbors, LangtonState.SHEATH) >= 1 ||
+              countNeighborType(neighbors, LangtonState.CORE) >= 1),
+
+      new TransitionRule(LangtonState.EXTEND, LangtonState.TEMP,
+          neighbors -> countNeighborType(neighbors, LangtonState.EMPTY) >= 2),
+
+      new TransitionRule(LangtonState.EXTEND, LangtonState.CORE,
+          neighbors -> countNeighborType(neighbors, LangtonState.SHEATH) >= 2),
+
+      new TransitionRule(LangtonState.TEMP, LangtonState.CORE,
+          neighbors -> countNeighborType(neighbors, LangtonState.CORE) >= 1 ||
+              countNeighborType(neighbors, LangtonState.SHEATH) >= 2),
+
+      new TransitionRule(LangtonState.CORE, LangtonState.TURN,
+          neighbors -> countNeighborType(neighbors, LangtonState.SHEATH) >= 3),
+
+      new TransitionRule(LangtonState.TURN, LangtonState.INIT,
+          neighbors -> (neighbors[0] == LangtonState.CORE && neighbors[3] == LangtonState.SHEATH) ||
+              (neighbors[2] == LangtonState.CORE && neighbors[1] == LangtonState.SHEATH)),
+
+      new TransitionRule(LangtonState.SHEATH, LangtonState.CORE,
+          neighbors -> countNeighborType(neighbors, LangtonState.CORE) >= 2),
+
+      new TransitionRule(LangtonState.SHEATH, LangtonState.EXTEND,
+          neighbors -> countNeighborType(neighbors, LangtonState.EXTEND) >= 1)
+  );
 
   /**
    * Constructs a new Langton's Loop simulation with specified configuration.
@@ -198,95 +261,22 @@ public class LangtonLoop extends Simulation {
    * @return The next state for the cell
    */
   private LangtonState applyTransitionRules(LangtonState currentState, LangtonState[] neighbors) {
-    LangtonState N = neighbors[0];
-    LangtonState E = neighbors[1];
-    LangtonState S = neighbors[2];
-    LangtonState W = neighbors[3];
-
-    switch (currentState) {
-      case EMPTY:
-        // Empty cells become sheath if they have enough signal
-        if (countNeighborType(neighbors, LangtonState.EXTEND) >= 1 ||
-            countNeighborType(neighbors, LangtonState.CORE) >= 2) {
-          return LangtonState.SHEATH;
-        }
-        break;
-
-      case INIT:
-        // Init always tries to propagate signals
-        if (N == LangtonState.CORE || S == LangtonState.CORE) {
-          return LangtonState.ADVANCE;
-        }
-        break;
-
-      case ADVANCE:
-        // Advance signals move along the sheath
-        if (countNeighborType(neighbors, LangtonState.SHEATH) >= 1) {
-          return LangtonState.EXTEND;
-        }
-        // Or can start new paths
-        if (countNeighborType(neighbors, LangtonState.CORE) >= 1) {
-          return LangtonState.EXTEND;
-        }
-        break;
-
-      case EXTEND:
-        // Extension signals create new structure
-        if (countNeighborType(neighbors, LangtonState.EMPTY) >= 2) {
-          return LangtonState.TEMP;
-        }
-        // Or continue existing paths
-        if (countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
-          return LangtonState.CORE;
-        }
-        break;
-
-      case TEMP:
-        // Temporary states transition to core when near existing structure
-        if (countNeighborType(neighbors, LangtonState.CORE) >= 1 ||
-            countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
-          return LangtonState.CORE;
-        }
-        break;
-
-      case CORE:
-        // Core can turn to create corners
-        if (countNeighborType(neighbors, LangtonState.SHEATH) >= 3) {
-          return LangtonState.TURN;
-        }
-        break;
-
-      case TURN:
-        // Turns initiate new signal paths
-        if ((N == LangtonState.CORE && W == LangtonState.SHEATH) ||
-            (S == LangtonState.CORE && E == LangtonState.SHEATH)) {
-          return LangtonState.INIT;
-        }
-        break;
-
-      case SHEATH:
-        // Sheath can become core if surrounded by the right pattern
-        if (countNeighborType(neighbors, LangtonState.CORE) >= 2) {
-          return LangtonState.CORE;
-        }
-        // Or can extend if near signals
-        if (countNeighborType(neighbors, LangtonState.EXTEND) >= 1) {
-          return LangtonState.EXTEND;
-        }
-        break;
-    }
-
-    return currentState;
+    return TRANSITION_RULES.stream()
+        .filter(rule -> rule.currentState() == currentState)
+        .filter(rule -> rule.neighborTest().test(neighbors))
+        .findFirst()
+        .map(TransitionRule::nextState)
+        .orElse(currentState);
   }
 
   /**
-   * Counts the number of neighbors that match a specific state.
+   * Counts how many cells in the neighborhood match a specific state.
    *
-   * @param neighbors Array of neighbor states
-   * @param state     State to count
-   * @return Number of neighbors matching the specified state
+   * @param neighbors Array of neighbor states to check
+   * @param state The state to count occurrences of
+   * @return The number of neighboring cells in the specified state
    */
-  private int countNeighborType(LangtonState[] neighbors, LangtonState state) {
+  private static int countNeighborType(LangtonState[] neighbors, LangtonState state) {
     int count = 0;
     for (LangtonState neighbor : neighbors) {
       if (neighbor == state) {

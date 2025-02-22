@@ -40,7 +40,6 @@ public class WaTorWorld extends Simulation {
   private final int rows;
   private final int cols;
 
-  // --- State Arrays (indexed by grid row and col) ---
   // breedCounters holds the number of steps since last reproduction for both fish and sharks.
   private final double[][] breedCounters;
   // sharkEnergies holds the current energy for sharks. (Unused for fish.)
@@ -58,11 +57,10 @@ public class WaTorWorld extends Simulation {
    * @param sharkInitialEnergy initial energy for a shark when created
    * @param sharkEnergyGain    energy a shark gains by eating a fish
    * @throws IllegalArgumentException if fishBreedTime or sharkBreedTime is less than or equal to 0
-   * @author Tatum McKinnis
+   * author Tatum McKinnis
    */
   public WaTorWorld(SimulationConfig simulationConfig, Grid grid, double fishBreedTime,
-      double sharkBreedTime,
-      double sharkInitialEnergy, double sharkEnergyGain) {
+      double sharkBreedTime, double sharkInitialEnergy, double sharkEnergyGain) {
     super(simulationConfig, grid);
 
     if (fishBreedTime <= 0) {
@@ -83,7 +81,15 @@ public class WaTorWorld extends Simulation {
     this.breedCounters = new double[rows][cols];
     this.sharkEnergies = new double[rows][cols];
 
-    // Initialize counters for cells that already contain fish or sharks.
+    initializeCounters(grid);
+  }
+
+  /**
+   * Initializes breed counters and shark energy levels based on the grid's current state.
+   *
+   * @param grid the grid containing the initial state of the simulation
+   */
+  private void initializeCounters(Grid grid) {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         Cell cell = grid.getCell(r, c);
@@ -97,6 +103,7 @@ public class WaTorWorld extends Simulation {
       }
     }
   }
+
 
   /**
    * Initializes the color mapping for the simulation.
