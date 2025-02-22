@@ -3,7 +3,9 @@ package cellsociety.model.simulations;
 
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.Grid;
+import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.state.LangtonState;
+import cellsociety.model.simulations.TempestiLoop;
 import cellsociety.model.StateInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,8 @@ class TempestiLoopTest {
    * Instance of TempestiLoop simulation being tested.
    */
   private TempestiLoop tempestiLoop;
+  private Grid validGrid = new Grid(validConfig.getWidth(), validConfig.getHeight(), GameOfLifeState.ALIVE);
+
 
   /**
    * Sets up the test environment before each test case.

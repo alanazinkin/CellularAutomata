@@ -45,7 +45,7 @@ public class UserController {
    * @throws Exception throws a null pointer exception if the pane is null or uninitialized
    */
   public void addElementToPane(Control element, Pane pane) throws NullPointerException {
-    if (pane != null) {
+    if (pane != null && element != null) {
       pane.getChildren().add(element);
     } else {
       throw new NullPointerException("Pane is null");
@@ -114,7 +114,8 @@ public class UserController {
         try {
           simulationView.setTheme(selectedThemeColor, scene);
         } catch (FileNotFoundException ex) {
-          throw new RuntimeException(ex);
+          SimulationUI.displayAlert(myResources.getString("Error"),
+              myResources.getString("InvalidSimType"));
         }
       } else {
         SimulationUI.displayAlert(myResources.getString("Error"),

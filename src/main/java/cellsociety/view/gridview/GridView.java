@@ -7,6 +7,7 @@ import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Button;
@@ -180,7 +181,7 @@ public abstract class GridView {
     }
   }
 
-
-
-
+  public List<Shape> getImmutableCellsList() {
+    return Collections.unmodifiableList(myCells);
+  }
 }
