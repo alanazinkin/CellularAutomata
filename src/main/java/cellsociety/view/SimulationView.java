@@ -105,6 +105,14 @@ public class SimulationView {
     return myScene;
   }
 
+  /**
+   * sets the themeColor instance variable to the selected themeColor string and
+   * updates the theme to reflect the change
+   *
+   * @param themeColor selected theme color (Dark or Light)
+   * @param scene scene to be updated
+   * @throws FileNotFoundException if there is no CSS file for the themeColor
+   */
   public void setTheme(String themeColor, Scene scene) throws FileNotFoundException {
     myThemeColor = themeColor;
     updateTheme(scene);
@@ -169,10 +177,19 @@ public class SimulationView {
     }
   }
 
+  /**
+   * retrieves the scene instance variable for the simulation view
+   *
+   * @return myScene instance variable
+   */
   public Scene getScene() {
     return this.myScene;
   }
 
+  /**
+   * updates the iterationCounter instance variable text according to the number of iterations of
+   * the simulation
+   */
   public void updateIterationCounter() {
     iterationCounter.setText("Iteration Count: " + myController.getIterationCount());
   }
