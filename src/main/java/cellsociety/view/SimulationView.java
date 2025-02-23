@@ -61,10 +61,29 @@ public class SimulationView {
       throws FileNotFoundException {
     createSimulationWindow(primaryStage);
     setTheme(themeColor, myScene);
-    // create Grid
+    createGridView(simView, colorMap, grid);
+    createControlPanel(primaryStage, simView);
+    createSimulationInfoDisplay(simulation, simView, themeColor);
+  }
+
+  private void createSimulationInfoDisplay(Simulation simulation, SimulationView simView, String themeColor)
+      throws FileNotFoundException {
+    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
+        myConfig.getTitle(),
+        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
+        simulation.getColorMap(),
+        myResources
+    );
+    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
+        simView);
+  }
+
+  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap, Grid grid) {
     myGridView = new DefaultGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);
-    // make control panel
+  }
+
+  private void createControlPanel(Stage primaryStage, SimulationView simView) {
     ControlPanel myControlPanel = new ControlPanel(primaryStage, myScene, myController,
         simView, myResources, myGridView);
     myControlPanel.setupControlBar(simView.getRoot());
@@ -78,15 +97,6 @@ public class SimulationView {
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
-    // make simulation information pop-up window
-    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
-        myConfig.getTitle(),
-        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
-        simulation.getColorMap(),
-        myResources
-    );
-    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
-        simView);
   }
 
   /**
