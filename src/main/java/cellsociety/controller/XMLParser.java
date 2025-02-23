@@ -23,7 +23,7 @@ public class XMLParser extends BaseConfigParser{
   private static final String SIMULATION_TAG = "simulation";
   private static final Set<String> VALID_ROOT_CHILDREN = Set.of(
           "type", "title", "author", "description", "width", "height",
-          "cell", "initial_states", "parameter", "random_states", "random_proportions"
+          "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state"
   );
 
   /**
@@ -68,6 +68,8 @@ public class XMLParser extends BaseConfigParser{
 
       validateAndSetInitialStates(document, config);
       config.setParameters(parseParametersWithValidation(document));
+
+      config.setCellShapeValues(parseCellShapesWithValidation(document));
 
       return config;
     } catch (ParserConfigurationException e) {
@@ -659,5 +661,31 @@ public class XMLParser extends BaseConfigParser{
     } catch (NumberFormatException e) {
       throw new ConfigurationException("Invalid state value format. All states must be integers.");
     }
+  }
+
+  /**
+   * Parses cell shapes from the given XML document and validates them.
+   *
+   * @param doc The XML document containing cell shape elements.
+   * @return A map of cell shapes to their corresponding shape values as strings.
+   * @throws ConfigurationException if a state is missing, or it has an empty name.
+   */
+  private Map<String, String> parseCellShapesWithValidation(Document doc)
+      throws ConfigurationException {
+    Map<String, String> cellShapes = new HashMap<>();
+
+    NodeList cellStateNodes = doc.getElementsByTagName("cell_state");
+    for (int i = 0; i < cellStateNodes.getLength(); i++) {
+      Element stateElement = (Element) cellStateNodes.item(i);
+      String state = stateElement.getAttribute("state");
+      String shape = stateElement.getAttribute("shape");
+
+      if (state.isEmpty()) {
+        throw new ConfigurationException("State name cannot be empty");
+      }
+
+      cellShapes.put(state, shape);
+    }
+    return cellShapes;
   }
 }

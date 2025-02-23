@@ -28,6 +28,7 @@ public class SimulationConfig {
   private int height;
   private int[] initialStates;
   private Map<String, Double> parameters;
+  private Map<String, String> cellShapeMap;
   private Map<StateInterface, Color> colorMap;
 
   /**
@@ -135,6 +136,13 @@ public class SimulationConfig {
     return parameters;
   }
 
+  /**
+   * @return the cell shape map containing the shapes of the cells
+   */
+  public Map<String, String> getCellShapeMap() {
+    return cellShapeMap;
+  }
+
   // Setters
 
   /**
@@ -198,6 +206,10 @@ public class SimulationConfig {
    */
   public void setParameters(Map<String, Double> stringDoubleMap) {
     parameters = stringDoubleMap;
+  }
+
+  public void setCellShapeValues(Map<String, String> stringCellShapeMap) {
+    cellShapeMap = stringCellShapeMap;
   }
 
   /**

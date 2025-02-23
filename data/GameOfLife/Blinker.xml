@@ -6,6 +6,8 @@
     <description>A three-cell oscillator that alternates between horizontal and vertical states.</description>
     <width>5</width>
     <height>5</height>
+    <cell_state state="0" shape="Square"/>
+    <cell_state state="1" shape="Circle"/>
     <initial_states>
         0 0 0 0 0
         0 1 1 1 0
