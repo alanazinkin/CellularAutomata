@@ -1,9 +1,4 @@
 package cellsociety.model;
-
-import cellsociety.model.Agent;
-import cellsociety.model.Cell;
-import cellsociety.model.Grid;
-import cellsociety.model.Sex;
 import java.util.Random;
 
 /**
