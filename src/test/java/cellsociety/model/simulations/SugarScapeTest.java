@@ -5,16 +5,15 @@ import static org.mockito.Mockito.*;
 
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.*;
-import cellsociety.model.state.LoanManager;
+import cellsociety.model.LoanManager;
 import cellsociety.model.state.SugarScapeState;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for SugarScape simulation.
- * Tests the core functionality of the SugarScape simulation including initialization,
- * state management, and rule application.
+ * Test class for SugarScape simulation. Tests the core functionality of the SugarScape simulation
+ * including initialization, state management, and rule application.
  */
 public class SugarScapeTest {
 
@@ -31,20 +30,16 @@ public class SugarScapeTest {
     mockCell = mock(Cell.class);
     mockSugarCell = mock(SugarCell.class);
 
-    // Mock grid dimensions
     when(mockGrid.getRows()).thenReturn(10);
     when(mockGrid.getCols()).thenReturn(10);
     when(mockGrid.getCell(anyInt(), anyInt())).thenReturn(mockCell);
 
-    // Mock initial states in config - need 100 states for 10x10 grid
-    int[] mockInitialStates = new int[100];  // 10x10 grid = 100 cells
-    // Fill with mostly empty (0), some sugar (1), and few agents (2)
-    Arrays.fill(mockInitialStates, 0);  // Fill all with empty first
-    Arrays.fill(mockInitialStates, 0, 15, 1);  // 15 sugar cells
-    Arrays.fill(mockInitialStates, 15, 20, 2);  // 5 agent cells
+    int[] mockInitialStates = new int[100];
+    Arrays.fill(mockInitialStates, 0);
+    Arrays.fill(mockInitialStates, 0, 15, 1);
+    Arrays.fill(mockInitialStates, 15, 20, 2);
     when(mockConfig.getInitialStates()).thenReturn(mockInitialStates);
 
-    // Set up cell state
     when(mockCell.getCurrentState()).thenReturn(SugarScapeState.EMPTY);
 
     sugarScape = new SugarScape(mockConfig, mockGrid);
@@ -63,19 +58,15 @@ public class SugarScapeTest {
    */
   @Test
   void initialize_GrowthPatterns_SetsSugarLevelsCorrectly() {
-    // Create a real grid for testing patterns
     Grid realGrid = new Grid(5, 5, SugarScapeState.EMPTY);
 
-    // Mock config for real grid
     SimulationConfig realConfig = mock(SimulationConfig.class);
-    // Create real initial states for 5x5 grid = 25 cells
     int[] realInitialStates = new int[25];
-    Arrays.fill(realInitialStates, 0);  // All empty cells for testing growth patterns
+    Arrays.fill(realInitialStates, 0);
     when(realConfig.getInitialStates()).thenReturn(realInitialStates);
 
     SugarScape realSugarScape = new SugarScape(realConfig, realGrid);
 
-    // Check corner cells (should have maximum sugar due to pattern)
     SugarCell corner = (SugarCell) realGrid.getCell(0, 0);
     assertTrue(corner.getMaxSugar() > 10);
     assertEquals(corner.getMaxSugar(), corner.getSugar());
@@ -86,19 +77,15 @@ public class SugarScapeTest {
    */
   @Test
   void initialize_WithAgents_CreatesAgentsCorrectly() {
-    // Create a real grid with some agent cells
     Grid realGrid = new Grid(5, 5, SugarScapeState.EMPTY);
     Cell agentCell = realGrid.getCell(0, 0);
     agentCell.setCurrentState(SugarScapeState.AGENT);
 
-    // Mock config for grid with agents
     SimulationConfig agentConfig = mock(SimulationConfig.class);
-    // Create initial states for 5x5 grid with some agents
     int[] agentInitialStates = new int[25];
-    Arrays.fill(agentInitialStates, 1);  // Fill with sugar
-    // Put some agents in specific positions
-    agentInitialStates[0] = 2;  // Agent in corner
-    agentInitialStates[12] = 2; // Agent in middle
+    Arrays.fill(agentInitialStates, 1);
+    agentInitialStates[0] = 2;
+    agentInitialStates[12] = 2;
     when(agentConfig.getInitialStates()).thenReturn(agentInitialStates);
 
     SugarScape agentSugarScape = new SugarScape(agentConfig, realGrid);
@@ -111,7 +98,6 @@ public class SugarScapeTest {
    */
   @Test
   void applyRules_AllManagers_InvokedInOrder() {
-    // Create mocks for all managers
     MovementManager mockMovementManager = mock(MovementManager.class);
     GrowthManager mockGrowthManager = mock(GrowthManager.class);
     ReproductionManager mockReproductionManager = mock(ReproductionManager.class);
@@ -119,7 +105,6 @@ public class SugarScapeTest {
     LoanManager mockLoanManager = mock(LoanManager.class);
     DiseaseManager mockDiseaseManager = mock(DiseaseManager.class);
 
-    // Create simulation with mocked managers using reflection
     SugarScape spySugarScape = spy(sugarScape);
     try {
       var movementField = SugarScape.class.getDeclaredField("movementManager");
@@ -150,10 +135,8 @@ public class SugarScapeTest {
       fail("Failed to set up test with reflection: " + e.getMessage());
     }
 
-    // Execute rules
     spySugarScape.applyRules();
 
-    // Verify all managers were called in correct order
     var inOrder = inOrder(mockMovementManager, mockGrowthManager, mockReproductionManager,
         mockTradingManager, mockLoanManager, mockDiseaseManager);
 
@@ -217,7 +200,8 @@ public class SugarScapeTest {
     Grid validGrid = new Grid(2, 2, SugarScapeState.EMPTY);
     NullPointerException thrown = assertThrows(NullPointerException.class, () ->
         new SugarScape(null, validGrid));
-    assertEquals("Cannot invoke \"cellsociety.controller.SimulationConfig.getInitialStates()\" because \"simulationConfig\" is null",
+    assertEquals(
+        "Cannot invoke \"cellsociety.controller.SimulationConfig.getInitialStates()\" because \"simulationConfig\" is null",
         thrown.getMessage());
   }
 
@@ -226,7 +210,7 @@ public class SugarScapeTest {
    */
   @Test
   void constructor_NullGrid_ThrowsException() {
-    int[] validStates = new int[4];  // 2x2 grid
+    int[] validStates = new int[4];
     Arrays.fill(validStates, 0);
     when(mockConfig.getInitialStates()).thenReturn(validStates);
 
@@ -236,16 +220,15 @@ public class SugarScapeTest {
   }
 
 
-/**
- * Tests that an IllegalArgumentException is thrown when initial states are invalid.
- */
-@Test
-void constructor_InvalidInitialStates_ThrowsException() {
-  // Test with invalid array size
-  int[] invalidStates = new int[50];  // Wrong size for 10x10 grid
-  when(mockConfig.getInitialStates()).thenReturn(invalidStates);
+  /**
+   * Tests that an IllegalArgumentException is thrown when initial states are invalid.
+   */
+  @Test
+  void constructor_InvalidInitialStates_ThrowsException() {
+    int[] invalidStates = new int[50];
+    when(mockConfig.getInitialStates()).thenReturn(invalidStates);
 
-  assertThrows(IllegalArgumentException.class, () ->
-      new SugarScape(mockConfig, mockGrid));
-}
+    assertThrows(IllegalArgumentException.class, () ->
+        new SugarScape(mockConfig, mockGrid));
+  }
 }
