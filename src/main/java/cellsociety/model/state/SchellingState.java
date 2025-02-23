@@ -19,22 +19,24 @@ public enum SchellingState implements StateInterface {
   /**
    * Represents an agent in the Schelling's Model of Segregation simulation.
    */
-  AGENT("Agent"),
+  AGENT("Agent", 1),
 
   /**
    * Represents an empty cell in the Schelling's Model of Segregation simulation.
    */
-  EMPTY_CELL("Empty Cell");
+  EMPTY_CELL("Empty Cell", 0);
 
   private final String stateValue;
+  private final int numericValue;
 
   /**
    * Constructor for the SchellingState enum, assigning a string value to each state.
    *
    * @param stateValue the string value representing the state (e.g., "Agent", "Empty Cell")
    */
-  SchellingState(String stateValue) {
+  SchellingState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   /**
@@ -45,6 +47,11 @@ public enum SchellingState implements StateInterface {
   @Override
   public String getStateValue() {
     return stateValue;
+  }
+
+  @Override
+  public int getNumericValue() {
+    return numericValue;
   }
 
 }

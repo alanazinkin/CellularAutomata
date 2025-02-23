@@ -3,6 +3,7 @@ package cellsociety.controller;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.MockState;
+import java.lang.reflect.InvocationTargetException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.stage.Stage;
@@ -33,7 +34,15 @@ public class SimulationEngine {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.getKeyFrames().add(
                 new KeyFrame(Duration.seconds(secondDelay),
-                        e -> step())
+                        e -> {
+                          try {
+                            step();
+                          } catch (ClassNotFoundException | NoSuchMethodException |
+                                   InvocationTargetException | InstantiationException |
+                                   IllegalAccessException ex) {
+                            SimulationUI.displayAlert("Error", ex.getMessage());
+                          }
+                        })
         );
         return timeline;
     }
@@ -46,7 +55,8 @@ public class SimulationEngine {
         this.simulationUI = simulationController.getUI();
     }
 
-    public void step() {
+    public void step()
+        throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         simulation.step();
         simulationUI.updateView(getSimulation().getColorMap());
     }
