@@ -6,6 +6,9 @@ import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
+import cellsociety.view.shapefactory.CellShape;
+import cellsociety.view.shapefactory.CellShapeFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public abstract class GridView {
@@ -64,7 +66,8 @@ public abstract class GridView {
    * @param myRoot
    * @param colorMap
    */
-  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap) {
+  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     myRoot.setCenter(gridPane);
     gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
     gridPane.setMaxHeight(
@@ -81,7 +84,9 @@ public abstract class GridView {
    * @param colorMap mapping of state interfaces to colors to visually render each cell according to
    *                 its state value
    */
-  public void renderGrid(Map<StateInterface, String> colorMap) {
+  public void renderGrid(Map<StateInterface, String> colorMap)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    gridPane.getChildren().clear();
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
@@ -90,32 +95,48 @@ public abstract class GridView {
     }
   }
 
-  private void addCellShapeToGridView(Map<StateInterface, String> colorMap, Cell cell, int j, int i) {
+  private void addCellShapeToGridView(Map<StateInterface, String> colorMap, Cell cell, int j, int i)
+      throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     StateInterface cellState = cell.getCurrentState();
-    Rectangle rectCell = new Rectangle(cellWidth, cellHeight);
-    rectCell.setId(colorMap.get(cellState));
-    rectCell.setStroke(Color.BLACK);
-    rectCell.setStrokeWidth(1);
-    myCells.add(rectCell);
-    gridPane.add(rectCell, j, i);
+    Shape shape = makeCellShapeFromState(cellState);
+    shape.setId(colorMap.get(cellState));
+    shape.setStroke(Color.BLACK);
+    shape.setStrokeWidth(1);
+    myCells.add(i * numCols + j, shape);
+    gridPane.add(shape, j, i);
   }
 
-  /**
-   * updates the colors of all the cells in the grid according to all cells' current state
-   *
-   * @param colorMap data structure mapping cell states to visual colors in the simulation grid
-   */
-  public void updateCellColors(Map<StateInterface, String> colorMap) {
-    int cellCount = 0;
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Cell cell = myGrid.getCell(i, j);
-        StateInterface state = cell.getCurrentState();
-        Shape myCell = myCells.get(cellCount);
-        myCell.setId(colorMap.get(state));
-        cellCount++;
-      }
+
+  private Shape makeCellShapeFromState(StateInterface cellState)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    String factoryClassName = getCellFactoryName(cellState);
+    String fullFactoryClassName = "cellsociety.view.shapefactory." + factoryClassName;
+
+    // Create factory instance using reflection
+    Class<?> factoryClass = Class.forName(fullFactoryClassName);
+    CellShapeFactory factory = (CellShapeFactory) factoryClass.getDeclaredConstructor().newInstance();
+
+    // Create the cell shape using the factory
+    CellShape cellShape = factory.createCellShape(cellWidth, cellHeight);
+
+    Shape shape = cellShape.getShape();
+    return shape;
+  }
+
+  private String getCellFactoryName(StateInterface cellState) {
+    int cellStateNumericValue = cellState.getNumericValue();
+    //use reflection here to grab cell Shape
+    SimulationConfig  simConfig = myController.getSimulationConfig();
+    Map<Integer, String> cellShapeMap = simConfig.getCellShapeMap();
+    if (cellShapeMap == null) {
+      throw new NullPointerException("Cell shape map is null");
     }
+    // Get the shape type from the map (e.g., "Rectangle" or "Triangle")
+    String shapeType = cellShapeMap.getOrDefault(cellStateNumericValue, "Rectangle");
+
+    // Construct the factory class name
+    String factoryClassName = shapeType + "CellFactory";
+    return factoryClassName;
   }
 
   /**

@@ -6,6 +6,7 @@ import cellsociety.model.StateInterface;
 import cellsociety.view.SimulationSelector;
 import cellsociety.view.SimulationView;
 import cellsociety.view.SplashScreen;
+import java.lang.reflect.InvocationTargetException;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -169,7 +170,8 @@ public class SimulationUI {
    *
    * @param colorMap the mapping of states to colors.
    */
-  public void updateView(Map<StateInterface, String> colorMap) {
+  public void updateView(Map<StateInterface, String> colorMap)
+      throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     simulationView.updateGrid(colorMap);
     simulationView.updateIterationCounter();
   }

@@ -1,6 +1,7 @@
 package cellsociety.controller;
 
 import cellsociety.model.StateInterface;
+import java.util.Collections;
 import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -28,6 +29,7 @@ public class SimulationConfig {
   private int height;
   private int[] initialStates;
   private Map<String, Double> parameters;
+  private Map<Integer, String> cellShapeMap;
   private Map<StateInterface, Color> colorMap;
 
   /**
@@ -135,6 +137,13 @@ public class SimulationConfig {
     return parameters;
   }
 
+  /**
+   * @return the cell shape map containing the shapes of the cells
+   */
+  public Map<Integer, String> getCellShapeMap() {
+    return Collections.unmodifiableMap(cellShapeMap);
+  }
+
   // Setters
 
   /**
@@ -198,6 +207,10 @@ public class SimulationConfig {
    */
   public void setParameters(Map<String, Double> stringDoubleMap) {
     parameters = stringDoubleMap;
+  }
+
+  public void setCellShapeValues(Map<Integer, String> stringCellShapeMap) {
+    cellShapeMap = stringCellShapeMap;
   }
 
   /**

@@ -7,13 +7,15 @@ import cellsociety.model.StateInterface;
  */
 public enum MockState implements StateInterface {
 
-  STATE_ONE("State One"),
-  STATE_TWO("State Two");
+  STATE_ONE("State One", 1),
+  STATE_TWO("State Two", 2);
 
   private final String stateValue;
+  private final int numericValue;
 
-  MockState(String stateValue) {
+  MockState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   /**
@@ -24,6 +26,11 @@ public enum MockState implements StateInterface {
   @Override
   public String getStateValue() {
     return stateValue;
+  }
+
+  @Override
+  public int getNumericValue() {
+    return numericValue;
   }
 }
 

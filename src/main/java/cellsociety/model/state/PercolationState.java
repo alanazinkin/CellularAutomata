@@ -22,20 +22,21 @@ public enum PercolationState implements StateInterface {
   /**
    * Represents an open cell in the Percolation simulation, allowing fluid to flow through it.
    */
-  OPEN("Open"),
+  OPEN("Open", 0),
 
   /**
    * Represents a blocked cell in the Percolation simulation, which blocks the flow of fluid.
    */
-  BLOCKED("Blocked"),
+  BLOCKED("Blocked", 1),
 
   /**
    * Represents a cell that has been percolated. This cell was open and now indicates that fluid has
    * percolated through it.
    */
-  PERCOLATED("Percolated");
+  PERCOLATED("Percolated",2);
 
   private final String stateValue;
+  private final int numericValue;
 
   /**
    * Constructor for the PercolationState enum, assigning a string value to each state.
@@ -43,8 +44,9 @@ public enum PercolationState implements StateInterface {
    * @param stateValue the string value representing the state (e.g., "Open", "Blocked",
    *                   "Percolated")
    */
-  PercolationState(String stateValue) {
+  PercolationState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   /**
@@ -55,6 +57,11 @@ public enum PercolationState implements StateInterface {
   @Override
   public String getStateValue() {
     return stateValue;
+  }
+
+  @Override
+  public int getNumericValue() {
+    return numericValue;
   }
 }
 

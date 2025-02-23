@@ -11,6 +11,7 @@ import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
 import cellsociety.view.gridview.FireGridView;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -58,13 +59,33 @@ public class SimulationView {
    */
   public void initView(Stage primaryStage, Simulation simulation, SimulationView simView,
       Map<StateInterface, String> colorMap, Grid grid, String language, String themeColor)
-      throws FileNotFoundException {
+      throws FileNotFoundException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     createSimulationWindow(primaryStage);
     setTheme(themeColor, myScene);
-    // create Grid
+    createGridView(simView, colorMap, grid);
+    createControlPanel(primaryStage, simView);
+    createSimulationInfoDisplay(simulation, simView, themeColor);
+  }
+
+  private void createSimulationInfoDisplay(Simulation simulation, SimulationView simView, String themeColor)
+      throws FileNotFoundException {
+    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
+        myConfig.getTitle(),
+        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
+        simulation.getColorMap(),
+        myResources
+    );
+    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
+        simView);
+  }
+
+  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap, Grid grid)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     myGridView = new DefaultGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap);
-    // make control panel
+  }
+
+  private void createControlPanel(Stage primaryStage, SimulationView simView) {
     ControlPanel myControlPanel = new ControlPanel(primaryStage, myScene, myController,
         simView, myResources, myGridView);
     myControlPanel.setupControlBar(simView.getRoot());
@@ -78,15 +99,6 @@ public class SimulationView {
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
-    // make simulation information pop-up window
-    SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
-        myConfig.getTitle(),
-        myConfig.getAuthor(), myConfig.getDescription(), myConfig.getParameters(),
-        simulation.getColorMap(),
-        myResources
-    );
-    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
-        simView);
   }
 
   /**
@@ -169,9 +181,10 @@ public class SimulationView {
    *
    * @param stateMap holds the mapping for retrieving the CSS ids for a given cell state
    */
-  public void updateGrid(Map<StateInterface, String> stateMap) {
+  public void updateGrid(Map<StateInterface, String> stateMap)
+      throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     if (myGridView != null) {
-      myGridView.updateCellColors(stateMap);
+      myGridView.renderGrid(stateMap);
     } else {
       System.err.println("Error: GridView is not initialized.");
     }
