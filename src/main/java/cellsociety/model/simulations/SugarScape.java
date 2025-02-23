@@ -14,7 +14,7 @@ import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
 import cellsociety.model.SugarCell;
 import cellsociety.model.TradingManager;
-import cellsociety.model.state.LoanManager;
+import cellsociety.model.LoanManager;
 import cellsociety.model.state.SugarScapeState;
 import java.util.ArrayList;
 import java.util.Collections;
