@@ -19,27 +19,29 @@ public enum WaTorWorldState implements StateInterface {
   /**
    * Represents a fish in the Wa-Tor World simulation.
    */
-  FISH("Fish"),
+  FISH("Fish", 1),
 
   /**
    * Represents a shark in the Wa-Tor World simulation.
    */
-  SHARK("Shark"),
+  SHARK("Shark", 2),
 
   /**
    * Represents an empty cell in the Wa-Tor World simulation.
    */
-  EMPTY("Empty");
+  EMPTY("Empty", 0);
 
   private final String stateValue;
+  private final int numericValue;
 
   /**
    * Constructor for the WaTorWorldState enum, assigning a string value to each state.
    *
    * @param stateValue the string value representing the state (e.g., "Fish", "Shark", "Empty")
    */
-  WaTorWorldState(String stateValue) {
+  WaTorWorldState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   /**
@@ -54,6 +56,6 @@ public enum WaTorWorldState implements StateInterface {
 
   @Override
   public int getNumericValue() {
-    return 0;
+    return numericValue;
   }
 }

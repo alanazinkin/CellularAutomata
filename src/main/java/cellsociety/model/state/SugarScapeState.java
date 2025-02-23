@@ -11,19 +11,21 @@ import cellsociety.model.StateInterface;
  * </p>
  */
 public enum SugarScapeState implements StateInterface {
-  EMPTY("Empty"),      // Cell contains no sugar and no agent
-  SUGAR("Sugar"),      // Cell contains sugar but no agent
-  AGENT("Agent");      // Cell contains an agent
+  EMPTY("Empty",  0),      // Cell contains no sugar and no agent
+  SUGAR("Sugar", 1),      // Cell contains sugar but no agent
+  AGENT("Agent", 2);      // Cell contains an agent
 
   private final String stateValue;
+  private final int numericValue;
 
   /**
    * Constructor for SugarScapeState.
    *
    * @param stateValue the string representation of the state
    */
-  SugarScapeState(String stateValue) {
+  SugarScapeState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   /**
@@ -42,6 +44,6 @@ public enum SugarScapeState implements StateInterface {
 
   @Override
   public int getNumericValue() {
-    return 0;
+    return numericValue;
   }
 }
