@@ -14,8 +14,6 @@ import javafx.stage.Stage;
 
 public class SplashScreen {
 
-  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
-      SimulationController.class.getPackageName() + ".Simulation");
   private Pane layout;
 
   /**

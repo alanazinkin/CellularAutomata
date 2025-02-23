@@ -226,16 +226,4 @@ public class ControlPanel {
     myLowerBar.getChildren().add(myCustomizationBar);
   }
 
-  /**
-   * updates the iteration count text to the input parameter String
-   *
-   * @param newText String for the iteration count text
-   */
-  public void updateIterationCountText(String newText) {
-    iterationCounter.setText(newText);
-  }
-
-  private void makeIterationCountText() {
-    iterationCounter = new Text(myResources.getString("IterCount") + ": " + myController.getIterationCount());
-  }
 }

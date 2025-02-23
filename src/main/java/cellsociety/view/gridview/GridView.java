@@ -153,6 +153,11 @@ public abstract class GridView {
     }
   }
 
+  /**
+   * if the grid is not flipped, it flips it over the X-axis
+   * and flips it back otherwise
+   *
+   */
   public void renderGridFlippedVertically() {
     gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
     if (!flipped) {
@@ -181,6 +186,11 @@ public abstract class GridView {
     }
   }
 
+  /**
+   * retrieves myCells instance variable holding all the grid cells
+   *
+   * @return immutable myCells list
+   */
   public List<Shape> getImmutableCellsList() {
     return Collections.unmodifiableList(myCells);
   }
