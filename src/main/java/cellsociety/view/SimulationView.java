@@ -19,6 +19,7 @@ import cellsociety.view.gridview.DefaultGridView;
 import cellsociety.view.gridview.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SimulationView {
@@ -31,6 +32,7 @@ public class SimulationView {
   private SimulationConfig myConfig;
   private String myThemeColor;
   private Map<String, String> mySimulationResourceMap;
+  private Text iterationCounter;
 
   /**
    * @param simulationConfig  the simulation configuration containing all information about the
@@ -69,12 +71,13 @@ public class SimulationView {
     myControlPanel.makeLowerBar(simView.getRoot());
     try {
       myControlPanel.setUpLowerBar(simView.getRoot());
+      makeIterationCounter();
+      myControlPanel.addTextToTextBar(iterationCounter);
     } catch (Exception e) {
       SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("CustomizationBarError"));
       throw new NullPointerException(e.getMessage());
     }
-    myControlPanel.makeSideBar(simView.getRoot());
     // make simulation information pop-up window
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
         myConfig.getTitle(),
@@ -168,5 +171,13 @@ public class SimulationView {
 
   public Scene getScene() {
     return this.myScene;
+  }
+
+  public void updateIterationCounter() {
+    iterationCounter.setText("Iteration Count: " + myController.getIterationCount());
+  }
+
+  private void makeIterationCounter() {
+    iterationCounter = new Text("Iteration Count: " + myController.getIterationCount());
   }
 }

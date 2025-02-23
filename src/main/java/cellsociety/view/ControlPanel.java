@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -37,11 +38,12 @@ public class ControlPanel {
   private HBox myControlBar;
   private VBox mySideBar;
   private VBox myLowerBar;
-  private HBox myLabelBar;
+  private HBox myTextBar;
   private HBox myCustomizationBar;
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
   private GridView myGridView;
+  private Text iterationCounter;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -135,7 +137,7 @@ public class ControlPanel {
    */
   public void setUpLowerBar(BorderPane root) throws Exception {
     makeLowerBar(root);
-    makeLabelBar();
+    makeTextBar();
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
@@ -180,26 +182,36 @@ public class ControlPanel {
     myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
   }
 
-  private void makeLabelBar() {
-    myLabelBar = new HBox(400);
-    myLabelBar.setAlignment(Pos.CENTER);
-    addLabelBarToLowerBar();
-    makeLabelsAndAddToLabelBar();
+  private void makeTextBar() {
+    myTextBar = new HBox(400);
+    myTextBar.setAlignment(Pos.CENTER);
+    addTextBarToLowerBar();
+    makeTextAndAddToTextBar();
   }
 
-  private void addLabelBarToLowerBar() {
-    myLowerBar.getChildren().add(myLabelBar);
+  private void addTextBarToLowerBar() {
+    myLowerBar.getChildren().add(myTextBar);
   }
 
-  private void makeLabelsAndAddToLabelBar() {
-    Text myLabel = new Text(myResources.getString("Speed"));
-    Text myCustomizationLabel = new Text(myResources.getString("Settings"));
-    myLabelBar.getChildren().addAll(myLabel, myCustomizationLabel);
-    addCSSStyleIDs(List.of(myLabel, myCustomizationLabel));
+  private void makeTextAndAddToTextBar() {
+    Text speedText = new Text(myResources.getString("Speed"));
+    Text settingsText = new Text(myResources.getString("Settings"));
+    myTextBar.getChildren().addAll(speedText, settingsText);
+    addCSSStyleIDs(List.of(speedText, settingsText));
   }
 
-  private void addCSSStyleIDs(List<Text> myTexts) {
-    for (Text myText : myTexts) {
+  /**
+   * add text to the textBar
+   *
+   * @param newText text to add to the bar
+   */
+  public void addTextToTextBar(Text newText) {
+    myTextBar.getChildren().add(newText);
+    addCSSStyleIDs(List.of(newText));
+  }
+
+  private void addCSSStyleIDs(List<Shape> myTexts) {
+    for (Shape myText : myTexts) {
       myText.getStyleClass().add("custom-text");
     }
   }
@@ -214,11 +226,16 @@ public class ControlPanel {
     myLowerBar.getChildren().add(myCustomizationBar);
   }
 
-  public void makeSideBar(BorderPane root) {
-    mySideBar = new VBox(10);
-    mySideBar.setPadding(new Insets(0, 0, 10, 0));
-    mySideBar.setAlignment(Pos.CENTER);
-    mySideBar.setPrefWidth(300);
-    root.setRight(mySideBar);
+  /**
+   * updates the iteration count text to the input parameter String
+   *
+   * @param newText String for the iteration count text
+   */
+  public void updateIterationCountText(String newText) {
+    iterationCounter.setText(newText);
+  }
+
+  private void makeIterationCountText() {
+    iterationCounter = new Text(myResources.getString("IterCount") + ": " + myController.getIterationCount());
   }
 }

@@ -171,6 +171,7 @@ public class SimulationUI {
    */
   public void updateView(Map<StateInterface, String> colorMap) {
     simulationView.updateGrid(colorMap);
+    simulationView.updateIterationCounter();
   }
 
   /**
