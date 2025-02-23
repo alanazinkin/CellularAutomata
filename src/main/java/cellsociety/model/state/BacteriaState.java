@@ -22,6 +22,11 @@ public enum BacteriaState implements StateInterface {
     return stateValue;
   }
 
+  @Override
+  public int getNumericValue() {
+    return 0;
+  }
+
   /**
    * Determines if this state beats another state in rock-paper-scissors rules.
    *

@@ -140,6 +140,11 @@ public class AntState implements StateInterface {
     return "Empty";
   }
 
+  @Override
+  public int getNumericValue() {
+    return 0;
+  }
+
   /**
    * Compares this AntState with another object for equality. Two AntStates are considered equal
    * if they represent the same type of cell (nest, food, obstacle, or empty), regardless of their

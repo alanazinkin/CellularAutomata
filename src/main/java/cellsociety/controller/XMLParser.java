@@ -21,6 +21,7 @@ public class XMLParser extends BaseConfigParser{
 
   private static final String DEFAULT_PROPERTIES_PATH = "cellsociety.controller.simulation";
   private static final String SIMULATION_TAG = "simulation";
+  private static final Set<String> VALID_SHAPES = Set.of("Rectangle", "Triangle");
   private static final Set<String> VALID_ROOT_CHILDREN = Set.of(
           "type", "title", "author", "description", "width", "height",
           "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state"
@@ -119,6 +120,8 @@ public class XMLParser extends BaseConfigParser{
         validateAndSetInitialStates(document, config);
 
         config.setParameters(parseParametersWithValidation(document));
+
+        config.setCellShapeValues(parseCellShapesWithValidation(document));
 
       } catch (ParserConfigurationException e) {
         throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
@@ -670,9 +673,9 @@ public class XMLParser extends BaseConfigParser{
    * @return A map of cell shapes to their corresponding shape values as strings.
    * @throws ConfigurationException if a state is missing, or it has an empty name.
    */
-  private Map<String, String> parseCellShapesWithValidation(Document doc)
+  private Map<Integer, String> parseCellShapesWithValidation(Document doc)
       throws ConfigurationException {
-    Map<String, String> cellShapes = new HashMap<>();
+    Map<Integer, String> cellShapes = new HashMap<>();
 
     NodeList cellStateNodes = doc.getElementsByTagName("cell_state");
     for (int i = 0; i < cellStateNodes.getLength(); i++) {
@@ -683,8 +686,19 @@ public class XMLParser extends BaseConfigParser{
       if (state.isEmpty()) {
         throw new ConfigurationException("State name cannot be empty");
       }
-
-      cellShapes.put(state, shape);
+      if (shape.isEmpty()) {
+        throw new ConfigurationException("Shape name cannot be empty");
+      }
+      if (!VALID_SHAPES.contains(shape)) {
+        throw new ConfigurationException(shape + " is not a valid cell shape");
+      }
+      try {
+        int value = Integer.parseInt(state);
+        cellShapes.put(value, shape);
+      } catch (NumberFormatException e) {
+        throw new ConfigurationException(
+            String.format("Invalid numerical value for state '%s': %s", state, shape));
+      }
     }
     return cellShapes;
   }

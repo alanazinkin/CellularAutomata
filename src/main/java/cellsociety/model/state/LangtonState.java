@@ -26,4 +26,9 @@ public enum LangtonState implements StateInterface {
   public String getStateValue() {
     return stateValue;
   }
+
+  @Override
+  public int getNumericValue() {
+    return 0;
+  }
 }

@@ -22,4 +22,11 @@ public interface StateInterface {
    * @return a string representation of the state
    */
   String getStateValue();
+
+  /**
+   * Returns the numeric value associated with the state.
+   *
+   * @return the numeric value of the state
+   */
+  int getNumericValue();
 }

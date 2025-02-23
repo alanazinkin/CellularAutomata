@@ -47,4 +47,9 @@ public enum SchellingState implements StateInterface {
     return stateValue;
   }
 
+  @Override
+  public int getNumericValue() {
+    return 0;
+  }
+
 }
