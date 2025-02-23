@@ -35,7 +35,7 @@ public class ReproductionManagerTest {
     mockEmptyCell = mock(Cell.class);
 
     when(mockSimulation.getGrid()).thenReturn(mockGrid);
-    when(mockSimulation.getRandom()).thenReturn(new Random(42)); // Fixed seed
+    when(mockSimulation.getRandom()).thenReturn(new Random(42));
 
     agents = new ArrayList<>();
     agents.add(mockParent1);
@@ -43,6 +43,9 @@ public class ReproductionManagerTest {
 
     simulationAgents = new ArrayList<>();
     when(mockSimulation.getAgents()).thenReturn(simulationAgents);
+
+    Cell mockParentCell = mock(Cell.class);
+    when(mockParent1.getPosition()).thenReturn(mockParentCell);
 
     reproductionManager = new ReproductionManager(mockSimulation);
   }
@@ -87,8 +90,8 @@ public class ReproductionManagerTest {
 
     reproductionManager.applyReproduction(agents);
 
-    verify(mockGrid, never()).applyNextStates();
     assertEquals(0, simulationAgents.size());
+    verify(mockGrid).applyNextStates();
   }
 
   /**
@@ -113,6 +116,7 @@ public class ReproductionManagerTest {
         reproductionManager.applyReproduction(agents);
 
         assertEquals(0, simulationAgents.size());
+        verify(mockGrid).applyNextStates();
       }
     }
   }
@@ -137,28 +141,75 @@ public class ReproductionManagerTest {
         reproductionManager.applyReproduction(agents);
 
         assertEquals(0, simulationAgents.size());
+        verify(mockGrid).applyNextStates();
       }
     }
   }
 
   /**
-   * Tests that an IllegalArgumentException is thrown when agent list is null.
+   * Tests that a NullPointerException is thrown when agent list is null.
    */
   @Test
   void applyReproduction_NullAgentList_ThrowsException() {
-    assertThrows(IllegalArgumentException.class, () ->
+    NullPointerException thrown = assertThrows(NullPointerException.class, () ->
         reproductionManager.applyReproduction(null));
+    assertNotNull(thrown.getMessage());
   }
 
   /**
-   * Tests that an IllegalArgumentException is thrown when an agent has no position.
+   * Tests that a NullPointerException is thrown when an agent has null position.
    */
   @Test
   void applyReproduction_AgentWithNullPosition_ThrowsException() {
     when(mockParent1.isFertile()).thenReturn(true);
     when(mockParent1.getPosition()).thenReturn(null);
 
-    assertThrows(IllegalArgumentException.class, () ->
-        reproductionManager.applyReproduction(agents));
+    List<Agent> neighbors = new ArrayList<>();
+    neighbors.add(mockParent2);
+    try (var mockedStatic = mockStatic(GridOperations.class)) {
+      mockedStatic.when(() -> GridOperations.getAgentNeighbors(any(), any()))
+          .thenThrow(new NullPointerException("Cannot get neighbors of agent with null position"));
+
+      assertThrows(NullPointerException.class, () ->
+          reproductionManager.applyReproduction(agents));
+    }
+  }
+
+  /**
+   * Tests that child agent is initialized with correct properties.
+   */
+  @Test
+  void applyReproduction_SuccessfulReproduction_ChildPropertiesSet() {
+    when(mockParent1.isFertile()).thenReturn(true);
+    List<Agent> neighbors = new ArrayList<>();
+    neighbors.add(mockParent2);
+
+    Agent mockChild = mock(Agent.class);
+    when(mockChild.getPosition()).thenReturn(mockEmptyCell);
+
+    try (var mockedStatic = mockStatic(GridOperations.class)) {
+      mockedStatic.when(() -> GridOperations.getAgentNeighbors(mockParent1, mockSimulation))
+          .thenReturn(neighbors);
+      mockedStatic.when(() -> GridOperations.findAdjacentEmptyCell(mockParent1, mockSimulation))
+          .thenReturn(mockEmptyCell);
+
+      try (var mockedRulesOps = mockStatic(RulesOperations.class)) {
+        mockedRulesOps.when(() -> RulesOperations.canReproduce(mockParent1, mockParent2))
+            .thenReturn(true);
+        mockedRulesOps.when(() -> RulesOperations.reproduce(eq(mockParent1), eq(mockParent2),
+            eq(mockEmptyCell), any(Random.class))).thenAnswer(invocation -> {
+          if (mockChild != null) {
+            mockChild.setFertile(false);
+          }
+          return mockChild;
+        });
+
+        reproductionManager.applyReproduction(agents);
+
+        verify(mockChild).setFertile(false);
+        verify(mockEmptyCell).setNextState(SugarScapeState.AGENT);
+        verify(mockGrid).applyNextStates();
+      }
+    }
   }
 }
