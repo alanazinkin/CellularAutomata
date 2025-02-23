@@ -32,6 +32,7 @@ public abstract class Simulation {
    */
   private final Map<Integer, StateInterface> stateMap;
 
+  private int iterationCount;
   /**
    * Constructs a new Simulation instance with specified configuration and grid.
    *
@@ -46,6 +47,7 @@ public abstract class Simulation {
     this.colorMap = initializeColorMap();
     this.stateMap = initializeStateMap();
     initializeGrid(simulationConfig);
+    resetIterationCount();
   }
 
   /**
@@ -94,6 +96,7 @@ public abstract class Simulation {
    */
   public void reinitializeGridStates(SimulationConfig simulationConfig) {
     int cellCount = 0;
+    resetIterationCount();
     if (simulationConfig.getInitialStates().length == 0) {
       throw new NullPointerException("Initial states array is empty");
     }
@@ -168,6 +171,7 @@ public abstract class Simulation {
   public void step() {
     applyRules();
     grid.applyNextStates();
+    iterationCount++;
   }
 
   /**
@@ -215,6 +219,21 @@ public abstract class Simulation {
   public Map<Integer, StateInterface> getStateMap() {
     return Collections.unmodifiableMap(stateMap);
   }
+
+  /**
+   * retrieves the iterationCount variables representing the number of iterations
+   * of the simulation that have passed
+   *
+   * @return iterationCount instance variable
+   */
+  public int retrieveIterationCount() {
+    return iterationCount;
+  }
+
+  private void resetIterationCount() {
+    iterationCount = 0;
+  }
+
 }
 
 

@@ -66,7 +66,6 @@ public class SimulationController {
   private final SimulationFileManager fileManager;
   private Stage stage;
   private SimulationController myController;
-
   /**
    * Constructs a SimulationController and initializes key components.
    */
@@ -151,6 +150,10 @@ public class SimulationController {
 
   public SimulationUI getUI() {
     return ui;
+  }
+
+  public int getIterationCount() {
+    return engine.getSimulation().retrieveIterationCount();
   }
 
 }

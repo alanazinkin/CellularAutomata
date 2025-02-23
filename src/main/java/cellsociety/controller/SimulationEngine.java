@@ -2,7 +2,6 @@ package cellsociety.controller;
 
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
-import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.state.MockState;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

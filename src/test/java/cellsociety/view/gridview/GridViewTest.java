@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,45 @@ class GridViewTest extends DukeApplicationTest {
   }
 
   @Test
-  void renderGridFlippedVertically() {
+  void renderGridFlippedVertically_ClickButtonTwice_GridFlipsVerticallyAndBack() {
+    GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
+    runAsJFXAction(() -> gridView.createGridDisplay(myRoot, mySimulation.getColorMap()));
+    Button flipGridButton = myUserController.makeFlipGridButton("Flip Grid", gridView);
+    runAsJFXAction(() -> myUserController.addElementToPane(flipGridButton, myRoot));
+    runAsJFXAction(() -> clickOn(flipGridButton));
+    // Capture flipped positions
+    boolean isFlippedCorrectly = true;
+    int numRows = myGrid.getRows();
+    int numCols = myGrid.getCols();
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+        int expectedRow = numRows - i - 1;
+        Shape cell = gridView.getImmutableCellsList().get(i * numCols + j);
+        Integer actualRow = GridPane.getRowIndex(cell);
+        Integer actualCol = GridPane.getColumnIndex(cell);
+        if (actualRow == null || actualCol == null || actualRow != expectedRow || actualCol != j) {
+          isFlippedCorrectly = false;
+          break;
+        }
+      }
+    }
+    assertTrue(isFlippedCorrectly, "Grid should be flipped vertically");
+    runAsJFXAction(() -> clickOn(flipGridButton));
+    boolean isFlippedBack = true;
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) {
+        Shape cell = gridView.getImmutableCellsList().get(i * numCols + j);
+        Integer actualRow = GridPane.getRowIndex(cell);
+        Integer actualCol = GridPane.getColumnIndex(cell);
+        if (actualRow == null || actualCol == null || actualRow != i || actualCol != j) {
+          isFlippedBack = false;
+          break;
+        }
+      }
+    }
+    assertTrue(isFlippedBack, "Grid should be flipped back to its original position");
   }
+
+  @Test
+  public void updateCellColors_
 }
