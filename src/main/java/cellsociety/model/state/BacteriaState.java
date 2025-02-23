@@ -7,14 +7,16 @@ import cellsociety.model.StateInterface;
  * different type of bacteria that competes in a rock-paper-scissors fashion.
  */
 public enum BacteriaState implements StateInterface {
-  ROCK("Rock"),
-  PAPER("Paper"),
-  SCISSORS("Scissors");
+  ROCK("Rock", 0),
+  PAPER("Paper", 1),
+  SCISSORS("Scissors", 2);
 
   private final String stateValue;
+  private final int numericValue;
 
-  BacteriaState(String stateValue) {
+  BacteriaState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   @Override
@@ -24,7 +26,7 @@ public enum BacteriaState implements StateInterface {
 
   @Override
   public int getNumericValue() {
-    return 0;
+    return numericValue;
   }
 
   /**

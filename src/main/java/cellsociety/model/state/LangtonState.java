@@ -7,19 +7,21 @@ import cellsociety.model.StateInterface;
  * components and stages of the self-replicating loop structure.
  */
 public enum LangtonState implements StateInterface {
-  EMPTY("Empty"),           // State 0: Background state
-  SHEATH("Sheath"),        // State 1: Core/sheath of the loop
-  CORE("Core"),            // State 2: Internal structure
-  TEMP("Temporary"),       // State 3: Temporary marker state
-  TURN("Turn"),            // State 4: Corner/turning point
-  EXTEND("Extend"),        // State 5: Extension signal
-  INIT("Initialize"),      // State 6: Initialization signal
-  ADVANCE("Advance");      // State 7: Advance signal
+  EMPTY("Empty", 0),           // State 0: Background state
+  SHEATH("Sheath", 1),        // State 1: Core/sheath of the loop
+  CORE("Core", 2),            // State 2: Internal structure
+  TEMP("Temporary", 3),       // State 3: Temporary marker state
+  TURN("Turn", 4),            // State 4: Corner/turning point
+  EXTEND("Extend", 5),        // State 5: Extension signal
+  INIT("Initialize", 6),      // State 6: Initialization signal
+  ADVANCE("Advance", 7);      // State 7: Advance signal
 
   private final String stateValue;
+  private final int numericValue;
 
-  LangtonState(String stateValue) {
+  LangtonState(String stateValue, int numericValue) {
     this.stateValue = stateValue;
+    this.numericValue = numericValue;
   }
 
   @Override
@@ -29,6 +31,6 @@ public enum LangtonState implements StateInterface {
 
   @Override
   public int getNumericValue() {
-    return 0;
+    return numericValue;
   }
 }

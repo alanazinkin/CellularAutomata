@@ -142,6 +142,15 @@ public class AntState implements StateInterface {
 
   @Override
   public int getNumericValue() {
+    if (isNest) {
+      return 1;
+    }
+    if (isFood) {
+      return 2;
+    }
+    if (isObstacle) {
+      return 3;
+    }
     return 0;
   }
 
