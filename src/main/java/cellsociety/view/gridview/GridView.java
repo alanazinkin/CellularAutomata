@@ -11,15 +11,18 @@ import cellsociety.view.shapefactory.CellShapeFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public abstract class GridView {
 
@@ -31,6 +34,8 @@ public abstract class GridView {
   private GridPane gridPane;
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
+  private PauseTransition delay = new PauseTransition(Duration.seconds(0));
+
 
   int numRows;
   int numCols;
@@ -105,11 +110,29 @@ public abstract class GridView {
     shape.setId(colorMap.get(cellState));
     shape.setStroke(Color.BLACK);
     shape.setStrokeWidth(1);
-    //add a tooltip to allow for hovering
-    Tooltip tooltip = new Tooltip("This is a cell!");
-    Tooltip.install(shape, tooltip);
     myCells.add(i * numCols + j, shape);
     gridPane.add(shape, j, i);
+    makeCellPopUp(cellState, shape);
+  }
+
+  private void makeCellPopUp(StateInterface cellState, Shape shape) {
+    Popup popup = new Popup();
+    Label popupLabel = new Label(cellState.toString());
+    popupLabel.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; -fx-padding: 5;");
+    popup.getContent().add(popupLabel);
+
+    shape.setOnMouseEntered(event -> {
+      delay.setOnFinished(e -> {
+        if (!popup.isShowing()) {
+          popup.show(shape, event.getScreenX() + 10, event.getScreenY() + 10);
+        }
+      });
+      delay.playFromStart();
+    });
+    shape.setOnMouseExited(event -> {
+      delay.stop();
+      popup.hide();
+    });
   }
 
 
