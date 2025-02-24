@@ -4,4 +4,5 @@
 #langton-state-temp { -fx-fill: langton-state-temp; -fx-stroke: black; }
 #langton-state-turn { -fx-fill: langton-state-turn; -fx-stroke: black; }
 #langton-state-extend { -fx-fill: langton-state-extend; -fx-stroke: black; }
-#langton-state-init { -fx-fill: langton-state-init; -fx-stroke: black; 
+#langton-state-init { -fx-fill: langton-state-init; -fx-stroke: black; }
+#langton-state-advance { -fx-fill: langton-state-advance; -fx-stroke: black; }
