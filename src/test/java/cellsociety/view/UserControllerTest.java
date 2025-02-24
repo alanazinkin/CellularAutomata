@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -40,7 +41,7 @@ class UserControllerTest extends DukeApplicationTest {
   5, 5, myInitialStates, myParameters);
   private ResourceBundle DEFAULT_LANGUAGE_BUNDLE = ResourceBundle.getBundle("cellsociety.controller.English");
   private Map<String, String> mySimulationResourceMap;
-  private SimulationController myController;
+  private SimulationController myController = new SimulationController();
   private UserController myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, new SimulationController());
   Simulation mySimulation = new GameOfLife(mySimulationConfig, myGrid);
   private SimulationView mySimulationView = new SimulationView(mySimulationConfig, myController, DEFAULT_LANGUAGE_BUNDLE);
@@ -146,6 +147,21 @@ class UserControllerTest extends DukeApplicationTest {
     assertFalse(mySimulationView.getScene().getStylesheets().contains(lightCSS));
     String lightGameOfLife = getClass().getResource("/cellsociety/CSS/GameOfLife/GameOfLifeLight.css").toExternalForm();
     assertFalse(mySimulationView.getScene().getStylesheets().contains(lightGameOfLife));
+  }
+
+  @Test
+  public void makeSpeedSlider_BasicTest_SliderHasValidProperties() {
+    Slider slider = myUserController.makeSpeedSlider();
+    assertNotNull(slider, "Slider should not be null");
+    assertEquals(0.1, slider.getMin(), "Min value should be 0.1");
+    assertEquals(5, slider.getMax(), "Max value should be 5");
+    assertEquals(1, slider.getValue(), "Initial value should be 1");
+    assertTrue(slider.isSnapToTicks(), "Slider should snap to ticks");
+    assertTrue(slider.isShowTickLabels(), "Tick labels should be visible");
+    assertTrue(slider.isShowTickMarks(), "Tick marks should be visible");
+    assertEquals(1.0, slider.getMajorTickUnit(), "Major tick unit should be 1.0");
+    assertEquals(9, slider.getMinorTickCount(), "Minor tick count should be 9");
+    assertEquals(0.1, slider.getBlockIncrement(), "Block increment should be 0.1");
   }
 
 }

@@ -82,7 +82,7 @@ public class SimulationView {
   private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap, Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     myGridView = new DefaultGridView(myController, myConfig, grid);
-    myGridView.createGridDisplay(simView.getRoot(), colorMap);
+    myGridView.createGridDisplay(simView.getRoot(), colorMap, myConfig);
   }
 
   private void createControlPanel(Stage primaryStage, SimulationView simView) {
@@ -184,7 +184,7 @@ public class SimulationView {
   public void updateGrid(Map<StateInterface, String> stateMap)
       throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     if (myGridView != null) {
-      myGridView.renderGrid(stateMap);
+      myGridView.renderGrid(stateMap, myConfig);
     } else {
       System.err.println("Error: GridView is not initialized.");
     }

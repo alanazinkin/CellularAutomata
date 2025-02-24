@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 import cellsociety.model.StateInterface;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -141,6 +142,9 @@ public class SimulationConfig {
    * @return the cell shape map containing the shapes of the cells
    */
   public Map<Integer, String> getCellShapeMap() {
+    if (cellShapeMap == null) {
+      cellShapeMap = new HashMap<>();
+    }
     return Collections.unmodifiableMap(cellShapeMap);
   }
 
