@@ -202,4 +202,17 @@ public abstract class GridView {
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Shape rectCell = myCells.get(i * numCols + j);
-  
+        gridPane.add(rectCell, j, i);
+      }
+    }
+  }
+
+  /**
+   * retrieves myCells instance variable holding all the grid cells
+   *
+   * @return immutable myCells list
+   */
+  public List<Shape> getImmutableCellsList() {
+    return Collections.unmodifiableList(myCells);
+  }
+}
