@@ -221,8 +221,4 @@ public class SimulationConfig {
    * Sets the initial states of cells in the simulation.
    *
    * @param initialStates The new array of initial states.
-   */
-  public void setInitialStates(int[] initialStates) {
-    this.initialStates = initialStates;
-  }
-}
+   *

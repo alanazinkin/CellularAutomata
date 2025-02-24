@@ -1,12 +1,4 @@
-#percolation-state-open {
-  -fx-fill: whitesmoke;
-  -fx-stroke: black;
-}
-#percolation-state-percolated {
-  -fx-fill: royalblue;
-  -fx-stroke: black;
-}
-#percolation-state-blocked {
-  -fx-fill: black;
-  -fx-stroke: black;
-}
+#percolation-state-open { -fx-fill: percolation-state-open; -fx-stroke: black; }
+#percolation-state-percolated { -fx-fill: percolation-state-percolated; -fx-stroke: black; }
+#percolation-state-blocked { -fx-fill: percolation-state-blocked; -fx-stroke: black; }
+

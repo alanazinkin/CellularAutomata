@@ -1,12 +1,12 @@
 #bacteria-state-rock {
-  -fx-fill: red;
+  -fx-fill: bacteria-state-rock;
   -fx-stroke: black;
 }
 #bacteria-state-paper {
-  -fx-fill: lime;
+  -fx-fill: bacteria-state-paper;
   -fx-stroke: black;
 }
 #bacteria-state-scissors {
-  -fx-fill: royalblue;
+  -fx-fill: bacteria-state-scissors;
   -fx-stroke: black;
 }

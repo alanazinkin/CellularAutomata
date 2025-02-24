@@ -1,32 +1,8 @@
-#langton-state-empty {
-  -fx-fill: white;
-  -fx-stroke: black;
-}
-#langton-state-sheath {
-  -fx-fill: dimgrey;
-  -fx-stroke: black;
-}
-#langton-state-core {
-  -fx-fill: maroon;
-  -fx-stroke: black;
-}
-#langton-state-temp {
-  -fx-fill: midnightblue;
-  -fx-stroke: black;
-}
-#langton-state-turn {
-  -fx-fill: purple;
-  -fx-stroke: black;
-}
-#langton-state-extend {
-  -fx-fill: darkgreen;
-  -fx-stroke: black;
-}
-#langton-state-init {
-  -fx-fill: goldenrod;
-  -fx-stroke: black;
-}
-#langton-state-advance {
-  -fx-fill: saddlebrown;
-  -fx-stroke: black;
-}
+#langton-state-empty { -fx-fill: langton-state-empty; -fx-stroke: black; }
+#langton-state-sheath { -fx-fill: langton-state-sheath; -fx-stroke: black; }
+#langton-state-core { -fx-fill: langton-state-core; -fx-stroke: black; }
+#langton-state-temp { -fx-fill: langton-state-temp; -fx-stroke: black; }
+#langton-state-turn { -fx-fill: langton-state-turn; -fx-stroke: black; }
+#langton-state-extend { -fx-fill: langton-state-extend; -fx-stroke: black; }
+#langton-state-init { -fx-fill: langton-state-init; -fx-stroke: black; }
+#langton-state-advance 
