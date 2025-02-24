@@ -28,23 +28,30 @@ class GridViewTest extends DukeApplicationTest {
   int WINDOW_WIDTH = 1000;
   int WINDOW_HEIGHT = 800;
 
-  private Grid myGrid = new Grid(5, 5, GameOfLifeState.ALIVE);
   private Map<String, Double> myParameters = new HashMap<>();
   private int[] myInitialStates = new int[]{0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1};
-  private SimulationConfig mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
-      5, 5, myInitialStates, myParameters);
+  private SimulationConfig mySimulationConfig;
   private ResourceBundle DEFAULT_LANGUAGE_BUNDLE = ResourceBundle.getBundle("cellsociety.controller.English");
   private Map<String, String> mySimulationResourceMap;
   private SimulationController myController;
-  private UserController myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, new SimulationController());
-  Simulation mySimulation = new GameOfLife(mySimulationConfig, myGrid);
-  private SimulationView mySimulationView = new SimulationView(mySimulationConfig, myController, DEFAULT_LANGUAGE_BUNDLE);
+  private Simulation mySimulation;
+  private UserController myUserController;
+  private SimulationView mySimulationView;
+  private Grid myGrid;
+
   private BorderPane myRoot;
   private Scene myScene;
   private Stage myStage;
 
   @Override
   public void start (Stage stage) {
+    mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
+        5, 5, myInitialStates, myParameters);
+    myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, new SimulationController());
+    myGrid = new Grid(5, 5, GameOfLifeState.ALIVE);
+    mySimulation = new GameOfLife(mySimulationConfig, myGrid);
+    myController = new SimulationController();
+    mySimulationView = new SimulationView(mySimulationConfig, myController, DEFAULT_LANGUAGE_BUNDLE);
     mySimulationView.createSimulationWindow(stage);
     myRoot = mySimulationView.getRoot();
     myScene = mySimulationView.getScene();
@@ -59,14 +66,24 @@ class GridViewTest extends DukeApplicationTest {
 
   @Test
   public void makeGridLinesToggleButton_clickButtonOnce_GridLinesRemoved() {
-    GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
+    SimulationConfig simulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
+        5, 5, myInitialStates, myParameters);
+    myController = new SimulationController();
+    GridView gridView = new DefaultGridView(myController, simulationConfig, myGrid);
     Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
       try {
-        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
-      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
-               InstantiationException | IllegalAccessException e) {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), simulationConfig);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException(e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
       clickOn(gridLinesToggleButton);
@@ -83,7 +100,7 @@ class GridViewTest extends DukeApplicationTest {
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
       try {
-        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
       } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
                InstantiationException | IllegalAccessException e) {
         throw new RuntimeException(e);
@@ -96,28 +113,13 @@ class GridViewTest extends DukeApplicationTest {
     }
   }
 
-  @Test
-  void createGridDisplay() {
-  }
-
-  @Test
-  void renderGrid() {
-  }
-
-  @Test
-  void updateCellColors() {
-  }
-
-  @Test
-  void setGridLinesToggleButtonAction() {
-  }
 
   @Test
   void renderGridFlippedVertically_ClickButtonTwice_GridFlipsVerticallyAndBack() {
     GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
     runAsJFXAction(() -> {
       try {
-        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
       } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
                InstantiationException | IllegalAccessException e) {
         throw new RuntimeException(e);
