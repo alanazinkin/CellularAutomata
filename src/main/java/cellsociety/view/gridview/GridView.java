@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -104,6 +105,9 @@ public abstract class GridView {
     shape.setId(colorMap.get(cellState));
     shape.setStroke(Color.BLACK);
     shape.setStrokeWidth(1);
+    //add a tooltip to allow for hovering
+    Tooltip tooltip = new Tooltip("This is a cell!");
+    Tooltip.install(shape, tooltip);
     myCells.add(i * numCols + j, shape);
     gridPane.add(shape, j, i);
   }

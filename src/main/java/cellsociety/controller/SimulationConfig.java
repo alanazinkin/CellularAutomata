@@ -222,3 +222,8 @@ public class SimulationConfig {
    *
    * @param initialStates The new array of initial states.
    *
+   */
+  public void setInitialStates(int[] initialStates) {
+    this.initialStates = initialStates;
+  }
+}
