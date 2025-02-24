@@ -35,9 +35,8 @@ public class RulesOperations {
     int childVision = inheritVision(parent1, parent2);
     int childMetabolism = inheritMetabolism(parent1, parent2);
     Agent child = new Agent(position, childSugar, childVision, childMetabolism);
-    // Randomly choose one parent's sex for the child; alternatively, you might choose the opposite of one parent
     child.setSex(random.nextBoolean() ? parent1.getSex() : parent2.getSex());
-    child.setFertile(false);  // Newborn agents start infertile
+    child.setFertile(false);
     return child;
   }
 

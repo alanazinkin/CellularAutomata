@@ -1,17 +1,45 @@
+/**
+ * Manages the growth of resources in the SugarScape simulation.
+ * This class is responsible for handling the regrowth of sugar at defined intervals.
+ */
 package cellsociety.model;
 
 import cellsociety.model.state.SugarScapeState;
 import cellsociety.model.simulations.SugarScape;
 
+/**
+ * GrowthManager is responsible for handling the regrowth of sugar on the grid at specified intervals.
+ */
 public class GrowthManager {
 
   private final SugarScape simulation;
 
+  /**
+   * Constructs a GrowthManager for the given SugarScape simulation.
+   *
+   * @param simulation the SugarScape simulation instance
+   */
   public GrowthManager(SugarScape simulation) {
     this.simulation = simulation;
   }
 
+  /**
+   * Applies the sugar regrowth process based on the current tick, interval, and growth rate.
+   *
+   * @param currentTick the current simulation tick
+   * @param interval the interval at which sugar regrows
+   * @param growRate the rate at which sugar regrows
+   * @throws IllegalArgumentException if the interval or grow rate is non-positive
+   */
   public void applyGrowBack(int currentTick, int interval, int growRate) {
+    // Add parameter validation
+    if (interval <= 0) {
+      throw new IllegalArgumentException("Interval must be positive");
+    }
+    if (growRate <= 0) {
+      throw new IllegalArgumentException("Growth rate must be positive");
+    }
+
     if (currentTick % interval == 0) {
       var grid = simulation.getGrid();
       for (int r = 0; r < grid.getRows(); r++) {
@@ -32,4 +60,3 @@ public class GrowthManager {
     }
   }
 }
-
