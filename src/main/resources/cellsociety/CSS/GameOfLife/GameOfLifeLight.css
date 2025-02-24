@@ -1,8 +1,2 @@
-#gameoflife-state-alive {
-  -fx-fill: royalblue;
-  -fx-stroke: black;
-}
-#gameoflife-state-dead {
-  -fx-fill: lightcyan;
-  -fx-stroke: black;
-}
+#gameoflife-state-alive { -fx-fill: gameoflife-state-alive; -fx-stroke: black; }
+#gameoflife-state-dead { -fx-fill: gameoflife-state-dead; -fx-stroke: black; }

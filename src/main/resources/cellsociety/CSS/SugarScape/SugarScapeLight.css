@@ -1,9 +1,3 @@
-#sugar-state-empty {
-  -fx-fill: white;
-}
-#sugar-state-sugar {
-  -fx-fill: yellow;
-}
-#sugar-state-agent {
-  -fx-fill: skyblue;
-}
+#sugar-state-empty { -fx-fill: sugar-state-empty; }
+#sugar-state-sugar { -fx-fill: sugar-state-sugar; }
+#sugar-state-agent { -fx-fill: sugar-state-agent; }

@@ -1,12 +1,3 @@
-#watorworld-state-empty {
-  -fx-fill: midnightblue;
-  -fx-stroke: black;
-}
-#watorworld-state-fish {
-  -fx-fill: orangered;
-  -fx-stroke: black;
-}
-#watorworld-state-shark {
-  -fx-fill: dimgrey;
-  -fx-stroke: black;
-}
+#watorworld-state-empty { -fx-fill: watorworld-state-empty; -fx-stroke: black; }
+#watorworld-state-fish { -fx-fill: watorworld-state-fish; -fx-stroke: black; }
+#watorworld-state-shark { -fx-fill: watorworld-state-shark; -fx-stroke: black; }

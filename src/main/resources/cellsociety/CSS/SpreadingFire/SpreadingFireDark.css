@@ -1,16 +1,4 @@
-#fire-state-empty {
-  -fx-fill: grey;
-  -fx-stroke: black;
-}
-#fire-state-tree {
-  -fx-fill: darkgreen;
-  -fx-stroke: black;
-}
-#fire-state-burning {
-  -fx-fill: red;
-  -fx-stroke: black;
-}
-#fire-state-burnt {
-  -fx-fill: maroon;
-  -fx-stroke: black;
-}
+#fire-state-empty { -fx-fill: fire-state-empty; -fx-stroke: black; }
+#fire-state-tree { -fx-fill: fire-state-tree; -fx-stroke: black; }
+#fire-state-burning { -fx-fill: fire-state-burning; -fx-stroke: black; }
+#fire-state-burnt { -fx-fill: fire-state-burnt; -fx-stroke: black; }

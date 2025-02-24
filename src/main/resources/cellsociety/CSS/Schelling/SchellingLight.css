@@ -1,8 +1,2 @@
-#schelling-state-empty {
-  -fx-fill: palegreen;
-  -fx-stroke: black;
-}
-#percolation-state-agent {
-  -fx-fill: plum;
-  -fx-stroke: black;
-}
+#schelling-state-empty { -fx-fill: schelling-state-empty; -fx-stroke: black; }
+#schelling-state-agent { -fx-fill: schelling-state-agent; -fx-stroke: black; }

@@ -1,6 +1,52 @@
 .root {
   -fx-background: WHITE;
   -fx-background-color: WHITE;
+
+  bacteria-state-rock: red;
+  bacteria-state-paper: lime;
+  bacteria-state-scissors: royalblue;
+
+  ant-state-empty: white;
+  ant-state-nest: coral;
+  ant-state-food: lime;
+  ant-state-obstacle: dimgray;
+
+  gameoflife-state-alive: royalblue;
+  gameoflife-state-dead: lightcyan;
+
+  langton-state-empty: white;
+  langton-state-sheath: gray;
+  langton-state-core: red;
+  langton-state-temp: royalblue;
+  langton-state-turn: plum;
+  langton-state-extend: green;
+  langton-state-init: yellow;
+  langton-state-advance: peru;
+
+  percolation-state-open: seashell;
+  percolation-state-percolated: skyblue;
+  percolation-state-blocked: dimgray;
+
+  sand-state-empty: white;
+  sand-state-sand: gold;
+  sand-state-wall: coral;
+  sand-state-water: royalblue;
+
+  schelling-state-empty: palegreen;
+  schelling-state-agent: plum;
+
+  fire-state-empty: white;
+  fire-state-tree: lightgreen;
+  fire-state-burning: indianred;
+  fire-state-burnt: saddlebrown;
+
+  sugar-state-empty: white;
+  sugar-state-sugar: yellow;
+  sugar-state-agent: skyblue;
+
+  watorworld-state-empty: skyblue;
+  watorworld-state-fish: coral;
+  watorworld-state-shark: grey;
 }
 .button {
   -fx-text-fill: #FFFFFF;

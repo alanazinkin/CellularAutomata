@@ -1,13 +1,4 @@
-#sand-state-empty {
-  -fx-fill: white;
-  -fx-stroke: black;
-}
-#sand-state-sand {
-  -fx-fill: gold;
-}
-#sand-state-wall {
-  -fx-fill: coral;
-}
-#sand-state-water {
-  -fx-fill: royalblue;
-}
+#sand-state-empty { -fx-fill: sand-state-empty; -fx-stroke: black; }
+#sand-state-sand { -fx-fill: sand-state-sand; }
+#sand-state-wall { -fx-fill: sand-state-wall; }
+#sand-state-water { -fx-fill: sand-state-water; }
