@@ -10,6 +10,7 @@ import cellsociety.model.simulations.GameOfLife;
 import cellsociety.model.state.GameOfLifeState;
 import cellsociety.view.SimulationView;
 import cellsociety.view.UserController;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -62,7 +63,12 @@ class GridViewTest extends DukeApplicationTest {
     Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
-      gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+               InstantiationException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
       clickOn(gridLinesToggleButton);
     });
     for (Shape cell: gridView.getImmutableCellsList()) {
@@ -76,7 +82,12 @@ class GridViewTest extends DukeApplicationTest {
     Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
-      gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+               InstantiationException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
       clickOn(gridLinesToggleButton);
       clickOn(gridLinesToggleButton);
     });
@@ -104,7 +115,14 @@ class GridViewTest extends DukeApplicationTest {
   @Test
   void renderGridFlippedVertically_ClickButtonTwice_GridFlipsVerticallyAndBack() {
     GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
-    runAsJFXAction(() -> gridView.createGridDisplay(myRoot, mySimulation.getColorMap()));
+    runAsJFXAction(() -> {
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap());
+      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+               InstantiationException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    });
     Button flipGridButton = myUserController.makeFlipGridButton("Flip Grid", gridView);
     runAsJFXAction(() -> myUserController.addElementToPane(flipGridButton, myRoot));
     runAsJFXAction(() -> clickOn(flipGridButton));
@@ -141,6 +159,4 @@ class GridViewTest extends DukeApplicationTest {
     assertTrue(isFlippedBack, "Grid should be flipped back to its original position");
   }
 
-  @Test
-  public void updateCellColors_
 }
