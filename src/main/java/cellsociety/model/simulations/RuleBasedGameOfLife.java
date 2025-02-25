@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Rule-based implementation of the Game of Life simulation. In this version, cells have specific
@@ -31,7 +33,15 @@ public class RuleBasedGameOfLife extends Simulation {
    */
   public RuleBasedGameOfLife(SimulationConfig config, Grid grid) {
     super(config, grid);
-    parseRuleCode(config.getParameters().getOrDefault("ruleCode", 323.0));
+
+    // Get the rule code from parameters, supporting string or numeric format
+    Object ruleCodeParam = config.getParameters().getOrDefault("ruleCode", 323.0);
+
+    if (ruleCodeParam instanceof Double) {
+      parseNumericRuleCode((Double) ruleCodeParam);
+    } else {
+      parseStringRuleCode(ruleCodeParam.toString());
+    }
   }
 
   /**
@@ -123,13 +133,13 @@ public class RuleBasedGameOfLife extends Simulation {
   }
 
   /**
-   * Parses the rule code to determine the birth and survival conditions. The rule code is split
-   * into two parts: one for birth and one for survival conditions.
+   * Parses the numeric rule code to determine the birth and survival conditions.
+   * The rule code is split into two parts: one for birth and one for survival conditions.
    *
    * @param code The rule code (a double value representing a string-based rule).
    * @throws IllegalArgumentException if the rule code format is invalid.
    */
-  private void parseRuleCode(double code) {
+  private void parseNumericRuleCode(double code) {
     String codeString = String.valueOf((int) code);
 
     if (codeString.length() < 2) {
@@ -139,8 +149,36 @@ public class RuleBasedGameOfLife extends Simulation {
     String birthPart = codeString.substring(0, 1);
     String survivePart = codeString.substring(1);
 
-    parseNumbers(birthPart, birthConditions);
-    parseNumbers(survivePart, surviveConditions);
+    parseDigits(birthPart, birthConditions);
+    parseDigits(survivePart, surviveConditions);
+  }
+
+  /**
+   * Parses a string rule code in B/S format (e.g., "B3/S23") to determine birth and survival conditions.
+   * Supports both B/S and S/B formats.
+   *
+   * @param ruleString The rule string in B/S or S/B format.
+   * @throws IllegalArgumentException if the rule string format is invalid.
+   */
+  private void parseStringRuleCode(String ruleString) {
+    ruleString = ruleString.toUpperCase().trim().replaceAll("\\s+", "");
+
+    Pattern bsPattern = Pattern.compile("B([0-8]*)/?S([0-8]*)");
+    Pattern sbPattern = Pattern.compile("S([0-8]*)/?B([0-8]*)");
+
+    Matcher bsMatcher = bsPattern.matcher(ruleString);
+    Matcher sbMatcher = sbPattern.matcher(ruleString);
+
+    if (bsMatcher.matches()) {
+      parseDigits(bsMatcher.group(1), birthConditions);
+      parseDigits(bsMatcher.group(2), surviveConditions);
+    } else if (sbMatcher.matches()) {
+      parseDigits(sbMatcher.group(2), birthConditions);
+      parseDigits(sbMatcher.group(1), surviveConditions);
+    } else {
+      throw new IllegalArgumentException("Invalid rule string format: " + ruleString +
+          ". Expected format: B3/S23 or S23/B3");
+    }
   }
 
   /**
@@ -152,7 +190,7 @@ public class RuleBasedGameOfLife extends Simulation {
    * @throws IllegalArgumentException if any character in the string is not a digit or if the digit
    *                                  is out of range.
    */
-  private void parseNumbers(String input, Set<Integer> output) {
+  private void parseDigits(String input, Set<Integer> output) {
     for (char c : input.toCharArray()) {
       if (!Character.isDigit(c)) {
         throw new IllegalArgumentException("Invalid character in rule: " + c);
