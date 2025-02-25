@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Sugar Scape</type>
+    <title>Invalid Sugar</title>
+    <author>Angela Predolac</author>
+    <description>SugarScape simulation with formatting errors.</description>
+    <width>6</width>
+    <height>6</height>
+    <!-- Missing closing tag for <initial_states> -->
+    <initial_states>
+    0 2 2 1 2 1
+    1 0 0 0 0 0
+    0 0 2 0 1 0
+    1 0 1 0 2 0
+    0 2 1 0 0 1
+    0 0 0 2 0 0
+</simulation>  <!-- Mismatched closing tag -->
