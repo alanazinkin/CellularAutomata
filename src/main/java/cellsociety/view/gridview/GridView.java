@@ -41,11 +41,11 @@ public abstract class GridView {
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
 
 
-  int numRows;
-  int numCols;
-  int cellWidth;
-  int cellHeight;
-  boolean flipped = false;
+  private int numRows;
+  private int numCols;
+  private int cellWidth;
+  private int cellHeight;
+  private boolean flipped = false;
 
   private double zoomFactor;
   private double zoomStep;
