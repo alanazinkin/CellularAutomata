@@ -101,6 +101,12 @@ public class Cell {
     this.currentState = this.nextState;
   }
 
+  public void applyPrevState() {
+    this.nextState = this.currentState;
+    this.currentState = this.prevState;
+    this.prevState =  MockState.STATE_ONE;
+  }
+
   /**
    * Resets the next state back to the current state after applying the update.
    */

@@ -99,6 +99,16 @@ public class SimulationController {
     }
   }
 
+  public void stepBackSimulation() {
+    try {
+      engine.stepBackOnce();
+    }
+    catch (Exception e) {
+      ui.handleError("StepError", e);
+      pauseSimulation();
+    }
+  }
+
   public void startSimulation() {
     engine.start();
   }

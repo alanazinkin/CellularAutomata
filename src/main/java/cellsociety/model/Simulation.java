@@ -165,13 +165,22 @@ public abstract class Simulation {
    * Executes one simulation step by applying rules and updating grid.
    * <p>
    * Implementation sequence: 1. Apply simulation-specific rules through {@link #applyRules()} 2.
-   * Commit calculated next states to the grid
+   * Commit calculated next states to the grid 3. Increment iteration count
    * </p>
    */
   public void step() {
     applyRules();
     grid.applyNextStates();
     iterationCount++;
+  }
+
+  public void stepBackOnce() {
+    if (iterationCount > 0) {
+      boolean applied = grid.applyPreviousStates();
+      if (applied) {
+        iterationCount--;
+      }
+    }
   }
 
   /**

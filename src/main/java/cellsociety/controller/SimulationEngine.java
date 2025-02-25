@@ -61,6 +61,12 @@ public class SimulationEngine {
         simulationUI.updateView(getSimulation().getColorMap());
     }
 
+    public void stepBackOnce()
+        throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        simulation.stepBackOnce();
+        simulationUI.updateView(getSimulation().getColorMap());
+    }
+
     public void resetGrid() {
         simulation.reinitializeGridStates(simulationConfig);
     }

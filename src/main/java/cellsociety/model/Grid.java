@@ -1,5 +1,6 @@
 package cellsociety.model;
 
+import cellsociety.model.state.MockState;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -162,6 +163,25 @@ public class Grid {
       }
     }
   }
+
+  public boolean applyPreviousStates() {
+    boolean applied = false;
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        Cell cell = cells[r][c];
+        if (cell == null) {
+          throw new IllegalStateException(
+              String.format("Cell at (%d,%d) is null", r, c));
+        }
+        if (cell.getPrevState() != MockState.STATE_ONE) {
+          cell.applyPrevState();
+          applied = true;
+        }
+      }
+    }
+    return applied;
+  }
+
 
   /**
    * Resets the grid to a new state, initializing all cells with the specified state.
