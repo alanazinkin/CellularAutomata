@@ -100,10 +100,10 @@ public abstract class GridView {
   }
 
   private void setZoomInstanceVariables() {
-    zoomFactor = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.factor", "1.0"));
+    zoomFactor = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.factor", "1"));
     zoomStep = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.step", "0.1"));
     minZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("min.zoom", "0.5"));
-    maxZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("max.zoom", "3.0"));
+    maxZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("max.zoom", "3"));
     ;
   }
 
