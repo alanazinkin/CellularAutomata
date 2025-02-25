@@ -16,12 +16,15 @@ import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Scale;
 import javafx.stage.Popup;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public abstract class GridView {
@@ -32,6 +35,7 @@ public abstract class GridView {
   private Grid myGrid;
   private List<Shape> myCells;
   private GridPane gridPane;
+  private Pane zoomPane;
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
@@ -42,6 +46,11 @@ public abstract class GridView {
   int cellWidth;
   int cellHeight;
   boolean flipped = false;
+
+  private double zoomFactor;
+  private double zoomStep;
+  private double minZoom;
+  private double maxZoom;
 
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the
@@ -65,6 +74,37 @@ public abstract class GridView {
         (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT)
             / numCols;
     gridPane = new GridPane();
+    zoomPane = new StackPane(gridPane);
+    addGridZoom();
+  }
+
+  private void addGridZoom() {
+    setZoomInstanceVariables();
+    Scale scale = new Scale(zoomFactor, zoomFactor, 0, 0);
+    gridPane.getTransforms().add(scale);
+    setupZoomPaneScrollEvent(scale);
+  }
+
+  private void setupZoomPaneScrollEvent(Scale scale) {
+    zoomPane.setOnScroll((ScrollEvent event) -> {
+      scale.setPivotX(event.getX());
+      scale.setPivotY(event.getY());
+      if (event.getDeltaY() > 0) {
+        zoomFactor = Math.min(zoomFactor + zoomStep, maxZoom);
+      } else {
+        zoomFactor = Math.max(zoomFactor - zoomStep, minZoom);
+      }
+      scale.setX(zoomFactor);
+      scale.setY(zoomFactor);
+    });
+  }
+
+  private void setZoomInstanceVariables() {
+    zoomFactor = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.factor", "1.0"));
+    zoomStep = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.step", "0.1"));
+    minZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("min.zoom", "0.5"));
+    maxZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("max.zoom", "3.0"));
+    ;
   }
 
   /**
@@ -75,7 +115,7 @@ public abstract class GridView {
    */
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    myRoot.setCenter(gridPane);
+    myRoot.setCenter(zoomPane);
     gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
     gridPane.setMaxHeight(
         parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT);
