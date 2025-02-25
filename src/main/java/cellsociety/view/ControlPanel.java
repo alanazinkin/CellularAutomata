@@ -36,14 +36,12 @@ public class ControlPanel {
   private final ResourceBundle myResources;
   private final SimulationView mySimView;
   private HBox myControlBar;
-  private VBox mySideBar;
   private VBox myLowerBar;
   private HBox myTextBar;
   private HBox myCustomizationBar;
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
   private GridView myGridView;
-  private Text iterationCounter;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -148,7 +146,6 @@ public class ControlPanel {
     Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
         myResources.getString("ToggleGrid"), myGridView);
     Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
-
     List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton);
     for (Control element : elements) {
       myUserControl.addElementToPane(element, myCustomizationBar);

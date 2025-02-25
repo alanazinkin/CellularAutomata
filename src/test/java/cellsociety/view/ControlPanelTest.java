@@ -56,7 +56,7 @@ class ControlPanelTest extends DukeApplicationTest {
     ControlPanel testControlPanel = new ControlPanel(myStage, myScene, myController, mySimView, myResources, myGridView);
     testControlPanel.setupControlBar(myRoot);
     HBox controlBar = (HBox) myRoot.getTop();
-    List<String> expectedButtons = List.of("Start", "Pause", "Step", "Reset", "Save", "Add Simulation");
+    List<String> expectedButtons = List.of("Start", "Pause", "Step", "Step Back", "Reset", "Save", "Add Simulation");
     List<String> expectedComboBoxes = List.of("Select Simulation Type", "Select Config File");
     assertEquals(expectedButtons.size() + expectedComboBoxes.size(), controlBar.getChildren().size(), "Control bar should have the correct number of buttons");
     for (int i = 0; i < expectedButtons.size(); i++) {
