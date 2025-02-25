@@ -57,7 +57,7 @@ public class FileRetriever {
         folderExtension = "GameOfLife";
         break;
       case "Rules-Based Game of Life":
-        folderExtension = "GameOfLife";
+        folderExtension = "RuleBasedGameOfLife";
         break;
       case "Spreading of Fire":
         folderExtension = "SpreadingFire";

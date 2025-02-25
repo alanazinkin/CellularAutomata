@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+    <type>Game of Life</type>
+    <title>High-Life</title>
+    <author>Angela Predolac</author>
+    <description>High-Life variant with self-replicating structures using S2/B36 rules.</description>
+    <width>6</width>
+    <height>6</height>
+    <parameter name="rulestring" value="S2/B36"/>
+    <!-- 0 : DEAD      1 : ALIVE -->
+    <initial_states>
+        0 0 1 1 0 0
+        0 1 0 0 1 0
+        1 0 1 1 0 1
+        1 1 0 0 1 1
+        0 1 1 0 1 0
+        0 0 0 1 0 0
+    </initial_states>
+</simulation>
