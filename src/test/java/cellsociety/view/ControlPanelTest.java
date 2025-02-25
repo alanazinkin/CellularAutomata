@@ -78,6 +78,4 @@ class ControlPanelTest extends DukeApplicationTest {
   }
 
   @Test
-  void makeLowerBar() {
-  }
-}
+  void makeLower

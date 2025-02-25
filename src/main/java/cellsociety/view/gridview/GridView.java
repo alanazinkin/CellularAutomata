@@ -280,6 +280,4 @@ public abstract class GridView {
    * @return immutable myCells list
    */
   public List<Shape> getImmutableCellsList() {
-    return Collections.unmodifiableList(myCells);
-  }
-}
+    return Colle
