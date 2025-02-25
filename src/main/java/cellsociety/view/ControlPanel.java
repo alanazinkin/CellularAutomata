@@ -74,8 +74,10 @@ public class ControlPanel {
         e -> myController.startSimulation());
     Button pauseButton = myUserControl.makeButton(myResources.getString("Pause"),
         e -> myController.pauseSimulation());
-    Button stepForwardButton = myUserControl.makeButton(myResources.getString("Step"),
+    Button stepForwardButton = myUserControl.makeButton(myResources.getString("StepForward"),
         e -> myController.stepSimulation());
+    Button stepBackwardButton = myUserControl.makeButton(myResources.getString("StepBack"),
+        e -> myController.stepBackSimulation());
     Button resetButton = myUserControl.makeButton(myResources.getString("Reset"),
         e -> myController.resetGrid());
     Button saveButton = myUserControl.makeButton(myResources.getString("Save"),
@@ -83,7 +85,7 @@ public class ControlPanel {
     Button addSimButton = myUserControl.makeButton(myResources.getString("AddSimulation"), e -> {
       makeANewSim();
     });
-    List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, resetButton,
+    List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, stepBackwardButton, resetButton,
         saveButton, addSimButton);
     addButtonsToPane(buttons);
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();

@@ -157,6 +157,7 @@ public class SimulationInfoDisplay {
     // create and set the scene
     myScene = new Scene(root, parseInt(CONFIG.getString("sim.info.display.width")), parseInt(CONFIG.getString("sim.info.display.height")));
     stage.setScene(myScene);
+    stage.setAlwaysOnTop(true);
     // create display box to hold relevant information
     simView.setTheme(themeColor, myScene);
     // add relevant text to scene
