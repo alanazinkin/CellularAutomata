@@ -39,9 +39,11 @@ public class SimulationSelector {
   public List<ComboBox<String>> makeSimSelectorComboBoxes(String firstLabel, String secondBoxLabel,
       List<String> simulationTypeOptions) throws Exception {
     ComboBox<String> simulationTypes = new ComboBox<>();
+    simulationTypes.setId("simulationTypesComboBox");
     simulationTypes.setPromptText(firstLabel);
     simulationTypes.getItems().addAll(simulationTypeOptions);
     ComboBox<String> configFileComboBox = new ComboBox<>();
+    configFileComboBox.setId("configFileComboBox");
     configFileComboBox.setPromptText(secondBoxLabel);
     // Update available files when simulation type is selected
     updateFileOptions(simulationTypes, configFileComboBox);

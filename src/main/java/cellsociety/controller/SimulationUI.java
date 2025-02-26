@@ -200,6 +200,7 @@ public class SimulationUI {
    */
   public static void displayAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.getDialogPane().setId("myAlert");
     alert.setTitle(title);
     alert.setContentText(content);
     alert.showAndWait();
