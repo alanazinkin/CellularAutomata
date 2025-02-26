@@ -1,11 +1,14 @@
 package cellsociety.view;
 
+import static java.lang.Integer.parseInt;
+
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationMaker;
 import cellsociety.controller.SimulationController;
 import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,6 +37,7 @@ public class ControlPanel {
   private final Scene myScene;
   private final SimulationController myController;
   private final ResourceBundle myResources;
+  private final Map<String, String> myConfigBundle;
   private final SimulationView mySimView;
   private HBox myControlBar;
   private VBox myLowerBar;
@@ -52,6 +56,7 @@ public class ControlPanel {
     myStage = stage;
     myScene = scene;
     myController = controller;
+    myConfigBundle = controller.retrieveImmutableConfigResourceBundle();
     myResources = resources;
     mySimView = simulationView;
     myGridView = gridView;
@@ -169,10 +174,10 @@ public class ControlPanel {
    * @param root main BorderPane that holds scene elements
    */
   public void makeLowerBar(BorderPane root) {
-    myLowerBar = new VBox(10);
+    myLowerBar = new VBox(parseInt(myConfigBundle.getOrDefault("lower.bar.spacing", "10")));
     myLowerBar.setId("lowerBar");
-    myLowerBar.setPadding(new Insets(0, 0, 10, 0));
-    myLowerBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
+    myLowerBar.setPadding(new Insets(0, 0, parseInt(myConfigBundle.getOrDefault("lower.bar.bottom.padding", "10")), 0));
+    myLowerBar.setPrefHeight(parseInt(myConfigBundle.getOrDefault("control.bar.height", "60")) * .3);
     myLowerBar.setAlignment(Pos.CENTER);
     myLowerBar.setPrefWidth(Double.MAX_VALUE);
     root.setBottom(myLowerBar);
@@ -195,7 +200,7 @@ public class ControlPanel {
   }
 
   private void makeTextBar() {
-    myTextBar = new HBox(400);
+    myTextBar = new HBox(parseInt(myConfigBundle.getOrDefault("text.bar.spacing", "400")));
     myTextBar.setId("textBar");
     myTextBar.setAlignment(Pos.CENTER);
     addTextBarToLowerBar();
@@ -232,7 +237,7 @@ public class ControlPanel {
   }
 
   private void makeCustomizationBar() {
-    myCustomizationBar = new HBox(100);
+    myCustomizationBar = new HBox(parseInt(myConfigBundle.getOrDefault("customization.bar.spacing", "100")));
     myCustomizationBar.setId("customizationBar");
     myCustomizationBar.setAlignment(Pos.CENTER);
     addCustomizationBarToLowerBar();
