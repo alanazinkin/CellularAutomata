@@ -46,6 +46,7 @@ public class ControlPanel {
   private FileRetriever myFileRetriever;
   private UserController myUserControl;
   private GridView myGridView;
+  private GridSettingsDisplay myGridSettingsDisplay;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -62,6 +63,7 @@ public class ControlPanel {
     myGridView = gridView;
     initializeFileRetriever();
     initializeUserControl();
+    initalizeGridSettingsDisplay();
   }
 
   /**
@@ -162,11 +164,11 @@ public class ControlPanel {
     gridLinesToggle.setId("gridLinesToggle");
     Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
     flipGridButton.setId("flipGridButton");
-    List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton);
-    for (Control element : elements) {
-      myUserControl.addElementToPane(element, myCustomizationBar);
-    }
+    Button gridSettings = myUserControl.makeButton(myResources.getString("GridSettings"), e -> myGridSettingsDisplay.openWindow()) ;
+    List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton, gridSettings);
+    myCustomizationBar.getChildren().addAll(elements);
   }
+
 
   /**
    * Initializes lower control bar as a vertical box and adds it to the root borderpane
@@ -189,6 +191,11 @@ public class ControlPanel {
 
   private void initializeUserControl() {
     myUserControl = new UserController(myResources, myController);
+  }
+
+  private void initalizeGridSettingsDisplay() {
+    myGridSettingsDisplay = new GridSettingsDisplay(myResources, myController);
+    myGridSettingsDisplay.makeGridSettingsDisplay();
   }
 
   private void makeControlBar(BorderPane root) {

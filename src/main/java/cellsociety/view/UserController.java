@@ -6,6 +6,7 @@ import cellsociety.controller.SimulationController;
 import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -147,8 +148,4 @@ public class UserController {
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);
     flipGrid.setOnAction(e -> gridView.renderGridFlippedVertically());
-    return flipGrid;
-  }
-
-
-}
+    re
