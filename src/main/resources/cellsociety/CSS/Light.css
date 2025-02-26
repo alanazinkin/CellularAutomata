@@ -98,3 +98,10 @@
   -fx-background-insets: 0;
   -fx-background-radius: 5px;
 }
+
+#popupLabel {
+  -fx-background-color: white;
+  -fx-text-fill: black;
+  -fx-border-color: black;
+  -fx-padding: 5;
+}
