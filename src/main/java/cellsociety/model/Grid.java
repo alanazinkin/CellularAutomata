@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import cellsociety.model.state.MockState;
+import cellsociety.model.state.StepBackState;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -173,7 +174,7 @@ public class Grid {
           throw new IllegalStateException(
               String.format("Cell at (%d,%d) is null", r, c));
         }
-        if (cell.getPrevState() != MockState.STATE_ONE) {
+        if (cell.getPrevState() != StepBackState.STEP_BACK_STATE) {
           cell.applyPrevState();
           applied = true;
         }

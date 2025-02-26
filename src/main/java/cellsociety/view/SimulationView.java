@@ -9,7 +9,6 @@ import cellsociety.controller.SimulationUI;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
-import cellsociety.view.gridview.FireGridView;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -166,7 +165,6 @@ public class SimulationView {
 
   private GridView createAppropriateGridView(Grid grid) {
     return switch (myConfig.getType().toLowerCase()) {
-      case "spreading of fire" -> new FireGridView(myController, myConfig, grid);
       case "game of life" -> new DefaultGridView(myController, myConfig, grid);
       default -> null;
     };
