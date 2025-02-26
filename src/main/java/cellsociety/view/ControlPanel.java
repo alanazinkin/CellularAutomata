@@ -223,4 +223,35 @@ public class ControlPanel {
     speedText.setId("speedText");
     Text settingsText = new Text(myResources.getString("Settings"));
     settingsText.setId("settingsText");
-    myTextBar.getChildre
+    myTextBar.getChildren().addAll(speedText, settingsText);
+    addCSSStyleIDs(List.of(speedText, settingsText));
+  }
+
+  /**
+   * add text to the textBar
+   *
+   * @param newText text to add to the bar
+   */
+  public void addTextToTextBar(Text newText) {
+    myTextBar.getChildren().add(newText);
+    addCSSStyleIDs(List.of(newText));
+  }
+
+  private void addCSSStyleIDs(List<Shape> myTexts) {
+    for (Shape myText : myTexts) {
+      myText.getStyleClass().add("custom-text");
+    }
+  }
+
+  private void makeCustomizationBar() {
+    myCustomizationBar = new HBox(parseInt(myConfigBundle.getOrDefault("customization.bar.spacing", "100")));
+    myCustomizationBar.setId("customizationBar");
+    myCustomizationBar.setAlignment(Pos.CENTER);
+    addCustomizationBarToLowerBar();
+  }
+
+  private void addCustomizationBarToLowerBar() {
+    myLowerBar.getChildren().add(myCustomizationBar);
+  }
+
+}
