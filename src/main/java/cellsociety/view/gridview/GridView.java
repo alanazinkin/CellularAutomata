@@ -271,4 +271,9 @@ public abstract class GridView {
   /**
    * retrieves myCells instance variable holding all the grid cells
    *
-   * 
+   * @return immutable myCells list
+   */
+  public List<Shape> getImmutableCellsList() {
+    return Collections.unmodifiableList(myCells);
+  }
+}
