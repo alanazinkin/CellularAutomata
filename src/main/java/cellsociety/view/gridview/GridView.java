@@ -30,8 +30,6 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 
 public abstract class GridView {
-
-  private static final int SLIDER_BAR_HEIGHT = 150;
   private boolean hasGridLines = true;
 
   private Grid myGrid;
@@ -77,7 +75,7 @@ public abstract class GridView {
          / numCols;
     cellHeight =
         (parseInt(myConfigResourceMap.getOrDefault("grid.height", "750"))
-            - SLIDER_BAR_HEIGHT)
+            - parseInt(myConfigResourceMap.getOrDefault("lower.bar.height", "150")))
             / numRows;
     gridPane = new GridPane();
     zoomPane = new StackPane(gridPane);
@@ -124,7 +122,7 @@ public abstract class GridView {
     myRoot.setLeft(zoomPane);
     gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(myInfoDisplayBundle.getString("sim.info.display.width")));
     gridPane.setMaxHeight(
-        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT);
+        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - parseInt(myConfigResourceMap.getOrDefault("lower.bar.height", "150")));
     gridPane.setGridLinesVisible(true);
     //gridPane.setStyle("bacteria-state-rock: #f542dd;");
     myCells = new ArrayList<>();
@@ -174,13 +172,16 @@ public abstract class GridView {
   private void makeCellPopUp(StateInterface cellState, Shape shape) {
     Popup popup = new Popup();
     Label popupLabel = new Label(cellState.toString());
-    popupLabel.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; -fx-padding: 5;");
+    popupLabel.setId("popupLabel");
     popup.getContent().add(popupLabel);
 
     shape.setOnMouseEntered(event -> {
       delay.setOnFinished(e -> {
         if (!popup.isShowing()) {
-          popup.show(shape, event.getScreenX() + 10, event.getScreenY() + 10);
+          popup.show(shape, event.getScreenX() +
+              parseInt(myConfigResourceMap.getOrDefault("pop.up.offset", "10")) ,
+              event.getScreenY() +
+                  parseInt(myConfigResourceMap.getOrDefault("pop.up.offset", "10")));
         }
       });
       delay.playFromStart();
