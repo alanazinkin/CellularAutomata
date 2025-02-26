@@ -148,4 +148,15 @@ public class UserController {
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);
     flipGrid.setOnAction(e -> gridView.renderGridFlippedVertically());
-    re
+    return flipGrid;
+  }
+
+  public ComboBox<String> makeComboBox(String label, List<String> options) {
+    ComboBox<String> comboBox = new ComboBox<>();
+    comboBox.setPromptText(label);
+    comboBox.getItems().addAll(options);
+    return comboBox;
+  }
+
+
+}
