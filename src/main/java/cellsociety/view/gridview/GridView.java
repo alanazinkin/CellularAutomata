@@ -6,6 +6,7 @@ import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
+import cellsociety.view.SimulationInfoDisplay;
 import cellsociety.view.shapefactory.CellShape;
 import cellsociety.view.shapefactory.CellShapeFactory;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,6 +40,8 @@ public abstract class GridView {
   private Pane zoomPane;
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
+  private ResourceBundle myInfoDisplayBundle = ResourceBundle.getBundle(
+      SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
 
 
@@ -115,8 +119,8 @@ public abstract class GridView {
    */
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    myRoot.setCenter(zoomPane);
-    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
+    myRoot.setLeft(zoomPane);
+    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(myInfoDisplayBundle.getString("sim.info.display.width")));
     gridPane.setMaxHeight(
         parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);

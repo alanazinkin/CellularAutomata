@@ -149,20 +149,12 @@ public class SimulationInfoDisplay {
    */
   public void createDisplayBox(Stage stage, String title, String themeColor, SimulationView simView)
       throws FileNotFoundException {
-    stage.setTitle(title);
-    BorderPane root = new BorderPane();
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
-    root.setCenter(vbox);
-    // create and set the scene
-    myScene = new Scene(root, parseInt(CONFIG.getString("sim.info.display.width")), parseInt(CONFIG.getString("sim.info.display.height")));
-    stage.setScene(myScene);
-    stage.setAlwaysOnTop(true);
+    simView.getRoot().setCenter(vbox);
     // create display box to hold relevant information
-    simView.setTheme(themeColor, myScene);
     // add relevant text to scene
     addSimulationInformationToScene(vbox, themeColor);
-    stage.show();
   }
 
   /**
@@ -202,7 +194,7 @@ public class SimulationInfoDisplay {
     Text infoText = new Text(text);
     infoText.setTextAlignment(TextAlignment.CENTER);
     infoText.setFont(Font.font("Verdana", FontWeight.BOLD, parseInt(CONFIG.getString("text.size"))));
-    infoText.setWrappingWidth(parseInt(CONFIG.getString("sim.info.display.width")) * .75);
+    infoText.setWrappingWidth(Double.parseDouble(CONFIG.getString("sim.info.display.width")) * .4);
     return infoText;
   }
 
