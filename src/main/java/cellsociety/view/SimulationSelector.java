@@ -10,6 +10,10 @@ import java.util.ResourceBundle;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
+/**
+ * the SimulationSelector class creates the necessary buttons, and ComboBoxes for selecting a new
+ * simulation from a list of simulation type options and simulation configuration files
+ */
 public class SimulationSelector {
 
   private ResourceBundle myResources;
@@ -64,10 +68,9 @@ public class SimulationSelector {
             SimulationUI.displayAlert(myResources.getString("Error"),
                 myResources.getString("NoFilesToRun") + " " + simulationType + ". "
                     + myResources.getString("SelectDifSim"));
-          }
-          else{
-            SimulationUI.displayAlert("Error","No Files To Run" + " " + simulationType + ". "
-                    + "Select a different simulation type");
+          } else {
+            SimulationUI.displayAlert("Error", "No Files To Run" + " " + simulationType + ". "
+                + "Select a different simulation type");
           }
           configFileComboBox.getItems().clear();
           configFileComboBox.setDisable(true);

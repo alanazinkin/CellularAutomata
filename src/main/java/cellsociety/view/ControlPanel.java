@@ -31,8 +31,6 @@ import javafx.stage.Stage;
  */
 public class ControlPanel {
 
-  private static final int CONTROL_BAR_HEIGHT = 60;
-
   private final Stage myStage;
   private final Scene myScene;
   private final SimulationController myController;
@@ -202,7 +200,7 @@ public class ControlPanel {
     myControlBar = new HBox();
     root.setTop(myControlBar);
     myControlBar.setAlignment(Pos.CENTER);
-    myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
+    myControlBar.setPrefHeight(parseInt(myConfigBundle.getOrDefault("control.bar.height", "400")));
     myControlBar.setId("controlBar");
   }
 

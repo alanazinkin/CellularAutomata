@@ -13,6 +13,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
+/**
+ * This class creates a settings display which had buttons for selecting the specific type of grid
+ * neighborhood, edge type, and cell shape
+ */
 public class GridSettingsDisplay {
 
   private static final List<String> NEIGHBORHOOD_TYPES = List.of("Moore", "Von Neumann",
