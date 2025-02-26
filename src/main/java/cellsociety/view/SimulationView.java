@@ -109,6 +109,7 @@ public class SimulationView {
    */
   public Scene createSimulationWindow(Stage stage) {
     myRoot = new BorderPane();
+    myRoot.setId("myRoot");
     myScene = new Scene(myRoot, parseInt(mySimulationResourceMap.get("window.width")),
         parseInt(mySimulationResourceMap.get("window.height")));
     stage.setScene(myScene);

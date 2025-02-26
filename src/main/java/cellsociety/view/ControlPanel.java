@@ -70,19 +70,26 @@ public class ControlPanel {
     // add buttons to Control Bar
     Button startButton = myUserControl.makeButton(myResources.getString("Start"),
         e -> myController.startSimulation());
+    startButton.setId("startButton");
     Button pauseButton = myUserControl.makeButton(myResources.getString("Pause"),
         e -> myController.pauseSimulation());
+    pauseButton.setId("pauseButton");
     Button stepForwardButton = myUserControl.makeButton(myResources.getString("StepForward"),
         e -> myController.stepSimulation());
+    stepForwardButton.setId("stepForwardButton");
     Button stepBackwardButton = myUserControl.makeButton(myResources.getString("StepBack"),
         e -> myController.stepBackSimulation());
+    stepBackwardButton.setId("stepBackButton");
     Button resetButton = myUserControl.makeButton(myResources.getString("Reset"),
         e -> myController.resetGrid());
+    resetButton.setId("resetButton");
     Button saveButton = myUserControl.makeButton(myResources.getString("Save"),
         e -> myController.saveSimulation());
+    saveButton.setId("saveButton");
     Button addSimButton = myUserControl.makeButton(myResources.getString("AddSimulation"), e -> {
       makeANewSim();
     });
+    addSimButton.setId("addSimButton");
     List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, stepBackwardButton, resetButton,
         saveButton, addSimButton);
     addButtonsToPane(buttons);
@@ -141,11 +148,15 @@ public class ControlPanel {
     makeCustomizationBar();
 
     Slider speedSlider = myUserControl.makeSpeedSlider();
+    speedSlider.setId("speedSlider");
     ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
+    themeSelector.setId("themeSelector");
     myUserControl.selectTheme(mySimView, myScene, themeSelector);
     Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
         myResources.getString("ToggleGrid"), myGridView);
+    gridLinesToggle.setId("gridLinesToggle");
     Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
+    flipGridButton.setId("flipGridButton");
     List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton);
     for (Control element : elements) {
       myUserControl.addElementToPane(element, myCustomizationBar);
@@ -159,6 +170,7 @@ public class ControlPanel {
    */
   public void makeLowerBar(BorderPane root) {
     myLowerBar = new VBox(10);
+    myLowerBar.setId("lowerBar");
     myLowerBar.setPadding(new Insets(0, 0, 10, 0));
     myLowerBar.setPrefHeight(CONTROL_BAR_HEIGHT * .3);
     myLowerBar.setAlignment(Pos.CENTER);
@@ -179,10 +191,12 @@ public class ControlPanel {
     root.setTop(myControlBar);
     myControlBar.setAlignment(Pos.CENTER);
     myControlBar.setPrefHeight(CONTROL_BAR_HEIGHT);
+    myControlBar.setId("controlBar");
   }
 
   private void makeTextBar() {
     myTextBar = new HBox(400);
+    myTextBar.setId("textBar");
     myTextBar.setAlignment(Pos.CENTER);
     addTextBarToLowerBar();
     makeTextAndAddToTextBar();
@@ -194,7 +208,9 @@ public class ControlPanel {
 
   private void makeTextAndAddToTextBar() {
     Text speedText = new Text(myResources.getString("Speed"));
+    speedText.setId("speedText");
     Text settingsText = new Text(myResources.getString("Settings"));
+    settingsText.setId("settingsText");
     myTextBar.getChildren().addAll(speedText, settingsText);
     addCSSStyleIDs(List.of(speedText, settingsText));
   }
@@ -217,6 +233,7 @@ public class ControlPanel {
 
   private void makeCustomizationBar() {
     myCustomizationBar = new HBox(100);
+    myCustomizationBar.setId("customizationBar");
     myCustomizationBar.setAlignment(Pos.CENTER);
     addCustomizationBarToLowerBar();
   }
