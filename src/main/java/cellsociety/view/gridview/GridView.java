@@ -6,6 +6,7 @@ import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
+import cellsociety.view.SimulationInfoDisplay;
 import cellsociety.view.shapefactory.CellShape;
 import cellsociety.view.shapefactory.CellShapeFactory;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,6 +40,8 @@ public abstract class GridView {
   private Pane zoomPane;
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
+  private ResourceBundle myInfoDisplayBundle = ResourceBundle.getBundle(
+      SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
 
 
@@ -69,10 +73,12 @@ public abstract class GridView {
     myGrid = grid;
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numRows;
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "900"))
+         / numCols;
     cellHeight =
-        (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT)
-            / numCols;
+        (parseInt(myConfigResourceMap.getOrDefault("grid.height", "750"))
+            - SLIDER_BAR_HEIGHT)
+            / numRows;
     gridPane = new GridPane();
     zoomPane = new StackPane(gridPane);
     addGridZoom();
@@ -115,8 +121,8 @@ public abstract class GridView {
    */
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    myRoot.setCenter(zoomPane);
-    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")));
+    myRoot.setLeft(zoomPane);
+    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(myInfoDisplayBundle.getString("sim.info.display.width")));
     gridPane.setMaxHeight(
         parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT);
     gridPane.setGridLinesVisible(true);
@@ -138,7 +144,13 @@ public abstract class GridView {
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        addCellShapeToGridView(colorMap, simulationConfig, cell, j, i);
+        int col = j;
+        int row = i;
+        if (flipped) {
+          col = j;
+          row = numRows - i - 1;
+        }
+        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row);
       }
     }
   }
@@ -151,8 +163,12 @@ public abstract class GridView {
     shape.setStroke(Color.BLACK);
     shape.setStrokeWidth(1);
     myCells.add(i * numCols + j, shape);
-    gridPane.add(shape, j, i);
+    addShapeToGridPaneAtIndex(j, i, shape);
     makeCellPopUp(cellState, shape);
+  }
+
+  private void addShapeToGridPaneAtIndex(int col, int row, Shape shape) {
+    gridPane.add(shape, col, row);
   }
 
   private void makeCellPopUp(StateInterface cellState, Shape shape) {
@@ -247,32 +263,9 @@ public abstract class GridView {
    *
    */
   public void renderGridFlippedVertically() {
-    gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
-    if (!flipped) {
-      applyGridFlip();
-    } else {
-      flipGridBack();
-    }
     flipped = !flipped;
   }
-
-  private void applyGridFlip() {
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Shape rectCell = myCells.get(i * numCols + j);
-        gridPane.add(rectCell, j, numRows - i - 1);
-      }
-    }
-  }
-
-  private void flipGridBack() {
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Shape rectCell = myCells.get(i * numCols + j);
-        gridPane.add(rectCell, j, i);
-      }
-    }
-  }
+  
 
   /**
    * retrieves myCells instance variable holding all the grid cells
