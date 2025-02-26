@@ -12,6 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Class for creating splash screen that allows the user to initialize a new simulation
+ */
 public class SplashScreen {
 
   private Pane layout;

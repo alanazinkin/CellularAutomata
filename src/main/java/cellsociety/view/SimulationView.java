@@ -23,6 +23,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * SimulationView class is the high level class for creating a new simulation view with the relative
+ * control panels, buttons, grid views etc.
+ */
 public class SimulationView {
 
   private SimulationController myController;
@@ -67,7 +71,8 @@ public class SimulationView {
     createSimulationInfoDisplay(simulation, simView, themeColor);
   }
 
-  private void createSimulationInfoDisplay(Simulation simulation, SimulationView simView, String themeColor)
+  private void createSimulationInfoDisplay(Simulation simulation, SimulationView simView,
+      String themeColor)
       throws FileNotFoundException {
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
         myConfig.getTitle(),
@@ -79,7 +84,8 @@ public class SimulationView {
         simView);
   }
 
-  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap, Grid grid)
+  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
+      Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     myGridView = new DefaultGridView(myController, myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap, myConfig);
@@ -119,11 +125,11 @@ public class SimulationView {
   }
 
   /**
-   * sets the themeColor instance variable to the selected themeColor string and
-   * updates the theme to reflect the change
+   * sets the themeColor instance variable to the selected themeColor string and updates the theme
+   * to reflect the change
    *
    * @param themeColor selected theme color (Dark or Light)
-   * @param scene scene to be updated
+   * @param scene      scene to be updated
    * @throws FileNotFoundException if there is no CSS file for the themeColor
    */
   public void setTheme(String themeColor, Scene scene) throws FileNotFoundException {
@@ -186,7 +192,8 @@ public class SimulationView {
     if (myGridView != null) {
       myGridView.renderGrid(stateMap, myConfig);
     } else {
-      SimulationUI.displayAlert(myResources.getString("Error"), myResources.getString("GridViewNull"));
+      SimulationUI.displayAlert(myResources.getString("Error"),
+          myResources.getString("GridViewNull"));
     }
   }
 
@@ -204,10 +211,4 @@ public class SimulationView {
    * the simulation
    */
   public void updateIterationCounter() {
-    iterationCounter.setText("Iteration Count: " + myController.getIterationCount());
-  }
-
-  private void makeIterationCounter() {
-    iterationCounter = new Text("Iteration Count: " + myController.getIterationCount());
-  }
-}
+    iterationCounter.setText("Iteration Count:

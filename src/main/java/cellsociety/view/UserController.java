@@ -18,6 +18,10 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 
+/**
+ * UserController class allows the user to create new buttons, selectors, and other widgets for
+ * interacting with the simulation
+ */
 public class UserController {
 
 
@@ -141,7 +145,7 @@ public class UserController {
   /**
    * creates toggle button that flips the grid horizontally
    *
-   * @param label button label
+   * @param label    button label
    * @param gridView gridview that is flipped horizontally
    * @return newly created flip grid button
    */

@@ -1,7 +1,9 @@
 package cellsociety.view.gridview;
+
 import cellsociety.controller.SimulationConfig;
 
 import static java.lang.Integer.parseInt;
+
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
@@ -29,7 +31,12 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Popup;
 import javafx.util.Duration;
 
+/**
+ * abstract class for creating a GridView, which holds all teh cells and updates the visual display
+ * of their states
+ */
 public abstract class GridView {
+
   private boolean hasGridLines = true;
 
   private Grid myGrid;
@@ -39,7 +46,8 @@ public abstract class GridView {
   private SimulationController myController;
   private Map<String, String> myConfigResourceMap;
   private ResourceBundle myInfoDisplayBundle = ResourceBundle.getBundle(
-      SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");;
+      SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");
+  ;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
 
 
@@ -72,7 +80,7 @@ public abstract class GridView {
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
     cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "900"))
-         / numCols;
+        / numCols;
     cellHeight =
         (parseInt(myConfigResourceMap.getOrDefault("grid.height", "750"))
             - parseInt(myConfigResourceMap.getOrDefault("lower.bar.height", "150")))
@@ -117,12 +125,16 @@ public abstract class GridView {
    * @param myRoot
    * @param colorMap
    */
-  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
+  public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     myRoot.setLeft(zoomPane);
-    gridPane.setMaxWidth(parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(myInfoDisplayBundle.getString("sim.info.display.width")));
+    gridPane.setMaxWidth(
+        parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(
+            myInfoDisplayBundle.getString("sim.info.display.width")));
     gridPane.setMaxHeight(
-        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - parseInt(myConfigResourceMap.getOrDefault("lower.bar.height", "150")));
+        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - parseInt(
+            myConfigResourceMap.getOrDefault("lower.bar.height", "150")));
     gridPane.setGridLinesVisible(true);
     //gridPane.setStyle("bacteria-state-rock: #f542dd;");
     myCells = new ArrayList<>();
@@ -153,7 +165,8 @@ public abstract class GridView {
     }
   }
 
-  private void addCellShapeToGridView(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig, Cell cell, int j, int i)
+  private void addCellShapeToGridView(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig, Cell cell, int j, int i)
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     StateInterface cellState = cell.getCurrentState();
     Shape shape = makeCellShapeFromState(cellState, simulationConfig);
@@ -179,7 +192,7 @@ public abstract class GridView {
       delay.setOnFinished(e -> {
         if (!popup.isShowing()) {
           popup.show(shape, event.getScreenX() +
-              parseInt(myConfigResourceMap.getOrDefault("pop.up.offset", "10")) ,
+                  parseInt(myConfigResourceMap.getOrDefault("pop.up.offset", "10")),
               event.getScreenY() +
                   parseInt(myConfigResourceMap.getOrDefault("pop.up.offset", "10")));
         }
@@ -193,14 +206,16 @@ public abstract class GridView {
   }
 
 
-  private Shape makeCellShapeFromState(StateInterface cellState, SimulationConfig simulationConfigconfig)
+  private Shape makeCellShapeFromState(StateInterface cellState,
+      SimulationConfig simulationConfigconfig)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     String factoryClassName = getCellFactoryName(cellState, simulationConfigconfig);
     String fullFactoryClassName = "cellsociety.view.shapefactory." + factoryClassName;
 
     // Create factory instance using reflection
     Class<?> factoryClass = Class.forName(fullFactoryClassName);
-    CellShapeFactory factory = (CellShapeFactory) factoryClass.getDeclaredConstructor().newInstance();
+    CellShapeFactory factory = (CellShapeFactory) factoryClass.getDeclaredConstructor()
+        .newInstance();
 
     // Create the cell shape using the factory
     CellShape cellShape = factory.createCellShape(cellWidth, cellHeight);
@@ -225,7 +240,8 @@ public abstract class GridView {
 
   /**
    * sets the action call of the grid lines toggle button
-   * @param gridView the gridview object that will be changed by the button press
+   *
+   * @param gridView     the gridview object that will be changed by the button press
    * @param toggleButton the toggle button
    */
   public void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
@@ -259,14 +275,12 @@ public abstract class GridView {
   }
 
   /**
-   * if the grid is not flipped, it flips it over the X-axis
-   * and flips it back otherwise
-   *
+   * if the grid is not flipped, it flips it over the X-axis and flips it back otherwise
    */
   public void renderGridFlippedVertically() {
     flipped = !flipped;
   }
-  
+
 
   /**
    * retrieves myCells instance variable holding all the grid cells
