@@ -73,10 +73,12 @@ public abstract class GridView {
     myGrid = grid;
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) / numRows;
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "900"))
+         / numCols;
     cellHeight =
-        (parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - SLIDER_BAR_HEIGHT)
-            / numCols;
+        (parseInt(myConfigResourceMap.getOrDefault("grid.height", "750"))
+            - SLIDER_BAR_HEIGHT)
+            / numRows;
     gridPane = new GridPane();
     zoomPane = new StackPane(gridPane);
     addGridZoom();
@@ -142,7 +144,13 @@ public abstract class GridView {
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        addCellShapeToGridView(colorMap, simulationConfig, cell, j, i);
+        int col = j;
+        int row = i;
+        if (flipped) {
+          col = j;
+          row = numRows - i - 1;
+        }
+        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row);
       }
     }
   }
@@ -155,8 +163,12 @@ public abstract class GridView {
     shape.setStroke(Color.BLACK);
     shape.setStrokeWidth(1);
     myCells.add(i * numCols + j, shape);
-    gridPane.add(shape, j, i);
+    addShapeToGridPaneAtIndex(j, i, shape);
     makeCellPopUp(cellState, shape);
+  }
+
+  private void addShapeToGridPaneAtIndex(int col, int row, Shape shape) {
+    gridPane.add(shape, col, row);
   }
 
   private void makeCellPopUp(StateInterface cellState, Shape shape) {
@@ -251,32 +263,9 @@ public abstract class GridView {
    *
    */
   public void renderGridFlippedVertically() {
-    gridPane.getChildren().clear(); // Clear the GridPane but keep myCells
-    if (!flipped) {
-      applyGridFlip();
-    } else {
-      flipGridBack();
-    }
     flipped = !flipped;
   }
-
-  private void applyGridFlip() {
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Shape rectCell = myCells.get(i * numCols + j);
-        gridPane.add(rectCell, j, numRows - i - 1);
-      }
-    }
-  }
-
-  private void flipGridBack() {
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Shape rectCell = myCells.get(i * numCols + j);
-        gridPane.add(rectCell, j, i);
-      }
-    }
-  }
+  
 
   /**
    * retrieves myCells instance variable holding all the grid cells
