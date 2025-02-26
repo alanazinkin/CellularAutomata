@@ -1,9 +1,9 @@
 package cellsociety.view.shapefactory;
 
-public class RectangleCellFactory extends CellShapeFactory{
+/**
+ * concrete RectangleCellFactory class for creating new RectangleCell types
+ */
+public class RectangleCellFactory extends CellShapeFactory {
 
-  @Override
-  public CellShape createCellShape(int width, int height) {
-    return new RectangleCell(width, height);
-  }
-}
+  /**
+   * @param width  width of unde

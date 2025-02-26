@@ -1,6 +1,6 @@
 package cellsociety.view.shapefactory;
 
-public abstract class CellShapeFactory {
-
-  public abstract CellShape createCellShape(int width, int height);
-}
+/**
+ * Abstract class for creating a CellShapeFactory which can create Cell Shapes
+ */
+public abstract class Cel
