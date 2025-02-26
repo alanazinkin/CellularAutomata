@@ -153,7 +153,6 @@ public class SimulationView {
     String basePath = "/cellsociety/CSS/";
     for (String file : files) {
       String completePath = basePath + file + ".css";
-      System.out.println(completePath);
       scene.getStylesheets().add(getClass().getResource(completePath).toExternalForm());
     }
   }
@@ -187,7 +186,7 @@ public class SimulationView {
     if (myGridView != null) {
       myGridView.renderGrid(stateMap, myConfig);
     } else {
-      System.err.println("Error: GridView is not initialized.");
+      SimulationUI.displayAlert(myResources.getString("Error"), myResources.getString("GridViewNull"));
     }
   }
 
