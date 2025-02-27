@@ -12,4 +12,6 @@ public abstract class CellShapeFactory {
    * @param height height of underlying shape
    * @return a new CellShape instance
    */
-  public abstract CellShape createCellShape(double width, double height, boo
+  public abstract CellShape createCellShape(double width, double height, boolean isUpward);
+
+}

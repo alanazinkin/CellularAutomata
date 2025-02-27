@@ -84,4 +84,8 @@ public class SplashScreen {
         fileRetriever.getSimulationTypes()
     );
     for (ComboBox<String> simulationComboBox : simulationComboBoxes) {
- 
+      layout.getChildren().add(simulationComboBox);
+    }
+    return simulationComboBoxes;
+  }
+}

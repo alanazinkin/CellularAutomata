@@ -12,7 +12,7 @@ class XMLStructureValidator {
     private static final String SIMULATION_TAG = "simulation";
     private static final Set<String> VALID_ROOT_CHILDREN = Set.of(
             "type", "title", "author", "description", "width", "height",
-            "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state"
+            "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state", "tiling"
     );
 
     /**

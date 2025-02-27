@@ -14,4 +14,7 @@ public class DefaultGridView extends GridView {
    */
   public DefaultGridView(SimulationController simulationController,
       SimulationConfig simulationConfig, Grid grid) {
-  
+    super(simulationController, simulationConfig, grid);
+  }
+
+}

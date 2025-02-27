@@ -228,4 +228,20 @@ public class SimulationConfig {
   }
 
   /**
-   * Sets the initial st
+   * Sets the initial states of cells in the simulation.
+   *
+   * @param initialStates The new array of initial states.
+   *
+   */
+  public void setInitialStates(int[] initialStates) {
+    this.initialStates = initialStates;
+  }
+
+  /**
+   * Sets the tiling of the grid layout in the simulation
+   * @param tiling The tiling of the grid (triangular, hexagonal, or default)
+   */
+  public void setTiling(String tiling) {
+    this.tiling = tiling;
+  }
+}

@@ -5,5 +5,8 @@ package cellsociety.view.shapefactory;
  */
 public class RectangleCellFactory extends CellShapeFactory {
 
-  /**
-   * @param width  width of unde
+  @Override
+  public CellShape createCellShape(double width, double height, boolean isUpward) {
+    return new RectangleCell(width, height);
+  }
+}

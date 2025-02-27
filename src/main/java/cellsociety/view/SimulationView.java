@@ -10,13 +10,13 @@ import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
 import cellsociety.view.gridview.GridViewFactory;
+import cellsociety.view.shapefactory.CellShapeFactory;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import cellsociety.view.gridview.DefaultGridView;
 import cellsociety.view.gridview.GridView;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -211,4 +211,27 @@ public class SimulationView {
   }
 
   private GridView makeGridViewFromTiling(SimulationConfig simulationConfig, Grid grid)
-      throws ClassNotFoundException, InstantiationE
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    String gridFactoryClassName = getGridFactoryName(simulationConfig);
+    String fullFactoryClassName = "cellsociety.view.gridview." + gridFactoryClassName;
+
+    // Create factory instance using reflection
+    Class<?> factoryClass = Class.forName(fullFactoryClassName);
+    GridViewFactory factory = (GridViewFactory) factoryClass.getDeclaredConstructor()
+        .newInstance();
+
+    // Create the cell shape using the factory
+    GridView gridView = factory.createGridView(myController, simulationConfig, grid);
+
+    return gridView;
+  }
+
+  private String getGridFactoryName(SimulationConfig simulationConfig) {
+    String tiling = simulationConfig.getTiling();
+    if (tiling == null) {
+      throw new NullPointerException("Tiling cannot be null");
+    }
+    // Construct the factory class name
+    return tiling + "GridViewFactory";
+  }
+}
