@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * Manages creatures in the simulation, tracking their positions and orientations.
+ * @author Tatum McKinnis
  */
 public class CreatureManager {
 

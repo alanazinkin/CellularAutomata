@@ -31,27 +31,6 @@ public enum Sex {
     this.displayName = displayName;
   }
 
-  /**
-   * Gets the human-readable name of the sex.
-   *
-   * @return the display name of the sex
-   */
-  public String getDisplayName() {
-    return displayName;
-  }
-
-  /**
-   * Gets the opposite sex.
-   * <p>
-   * Used in reproduction rules to find compatible mates.
-   * </p>
-   *
-   * @return FEMALE if called on MALE, MALE if called on FEMALE
-   */
-  public Sex getOpposite() {
-    return this == MALE ? FEMALE : MALE;
-  }
-
   @Override
   public String toString() {
     return displayName;

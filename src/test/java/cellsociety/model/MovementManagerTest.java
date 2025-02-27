@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
  * Test class for MovementManager.
  * Tests the agent movement functionality in the SugarScape simulation including
  * valid moves, sugar collection, and edge cases.
+ * @author Tatum McKinnis
  */
 public class MovementManagerTest {
 

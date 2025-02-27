@@ -12,7 +12,7 @@ import java.util.List;
  * Test class for {@link CreatureProgram}.
  * Tests the functionality of the program that defines a creature's behavior.
  *
- * @author Simulation Developer
+ * @author Tatum McKinnis
  */
 public class CreatureProgramTest {
 

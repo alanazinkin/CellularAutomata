@@ -13,6 +13,7 @@ import cellsociety.model.StateInterface;
  * Each enum constant in FireState represents a specific state of a cell in the simulation. The enum
  * implements the StateInterface interface, ensuring that each state can be handled polymorphically
  * across various simulations.
+ * @author Tatum McKinnis
  */
 public enum FireState implements StateInterface {
 

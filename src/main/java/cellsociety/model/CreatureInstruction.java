@@ -1,9 +1,8 @@
 package cellsociety.model;
 
-import cellsociety.model.InstructionType;
-
 /**
  * Represents an instruction that can be executed by a creature.
+ * @author Tatum McKinnis
  */
 public class CreatureInstruction {
   private final InstructionType type;

@@ -2,6 +2,7 @@ package cellsociety.model;
 
 /**
  * Represents a direction with associated degree values.
+ * @author Tatum McKinnis
  */
 public enum Direction {
   NORTH(90),
@@ -31,7 +32,6 @@ public enum Direction {
    * @return the corresponding direction
    */
   public static Direction fromDegrees(double degrees) {
-    // Normalize degrees to 0-359
     double normalizedDegrees = ((degrees % 360) + 360) % 360;
 
     if (normalizedDegrees >= 315 || normalizedDegrees < 45) {

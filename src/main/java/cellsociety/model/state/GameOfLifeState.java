@@ -11,6 +11,7 @@ import cellsociety.model.StateInterface;
  * <p>
  * This enum implements the {@link cellsociety.model.StateInterface} interface to maintain
  * consistency across various state enums used in grid-based simulations.
+ * @author Tatum McKinnis
  * </p>
  */
 public enum GameOfLifeState implements StateInterface {
@@ -57,21 +58,5 @@ public enum GameOfLifeState implements StateInterface {
    */
   public int getNumericValue() {
     return numericValue;
-  }
-
-  /**
-   * Returns the GameOfLifeState corresponding to the given numeric value.
-   *
-   * @param value the numeric value (e.g., 0 or 1) parsed from the XML file
-   * @return the corresponding GameOfLifeState
-   * @throws IllegalArgumentException if no matching state is found
-   */
-  public static GameOfLifeState fromValue(int value) {
-    for (GameOfLifeState state : GameOfLifeState.values()) {
-      if (state.getNumericValue() == value) {
-        return state;
-      }
-    }
-    throw new IllegalArgumentException("Invalid state value: " + value);
   }
 }

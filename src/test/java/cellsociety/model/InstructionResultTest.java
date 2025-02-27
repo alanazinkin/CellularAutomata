@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
  * Test class for InstructionResult that validates the creation and behavior of instruction results.
  * Tests focus on validating the correct construction, property retrieval, and handling of different
  * scenarios like normal flow continuation or action execution.
+ * @author Tatum McKinnis
  */
 class InstructionResultTest {
 
@@ -17,14 +18,9 @@ class InstructionResultTest {
    */
   @Test
   void getNextInstructionIndex_PositiveIndex_ReturnsCorrectIndex() {
-    // Arrange
     int nextIndex = 5;
     boolean actionExecuted = true;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertEquals(nextIndex, result.getNextInstructionIndex());
   }
 
@@ -33,14 +29,9 @@ class InstructionResultTest {
    */
   @Test
   void isActionExecuted_ActionExecutedTrue_ReturnsTrue() {
-    // Arrange
     int nextIndex = 5;
     boolean actionExecuted = true;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertTrue(result.isActionExecuted());
   }
 
@@ -49,14 +40,9 @@ class InstructionResultTest {
    */
   @Test
   void isActionExecuted_ActionExecutedFalse_ReturnsFalse() {
-    // Arrange
     int nextIndex = 0;
     boolean actionExecuted = false;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertFalse(result.isActionExecuted());
   }
 
@@ -66,14 +52,9 @@ class InstructionResultTest {
    */
   @Test
   void getNextInstructionIndex_ZeroIndex_ReturnsZero() {
-    // Arrange
     int nextIndex = 0;
     boolean actionExecuted = true;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertEquals(nextIndex, result.getNextInstructionIndex());
   }
 
@@ -83,14 +64,9 @@ class InstructionResultTest {
    */
   @Test
   void getNextInstructionIndex_NegativeIndex_ReturnsNegativeOne() {
-    // Arrange
-    int continueNormallyIndex = -1; // The code indicates -1 means continue normally
+    int continueNormallyIndex = -1;
     boolean actionExecuted = true;
-
-    // Act
     InstructionResult result = new InstructionResult(continueNormallyIndex, actionExecuted);
-
-    // Assert
     assertEquals(continueNormallyIndex, result.getNextInstructionIndex());
   }
 
@@ -100,22 +76,16 @@ class InstructionResultTest {
    */
   @Test
   void constructor_VariousCombinations_ReturnsCorrectValues() {
-    // Arrange & Act
     InstructionResult result1 = new InstructionResult(1, true);
     InstructionResult result2 = new InstructionResult(2, false);
     InstructionResult result3 = new InstructionResult(-1, true);
     InstructionResult result4 = new InstructionResult(-1, false);
-
-    // Assert
     assertEquals(1, result1.getNextInstructionIndex());
     assertTrue(result1.isActionExecuted());
-
     assertEquals(2, result2.getNextInstructionIndex());
     assertFalse(result2.isActionExecuted());
-
     assertEquals(-1, result3.getNextInstructionIndex());
     assertTrue(result3.isActionExecuted());
-
     assertEquals(-1, result4.getNextInstructionIndex());
     assertFalse(result4.isActionExecuted());
   }
@@ -126,14 +96,9 @@ class InstructionResultTest {
    */
   @Test
   void constructor_NoActionWithNextInstruction_ReturnsCorrectValues() {
-    // Arrange
     int nextIndex = 10;
     boolean actionExecuted = false;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertEquals(nextIndex, result.getNextInstructionIndex());
     assertFalse(result.isActionExecuted());
   }
@@ -144,14 +109,9 @@ class InstructionResultTest {
    */
   @Test
   void getNextInstructionIndex_MaxInteger_ReturnsMaxInteger() {
-    // Arrange
     int nextIndex = Integer.MAX_VALUE;
     boolean actionExecuted = true;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertEquals(nextIndex, result.getNextInstructionIndex());
   }
 
@@ -161,14 +121,9 @@ class InstructionResultTest {
    */
   @Test
   void getNextInstructionIndex_MinInteger_ReturnsMinInteger() {
-    // Arrange
     int nextIndex = Integer.MIN_VALUE;
     boolean actionExecuted = false;
-
-    // Act
     InstructionResult result = new InstructionResult(nextIndex, actionExecuted);
-
-    // Assert
     assertEquals(nextIndex, result.getNextInstructionIndex());
   }
 }

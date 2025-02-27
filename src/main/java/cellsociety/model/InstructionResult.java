@@ -2,6 +2,7 @@ package cellsociety.model;
 
 /**
  * Represents the result of executing an instruction.
+ * @author Tatum McKinnis
  */
 public class InstructionResult {
   private final int nextInstructionIndex;

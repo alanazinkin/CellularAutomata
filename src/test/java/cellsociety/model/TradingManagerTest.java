@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Test class for TradingManager.
  * Tests the management and execution of trades between agents.
+ * @author Tatum McKinnis
  */
 public class TradingManagerTest {
   private TradingManager tradingManager;

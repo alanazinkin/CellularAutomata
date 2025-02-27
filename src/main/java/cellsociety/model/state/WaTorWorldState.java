@@ -13,6 +13,7 @@ import cellsociety.model.StateInterface;
  * This enum implements the {@link StateInterface} interface to maintain consistency across various
  * state enums used in grid-based simulations.
  * </p>
+ * @author Tatum McKinnis
  */
 public enum WaTorWorldState implements StateInterface {
 
@@ -54,6 +55,11 @@ public enum WaTorWorldState implements StateInterface {
     return stateValue;
   }
 
+  /**
+   * Returns the numeric value associated with this state.
+   *
+   * @return the numeric identifier of the mock state.
+   */
   @Override
   public int getNumericValue() {
     return numericValue;
