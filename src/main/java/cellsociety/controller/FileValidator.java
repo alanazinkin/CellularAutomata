@@ -2,7 +2,14 @@ package cellsociety.controller;
 
 import java.io.File;
 
+/**
+ * A utility class for validating configuration files.
+ * Ensures that the file exists, is readable, is not empty, and has the correct XML format.
+ *
+ * @author angelapredolac
+ */
 class FileValidator {
+
     /**
      * Validates if a file exists, is readable, and has the correct format.
      *
