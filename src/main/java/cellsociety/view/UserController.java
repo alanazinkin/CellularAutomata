@@ -155,4 +155,20 @@ public class UserController {
     flipGrid.setOnAction(e -> {
       try {
         gridView.renderGridFlippedVertically(myController.getSimulation().getColorMap());
- 
+      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+               InstantiationException | IllegalAccessException ex) {
+        throw new RuntimeException(ex);
+      }
+    });
+    return flipGrid;
+  }
+
+  public ComboBox<String> makeComboBox(String label, List<String> options) {
+    ComboBox<String> comboBox = new ComboBox<>();
+    comboBox.setPromptText(label);
+    comboBox.getItems().addAll(options);
+    return comboBox;
+  }
+
+
+}

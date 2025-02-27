@@ -146,4 +146,8 @@ public class Cell {
   private void validateState(StateInterface state, String errorMessage) {
     if (state == null) {
       throw new IllegalArgumentException(errorMessage);
+    }
+  }
+}
+
   

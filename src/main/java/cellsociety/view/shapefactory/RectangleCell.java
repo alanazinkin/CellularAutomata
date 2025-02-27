@@ -22,4 +22,36 @@ public class RectangleCell implements CellShape {
   }
 
   /**
-   * concrete method for creatin
+   * concrete method for creating a new CellShape instance
+   * @param width  width of the shape
+   * @param height height of the shape
+   * @return new RectangleCell instance
+   */
+  @Override
+  public CellShape createShape(double width, double height, boolean isUpward) {
+    return new RectangleCell(width, height);
+  }
+
+  /**
+   *
+   * @return the underlying Rectangle
+   */
+  @Override
+  public Shape getShape() {
+    return rectangle;
+  }
+
+  /**
+   * sets the dimensions of the underlying Rectangle
+   *
+   * @param width    width of the rectangle
+   * @param height   height of the rectangle
+   * @param isUpward
+   */
+  @Override
+  public void setDimensions(double width, double height, boolean isUpward) {
+    rectangle.setWidth(width);
+    rectangle.setHeight(height);
+  }
+
+}

@@ -211,4 +211,6 @@ public class SimulationView {
   }
 
   private GridView makeGridViewFromTiling(SimulationConfig simulationConfig, Grid grid)
-      throws ClassNotFoundException, InstantiationE
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+  }
+}

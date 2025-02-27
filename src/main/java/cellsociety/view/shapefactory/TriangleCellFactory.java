@@ -5,5 +5,8 @@ package cellsociety.view.shapefactory;
  */
 public class TriangleCellFactory extends CellShapeFactory {
 
-  /**
-   * constructor for cre
+  @Override
+  public CellShape createCellShape(double width, double height, boolean isUpward) {
+    return new TriangleCell(width, height, isUpward);
+  }
+}
