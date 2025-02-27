@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 import java.io.File;
 
-public class BaseFileValidator implements FileValidator {
+public class BaseFileValidator extends FileValidator {
     @Override
     public void validateFile(String filePath) throws ConfigurationException {
         File file = new File(filePath);
