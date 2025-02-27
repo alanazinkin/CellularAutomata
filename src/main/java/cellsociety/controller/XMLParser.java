@@ -22,9 +22,11 @@ public class XMLParser extends BaseConfigParser{
   private static final String DEFAULT_PROPERTIES_PATH = "cellsociety.controller.simulation";
   private static final String SIMULATION_TAG = "simulation";
   private static final Set<String> VALID_SHAPES = Set.of("Rectangle", "Triangle");
+  private static final Set<String> VALID_TILING = Set.of("Default", "Triangle");
   private static final Set<String> VALID_ROOT_CHILDREN = Set.of(
           "type", "title", "author", "description", "width", "height",
-          "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state"
+          "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state",
+      "tiling"
   );
 
   /**
@@ -71,6 +73,8 @@ public class XMLParser extends BaseConfigParser{
       config.setParameters(parseParametersWithValidation(document));
 
       config.setCellShapeValues(parseCellShapesWithValidation(document));
+
+      validateAndSetTiling(document, config);
 
       return config;
     } catch (ParserConfigurationException e) {
@@ -123,6 +127,8 @@ public class XMLParser extends BaseConfigParser{
 
         config.setCellShapeValues(parseCellShapesWithValidation(document));
 
+        validateAndSetTiling(document, config);
+
       } catch (ParserConfigurationException e) {
         throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
       } catch (SAXException e) {
@@ -133,6 +139,19 @@ public class XMLParser extends BaseConfigParser{
 
       return config;
     }
+
+  private void validateAndSetTiling(Document document, SimulationConfig config)
+      throws ConfigurationException {
+    String tiling = getElementContent(document, "tiling");
+    // set a default tiling
+    if (tiling == null) {
+      tiling = "Default";
+    }
+    if (!VALID_TILING.contains(tiling)) {
+      throw new ConfigurationException(tiling + "is not a valid tiling.");
+    }
+    config.setTiling(tiling);
+  }
 
   /**
    * Parses and validates random state assignments for cells in the simulation grid.
@@ -684,22 +703,4 @@ public class XMLParser extends BaseConfigParser{
       String shape = stateElement.getAttribute("shape");
 
       if (state.isEmpty()) {
-        throw new ConfigurationException("State name cannot be empty");
-      }
-      if (shape.isEmpty()) {
-        throw new ConfigurationException("Shape name cannot be empty");
-      }
-      if (!VALID_SHAPES.contains(shape)) {
-        throw new ConfigurationException(shape + " is not a valid cell shape");
-      }
-      try {
-        int value = Integer.parseInt(state);
-        cellShapes.put(value, shape);
-      } catch (NumberFormatException e) {
-        throw new ConfigurationException(
-            String.format("Invalid numerical value for state '%s': %s", state, shape));
-      }
-    }
-    return cellShapes;
-  }
-}
+        throw ne

@@ -9,6 +9,7 @@ import cellsociety.controller.SimulationUI;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
+import cellsociety.view.gridview.GridViewFactory;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -86,7 +87,8 @@ public class SimulationView {
   private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
       Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    myGridView = new DefaultGridView(myController, myConfig, grid);
+
+    myGridView = makeGridViewFromTiling(myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap, myConfig);
   }
 
@@ -162,14 +164,6 @@ public class SimulationView {
     }
   }
 
-
-  private GridView createAppropriateGridView(Grid grid) {
-    return switch (myConfig.getType().toLowerCase()) {
-      case "game of life" -> new DefaultGridView(myController, myConfig, grid);
-      default -> null;
-    };
-  }
-
   /**
    * Retrieves the root of the scene. Primarily used to add/ remove objects later on with
    * root.getChildren().add() or root.getChildren().remove()
@@ -215,4 +209,6 @@ public class SimulationView {
   private void makeIterationCounter() {
     iterationCounter = new Text("Iteration Count: " + myController.getIterationCount());
   }
-}
+
+  private GridView makeGridViewFromTiling(SimulationConfig simulationConfig, Grid grid)
+      throws ClassNotFoundException, InstantiationE

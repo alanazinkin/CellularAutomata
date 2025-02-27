@@ -106,9 +106,3 @@ public class SimulationSelector {
   private static void displayNewFileOptions(ComboBox<String> configFileComboBox,
       String simulationType) throws FileNotFoundException {
     FileRetriever fileRetriever = new FileRetriever();
-    Collection<String> fileNames = fileRetriever.getFileNames(simulationType);
-    configFileComboBox.getItems().setAll(fileNames);
-    configFileComboBox.setDisable(false);
-  }
-
-}

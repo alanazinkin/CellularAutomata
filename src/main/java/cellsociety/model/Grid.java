@@ -247,11 +247,4 @@ public class Grid {
    * Returns the number of columns in the grid.
    *
    * @return the number of columns
-   */
-  public int getCols() {
-    return cols;
-  }
-}
-
-
-
+ 
