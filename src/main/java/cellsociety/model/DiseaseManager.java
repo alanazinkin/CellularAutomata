@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * Manages the spread and effects of diseases within the SugarScape simulation.
  * This includes updating agents' immune systems and transmitting diseases to neighboring agents.
+ * @author Tatum McKinnis
  */
 public class DiseaseManager {
 

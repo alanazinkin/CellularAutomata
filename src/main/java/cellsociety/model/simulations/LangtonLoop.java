@@ -220,7 +220,6 @@ public class LangtonLoop extends Simulation {
    * @param centerY The y-coordinate for the center of the loop
    */
   private void initializeLoop(int centerX, int centerY) {
-    Grid grid = getGrid();
 
     setState(centerX, centerY, LangtonState.CORE);
     setState(centerX-1, centerY, LangtonState.CORE);
@@ -276,15 +275,12 @@ public class LangtonLoop extends Simulation {
     int rows = grid.getRows();
     int cols = grid.getCols();
 
-    // Initialize with mostly empty cells, but some random states
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         Cell cell = grid.getCell(row, col);
         if (cell != null) {
-          // 80% chance of empty, 20% chance of random state
           double random = Math.random();
           if (random > 0.8) {
-            // Choose a random non-empty state
             LangtonState state = getRandomState();
             cell.setCurrentState(state);
             cell.setNextState(state);
@@ -306,12 +302,10 @@ public class LangtonLoop extends Simulation {
     int rows = grid.getRows();
     int cols = grid.getCols();
 
-    // Add a small pattern in the top-left quadrant
     int x1 = rows / 4;
     int y1 = cols / 4;
     addSmallPattern(x1, y1);
 
-    // Add another small pattern in the bottom-right quadrant
     int x2 = (3 * rows) / 4;
     int y2 = (3 * cols) / 4;
     addSmallPattern(x2, y2);
@@ -326,14 +320,12 @@ public class LangtonLoop extends Simulation {
    * @param y The y-coordinate for the pattern center
    */
   private void addSmallPattern(int x, int y) {
-    // Create a small cross pattern
     setState(x, y, LangtonState.CORE);
     setState(x-1, y, LangtonState.SHEATH);
     setState(x+1, y, LangtonState.SHEATH);
     setState(x, y-1, LangtonState.SHEATH);
     setState(x, y+1, LangtonState.SHEATH);
 
-    // Add initiators
     setState(x-1, y-1, LangtonState.INIT);
     setState(x+1, y+1, LangtonState.EXTEND);
   }
@@ -364,10 +356,9 @@ public class LangtonLoop extends Simulation {
     System.out.println("Current grid state (" + rows + "x" + cols + "):");
     StringBuilder builder = new StringBuilder();
 
-    // Only print a smaller section around the center for readability
     int centerRow = rows / 2;
     int centerCol = cols / 2;
-    int range = 5; // Print 5 cells in each direction from center
+    int range = 5;
 
     int startRow = Math.max(0, centerRow - range);
     int endRow = Math.min(rows - 1, centerRow + range);
@@ -464,25 +455,20 @@ public class LangtonLoop extends Simulation {
     int rows = grid.getRows();
     int cols = grid.getCols();
 
-    // Debug information to track the simulation
     System.out.println("Applying rules to grid of size: " + rows + "x" + cols);
 
-    // Count state frequencies before update
     Map<LangtonState, Integer> stateCounts = new HashMap<>();
     for (LangtonState state : LangtonState.values()) {
       stateCounts.put(state, 0);
     }
 
-    // First pass: calculate next states for all cells
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         Cell cell = grid.getCell(row, col);
         if (cell != null) {
-          // Count current states
           LangtonState currentState = (LangtonState) cell.getCurrentState();
           stateCounts.put(currentState, stateCounts.get(currentState) + 1);
 
-          // Calculate next state
           updateCellState(row, col);
         } else {
           System.out.println("Warning: Null cell at position (" + row + ", " + col + ") during rule application");
@@ -490,13 +476,11 @@ public class LangtonLoop extends Simulation {
       }
     }
 
-    // Log state distribution
     System.out.println("State distribution before update:");
     for (Map.Entry<LangtonState, Integer> entry : stateCounts.entrySet()) {
       System.out.println("  " + entry.getKey() + ": " + entry.getValue());
     }
 
-    // Apply all next states at once
     grid.applyNextStates();
     System.out.println("Applied next states to all cells");
   }
@@ -533,7 +517,6 @@ public class LangtonLoop extends Simulation {
 
     LangtonState newState = applyTransitionRules(currentState, neighbors);
 
-    // Debug output for state transitions
     if (newState != currentState) {
       System.out.println("Cell at (" + row + "," + col + ") changing from " + currentState + " to " + newState);
     }
@@ -559,7 +542,7 @@ public class LangtonLoop extends Simulation {
       if (grid.isValidPosition(newRow, newCol)) {
         neighbors[i] = (LangtonState) grid.getCell(newRow, newCol).getCurrentState();
       } else {
-        neighbors[i] = DEFAULT_STATE; // Use default state for out-of-bounds cells
+        neighbors[i] = DEFAULT_STATE;
       }
     }
 
@@ -574,20 +557,18 @@ public class LangtonLoop extends Simulation {
    * @return The next state for the cell
    */
   private LangtonState applyTransitionRules(LangtonState currentState, LangtonState[] neighbors) {
-    // Verify that neighbors array is correctly populated
     if (neighbors == null) {
       System.out.println("Null neighbors array for state " + currentState);
       return currentState;
     }
 
-    // Debug information about the neighborhood
     StringBuilder neighborhood = new StringBuilder();
     neighborhood.append("Neighborhood for ").append(currentState).append(": [");
     for (LangtonState neighbor : neighbors) {
       neighborhood.append(neighbor).append(", ");
     }
     if (neighbors.length > 0) {
-      neighborhood.setLength(neighborhood.length() - 2); // Remove trailing comma and space
+      neighborhood.setLength(neighborhood.length() - 2);
     }
     neighborhood.append("]");
 

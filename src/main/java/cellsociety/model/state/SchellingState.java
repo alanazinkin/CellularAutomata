@@ -12,6 +12,7 @@ import cellsociety.model.StateInterface;
  * <p>
  * This enum implements the {@link StateInterface} interface to ensure consistency across different
  * state enums in grid-based simulations.
+ * @author Tatum McKinnis
  * </p>
  */
 public enum SchellingState implements StateInterface {
@@ -49,6 +50,11 @@ public enum SchellingState implements StateInterface {
     return stateValue;
   }
 
+  /**
+   * Returns the numeric value associated with this state.
+   *
+   * @return the numeric identifier of the mock state.
+   */
   @Override
   public int getNumericValue() {
     return numericValue;

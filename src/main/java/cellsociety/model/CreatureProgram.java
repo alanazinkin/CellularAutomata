@@ -8,6 +8,7 @@ import java.util.List;
  * Represents a program that defines a creature's behavior.
  * This class is a pure model class that only stores the program data structure.
  * Parsing of program text is handled by the ProgramParser in the controller layer.
+ * @author Tatum McKinnis
  */
 public class CreatureProgram {
   private final String speciesName;

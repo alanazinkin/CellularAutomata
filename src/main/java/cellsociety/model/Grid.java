@@ -1,6 +1,5 @@
 package cellsociety.model;
 
-import cellsociety.model.state.MockState;
 import cellsociety.model.state.StepBackState;
 import java.util.ArrayList;
 import java.util.Collections;

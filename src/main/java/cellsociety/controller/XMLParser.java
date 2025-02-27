@@ -1,14 +1,10 @@
 package cellsociety.controller;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
-import java.util.*;
 
 /**
  * Parser for reading and validating configuration files in XML format.
@@ -29,11 +25,22 @@ public class XMLParser extends BaseConfigParser{
       "tiling"
   );
 
+  private final XMLStructureValidator structureValidator;
+  private final XMLInitialStateParser initialStateParser;
+  private final XMLParameterParser parameterParser;
+  private final XMLCellShapeParser cellShapeParser;
+  private final FileValidator fileValidator;
+
   /**
    * Constructs an XMLParser with a default XMLFileValidator and properties path.
    */
   public XMLParser() {
     super(new XMLFileValidator(), DEFAULT_PROPERTIES_PATH);
+    this.structureValidator = new XMLStructureValidator();
+    this.initialStateParser = new XMLInitialStateParser();
+    this.parameterParser = new XMLParameterParser();
+    this.cellShapeParser = new XMLCellShapeParser();
+    this.fileValidator = new FileValidator();
   }
 
   /**
@@ -46,6 +53,7 @@ public class XMLParser extends BaseConfigParser{
   @Override
   protected SimulationConfig parseConfig(String filePath) throws ConfigurationException {
     try {
+<<<<<<< src/main/java/cellsociety/controller/XMLParser.java
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -77,6 +85,10 @@ public class XMLParser extends BaseConfigParser{
       validateAndSetTiling(document, config);
 
       return config;
+=======
+      Document document = loadXMLDocument(filePath);
+      return parseXMLDocument(document);
+>>>>>>> src/main/java/cellsociety/controller/XMLParser.java
     } catch (ParserConfigurationException e) {
       throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
     } catch (SAXException e) {
@@ -93,6 +105,7 @@ public class XMLParser extends BaseConfigParser{
    * @return A populated SimulationConfig object.
    * @throws ConfigurationException If an error occurs during parsing or validation.
    */
+<<<<<<< src/main/java/cellsociety/controller/XMLParser.java
     public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
       validateFile(filePath);
 
@@ -403,157 +416,73 @@ public class XMLParser extends BaseConfigParser{
     if (widthStr == null || heightStr == null || widthStr.isEmpty() || heightStr.isEmpty()) {
       throw new ConfigurationException("Width and height must be specified in the configuration");
     }
+=======
+  public SimulationConfig parseXMLFile(String filePath) throws ConfigurationException {
+    fileValidator.validateFile(filePath);
+>>>>>>> src/main/java/cellsociety/controller/XMLParser.java
 
     try {
-      int width = Integer.parseInt(widthStr.trim());
-      int height = Integer.parseInt(heightStr.trim());
-
-      if (width <= 0 || height <= 0) {
-        throw new ConfigurationException(
-                String.format("Invalid grid dimensions: width=%d, height=%d. Must be positive values.",
-                        width, height));
-      }
-
-      config.setWidth(width);
-      config.setHeight(height);
-    } catch (NumberFormatException e) {
-      throw new ConfigurationException("Grid dimensions must be valid integers");
+      Document document = loadXMLDocument(filePath);
+      return parseXMLDocument(document);
+    } catch (ParserConfigurationException e) {
+      throw new ConfigurationException("XML parser configuration error: " + e.getMessage());
+    } catch (SAXException e) {
+      throw new ConfigurationException("Invalid XML format: " + e.getMessage());
+    } catch (Exception e) {
+      throw new ConfigurationException("Error reading file: " + e.getMessage());
     }
   }
 
   /**
-   * Validates and sets specific cell locations and their states based on XML input.
-   * Ensures locations are within bounds and do not overlap.
+   * Loads an XML document from a file path.
    *
-   * @param cellNodes The list of cell nodes from the XML document.
-   * @param config    The simulation configuration object to be updated.
-   * @throws ConfigurationException If locations are out of bounds, duplicated, or states are invalid.
+   * @param filePath The path to the XML file.
+   * @return The loaded Document object.
+   * @throws ParserConfigurationException If there are parser configuration issues.
+   * @throws SAXException If there are XML parsing issues.
+   * @throws IOException If there are file reading issues.
    */
-  private void validateAndSetCellLocations(NodeList cellNodes, SimulationConfig config)
-          throws ConfigurationException {
-    int width = config.getWidth();
-    int height = config.getHeight();
-    int[] states = new int[width * height];
-    Set<String> usedLocations = new HashSet<>();
-    List<String> outOfBoundsCells = new ArrayList<>();
-    List<String> duplicateLocations = new ArrayList<>();
-
-    Arrays.fill(states, 0);
-
-    for (int i = 0; i < cellNodes.getLength(); i++) {
-      Element cellElement = (Element) cellNodes.item(i);
-
-      try {
-        int row = Integer.parseInt(cellElement.getAttribute("row"));
-        int col = Integer.parseInt(cellElement.getAttribute("col"));
-        int state = Integer.parseInt(cellElement.getAttribute("state"));
-
-        if (row < 0 || row >= height || col < 0 || col >= width) {
-          outOfBoundsCells.add(String.format("(row=%d, col=%d)", row, col));
-          continue;
-        }
-
-        String location = row + "," + col;
-        if (!usedLocations.add(location)) {
-          duplicateLocations.add(String.format("(row=%d, col=%d)", row, col));
-          continue;
-        }
-
-        states[row * width + col] = state;
-
-      } catch (NumberFormatException e) {
-        throw new ConfigurationException(
-                "Invalid number format in cell definition at index " + i);
-      }
-    }
-
-    if (!outOfBoundsCells.isEmpty() || !duplicateLocations.isEmpty()) {
-      StringBuilder errorMsg = new StringBuilder();
-      if (!outOfBoundsCells.isEmpty()) {
-        errorMsg.append(String.format("Cells outside grid bounds %dx%d: %s\n",
-                width, height, String.join(", ", outOfBoundsCells)));
-      }
-      if (!duplicateLocations.isEmpty()) {
-        errorMsg.append("Duplicate cell locations: ")
-                .append(String.join(", ", duplicateLocations));
-      }
-      throw new ConfigurationException(errorMsg.toString());
-    }
-
-    validateCellStates(states, config.getType());
-    config.setInitialStates(states);
+  private Document loadXMLDocument(String filePath)
+          throws ParserConfigurationException, SAXException, IOException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document document = builder.parse(new File(filePath));
+    document.getDocumentElement().normalize();
+    return document;
   }
 
   /**
-   * Validates that the number of provided states matches the expected grid size.
+   * Parses the XML document to create a SimulationConfig object.
    *
-   * @param config       The simulation configuration containing grid dimensions.
-   * @param statesLength The number of states provided.
-   * @throws ConfigurationException If the number of states does not match the grid size.
+   * @param document The XML document to parse.
+   * @return A populated SimulationConfig object.
+   * @throws ConfigurationException If validation or parsing errors occur.
    */
-  private void validateGridSize(SimulationConfig config, int statesLength)
-          throws ConfigurationException {
-    int expectedCells = config.getWidth() * config.getHeight();
-    if (statesLength != expectedCells) {
-      throw new ConfigurationException(String.format(
-              "Number of states (%d) does not match grid size (%dx%d = %d cells)",
-              statesLength, config.getWidth(), config.getHeight(), expectedCells));
-    }
-  }
+  private SimulationConfig parseXMLDocument(Document document) throws ConfigurationException {
+    structureValidator.validateXMLStructure(document);
+    structureValidator.validateRequiredFields(document);
 
-  /**
-   * Validates that the given cell states are valid for the specified simulation type.
-   *
-   * @param states         An array of cell states.
-   * @param simulationType The type of simulation being run.
-   * @throws ConfigurationException If any state is not valid for the simulation type.
-   */
-  @Override
-  protected void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
-    Set<Integer> validStates = VALID_STATES.get(simulationType);
-    if (validStates == null) {
-      throw new ConfigurationException("No valid states defined for simulation type: " + simulationType);
-    }
+    SimulationConfig config = new SimulationConfig();
 
-    List<Integer> invalidStates = new ArrayList<>();
-    Set<Integer> foundInvalidStates = new HashSet<>();
+    String simType = XMLDocumentUtil.getElementContent(document, "type");
+    validateSimulationType(simType);
+    config.setSimulationType(simType);
 
-    for (int i = 0; i < states.length; i++) {
-      if (!validStates.contains(states[i])) {
-        foundInvalidStates.add(states[i]);
-        invalidStates.add(i);
-      }
-    }
+    config.setTitle(XMLDocumentUtil.getElementContent(document, "title"));
+    config.setAuthor(XMLDocumentUtil.getElementContent(document, "author"));
+    config.setDescription(XMLDocumentUtil.getElementContent(document, "description"));
 
-    if (!invalidStates.isEmpty()) {
-      String errorMsg = String.format(
-              "Invalid cell states found at positions %s. Found invalid values: %s. Valid states for %s are: %s",
-              invalidStates,
-              foundInvalidStates,
-              simulationType,
-              validStates
-      );
-      throw new ConfigurationException(errorMsg);
-    }
-  }
+    String widthStr = XMLDocumentUtil.getElementContent(document, "width");
+    String heightStr = XMLDocumentUtil.getElementContent(document, "height");
+    GridDimensionParser.setGridDimensions(widthStr, heightStr, config);
 
-  /**
-   * Validates the structure of the provided XML document.
-   * Ensures it contains the expected root element and structure.
-   *
-   * @param doc The XML document to be validated.
-   * @throws ConfigurationException If the document is empty, malformed, or missing required elements.
-   */
-  private void validateXMLStructure(Document doc) throws ConfigurationException {
-    if (doc.getDocumentElement() == null) {
-      throw new ConfigurationException("Empty or malformed XML document");
-    }
+    initialStateParser.validateAndSetInitialStates(document, config);
 
-    if (!SIMULATION_TAG.equals(doc.getDocumentElement().getTagName())) {
-      throw new ConfigurationException("Root element must be 'simulation', found: " +
-              doc.getDocumentElement().getTagName());
-    }
+    config.setParameters(parameterParser.parseParametersWithValidation(document));
+    config.setCellShapeValues(cellShapeParser.parseCellShapesWithValidation(document));
 
+<<<<<<< src/main/java/cellsociety/controller/XMLParser.java
     NodeList rootChildren = doc.getDocumentElement().getChildNodes();
     for (int i = 0; i < rootChildren.getLength(); i++) {
       Node child = rootChildren.item(i);
@@ -704,3 +633,8 @@ public class XMLParser extends BaseConfigParser{
 
       if (state.isEmpty()) {
         throw ne
+=======
+    return config;
+  }
+}
+>>>>>>> src/main/java/cellsociety/controller/XMLParser.java

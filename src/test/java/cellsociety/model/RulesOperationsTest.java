@@ -10,6 +10,7 @@ import java.util.Random;
 /**
  * Test class for RulesOperations.
  * Tests reproduction and trading functionality between agents.
+ * @author Tatum McKinnis
  */
 public class RulesOperationsTest {
   private Agent agent1;

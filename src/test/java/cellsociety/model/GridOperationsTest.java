@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Test class for GridOperations.
  * Tests grid-related operations including movement, distance calculations, and neighbor finding.
+ * @author Tatum McKinnis
  */
 public class GridOperationsTest {
   private SugarScape simulation;
@@ -24,7 +25,7 @@ public class GridOperationsTest {
   void setUp() {
     int[] initialStates = new int[GRID_SIZE * GRID_SIZE];
     for(int i = 0; i < initialStates.length; i++) {
-      initialStates[i] = 0; // EMPTY state
+      initialStates[i] = 0;
     }
 
     config = new SimulationConfig(
@@ -38,11 +39,9 @@ public class GridOperationsTest {
         new HashMap<>()
     );
 
-    // Create grid with sugar cells
     StateInterface defaultState = SugarScapeState.EMPTY;
     grid = new Grid(GRID_SIZE, GRID_SIZE, defaultState);
 
-    // Convert all cells to SugarCells
     for(int r = 0; r < GRID_SIZE; r++) {
       for(int c = 0; c < GRID_SIZE; c++) {
         SugarCell sugarCell = new SugarCell(r, c, SugarScapeState.EMPTY);
@@ -54,7 +53,6 @@ public class GridOperationsTest {
 
     simulation = new SugarScape(config, grid);
 
-    // Create test agent
     SugarCell agentCell = new SugarCell(2, 2, SugarScapeState.EMPTY);
     grid.setCellAt(2, 2, agentCell);
     agent = new Agent(agentCell, 20, 2, 2);
@@ -189,7 +187,6 @@ public class GridOperationsTest {
       GridOperations.getAgentNeighbors(agent, null);
       fail("Should throw NullPointerException");
     } catch (NullPointerException e) {
-      // Test passes
     }
   }
 }

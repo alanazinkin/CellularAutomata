@@ -1,10 +1,12 @@
 package cellsociety.model;
 
 import cellsociety.model.simulations.SugarScape;
-import java.util.List;/**
+import java.util.List;
+/**
  * The {@code TradingManager} class manages trading between agents within the SugarScape simulation.
  * It determines which agents can trade based on predefined rules and facilitates resource exchanges
  * between neighboring agents.
+ * @author Tatum McKinnis
  */
 public class TradingManager {
 

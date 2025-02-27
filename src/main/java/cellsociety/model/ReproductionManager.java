@@ -10,6 +10,7 @@ import java.util.List;
  * Manages reproduction within the SugarScape simulation.
  * This includes determining which agents can reproduce,
  * selecting suitable mates, and placing offspring in empty grid cells.
+ * @author Tatum McKinnis
  */
 public class ReproductionManager {
 

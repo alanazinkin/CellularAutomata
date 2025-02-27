@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link ProgramRegistry}.
  * Tests the functionality of the registry that manages creature programs.
  *
- * @author Simulation Developer
+ * @author Tatum McKinnis
  */
 public class ProgramRegistryTest {
 

@@ -2,6 +2,13 @@ package cellsociety.controller;
 
 import java.util.*;
 
+/**
+ * An abstract base class for parsing simulation configuration files.
+ * Provides common validation logic and utilities for ensuring
+ * configurations adhere to expected formats and constraints.
+ *
+ * @author angelapredolac
+ */
 public abstract class BaseConfigParser implements SimulationConfigParser {
     protected static final Set<String> VALID_SIMULATION_TYPES = Set.of(
             "Game of Life", "Spreading of Fire", "Schelling Segregation",
@@ -9,6 +16,9 @@ public abstract class BaseConfigParser implements SimulationConfigParser {
         "Tempesti Loop"
     );
 
+    /**
+     * Mapping of valid states for each simulation type.
+     */
     protected static final Map<String, Set<Integer>> VALID_STATES = Map.of(
             "Game of Life", Set.of(0, 1),
             "Spreading of Fire", Set.of(0, 1, 2),
@@ -25,64 +35,49 @@ public abstract class BaseConfigParser implements SimulationConfigParser {
     protected final FileValidator fileValidator;
     protected final ResourceBundle defaultProperties;
 
+    /**
+     * Constructs a BaseConfigParser with the given file validator and properties file.
+     *
+     * @param fileValidator  the validator to ensure file integrity
+     * @param propertiesPath the path to the resource bundle containing default properties
+     */
     protected BaseConfigParser(FileValidator fileValidator, String propertiesPath) {
         this.fileValidator = fileValidator;
         this.defaultProperties = ResourceBundle.getBundle(propertiesPath);
     }
 
+    /**
+     * Parses a simulation configuration file.
+     *
+     * @param filePath the path to the configuration file
+     * @return the parsed simulation configuration
+     * @throws ConfigurationException if the configuration is invalid
+     */
     @Override
     public SimulationConfig parse(String filePath) throws ConfigurationException {
         fileValidator.validateFile(filePath);
         return parseConfig(filePath);
     }
 
+    /**
+     * Abstract method for parsing a specific configuration file.
+     *
+     * @param filePath the path to the configuration file
+     * @return the parsed simulation configuration
+     * @throws ConfigurationException if the configuration is invalid
+     */
     protected abstract SimulationConfig parseConfig(String filePath) throws ConfigurationException;
 
+    /**
+     * Validates whether a given simulation type is supported.
+     *
+     * @param type the simulation type to validate
+     * @throws ConfigurationException if the simulation type is not recognized
+     */
     protected void validateSimulationType(String type) throws ConfigurationException {
         if (!VALID_SIMULATION_TYPES.contains(type)) {
             throw new ConfigurationException("Invalid simulation type: " + type +
                     ". Valid types are: " + String.join(", ", VALID_SIMULATION_TYPES));
-        }
-    }
-
-    protected void validateCellStates(int[] states, String simulationType)
-            throws ConfigurationException {
-        Set<Integer> validStates = VALID_STATES.get(simulationType);
-        if (validStates == null) {
-            throw new ConfigurationException(
-                    "No valid states defined for simulation type: " + simulationType);
-        }
-
-        List<Integer> invalidStates = new ArrayList<>();
-        Set<Integer> foundInvalidStates = new HashSet<>();
-
-        for (int i = 0; i < states.length; i++) {
-            if (!validStates.contains(states[i])) {
-                foundInvalidStates.add(states[i]);
-                invalidStates.add(i);
-            }
-        }
-
-        if (!invalidStates.isEmpty()) {
-            String errorMsg = String.format(
-                    "Invalid cell states found at positions %s. Found invalid values: %s. " +
-                            "Valid states for %s are: %s",
-                    invalidStates, foundInvalidStates, simulationType, validStates
-            );
-            throw new ConfigurationException(errorMsg);
-        }
-    }
-
-    protected void validateParameterValue(String name, double value) throws ConfigurationException {
-        if (name.toLowerCase().contains("prob") && (value < 0 || value > 1)) {
-            throw new ConfigurationException(
-                    String.format("Probability parameter '%s' must be between 0 and 1, got: %f",
-                            name, value));
-        }
-
-        if (value < 0) {
-            throw new ConfigurationException(
-                    String.format("Parameter '%s' cannot be negative, got: %f", name, value));
         }
     }
 }

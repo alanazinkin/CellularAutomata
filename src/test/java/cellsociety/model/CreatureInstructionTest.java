@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for CreatureInstruction that tests the creation and behavior of creature instructions.
  * Tests focus on validating the correct construction, property retrieval, and string representation.
+ * @author Tatum McKinnis
  */
 class CreatureInstructionTest {
 
@@ -16,14 +17,11 @@ class CreatureInstructionTest {
    */
   @Test
   void getType_AfterConstruction_ReturnsCorrectType() {
-    // Arrange
     InstructionType type = InstructionType.MOVE;
     int parameter = 5;
 
-    // Act
     CreatureInstruction instruction = new CreatureInstruction(type, parameter);
 
-    // Assert
     assertEquals(type, instruction.getType());
   }
 
@@ -32,7 +30,6 @@ class CreatureInstructionTest {
    */
   @Test
   void getType_ConditionalInstructions_ReturnsCorrectType() {
-    // Arrange & Act
     CreatureInstruction ifEmptyInstruction = new CreatureInstruction(InstructionType.IFEMPTY, 10);
     CreatureInstruction ifWallInstruction = new CreatureInstruction(InstructionType.IFWALL, 15);
     CreatureInstruction ifSameInstruction = new CreatureInstruction(InstructionType.IFSAME, 20);
@@ -40,7 +37,6 @@ class CreatureInstructionTest {
     CreatureInstruction ifRandomInstruction = new CreatureInstruction(InstructionType.IFRANDOM, 30);
     CreatureInstruction goInstruction = new CreatureInstruction(InstructionType.GO, 5);
 
-    // Assert
     assertEquals(InstructionType.IFEMPTY, ifEmptyInstruction.getType());
     assertEquals(InstructionType.IFWALL, ifWallInstruction.getType());
     assertEquals(InstructionType.IFSAME, ifSameInstruction.getType());
@@ -55,14 +51,11 @@ class CreatureInstructionTest {
    */
   @Test
   void getParameter_AfterConstruction_ReturnsCorrectParameter() {
-    // Arrange
     InstructionType type = InstructionType.MOVE;
     int parameter = 5;
 
-    // Act
     CreatureInstruction instruction = new CreatureInstruction(type, parameter);
 
-    // Assert
     assertEquals(parameter, instruction.getParameter());
   }
 
@@ -72,15 +65,12 @@ class CreatureInstructionTest {
    */
   @Test
   void toString_ValidInstruction_ReturnsFormattedString() {
-    // Arrange
     InstructionType type = InstructionType.RIGHT;
     int parameter = 90;
     CreatureInstruction instruction = new CreatureInstruction(type, parameter);
 
-    // Act
     String result = instruction.toString();
 
-    // Assert
     assertEquals(type + " " + parameter, result);
   }
 
@@ -90,15 +80,12 @@ class CreatureInstructionTest {
    */
   @Test
   void toString_NegativeParameter_IncludesNegativeSign() {
-    // Arrange
     InstructionType type = InstructionType.LEFT;
     int parameter = -45;
     CreatureInstruction instruction = new CreatureInstruction(type, parameter);
 
-    // Act
     String result = instruction.toString();
 
-    // Assert
     assertEquals(type + " " + parameter, result);
   }
 
@@ -108,13 +95,11 @@ class CreatureInstructionTest {
    */
   @Test
   void getType_DifferentInstructionTypes_ReturnsCorrectTypes() {
-    // Arrange & Act
     CreatureInstruction moveInstruction = new CreatureInstruction(InstructionType.MOVE, 1);
     CreatureInstruction leftInstruction = new CreatureInstruction(InstructionType.LEFT, 45);
     CreatureInstruction rightInstruction = new CreatureInstruction(InstructionType.RIGHT, 45);
     CreatureInstruction infectInstruction = new CreatureInstruction(InstructionType.INFECT, 0);
 
-    // Assert
     assertEquals(InstructionType.MOVE, moveInstruction.getType());
     assertEquals(InstructionType.LEFT, leftInstruction.getType());
     assertEquals(InstructionType.RIGHT, rightInstruction.getType());
@@ -127,12 +112,10 @@ class CreatureInstructionTest {
    */
   @Test
   void getParameter_DifferentParameters_ReturnsCorrectValues() {
-    // Arrange & Act
     CreatureInstruction instruction1 = new CreatureInstruction(InstructionType.MOVE, 0);
     CreatureInstruction instruction2 = new CreatureInstruction(InstructionType.MOVE, 100);
     CreatureInstruction instruction3 = new CreatureInstruction(InstructionType.MOVE, -50);
 
-    // Assert
     assertEquals(0, instruction1.getParameter());
     assertEquals(100, instruction2.getParameter());
     assertEquals(-50, instruction3.getParameter());

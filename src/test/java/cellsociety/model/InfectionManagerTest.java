@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link InfectionManager}.
  * Tests the functionality of managing infections in the simulation.
  *
- * @author Simulation Developer
+ * @author Tatum McKinnis
  */
 public class InfectionManagerTest {
 
@@ -81,18 +81,13 @@ public class InfectionManagerTest {
   public void updateInfections_WithMultipleSteps_MaintainsInfection() {
     manager.infectCreature(mockCell, mockOriginalState, 2);
 
-    // First update
     manager.updateInfections(mockGrid);
 
-    // Cell should still be infected but not newly
     assertFalse(manager.isNewlyInfected(mockCell));
-    // Next state should not be set yet
     verify(mockCell, never()).setNextState(any());
 
-    // Second update
     manager.updateInfections(mockGrid);
 
-    // Now the cell should revert to original state
     verify(mockCell).setNextState(mockOriginalState);
   }
 
@@ -121,27 +116,20 @@ public class InfectionManagerTest {
     assertTrue(manager.isNewlyInfected(mockCell));
     assertTrue(manager.isNewlyInfected(mockCell2));
 
-    // Update once
     manager.updateInfections(mockGrid);
 
-    // Both should still be infected but no longer newly
     assertFalse(manager.isNewlyInfected(mockCell));
     assertFalse(manager.isNewlyInfected(mockCell2));
 
-    // Update twice more (3 total)
     manager.updateInfections(mockGrid);
     manager.updateInfections(mockGrid);
 
-    // First cell should be cured
     verify(mockCell).setNextState(mockOriginalState);
-    // Second cell should still be infected
     verify(mockCell2, never()).setNextState(any());
 
-    // Update twice more (5 total)
     manager.updateInfections(mockGrid);
     manager.updateInfections(mockGrid);
 
-    // Now both cells should be cured
     verify(mockCell2).setNextState(mockOriginalState2);
   }
 }

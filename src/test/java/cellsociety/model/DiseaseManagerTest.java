@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for DiseaseManager.
  * Tests the disease transmission and immune system interaction functionality.
+ * @author Tatum McKinnis
  */
 public class DiseaseManagerTest {
 
@@ -63,7 +64,6 @@ public class DiseaseManagerTest {
     List<Agent> neighbors = new ArrayList<>();
     neighbors.add(mockAgent2);
 
-    // Mock the static GridOperations method
     try (var mockedStatic = mockStatic(GridOperations.class)) {
       mockedStatic.when(() -> GridOperations.getAgentNeighbors(eq(mockAgent1), any()))
           .thenReturn(neighbors);

@@ -124,7 +124,7 @@ public class TempestiLoop extends Simulation {
       int newCol = col + VON_NEUMANN_OFFSETS[i][1];
       neighbors[i] = grid.isValidPosition(newRow, newCol) ?
           (LangtonState) grid.getCell(newRow, newCol).getCurrentState() :
-          LangtonState.EMPTY;
+          DEFAULT_STATE;
     }
 
     return neighbors;
@@ -168,14 +168,13 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either SHEATH or EMPTY).
    */
   private LangtonState handleEmptyState(LangtonState[] neighbors) {
-    // Empty cells become SHEATH if adjacent to ADVANCE or two SHEATH/TEMP
     if (countNeighborType(neighbors, LangtonState.ADVANCE) >= 1) {
       return LangtonState.SHEATH;
     } else if (countNeighborType(neighbors, LangtonState.SHEATH) >= 2 ||
         countNeighborType(neighbors, LangtonState.TEMP) >= 2) {
       return LangtonState.SHEATH;
     }
-    return LangtonState.EMPTY;
+    return DEFAULT_STATE;
   }
 
   /**
@@ -185,7 +184,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either SHEATH or TEMP).
    */
   private LangtonState handleSheathState(LangtonState[] neighbors) {
-    // Sheath becomes TEMP if near INIT/ADVANCE to propagate signal
     if (countNeighborType(neighbors, LangtonState.INIT) >= 1 ||
         countNeighborType(neighbors, LangtonState.ADVANCE) >= 1) {
       return LangtonState.TEMP;
@@ -200,7 +198,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either CORE or INIT).
    */
   private LangtonState handleCoreState(LangtonState[] neighbors) {
-    // Core emits INIT if surrounded by at least two SHEATH
     if (countNeighborType(neighbors, LangtonState.SHEATH) >= 2) {
       return LangtonState.INIT;
     }
@@ -214,7 +211,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either INIT or ADVANCE).
    */
   private LangtonState handleInitState(LangtonState[] neighbors) {
-    // INIT propagates to adjacent SHEATH and converts to ADVANCE
     if (countNeighborType(neighbors, LangtonState.SHEATH) >= 1) {
       return LangtonState.ADVANCE;
     }
@@ -228,7 +224,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either ADVANCE or EXTEND).
    */
   private LangtonState handleAdvanceState(LangtonState[] neighbors) {
-    // ADVANCE moves to empty cells, extending the sheath
     if (countNeighborType(neighbors, LangtonState.EMPTY) >= 1) {
       return LangtonState.EXTEND;
     }
@@ -242,7 +237,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (either SHEATH or TURN).
    */
   private LangtonState handleTurnState(LangtonState[] neighbors) {
-    // TURN state facilitates direction change, reverts after extension
     if (countNeighborType(neighbors, LangtonState.EXTEND) >= 1) {
       return LangtonState.SHEATH;
     }
@@ -256,7 +250,6 @@ public class TempestiLoop extends Simulation {
    * @return The new state for the cell (always SHEATH).
    */
   private LangtonState handleExtendState(LangtonState[] neighbors) {
-    // EXTEND converts to SHEATH and creates new ADVANCE signal
     return LangtonState.SHEATH;
   }
 
