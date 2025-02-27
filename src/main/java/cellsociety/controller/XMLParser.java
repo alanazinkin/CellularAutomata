@@ -203,26 +203,7 @@ public class XMLParser extends BaseConfigParser{
    */
   private int[] generateRandomStates(int width, int height,
                                      Map<Integer, Integer> stateCounts) {
-    int gridSize = width * height;
-    int[] states = new int[gridSize];
-    Random random = new Random();
-
-    Arrays.fill(states, 0);
-
-    for (Map.Entry<Integer, Integer> entry : stateCounts.entrySet()) {
-      int stateValue = entry.getKey();
-      int count = entry.getValue();
-
-      for (int i = 0; i < count; i++) {
-        int position;
-        do {
-          position = random.nextInt(gridSize);
-        } while (states[position] != 0);
-        states[position] = stateValue;
-      }
-    }
-
-    return states;
+    return getInts(width, height, stateCounts);
   }
 
   /**
@@ -473,31 +454,7 @@ public class XMLParser extends BaseConfigParser{
    */
   @Override
   protected void validateCellStates(int[] states, String simulationType) throws ConfigurationException {
-    Set<Integer> validStates = VALID_STATES.get(simulationType);
-    if (validStates == null) {
-      throw new ConfigurationException("No valid states defined for simulation type: " + simulationType);
-    }
-
-    List<Integer> invalidStates = new ArrayList<>();
-    Set<Integer> foundInvalidStates = new HashSet<>();
-
-    for (int i = 0; i < states.length; i++) {
-      if (!validStates.contains(states[i])) {
-        foundInvalidStates.add(states[i]);
-        invalidStates.add(i);
-      }
-    }
-
-    if (!invalidStates.isEmpty()) {
-      String errorMsg = String.format(
-              "Invalid cell states found at positions %s. Found invalid values: %s. Valid states for %s are: %s",
-              invalidStates,
-              foundInvalidStates,
-              simulationType,
-              validStates
-      );
-      throw new ConfigurationException(errorMsg);
-    }
+    XMLInitialStateParser.validateCellStatesHelper(states, simulationType);
   }
 
   /**
