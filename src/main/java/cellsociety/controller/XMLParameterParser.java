@@ -50,6 +50,19 @@ class XMLParameterParser {
      * @throws ConfigurationException If the parameter value is invalid.
      */
     private void validateParameterValue(String name, double value) throws ConfigurationException {
-        //TODO: implement logic specific for each parameter
+        validateParamHelper(name, value);
+    }
+
+    static void validateParamHelper(String name, double value) throws ConfigurationException {
+        if (name.toLowerCase().contains("prob") && (value < 0 || value > 1)) {
+            throw new ConfigurationException(
+                    String.format("Probability parameter '%s' must be between 0 and 1, got: %f",
+                            name, value));
+        }
+
+        if (value < 0) {
+            throw new ConfigurationException(
+                    String.format("Parameter '%s' cannot be negative, got: %f", name, value));
+        }
     }
 }
