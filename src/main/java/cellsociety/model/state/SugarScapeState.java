@@ -9,6 +9,7 @@ import cellsociety.model.StateInterface;
  * different simulations. Each state represents a different condition of a cell in the SugarScape
  * grid.
  * </p>
+ * @author Tatum McKinnis
  */
 public enum SugarScapeState implements StateInterface {
   EMPTY("Empty",  0),      // Cell contains no sugar and no agent
@@ -42,6 +43,11 @@ public enum SugarScapeState implements StateInterface {
     return stateValue;
   }
 
+  /**
+   * Returns the numeric value associated with this state.
+   *
+   * @return the numeric identifier of the mock state.
+   */
   @Override
   public int getNumericValue() {
     return numericValue;

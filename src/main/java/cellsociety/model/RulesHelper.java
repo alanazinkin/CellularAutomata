@@ -6,6 +6,7 @@ import java.util.Random;
  * <p>
  * This class includes utility functions to locate cell coordinates in the grid and to create
  * agents with randomized attributes.
+ * @author Tatum McKinnis
  * </p>
  */
 public class RulesHelper {

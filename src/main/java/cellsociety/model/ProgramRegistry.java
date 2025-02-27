@@ -8,6 +8,7 @@ import java.util.Map;
  * Manages the registry of programs for different creature species.
  * This class belongs to the model layer as it maintains associations
  * between states and their behavior definitions.
+ * @author Tatum McKinnis
  */
 public class ProgramRegistry {
   private final Map<CreatureState, CreatureProgram> speciesPrograms = new HashMap<>();

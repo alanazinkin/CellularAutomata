@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for SugarScape simulation. Tests the core functionality of the SugarScape simulation
  * including initialization, state management, and rule application.
+ * @author Tatum McKinnis
  */
 public class SugarScapeTest {
 

@@ -7,6 +7,7 @@ import java.util.Objects;
  * Represents the state of a cell in the ant foraging simulation. This includes pheromone levels,
  * ant population, and special cell types (nest, food, obstacle). Unlike enum-based states, this
  * class supports dynamic properties that change during simulation.
+ * @author Tatum McKinnis
  */
 public class AntState implements StateInterface {
 

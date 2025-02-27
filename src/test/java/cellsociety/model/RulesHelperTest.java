@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.model.state.SugarScapeState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import cellsociety.model.*;
 import java.util.Random;
 
 /**
  * Test class for RulesHelper utility class.
  * Tests the helper methods used in the SugarScape simulation.
+ * @author Tatum McKinnis
  */
 public class RulesHelperTest {
   private Grid grid;

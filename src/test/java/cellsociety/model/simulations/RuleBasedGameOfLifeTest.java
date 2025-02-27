@@ -237,7 +237,6 @@ class RuleBasedGameOfLifeTest {
   @SuppressWarnings("unchecked")
   private void configureSimulationWithStringRule(String ruleCode) {
     Map<String, Double> params = new HashMap<>();
-    // Use raw type to bypass type checking, allowing String in a Double map
     ((Map)params).put("ruleCode", ruleCode);
     when(mockConfig.getParameters()).thenReturn(params);
   }

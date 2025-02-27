@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Manages infection status of creatures in the simulation.
+ * @author Tatum McKinnis
  */
 public class InfectionManager {
   private final Map<Cell, InfectionData> infectionStatuses = new HashMap<>();
@@ -49,13 +50,10 @@ public class InfectionManager {
       data.wasInfectedPreviously = true;
 
       if (data.remainingSteps <= 0) {
-        // Infection has ended, revert to previous state
         cell.setNextState(data.originalState);
         cellsToRemove.add(cell);
       }
     }
-
-    // Remove cells that are no longer infected
     for (Cell cell : cellsToRemove) {
       infectionStatuses.remove(cell);
     }
