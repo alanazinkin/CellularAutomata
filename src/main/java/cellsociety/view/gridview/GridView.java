@@ -183,15 +183,34 @@ public abstract class GridView {
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     StateInterface cellState = cell.getCurrentState();
     Shape shape = makeCellShapeFromState(cellState, simulationConfig, isUpward);
-    shape.setId(colorMap.get(cellState));
-    shape.setStroke(Color.BLACK);
-    shape.setStrokeWidth(1);
+    styleTheShape(colorMap, shape, cellState);
     myCells.add(shape);
     addShapeToGridPaneAtIndex(j, i, shape);
     makeCellPopUp(cellState, shape);
   }
 
-  private void addShapeToGridPaneAtIndex(int col, int row, Shape shape) {
+  /**
+   * adds CSS styles to the shape
+   *
+   * @param colorMap  maps states to CSS ids
+   * @param shape the shape to be styled
+   * @param cellState the state of the cell being represented by the shape
+   */
+  protected static void styleTheShape(Map<StateInterface, String> colorMap, Shape shape,
+      StateInterface cellState) {
+    shape.setId(colorMap.get(cellState));
+    shape.setStroke(Color.BLACK);
+    shape.setStrokeWidth(1);
+  }
+
+  /**
+   * add the shape to the gridPane instance variable at a given column, row index
+   *
+   * @param col column of gridpane
+   * @param row of gridpane
+   * @param shape to be added to the gridpane
+   */
+  protected void addShapeToGridPaneAtIndex(int col, int row, Shape shape) {
     gridPane.add(shape, col, row);
   }
 
@@ -343,6 +362,10 @@ public abstract class GridView {
 
   protected int getCellHeight() {
     return cellHeight;
+  }
+
+  protected boolean getFlipped() {
+    return flipped;
   }
 
 }

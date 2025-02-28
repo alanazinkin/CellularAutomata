@@ -9,6 +9,7 @@ import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
 import cellsociety.view.shapefactory.CellShape;
+import cellsociety.view.shapefactory.CellShapeFactory;
 import cellsociety.view.shapefactory.TriangleCellFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -85,9 +86,41 @@ public class TriangleGridView extends GridView {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
         boolean isUpward = (i + j) % 2 == 0;
-        addCellShapeToGridView(colorMap, simulationConfig, cell, j, i, isUpward);
+        int row = i;
+        int col = j;
+        if (getFlipped()) {
+          col = j;
+          row = numRows - i - 1;
+        }
+        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, isUpward);
       }
     }
+  }
+
+  /**
+   *
+   * @param colorMap         map of state interface to CSS identifier
+   * @param simulationConfig simulation configuration object
+   * @param cell             cell
+   * @param j                column index
+   * @param i                row index
+   * @param isUpward         true if cell is in normal orientation, false if its upside down
+   */
+  @Override
+  public void addCellShapeToGridView(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig, Cell cell, int j, int i, boolean isUpward) {
+    StateInterface cellState = cell.getCurrentState();
+    Shape shape = makeTriangleShapeFromTiling(isUpward);
+    styleTheShape(colorMap, shape, cellState);
+    getMyCells().add(shape);
+    addShapeToGridPaneAtIndex(j, i, shape);
+    makeCellPopUp(cellState, shape);
+  }
+
+  private Shape makeTriangleShapeFromTiling(boolean isUpward) {
+    TriangleCellFactory triangleCellFactory = new TriangleCellFactory();
+    CellShape cellShape = triangleCellFactory.createCellShape(getCellWidth(), getCellHeight(), isUpward);
+    return cellShape.getShape();
   }
 
 }
