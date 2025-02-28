@@ -7,7 +7,7 @@
     <width>5</width>
     <height>5</height>
     <cell_state state="0" shape="Triangle"/>
-    <cell_state state="1" shape="Triangle"/>
+    <cell_state state="1" shape="Rectangle"/>
     <tiling>Triangle</tiling>
     <initial_states>
         0 0 0 0 0
