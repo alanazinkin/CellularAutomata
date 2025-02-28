@@ -50,7 +50,6 @@ public abstract class GridView {
   ;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
 
-
   private int numRows;
   private int numCols;
   private int cellWidth;
@@ -77,17 +76,14 @@ public abstract class GridView {
     myController = simulationController;
     myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
     myGrid = grid;
-    numRows = simulationConfig.getWidth();
-    numCols = simulationConfig.getHeight();
-    cellWidth = parseInt(myConfigResourceMap.getOrDefault("window.width", "900"))
-        / numCols;
-    cellHeight =
-        (parseInt(myConfigResourceMap.getOrDefault("grid.height", "750"))
-            - parseInt(myConfigResourceMap.getOrDefault("lower.bar.height", "150")))
-            / numRows;
     gridPane = new GridPane();
     zoomPane = new StackPane(gridPane);
-    addGridZoom();
+    numRows = simulationConfig.getWidth();
+    numCols = simulationConfig.getHeight();
+    cellWidth = parseInt(myConfigResourceMap.getOrDefault("grid.width", "400"))
+        / numCols;
+    cellHeight = parseInt(myConfigResourceMap.getOrDefault("grid.height", "400"))
+        / numRows;
   }
 
   private void addGridZoom() {
@@ -116,7 +112,6 @@ public abstract class GridView {
     zoomStep = Double.parseDouble(myConfigResourceMap.getOrDefault("zoom.step", "0.1"));
     minZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("min.zoom", "0.5"));
     maxZoom = Double.parseDouble(myConfigResourceMap.getOrDefault("max.zoom", "3"));
-    ;
   }
 
   /**
@@ -128,12 +123,13 @@ public abstract class GridView {
   public void createGridDisplay(BorderPane myRoot, Map<StateInterface, String> colorMap,
       SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    addGridZoom();
     myRoot.setLeft(zoomPane);
     gridPane.setMaxWidth(
-        parseInt(myConfigResourceMap.getOrDefault("window.width", "1000")) - parseInt(
+        parseInt(myConfigResourceMap.getOrDefault("grid.width", "400")) - parseInt(
             myInfoDisplayBundle.getString("sim.info.display.width")));
     gridPane.setMaxHeight(
-        parseInt(myConfigResourceMap.getOrDefault("window.height", "800")) - parseInt(
+        parseInt(myConfigResourceMap.getOrDefault("grid.height", "400")) - parseInt(
             myConfigResourceMap.getOrDefault("lower.bar.height", "150")));
     gridPane.setGridLinesVisible(true);
     //gridPane.setStyle("bacteria-state-rock: #f542dd;");
@@ -145,8 +141,9 @@ public abstract class GridView {
    * Creates the visual display of grid cells based on the Grid object and organizes them in the
    * view
    *
-   * @param colorMap mapping of state interfaces to colors to visually render each cell according to
-   *                 its state value
+   * @param colorMap         mapping of state interfaces to colors to visually render each cell
+   *                         according to its state value
+   * @param simulationConfig the object representation of the simulation configuration
    */
   public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -160,20 +157,36 @@ public abstract class GridView {
           col = j;
           row = numRows - i - 1;
         }
-        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row);
+        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, true);
       }
     }
   }
 
-  private void addCellShapeToGridView(Map<StateInterface, String> colorMap,
-      SimulationConfig simulationConfig, Cell cell, int j, int i)
+  /**
+   * adds the cell shape to the grid view
+   *
+   * @param colorMap         map of state interface to CSS identifier
+   * @param simulationConfig simulation configuration object
+   * @param cell             cell
+   * @param j                column index
+   * @param i                row index
+   * @param isUpward         true if cell is in normal orientation, false if its upside down
+   * @throws ClassNotFoundException    There is no class for the specific cell type
+   * @throws NoSuchMethodException     no constructor exists to create the factory
+   * @throws InvocationTargetException if a new cell cannot be made
+   * @throws InstantiationException    if a new cell cannot be instantiated
+   * @throws IllegalAccessException    if user attempts to access a method that should not be
+   *                                   accessed
+   */
+  protected void addCellShapeToGridView(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig, Cell cell, int j, int i, boolean isUpward)
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     StateInterface cellState = cell.getCurrentState();
-    Shape shape = makeCellShapeFromState(cellState, simulationConfig);
+    Shape shape = makeCellShapeFromState(cellState, simulationConfig, isUpward);
     shape.setId(colorMap.get(cellState));
     shape.setStroke(Color.BLACK);
     shape.setStrokeWidth(1);
-    myCells.add(i * numCols + j, shape);
+    myCells.add(shape);
     addShapeToGridPaneAtIndex(j, i, shape);
     makeCellPopUp(cellState, shape);
   }
@@ -182,7 +195,13 @@ public abstract class GridView {
     gridPane.add(shape, col, row);
   }
 
-  private void makeCellPopUp(StateInterface cellState, Shape shape) {
+  /**
+   * makes the visual pop up when hovering over a given cell
+   *
+   * @param cellState cell's state
+   * @param shape     cell's visual shape
+   */
+  protected void makeCellPopUp(StateInterface cellState, Shape shape) {
     Popup popup = new Popup();
     Label popupLabel = new Label(cellState.toString());
     popupLabel.setId("popupLabel");
@@ -205,9 +224,8 @@ public abstract class GridView {
     });
   }
 
-
   private Shape makeCellShapeFromState(StateInterface cellState,
-      SimulationConfig simulationConfigconfig)
+      SimulationConfig simulationConfigconfig, boolean isUpward)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     String factoryClassName = getCellFactoryName(cellState, simulationConfigconfig);
     String fullFactoryClassName = "cellsociety.view.shapefactory." + factoryClassName;
@@ -218,7 +236,7 @@ public abstract class GridView {
         .newInstance();
 
     // Create the cell shape using the factory
-    CellShape cellShape = factory.createCellShape(cellWidth, cellHeight);
+    CellShape cellShape = factory.createCellShape(cellWidth, cellHeight, isUpward);
 
     Shape shape = cellShape.getShape();
     return shape;
@@ -277,8 +295,10 @@ public abstract class GridView {
   /**
    * if the grid is not flipped, it flips it over the X-axis and flips it back otherwise
    */
-  public void renderGridFlippedVertically() {
+  public void renderGridFlippedVertically(Map<StateInterface, String> colorMap)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     flipped = !flipped;
+    renderGrid(myController.getSimulation().getColorMap(), myController.getSimulationConfig());
   }
 
 
@@ -290,4 +310,39 @@ public abstract class GridView {
   public List<Shape> getImmutableCellsList() {
     return Collections.unmodifiableList(myCells);
   }
+
+  /**
+   * used to get the gridPane for classes that extend the GridView
+   *
+   * @return new GridPane
+   */
+  protected GridPane getGridPane() {
+    return gridPane;
+  }
+
+  /**
+   * used to get the list of cells for classes that extend the GridView
+   *
+   * @return myCells instance variable
+   */
+  protected List<Shape> getMyCells() {
+    return myCells;
+  }
+
+  protected void setCellWidth(int cellWidth) {
+    this.cellWidth = cellWidth;
+  }
+
+  protected void setCellHeight(int cellHeight) {
+    this.cellHeight = cellHeight;
+  }
+
+  protected int getCellWidth() {
+    return cellWidth;
+  }
+
+  protected int getCellHeight() {
+    return cellHeight;
+  }
+
 }

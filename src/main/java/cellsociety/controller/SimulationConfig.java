@@ -32,6 +32,7 @@ public class SimulationConfig {
   private Map<String, Double> parameters;
   private Map<Integer, String> cellShapeMap;
   private Map<StateInterface, Color> colorMap;
+  private String tiling;
 
   /**
    * Default constructor for XML parsing
@@ -54,7 +55,7 @@ public class SimulationConfig {
    * @param parameters    inputs to the simulation (ex: probCatch in Spreading Fire)
    */
   public SimulationConfig(String type, String title, String author, String description,
-      int width, int height, int[] initialStates, Map<String, Double> parameters) {
+      int width, int height, int[] initialStates, Map<String, Double> parameters, String tiling) {
     this.type = type;
     this.title = title;
     this.author = author;
@@ -63,6 +64,7 @@ public class SimulationConfig {
     this.height = height;
     this.initialStates = initialStates;
     this.parameters = parameters;
+    this.tiling = tiling;
   }
 
   /**
@@ -148,6 +150,14 @@ public class SimulationConfig {
     return Collections.unmodifiableMap(cellShapeMap);
   }
 
+  /**
+   *
+   * @return String representing the desired tiling layout of the grid
+   */
+  public String getTiling() {
+    return tiling;
+  }
+
   // Setters
 
   /**
@@ -225,5 +235,13 @@ public class SimulationConfig {
    */
   public void setInitialStates(int[] initialStates) {
     this.initialStates = initialStates;
+  }
+
+  /**
+   * Sets the tiling of the grid layout in the simulation
+   * @param tiling The tiling of the grid (triangular, hexagonal, or default)
+   */
+  public void setTiling(String tiling) {
+    this.tiling = tiling;
   }
 }

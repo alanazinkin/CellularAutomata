@@ -6,6 +6,7 @@ import cellsociety.controller.SimulationController;
 import cellsociety.controller.SimulationUI;
 import cellsociety.view.gridview.GridView;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -151,7 +152,14 @@ public class UserController {
    */
   public Button makeFlipGridButton(String label, GridView gridView) {
     Button flipGrid = new Button(label);
-    flipGrid.setOnAction(e -> gridView.renderGridFlippedVertically());
+    flipGrid.setOnAction(e -> {
+      try {
+        gridView.renderGridFlippedVertically(myController.getSimulation().getColorMap());
+      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+               InstantiationException | IllegalAccessException ex) {
+        throw new RuntimeException(ex);
+      }
+    });
     return flipGrid;
   }
 

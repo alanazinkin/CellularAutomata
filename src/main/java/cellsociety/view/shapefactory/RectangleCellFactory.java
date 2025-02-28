@@ -5,13 +5,8 @@ package cellsociety.view.shapefactory;
  */
 public class RectangleCellFactory extends CellShapeFactory {
 
-  /**
-   * @param width  width of underlying rectangle
-   * @param height height of underlying rectangle
-   * @return a new RectangleCell instance
-   */
   @Override
-  public CellShape createCellShape(int width, int height) {
+  public CellShape createCellShape(double width, double height, boolean isUpward) {
     return new RectangleCell(width, height);
   }
 }

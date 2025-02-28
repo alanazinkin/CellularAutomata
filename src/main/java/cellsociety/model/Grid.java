@@ -251,6 +251,4 @@ public class Grid {
     return cols;
   }
 }
-
-
-
+ 

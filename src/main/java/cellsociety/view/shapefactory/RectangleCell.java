@@ -28,7 +28,7 @@ public class RectangleCell implements CellShape {
    * @return new RectangleCell instance
    */
   @Override
-  public CellShape createShape(double width, double height) {
+  public CellShape createShape(double width, double height, boolean isUpward) {
     return new RectangleCell(width, height);
   }
 
@@ -43,11 +43,13 @@ public class RectangleCell implements CellShape {
 
   /**
    * sets the dimensions of the underlying Rectangle
-   * @param width  width of the rectangle
-   * @param height height of the rectangle
+   *
+   * @param width    width of the rectangle
+   * @param height   height of the rectangle
+   * @param isUpward
    */
   @Override
-  public void setDimensions(double width, double height) {
+  public void setDimensions(double width, double height, boolean isUpward) {
     rectangle.setWidth(width);
     rectangle.setHeight(height);
   }
