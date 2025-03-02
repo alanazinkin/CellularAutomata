@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * Default Grid view used for the standard simulation
+ * @author Alana Zinkin
  */
 public class DefaultGridView extends GridView {
 

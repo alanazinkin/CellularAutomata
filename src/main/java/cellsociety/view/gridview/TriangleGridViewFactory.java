@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 
 /**
  * Factory class for creating a TriangleGridView
+ * @author Alana Zinkin
  */
 public class TriangleGridViewFactory extends GridViewFactory {
 

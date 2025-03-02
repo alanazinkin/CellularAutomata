@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 /**
  * the SimulationSelector class creates the necessary buttons, and ComboBoxes for selecting a new
  * simulation from a list of simulation type options and simulation configuration files
+ *
+ * @author Alana Zinkin
  */
 public class SimulationSelector {
 

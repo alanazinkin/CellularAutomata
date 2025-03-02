@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 /**
  * Class for creating splash screen that allows the user to initialize a new simulation
+ *
+ * @author Alana Zinkin
  */
 public class SplashScreen {
 

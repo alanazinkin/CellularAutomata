@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 /**
  * this class creates a display window that informs the user of relevant simulation information such
  * as its type, name, author, description, state colors, and relevant parameters
+ *
+ * @author Alana Zinkin
  */
 public class SimulationInfoDisplay {
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle(

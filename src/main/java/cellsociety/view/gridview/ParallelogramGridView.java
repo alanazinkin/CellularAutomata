@@ -18,6 +18,7 @@ import javafx.scene.shape.Shape;
 
 /**
  * class for creating a ParallelogramGridView: a grid with Parallelogram tiling
+ * @author Alana Zinkin
  */
 public class ParallelogramGridView extends GridView {
 

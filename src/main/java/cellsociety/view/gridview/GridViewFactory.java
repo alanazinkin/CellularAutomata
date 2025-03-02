@@ -7,6 +7,7 @@ import cellsociety.view.shapefactory.CellShape;
 
 /**
  * abstract GridView factory class for creating new grid views
+ * @author Alana Zinkin
  */
 public abstract class GridViewFactory {
 

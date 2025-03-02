@@ -24,6 +24,7 @@ import javafx.scene.shape.Shape;
 
 /**
  * class for creating a TriangleGridView: a grid with Triangular tiling
+ * @author Alana Zinkin
  */
 public class TriangleGridView extends GridView {
 
