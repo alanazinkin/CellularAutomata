@@ -1,37 +1,22 @@
 package cellsociety.view.gridview;
 
-import static java.lang.Double.parseDouble;
-import static java.lang.Integer.parseInt;
-
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
-import cellsociety.view.shapefactory.CellShape;
-import cellsociety.view.shapefactory.CellShapeFactory;
-import cellsociety.view.shapefactory.TriangleCellFactory;
+import static java.lang.Integer.parseInt;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
-/**
- * class for creating a TriangleGridView: a grid with Triangular tiling
- */
-public class TriangleGridView extends GridView {
+public class HexagonGridView extends GridView {
 
-  private Pane myGridPane;
   private Grid myGrid;
   private int numRows;
   private int numCols;
   private Map<String, String> myConfigResourceMap;
-
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the
    * visuals of the grid of cells.
@@ -42,21 +27,21 @@ public class TriangleGridView extends GridView {
    *                             type, title, description etc.
    * @param grid                 the grid of cells of the simulation
    */
-  public TriangleGridView(SimulationController simulationController,
+  public HexagonGridView(SimulationController simulationController,
       SimulationConfig simulationConfig, Grid grid) {
     super(simulationController, simulationConfig, grid);
     myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
-    myGridPane = getGridPane();
+    setGridPane(new Pane());
     myGrid = grid;
     numRows = grid.getRows();
     numCols = grid.getCols();
-    setCellWidth(parseDouble(myConfigResourceMap.getOrDefault("grid.width", "400"))
+    setCellWidth(0.70 * parseInt(myConfigResourceMap.getOrDefault("grid.width", "400"))
         / numCols);
-    setCellHeight(parseDouble(myConfigResourceMap.getOrDefault("grid.height", "400"))
+    setCellHeight(0.70 * parseInt(myConfigResourceMap.getOrDefault("grid.height", "400"))
         / numRows);
-    addColumnConstraints((GridPane) myGridPane);
+    //addColumnConstraints(myGridPane);
+    //addRowConstraints(myGridPane);
   }
-
 
   /**
    * Creates the visual display of grid cells based on the Grid object and organizes them in the
@@ -76,20 +61,37 @@ public class TriangleGridView extends GridView {
   public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     // Generate a triangular tiling pattern
-    myGridPane.getChildren().clear();
+    getGridPane().getChildren().clear();
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        boolean isUpward = (i + j) % 2 == 0;
-        int row = i;
-        int col = j;
+        double row = i;
+        double col = j;
+        if (j % 2 == 1) {
+          row += 0.5;
+        }
         if (getFlipped()) {
-          col = j;
           row = numRows - i - 1;
         }
-        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, isUpward);
+        addHexagonToGridView(colorMap, simulationConfig, cell, col, row, true);
       }
     }
+  }
+
+  private void addHexagonToGridView(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig, Cell cell, double j, double i, boolean isUpward)
+      throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    StateInterface cellState = cell.getCurrentState();
+    Shape shape = makeCellShape(cellState, simulationConfig, isUpward);
+    styleTheShape(colorMap, shape, cellState);
+    addHexagonToGrid(j, i, shape);
+    makeCellPopUp(cellState, shape);
+  }
+
+  private void addHexagonToGrid(double j, double i, Shape shape) {
+    shape.setTranslateY(i * getCellWidth() * (Math.sqrt(3) / 2));
+    shape.setTranslateX(j * getCellWidth() * .75);
+    getGridPane().getChildren().add(shape);
   }
 
 }
