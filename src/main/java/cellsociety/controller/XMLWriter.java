@@ -25,8 +25,7 @@ public class XMLWriter extends BaseFileWriter {
   private static final String DESCRIPTION_TAG = "description";
   private static final String WIDTH_TAG = "width";
   private static final String HEIGHT_TAG = "height";
-  private static final String GRID_TAG = "grid";
-  private static final String PARAMETERS_TAG = "parameters";
+  private static final String GRID_TAG = "initial_states";
   private static final String PARAMETER_TAG = "parameter";
 
   /**
@@ -64,20 +63,18 @@ public class XMLWriter extends BaseFileWriter {
     appendTag(xmlContent, WIDTH_TAG, String.valueOf(config.getWidth()));
     appendTag(xmlContent, HEIGHT_TAG, String.valueOf(config.getHeight()));
 
-    xmlContent.append(String.format("  <%s>\n", PARAMETERS_TAG));
     for (Map.Entry<String, Double> parameter : config.getParameters().entrySet()) {
       xmlContent.append(String.format("    <%s name=\"%s\" value=\"%f\"/>\n",
               PARAMETER_TAG, parameter.getKey(), parameter.getValue()));
     }
-    xmlContent.append(String.format("  </%s>\n", PARAMETERS_TAG));
 
     xmlContent.append(String.format("  <%s>\n", GRID_TAG));
     for (int row = 0; row < grid.getRows(); row++) {
       StringBuilder rowContent = new StringBuilder("    ");
       for (int col = 0; col < grid.getCols(); col++) {
-        rowContent.append(grid.getCell(row, col).getCurrentState().toString());
+        rowContent.append(grid.getCell(row, col).getCurrentState().getNumericValue());
         if (col < grid.getCols() - 1) {
-          rowContent.append(",");
+          rowContent.append(" ");
         }
       }
       xmlContent.append(rowContent).append("\n");
