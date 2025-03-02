@@ -15,21 +15,17 @@ import java.util.Objects;
  */
 public class Grid {
 
-  // Named constant for neighbor offsets (row, column)
-  private static final int[][] NEIGHBOR_OFFSETS = {
-      {-1, -1}, {-1, 0}, {-1, 1},
-      {0, -1}, {0, 1},
-      {1, -1}, {1, 0}, {1, 1}
-  };
-
-  private final Cell[][] cells;
-  private final int rows;
-  private final int cols;
+  private Cell[][] cells;
+  private int rows;
+  private int cols;
   private final StateInterface defaultState;
+
+  private EdgeStrategy edgeStrategy;
+  private NeighborhoodStrategy neighborhoodStrategy;
 
   /**
    * Constructs a new {@code Grid} with the specified dimensions and initializes all cells to the
-   * given default state.
+   * given default state. Uses default bounded edge and Moore neighborhood.
    *
    * @param rows         the number of rows in the grid
    * @param cols         the number of columns in the grid
@@ -38,6 +34,22 @@ public class Grid {
    * @throws NullPointerException     if {@code defaultState} is {@code null}
    */
   public Grid(int rows, int cols, StateInterface defaultState) {
+    this(rows, cols, defaultState, new BoundedEdge(), new MooreNeighborhood());
+  }
+
+  /**
+   * Constructs a new {@code Grid} with the specified dimensions, state, and strategies.
+   *
+   * @param rows the number of rows in the grid
+   * @param cols the number of columns in the grid
+   * @param defaultState the initial state assigned to all cells
+   * @param edgeStrategy the strategy for handling grid edges
+   * @param neighborhoodStrategy the strategy for determining cell neighborhoods
+   * @throws IllegalArgumentException if either {@code rows} or {@code cols} is negative
+   * @throws NullPointerException if any parameter is {@code null}
+   */
+  public Grid(int rows, int cols, StateInterface defaultState,
+      EdgeStrategy edgeStrategy, NeighborhoodStrategy neighborhoodStrategy) {
     if (rows < 0 || cols < 0) {
       throw new IllegalArgumentException(
           String.format("Grid dimensions cannot be negative: %dx%d", rows, cols));
@@ -45,6 +57,9 @@ public class Grid {
     this.rows = rows;
     this.cols = cols;
     this.defaultState = Objects.requireNonNull(defaultState, "defaultState cannot be null");
+    this.edgeStrategy = Objects.requireNonNull(edgeStrategy, "edgeStrategy cannot be null");
+    this.neighborhoodStrategy = Objects.requireNonNull(neighborhoodStrategy, "neighborhoodStrategy cannot be null");
+
     cells = new Cell[rows][cols];
     initializeCells(defaultState);
   }
@@ -72,35 +87,51 @@ public class Grid {
   }
 
   /**
-   * Checks if the specified row and column indices represent a valid position within the grid.
-   * <p>
-   * A valid position is one where:
-   * <ul>
-   *   <li>{@code row} is between 0 (inclusive) and the grid's row count (exclusive)</li>
-   *   <li>{@code col} is between 0 (inclusive) and the grid's column count (exclusive)</li>
-   * </ul>
-   * This method provides a public interface to the private {@code isInBounds} check while maintaining
-   * encapsulation of the grid's internal implementation details.
-   * </p>
+   * Checks if the specified row and column indices represent a valid position within the grid
+   * according to the current edge strategy.
    *
    * @param row the row index to check
    * @param col the column index to check
-   * @return {@code true} if the position is within grid bounds, {@code false} otherwise
+   * @return {@code true} if the position is valid according to the edge strategy
    */
   public boolean isValidPosition(int row, int col) {
-    return isInBounds(row, col);
+    return edgeStrategy.isValidPosition(this, row, col);
   }
 
   /**
-   * Retrieves the cell at the specified row and column in the grid.
+   * Checks if the specified row and column indices are within the actual bounds of the grid.
+   * This method is used internally and by edge strategies.
+   *
+   * @param row the row index
+   * @param col the column index
+   * @return {@code true} if the indices are in bounds; {@code false} otherwise
+   */
+  boolean isInBounds(int row, int col) {
+    return row >= 0 && row < rows && col >= 0 && col < cols;
+  }
+
+  /**
+   * Retrieves the cell at the specified row and column in the grid, applying edge strategy.
+   *
+   * @param row the row index of the cell
+   * @param col the column index of the cell
+   * @return the {@code Cell} at the specified row and column or null if not valid
+   */
+  public Cell getCell(int row, int col) {
+    return edgeStrategy.getCell(this, row, col);
+  }
+
+  /**
+   * Directly accesses a cell without applying edge strategy.
+   * This method is used internally by edge strategies to avoid recursive calls.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
    * @return the {@code Cell} at the specified row and column
-   * @throws IndexOutOfBoundsException if the row or column indices are out of bounds
+   * @throws IndexOutOfBoundsException if the indices are out of bounds
    */
-  public Cell getCell(int row, int col) {
-    if (!isInBounds(row, col)) {
+  Cell getCellDirect(int row, int col) {
+    if (row < 0 || row >= rows || col < 0 || col >= cols) {
       throw new IndexOutOfBoundsException(
           String.format("Invalid cell indices: row=%d, col=%d", row, col));
     }
@@ -108,24 +139,13 @@ public class Grid {
   }
 
   /**
-   * Checks if the specified row and column indices are within the bounds of the grid.
-   *
-   * @param row the row index
-   * @param col the column index
-   * @return {@code true} if the indices are in bounds; {@code false} otherwise
-   */
-  private boolean isInBounds(int row, int col) {
-    return row >= 0 && row < rows && col >= 0 && col < cols;
-  }
-
-  /**
-   * Retrieves the neighboring cells of the specified cell at (row, col). Neighbors are determined
-   * using the eight surrounding positions in the grid.
+   * Retrieves the neighboring cells of the specified cell at (row, col).
+   * Neighbors are determined using the current neighborhood strategy.
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
    * @return an unmodifiable list of neighboring {@code Cell} objects
-   * @throws IndexOutOfBoundsException if {@code row} or {@code col} is out of bounds
+   * @throws IndexOutOfBoundsException if the central cell is out of bounds
    */
   public List<Cell> getNeighbors(int row, int col) {
     if (!isInBounds(row, col)) {
@@ -133,14 +153,16 @@ public class Grid {
           String.format("Indices (%d,%d) out of bounds", row, col));
     }
 
-    List<Cell> neighbors = new ArrayList<>(NEIGHBOR_OFFSETS.length);
-    for (int[] offset : NEIGHBOR_OFFSETS) {
-      int neighborRow = row + offset[0];
-      int neighborCol = col + offset[1];
-      if (isInBounds(neighborRow, neighborCol)) {
-        neighbors.add(getCell(neighborRow, neighborCol));
+    List<Cell> neighbors = new ArrayList<>();
+    List<int[]> neighborCoords = neighborhoodStrategy.getNeighborCoordinates(row, col);
+
+    for (int[] coord : neighborCoords) {
+      Cell neighbor = getCell(coord[0], coord[1]);
+      if (neighbor != null) {
+        neighbors.add(neighbor);
       }
     }
+
     return Collections.unmodifiableList(neighbors);
   }
 
@@ -164,6 +186,11 @@ public class Grid {
     }
   }
 
+  /**
+   * Applies previous states to all cells in the grid, if available.
+   *
+   * @return {@code true} if any cell was reverted to a previous state; {@code false} otherwise
+   */
   public boolean applyPreviousStates() {
     boolean applied = false;
     for (int r = 0; r < rows; r++) {
@@ -181,7 +208,6 @@ public class Grid {
     }
     return applied;
   }
-
 
   /**
    * Resets the grid to a new state, initializing all cells with the specified state.
@@ -225,7 +251,6 @@ public class Grid {
     StringBuilder sb = new StringBuilder();
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
-        // For visualization, we print the first character of the state's string representation.
         sb.append(cells[r][c].getCurrentState().toString().charAt(0)).append(" ");
       }
       sb.append(System.lineSeparator());
@@ -250,5 +275,66 @@ public class Grid {
   public int getCols() {
     return cols;
   }
+
+  /**
+   * Gets the current edge strategy.
+   *
+   * @return the edge strategy
+   */
+  public EdgeStrategy getEdgeStrategy() {
+    return edgeStrategy;
+  }
+
+  /**
+   * Sets a new edge strategy.
+   *
+   * @param edgeStrategy the new edge strategy
+   * @throws NullPointerException if edgeStrategy is null
+   */
+  public void setEdgeStrategy(EdgeStrategy edgeStrategy) {
+    this.edgeStrategy = Objects.requireNonNull(edgeStrategy, "edgeStrategy cannot be null");
+  }
+
+  /**
+   * Gets the current neighborhood strategy.
+   *
+   * @return the neighborhood strategy
+   */
+  public NeighborhoodStrategy getNeighborhoodStrategy() {
+    return neighborhoodStrategy;
+  }
+
+  /**
+   * Sets a new neighborhood strategy.
+   *
+   * @param neighborhoodStrategy the new neighborhood strategy
+   * @throws NullPointerException if neighborhoodStrategy is null
+   */
+  public void setNeighborhoodStrategy(NeighborhoodStrategy neighborhoodStrategy) {
+    this.neighborhoodStrategy = Objects.requireNonNull(neighborhoodStrategy,
+        "neighborhoodStrategy cannot be null");
+  }
+
+
+  /**
+   * Updates the cells array with a new array.
+   * This method is protected to allow subclasses like InfiniteGrid to modify the grid structure.
+   *
+   * @param newCells the new cells array to use
+   */
+  protected void setCells(Cell[][] newCells) {
+    this.cells = newCells;
+  }
+
+  /**
+   * Updates the dimensions of the grid.
+   * This method is protected to allow subclasses like InfiniteGrid to modify the grid structure.
+   *
+   * @param newRows the new number of rows
+   * @param newCols the new number of columns
+   */
+  protected void setDimensions(int newRows, int newCols) {
+    this.rows = newRows;
+    this.cols = newCols;
+  }
 }
- 
