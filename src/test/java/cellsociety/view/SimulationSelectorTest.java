@@ -47,7 +47,7 @@ class SimulationSelectorTest extends DukeApplicationTest {
     Map<String, Double> myParameters = new HashMap<>();
     int[] myInitialStates = new int[]{0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1};
     SimulationConfig mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
-        5, 5, myInitialStates, myParameters);
+        5, 5, myInitialStates, myParameters,"Default");
     mySimView = new SimulationView(mySimulationConfig, myController, myResources);
     myStage = new Stage();
     mySimView.createSimulationWindow(myStage);

@@ -34,7 +34,8 @@ class WaTorWorldTest {
         "Testing WaTorWorld simulation",
         3, 3,
         new int[9],
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
   }
 

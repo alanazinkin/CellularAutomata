@@ -80,8 +80,7 @@ public class SimulationView {
         simulation.getColorMap(),
         myResources
     );
-    mySimInfoDisplay.createDisplayBox(new Stage(), myResources.getString("SimInfo"), themeColor,
-        simView);
+    mySimInfoDisplay.createDisplayBox(themeColor, simView);
   }
 
   private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,

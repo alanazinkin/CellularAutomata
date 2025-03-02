@@ -25,8 +25,6 @@ public class HexagonCell implements CellShape {
 
   @Override
   public void setDimensions(double width, double height, boolean isUpward) {
-  // Correct height proportion
-
     hexagon.getPoints().addAll(
         0.0, height / 2,  // Left-middle
         width / 4, 0.0,        // Top-left

@@ -40,7 +40,8 @@ public class TradingManagerTest {
         GRID_SIZE,
         GRID_SIZE,
         initialStates,
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
 
     grid = new Grid(GRID_SIZE, GRID_SIZE, defaultState);

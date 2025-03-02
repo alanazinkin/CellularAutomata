@@ -1,33 +1,28 @@
 package cellsociety.view.gridview;
 
-import cellsociety.view.shapestrategy.DefaultStrategy;
-import static java.lang.Double.parseDouble;
-import static java.lang.Integer.parseInt;
-
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
-import cellsociety.view.shapefactory.CellShape;
-import cellsociety.view.shapefactory.CellShapeFactory;
-import cellsociety.view.shapefactory.TriangleCellFactory;
+import cellsociety.view.shapestrategy.HexagonStrategy;
+import cellsociety.view.shapestrategy.ParallelogramStrategy;
+import cellsociety.view.shapestrategy.ShapeStrategyContext;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import java.util.ResourceBundle;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 /**
- * class for creating a TriangleGridView: a grid with Triangular tiling
+ * class for creating a ParallelogramGridView: a grid with Parallelogram tiling
  */
-public class TriangleGridView extends GridView {
+public class ParallelogramGridView extends GridView {
 
-  private Pane myGridPane;
+  private static final ResourceBundle myGridViewResourceBundle = ResourceBundle.getBundle(
+      "cellsociety.view.GridSettings");
   private Grid myGrid;
   private int numRows;
   private int numCols;
@@ -43,23 +38,24 @@ public class TriangleGridView extends GridView {
    *                             type, title, description etc.
    * @param grid                 the grid of cells of the simulation
    */
-  public TriangleGridView(SimulationController simulationController,
+  public ParallelogramGridView(SimulationController simulationController,
       SimulationConfig simulationConfig, Grid grid) {
     super(simulationController, simulationConfig, grid);
     myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
-    myGridPane = new GridPane();
-    setGridPane(myGridPane);
+    setGridPane(new Pane());
     myGrid = grid;
     numRows = grid.getRows();
     numCols = grid.getCols();
-    setCellWidth(parseDouble(myConfigResourceMap.getOrDefault("grid.width", "400"))
-        / numCols);
-    setCellHeight(parseDouble(myConfigResourceMap.getOrDefault("grid.height", "400"))
-        / numRows);
-    addColumnConstraints((GridPane) myGridPane);
-    setAddStrategy(new DefaultStrategy());
+    setCellWidth(
+        parseDouble(myGridViewResourceBundle.getString("shape.shrinkage.factor")) * parseInt(
+            myConfigResourceMap.getOrDefault("grid.width", "400"))
+            / numCols);
+    setCellHeight(
+        parseDouble(myGridViewResourceBundle.getString("shape.shrinkage.factor")) * parseInt(
+            myConfigResourceMap.getOrDefault("grid.height", "400"))
+            / numRows);
+    setAddStrategy(new ParallelogramStrategy());
   }
-
 
   /**
    * Creates the visual display of grid cells based on the Grid object and organizes them in the
@@ -78,16 +74,14 @@ public class TriangleGridView extends GridView {
   @Override
   public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    // Generate a triangular tiling pattern
     getGridPane().getChildren().clear();
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);
-        boolean isUpward = (i + j) % 2 == 0;
-        int row = i;
-        int col = j;
+        boolean isUpward = i % 2 == 0;
+        double row = i;
+        double col = j;
         if (getFlipped()) {
-          col = j;
           row = numRows - i - 1;
         }
         addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, isUpward);

@@ -41,7 +41,8 @@ class BacteriaColoniesSimulationTest {
         GRID_SIZE,
         GRID_SIZE,
         initialStates,
-        parameters
+        parameters,
+        "Default"
     );
 
     simulation = new BacteriaColoniesSimulation(config, new Grid(3, 3, BacteriaState.ROCK));
@@ -131,7 +132,8 @@ class BacteriaColoniesSimulationTest {
 
     SimulationConfig invalidConfig = new SimulationConfig(
         "Bacteria", "Test", "Author", "Description",
-        GRID_SIZE, GRID_SIZE, new int[GRID_SIZE * GRID_SIZE], parameters
+        GRID_SIZE, GRID_SIZE, new int[GRID_SIZE * GRID_SIZE], parameters,
+        "Default"
     );
 
     BacteriaColoniesSimulation sim = new BacteriaColoniesSimulation(invalidConfig,
@@ -156,7 +158,8 @@ class BacteriaColoniesSimulationTest {
   void constructor_EmptyInitialStates_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new SimulationConfig(
         "Bacteria", "Test", "Author", "Description",
-        GRID_SIZE, GRID_SIZE, new int[0], new HashMap<>()
+        GRID_SIZE, GRID_SIZE, new int[0], new HashMap<>(),
+        "Default"
     );
 
     assertThrows(IllegalArgumentException.class, () ->

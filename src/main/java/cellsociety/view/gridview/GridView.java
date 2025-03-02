@@ -2,6 +2,9 @@ package cellsociety.view.gridview;
 
 import cellsociety.controller.SimulationConfig;
 
+import cellsociety.view.shapestrategy.DefaultStrategy;
+import cellsociety.view.shapestrategy.ShapeStrategy;
+import cellsociety.view.shapestrategy.ShapeStrategyContext;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
@@ -50,8 +53,8 @@ public abstract class GridView {
   private Map<String, String> myConfigResourceMap;
   private ResourceBundle myInfoDisplayBundle = ResourceBundle.getBundle(
       SimulationInfoDisplay.class.getPackageName() + ".InfoDisplay");
-  ;
   private PauseTransition delay = new PauseTransition(Duration.seconds(0));
+  private ShapeStrategyContext addStrategy = new ShapeStrategyContext(new DefaultStrategy());
 
   private int numRows;
   private int numCols;
@@ -79,14 +82,9 @@ public abstract class GridView {
     myController = simulationController;
     myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
     myGrid = grid;
-    gridPane = new GridPane();
-    zoomPane = new StackPane(gridPane);
+    zoomPane = new StackPane();
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
-    cellWidth = parseDouble(myConfigResourceMap.getOrDefault("grid.width", "400"))
-        / numCols;
-    cellHeight = parseDouble(myConfigResourceMap.getOrDefault("grid.height", "400"))
-        / numRows;
   }
 
   private void addGridZoom() {
@@ -140,29 +138,15 @@ public abstract class GridView {
   }
 
   /**
-   * Creates the visual display of grid cells based on the Grid object and organizes them in the
-   * view
+   * Abstract method for creating the visual display of grid cells
+   * based on the Grid object and organizes them in the view
    *
    * @param colorMap         mapping of state interfaces to colors to visually render each cell
    *                         according to its state value
    * @param simulationConfig the object representation of the simulation configuration
    */
-  public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
-      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    gridPane.getChildren().clear();
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Cell cell = myGrid.getCell(i, j);
-        int col = j;
-        int row = i;
-        if (flipped) {
-          col = j;
-          row = numRows - i - 1;
-        }
-        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, true);
-      }
-    }
-  }
+  public abstract void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
 
   /**
    * adds the cell shape to the grid view
@@ -181,10 +165,10 @@ public abstract class GridView {
    *                                   accessed
    */
   protected void addCellShapeToGridView(Map<StateInterface, String> colorMap,
-      SimulationConfig simulationConfig, Cell cell, int j, int i, boolean isUpward)
+      SimulationConfig simulationConfig, Cell cell, double j, double i, boolean isUpward)
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
     Shape shape = initializeShape(colorMap, simulationConfig, cell, isUpward);
-    addShapeToGridPaneAtIndex(j, i, shape);
+    addStrategy.executeStrategy(getGridPane(), j, i, shape, getCellWidth(), getCellHeight());
   }
 
   /**
@@ -209,7 +193,7 @@ public abstract class GridView {
     StateInterface cellState = cell.getCurrentState();
     Shape shape = makeCellShape(cellState, simulationConfig, isUpward);
     styleTheShape(colorMap, shape, cellState);
-    getMyCells().add(shape);
+    myCells.add(shape);
     makeCellPopUp(cellState, shape);
     return shape;
   }
@@ -230,17 +214,6 @@ public abstract class GridView {
     } else {
       shape.setStrokeWidth(0);
     }
-  }
-
-  /**
-   * add the shape to the gridPane instance variable at a given column, row index
-   *
-   * @param col   column of gridpane
-   * @param row   of gridpane
-   * @param shape to be added to the gridpane
-   */
-  protected void addShapeToGridPaneAtIndex(int col, int row, Shape shape) {
-    ((GridPane) gridPane).add(shape, col, row);
   }
 
   /**
@@ -283,12 +256,10 @@ public abstract class GridView {
     }
     String fullFactoryClassName = "cellsociety.view.shapefactory." + factoryClassName;
 
-    // Create factory instance using reflection
     Class<?> factoryClass = Class.forName(fullFactoryClassName);
     CellShapeFactory factory = (CellShapeFactory) factoryClass.getDeclaredConstructor()
         .newInstance();
 
-    // Create the cell shape using the factory
     CellShape cellShape = factory.createCellShape(cellWidth, cellHeight, isUpward);
 
     return cellShape.getShape();
@@ -297,14 +268,12 @@ public abstract class GridView {
   private String getCellFactoryNameFromState(StateInterface cellState,
       SimulationConfig simulationConfig) {
     int cellStateNumericValue = cellState.getNumericValue();
-    //use reflection here to grab cell Shape
     Map<Integer, String> cellShapeMap = simulationConfig.getCellShapeMap();
     if (cellShapeMap == null) {
       throw new NullPointerException("Cell shape map is null");
     }
     // Get the shape type from the map (e.g., "Rectangle" or "Triangle")
     String shapeType = cellShapeMap.getOrDefault(cellStateNumericValue, "Rectangle");
-    // Construct the factory class name
     String factoryClassName = shapeType + "CellFactory";
     return factoryClassName;
   }
@@ -392,15 +361,6 @@ public abstract class GridView {
   }
 
   /**
-   * used to get the list of cells for classes that extend the GridView
-   *
-   * @return myCells instance variable
-   */
-  protected List<Shape> getMyCells() {
-    return myCells;
-  }
-
-  /**
    * Sets the width of each cell in the grid.
    *
    * @param cellWidth the width of an individual cell
@@ -446,15 +406,6 @@ public abstract class GridView {
   }
 
   /**
-   * Retrieves the simulation controller managing the simulation.
-   *
-   * @return the {@link SimulationController} instance controlling the simulation
-   */
-  protected SimulationController getSimulationController() {
-    return myController;
-  }
-
-  /**
    * Sets the grid pane that displays the simulation grid. Also clears and re-adds the pane to the
    * zoom container for interactive zooming.
    *
@@ -465,5 +416,9 @@ public abstract class GridView {
     zoomPane.getChildren().clear();
     zoomPane.getChildren().add(gridPane);
     addGridZoom();
+  }
+
+  protected void setAddStrategy(ShapeStrategy addStrategy) {
+    this.addStrategy.setStrategy(addStrategy);
   }
 }

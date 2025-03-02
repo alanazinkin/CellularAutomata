@@ -46,7 +46,7 @@ class GridViewTest extends DukeApplicationTest {
   @Override
   public void start (Stage stage) {
     mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
-        5, 5, myInitialStates, myParameters);
+        5, 5, myInitialStates, myParameters,"Default");
     myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, new SimulationController());
     myGrid = new Grid(5, 5, GameOfLifeState.ALIVE);
     mySimulation = new GameOfLife(mySimulationConfig, myGrid);
@@ -67,7 +67,7 @@ class GridViewTest extends DukeApplicationTest {
   @Test
   public void makeGridLinesToggleButton_clickButtonOnce_GridLinesRemoved() {
     SimulationConfig simulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
-        5, 5, myInitialStates, myParameters);
+        5, 5, myInitialStates, myParameters,"Default");
     myController = new SimulationController();
     GridView gridView = new DefaultGridView(myController, simulationConfig, myGrid);
     Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);

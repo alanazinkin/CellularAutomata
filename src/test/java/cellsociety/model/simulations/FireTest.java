@@ -34,7 +34,8 @@ class FireTest {
         "Testing Fire simulation",
         3, 3,
         new int[9],
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
     grid = new Grid(3, 3, FireState.EMPTY);
   }

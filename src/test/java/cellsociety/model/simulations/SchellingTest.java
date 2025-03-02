@@ -62,7 +62,8 @@ public class SchellingTest {
         "Testing Schelling simulation",
         rows, cols,
         new int[rows * cols],
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
   }
 
