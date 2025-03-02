@@ -82,7 +82,7 @@ class AntSimulationTest {
     params.put("numAnts", 5.0);
     return new SimulationConfig("AntForaging", "Ant Simulation", "Test Author",
         "Test Description", GRID_SIZE, GRID_SIZE,
-        new int[GRID_SIZE * GRID_SIZE], params);
+        new int[GRID_SIZE * GRID_SIZE], params,"Default");
   }
 
   /**

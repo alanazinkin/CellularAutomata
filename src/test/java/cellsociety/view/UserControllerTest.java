@@ -38,7 +38,7 @@ class UserControllerTest extends DukeApplicationTest {
   private Map<String, Double> myParameters = new HashMap<>();
   private int[] myInitialStates = new int[]{0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1};
   private SimulationConfig mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
-  5, 5, myInitialStates, myParameters);
+  5, 5, myInitialStates, myParameters,"Default");
   private ResourceBundle DEFAULT_LANGUAGE_BUNDLE = ResourceBundle.getBundle("cellsociety.controller.English");
   private Map<String, String> mySimulationResourceMap;
   private SimulationController myController = new SimulationController();

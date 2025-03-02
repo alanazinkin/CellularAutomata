@@ -5,6 +5,10 @@ import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
+import cellsociety.view.shapestrategy.DefaultStrategy;
+import cellsociety.view.shapestrategy.HexagonStrategy;
+import cellsociety.view.shapestrategy.ShapeStrategy;
+import cellsociety.view.shapestrategy.ShapeStrategyContext;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import java.lang.reflect.InvocationTargetException;
@@ -51,6 +55,7 @@ public class HexagonGridView extends GridView {
         parseDouble(myGridViewResourceBundle.getString("shape.shrinkage.factor")) * parseInt(
             myConfigResourceMap.getOrDefault("grid.height", "400"))
             / numRows);
+    setAddStrategy(new HexagonStrategy());
   }
 
   /**
@@ -70,7 +75,7 @@ public class HexagonGridView extends GridView {
   @Override
   public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    // Generate a triangular tiling pattern
+    // Generate a hexagon tiling pattern
     getGridPane().getChildren().clear();
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
@@ -86,22 +91,8 @@ public class HexagonGridView extends GridView {
             row -= parseDouble(myGridViewResourceBundle.getString("hexagon.tiling.row.offset"));
           }
         }
-        addHexagonToGridView(colorMap, simulationConfig, cell, col, row, true);
+        addCellShapeToGridView(colorMap, simulationConfig, cell, col, row, true);
       }
     }
   }
-
-  private void addHexagonToGridView(Map<StateInterface, String> colorMap,
-      SimulationConfig simulationConfig, Cell cell, double j, double i, boolean isUpward)
-      throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-    Shape shape = initializeShape(colorMap, simulationConfig, cell, isUpward);
-    addHexagonToGrid(j, i, shape);
-  }
-
-  private void addHexagonToGrid(double j, double i, Shape shape) {
-    shape.setTranslateY(i * getCellWidth() * (Math.sqrt(3) / 2));
-    shape.setTranslateX(j * getCellWidth() * .75);
-    getGridPane().getChildren().add(shape);
-  }
-
 }

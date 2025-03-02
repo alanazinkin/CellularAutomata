@@ -7,6 +7,7 @@ import cellsociety.model.StateInterface;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -147,11 +148,13 @@ public class SimulationInfoDisplay {
    * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a
    * BorderPane root as the root element
    */
-  public void createDisplayBox(Stage stage, String title, String themeColor, SimulationView simView)
+  public void createDisplayBox(String themeColor, SimulationView simView)
       throws FileNotFoundException {
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
-    simView.getRoot().setCenter(vbox);
+    simView.getRoot().setRight(vbox);
+    vbox.setPadding(new Insets(0, 100, 0, 0));  // Adds 20px padding inside the VBox
+
     // create display box to hold relevant information
     // add relevant text to scene
     addSimulationInformationToScene(vbox, themeColor);

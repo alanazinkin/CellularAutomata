@@ -6,7 +6,7 @@ import java.util.Set;
 import org.w3c.dom.Document;
 
 public class XMLTilingParser {
-  private static final Set<String> VALID_TILING = Set.of("Default", "Triangle", "Hexagon");
+  private static final Set<String> VALID_TILING = Set.of("Default", "Triangle", "Hexagon", "Parallelogram");
 
   /**
    * parses the tiling of the configuration

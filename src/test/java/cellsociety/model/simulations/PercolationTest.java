@@ -43,7 +43,8 @@ class PercolationTest {
         "Testing Percolation simulation",
         2, 2,
         new int[]{1, 1, 1, 1},  // Use OPEN_ID (1) for all cells
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
   }
 

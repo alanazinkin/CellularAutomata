@@ -35,7 +35,8 @@ public class GameOfLifeTest {
         "Testing GameOfLife simulation",
         3, 3,
         new int[9],
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
     grid = new Grid(3, 3, GameOfLifeState.DEAD);
     for (int r = 0; r < grid.getRows(); r++) {

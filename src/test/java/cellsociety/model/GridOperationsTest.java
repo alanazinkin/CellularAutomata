@@ -36,7 +36,8 @@ public class GridOperationsTest {
         GRID_SIZE,
         GRID_SIZE,
         initialStates,
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
 
     StateInterface defaultState = SugarScapeState.EMPTY;

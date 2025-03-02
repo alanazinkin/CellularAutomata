@@ -42,7 +42,8 @@ public class LangtonLoopTest {
         GRID_SIZE,
         GRID_SIZE,
         initialStates,
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
 
     // Initialize grid with EMPTY state instead of CORE
@@ -171,7 +172,8 @@ public class LangtonLoopTest {
         2,
         2,
         invalidStates,
-        new HashMap<>()
+        new HashMap<>(),
+        "Default"
     );
 
     assertThrows(IllegalArgumentException.class, () -> {
