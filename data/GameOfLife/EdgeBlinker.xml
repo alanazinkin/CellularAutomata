@@ -7,7 +7,7 @@
     <width>5</width>
     <height>5</height>
     <!-- 0 : DEAD      1 : ALIVE -->
-    <tiling>Triangle</tiling>
+    <tiling>Hexagon</tiling>
     <initial_states>
         0 0 0 0 0
         1 1 1 0 0

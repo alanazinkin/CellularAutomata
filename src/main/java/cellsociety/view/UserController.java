@@ -139,7 +139,7 @@ public class UserController {
    */
   public Button makeGridLinesToggleButton(String label, GridView gridView) {
     Button toggleButton = new Button(label);
-    gridView.setGridLinesToggleButtonAction(gridView, toggleButton);
+    gridView.setGridLinesToggleButtonAction(toggleButton);
     return toggleButton;
   }
 
