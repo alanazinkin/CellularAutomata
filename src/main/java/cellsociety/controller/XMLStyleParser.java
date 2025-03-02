@@ -97,7 +97,7 @@ public class XMLStyleParser {
     private void parseCellStateAppearances(Document document, SimulationStyle style) throws ConfigurationException {
         Element cellStatesElement = (Element) document.getElementsByTagName("cell-states").item(0);
         if (cellStatesElement == null) {
-            return; 
+            return;
         }
 
         NodeList stateNodes = cellStatesElement.getElementsByTagName("state");
