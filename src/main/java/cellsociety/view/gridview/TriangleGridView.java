@@ -76,7 +76,7 @@ public class TriangleGridView extends GridView {
   public void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     // Generate a triangular tiling pattern
-    myGridPane.getChildren().clear();
+    getGridPane().getChildren().clear();
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < numCols; j++) {
         Cell cell = myGrid.getCell(i, j);

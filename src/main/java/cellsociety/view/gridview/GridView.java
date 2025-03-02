@@ -128,10 +128,10 @@ public abstract class GridView {
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     addGridZoom();
     myRoot.setLeft(zoomPane);
-    gridPane.setMaxWidth(
+    getGridPane().setMaxWidth(
         parseInt(myConfigResourceMap.getOrDefault("grid.width", "400")) - parseInt(
             myInfoDisplayBundle.getString("sim.info.display.width")));
-    gridPane.setMaxHeight(
+    getGridPane().setMaxHeight(
         parseInt(myConfigResourceMap.getOrDefault("grid.height", "400")) - parseInt(
             myConfigResourceMap.getOrDefault("lower.bar.height", "150")));
     //gridPane.setStyle("bacteria-state-rock: #f542dd;");
@@ -183,12 +183,35 @@ public abstract class GridView {
   protected void addCellShapeToGridView(Map<StateInterface, String> colorMap,
       SimulationConfig simulationConfig, Cell cell, int j, int i, boolean isUpward)
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    Shape shape = initializeShape(colorMap, simulationConfig, cell, isUpward);
+    addShapeToGridPaneAtIndex(j, i, shape);
+  }
+
+  /**
+   * wrapper method that creates a new shape, styles it, adds it to the myCells list and creates the
+   * cell popup holding relevant cell information
+   *
+   * @param colorMap         map of state interface to CSS identifier
+   * @param simulationConfig simulation configuration object
+   * @param cell             cell
+   * @param isUpward         true if cell is in normal orientation, false if its upside down
+   * @throws ClassNotFoundException    There is no class for the specific cell type
+   * @throws NoSuchMethodException     no constructor exists to create the factory
+   * @throws InvocationTargetException if a new cell cannot be made
+   * @throws InstantiationException    if a new cell cannot be instantiated
+   * @throws IllegalAccessException    if user attempts to access a method that should not be
+   *                                   accessed
+   */
+  protected Shape initializeShape(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig,
+      Cell cell, boolean isUpward)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     StateInterface cellState = cell.getCurrentState();
     Shape shape = makeCellShape(cellState, simulationConfig, isUpward);
     styleTheShape(colorMap, shape, cellState);
-    myCells.add(shape);
-    addShapeToGridPaneAtIndex(j, i, shape);
+    getMyCells().add(shape);
     makeCellPopUp(cellState, shape);
+    return shape;
   }
 
   /**
@@ -198,11 +221,15 @@ public abstract class GridView {
    * @param shape     the shape to be styled
    * @param cellState the state of the cell being represented by the shape
    */
-  protected static void styleTheShape(Map<StateInterface, String> colorMap, Shape shape,
+  protected void styleTheShape(Map<StateInterface, String> colorMap, Shape shape,
       StateInterface cellState) {
     shape.setId(colorMap.get(cellState));
     shape.setStroke(Color.BLACK);
-    shape.setStrokeWidth(1);
+    if (hasGridLines) {
+      shape.setStrokeWidth(1);
+    } else {
+      shape.setStrokeWidth(0);
+    }
   }
 
   /**
@@ -251,8 +278,7 @@ public abstract class GridView {
     String factoryClassName;
     if (simulationConfig.getTiling().equals("Default")) {
       factoryClassName = getCellFactoryNameFromState(cellState, simulationConfig);
-    }
-    else {
+    } else {
       factoryClassName = getCellFactoryNameFromTiling(simulationConfig);
     }
     String fullFactoryClassName = "cellsociety.view.shapefactory." + factoryClassName;
@@ -268,7 +294,8 @@ public abstract class GridView {
     return cellShape.getShape();
   }
 
-  private String getCellFactoryNameFromState(StateInterface cellState, SimulationConfig simulationConfig) {
+  private String getCellFactoryNameFromState(StateInterface cellState,
+      SimulationConfig simulationConfig) {
     int cellStateNumericValue = cellState.getNumericValue();
     //use reflection here to grab cell Shape
     Map<Integer, String> cellShapeMap = simulationConfig.getCellShapeMap();
@@ -294,17 +321,15 @@ public abstract class GridView {
   /**
    * sets the action call of the grid lines toggle button
    *
-   * @param gridView     the gridview object that will be changed by the button press
    * @param toggleButton the toggle button
    */
-  public void setGridLinesToggleButtonAction(GridView gridView, Button toggleButton) {
+  public void setGridLinesToggleButtonAction(Button toggleButton) {
     toggleButton.setOnAction(e -> {
+      hasGridLines = !hasGridLines;
       if (hasGridLines) {
-        gridView.removeGridLines();
-        hasGridLines = false;
+        addGridLines();
       } else {
-        gridView.addGridLines();
-        hasGridLines = true;
+        removeGridLines();
       }
     });
   }
@@ -375,26 +400,66 @@ public abstract class GridView {
     return myCells;
   }
 
+  /**
+   * Sets the width of each cell in the grid.
+   *
+   * @param cellWidth the width of an individual cell
+   */
   protected void setCellWidth(double cellWidth) {
     this.cellWidth = cellWidth;
   }
 
+  /**
+   * Sets the height of each cell in the grid.
+   *
+   * @param cellHeight the height of an individual cell
+   */
   protected void setCellHeight(double cellHeight) {
     this.cellHeight = cellHeight;
   }
 
+  /**
+   * Retrieves the current width of a cell in the grid.
+   *
+   * @return the width of an individual cell
+   */
   protected double getCellWidth() {
     return cellWidth;
   }
 
+  /**
+   * Retrieves the current height of a cell in the grid.
+   *
+   * @return the height of an individual cell
+   */
   protected double getCellHeight() {
     return cellHeight;
   }
 
-  protected boolean getFlipped() { return flipped; }
+  /**
+   * Checks if the grid is flipped vertically.
+   *
+   * @return true if the grid is flipped, false otherwise
+   */
+  protected boolean getFlipped() {
+    return flipped;
+  }
 
-  protected SimulationController getSimulationController() { return myController; }
+  /**
+   * Retrieves the simulation controller managing the simulation.
+   *
+   * @return the {@link SimulationController} instance controlling the simulation
+   */
+  protected SimulationController getSimulationController() {
+    return myController;
+  }
 
+  /**
+   * Sets the grid pane that displays the simulation grid. Also clears and re-adds the pane to the
+   * zoom container for interactive zooming.
+   *
+   * @param gridPane the {@link Pane} that represents the simulation grid
+   */
   protected void setGridPane(Pane gridPane) {
     this.gridPane = gridPane;
     zoomPane.getChildren().clear();

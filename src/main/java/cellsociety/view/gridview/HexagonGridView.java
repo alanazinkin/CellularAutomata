@@ -5,18 +5,26 @@ import cellsociety.controller.SimulationController;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
 import cellsociety.model.StateInterface;
+import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
+/**
+ * class for creating a HexagonGridView: a grid with Hexagonal tiling
+ */
 public class HexagonGridView extends GridView {
 
+  private static final ResourceBundle myGridViewResourceBundle = ResourceBundle.getBundle(
+      "cellsociety.view.GridSettings");
   private Grid myGrid;
   private int numRows;
   private int numCols;
   private Map<String, String> myConfigResourceMap;
+
   /**
    * Constructor for creating a GridView object, which is responsible for creating and updating the
    * visuals of the grid of cells.
@@ -35,12 +43,14 @@ public class HexagonGridView extends GridView {
     myGrid = grid;
     numRows = grid.getRows();
     numCols = grid.getCols();
-    setCellWidth(0.70 * parseInt(myConfigResourceMap.getOrDefault("grid.width", "400"))
-        / numCols);
-    setCellHeight(0.70 * parseInt(myConfigResourceMap.getOrDefault("grid.height", "400"))
-        / numRows);
-    //addColumnConstraints(myGridPane);
-    //addRowConstraints(myGridPane);
+    setCellWidth(
+        parseDouble(myGridViewResourceBundle.getString("shape.shrinkage.factor")) * parseInt(
+            myConfigResourceMap.getOrDefault("grid.width", "400"))
+            / numCols);
+    setCellHeight(
+        parseDouble(myGridViewResourceBundle.getString("shape.shrinkage.factor")) * parseInt(
+            myConfigResourceMap.getOrDefault("grid.height", "400"))
+            / numRows);
   }
 
   /**
@@ -68,10 +78,13 @@ public class HexagonGridView extends GridView {
         double row = i;
         double col = j;
         if (j % 2 == 1) {
-          row += 0.5;
+          row += parseDouble(myGridViewResourceBundle.getString("hexagon.tiling.row.offset"));
         }
         if (getFlipped()) {
           row = numRows - i - 1;
+          if (j % 2 == 1) {
+            row -= parseDouble(myGridViewResourceBundle.getString("hexagon.tiling.row.offset"));
+          }
         }
         addHexagonToGridView(colorMap, simulationConfig, cell, col, row, true);
       }
@@ -81,11 +94,8 @@ public class HexagonGridView extends GridView {
   private void addHexagonToGridView(Map<StateInterface, String> colorMap,
       SimulationConfig simulationConfig, Cell cell, double j, double i, boolean isUpward)
       throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-    StateInterface cellState = cell.getCurrentState();
-    Shape shape = makeCellShape(cellState, simulationConfig, isUpward);
-    styleTheShape(colorMap, shape, cellState);
+    Shape shape = initializeShape(colorMap, simulationConfig, cell, isUpward);
     addHexagonToGrid(j, i, shape);
-    makeCellPopUp(cellState, shape);
   }
 
   private void addHexagonToGrid(double j, double i, Shape shape) {
