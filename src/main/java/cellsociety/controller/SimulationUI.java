@@ -263,11 +263,10 @@ public class SimulationUI {
         String cssFile;
 
         if (theme.equalsIgnoreCase("DARK")) {
-            cssFile = "dark-theme.css";
-        } else if (theme.equalsIgnoreCase("CUSTOM")) {
-            cssFile = "custom-theme.css";
-        } else {
-            cssFile = "light-theme.css";
+            cssFile = "Dark.css";
+        }
+        else {
+            cssFile = "Light.css";
         }
 
         if (stage != null && stage.getScene() != null) {
