@@ -143,9 +143,9 @@ public class SimulationController {
     SimulationConfig config = fileManager.parseConfiguration();
     engine.initializeSimulation(config, controller);
 
-    applyStyle(currentStyle);
-
     ui.initialize(stage, this);
+
+    applyStyle(currentStyle);
   }
 
   /**
@@ -154,11 +154,11 @@ public class SimulationController {
    * @param style the style to apply
    */
   public void applyStyle(SimulationStyle style) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-    applyCellStateAppearances(style);
+    //applyCellStateAppearances(style);
 
-    applyGridProperties(style);
+    //applyGridProperties(style);
 
-    applyDisplayOptions(style);
+    //applyDisplayOptions(style);
 
     ui.updateView(engine.getSimulation().getColorMap());
   }

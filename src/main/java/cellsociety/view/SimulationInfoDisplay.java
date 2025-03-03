@@ -154,6 +154,7 @@ public class SimulationInfoDisplay {
   public Pane createDisplayBox(String themeColor, SimulationView simView)
       throws FileNotFoundException {
     VBox vbox = new VBox();
+    vbox.setId("SimulationInfoDisplay");
     vbox.setAlignment(Pos.CENTER);
     // create display box to hold relevant information
     // add relevant text to scene
@@ -199,6 +200,10 @@ public class SimulationInfoDisplay {
     infoText.setTextAlignment(TextAlignment.CENTER);
     infoText.setFont(Font.font("Verdana", FontWeight.BOLD, parseInt(CONFIG.getString("text.size"))));
     infoText.setWrappingWidth(Double.parseDouble(CONFIG.getString("sim.info.display.width")) * .4);
+    System.out.println(text);
+    String myId = text.replace(": ", "");
+    myId = myId.replace(" ", "");
+    infoText.setId(myId);
     return infoText;
   }
 
