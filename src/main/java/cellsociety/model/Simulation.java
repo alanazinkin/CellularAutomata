@@ -298,13 +298,14 @@ public abstract class Simulation {
   }
 
   /**
-<<<<<<< src/main/java/cellsociety/model/Simulation.java
    * sets the stateCounts instance variable to the parameter
    * @param stateCounts map of state interface values to cell counts
    */
   protected void setStateCounts(Map<StateInterface, Double> stateCounts) {
     this.stateCounts = stateCounts;
+  }
 
+  /**
    * Sets the color mapping for different cell states in the simulation.
    *
    * @param colorMap a map from state interfaces to color or image path strings
