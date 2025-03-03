@@ -29,13 +29,14 @@ public class CellStateLineGraph {
    *
    * @param xAxisLabel label for the x-axis
    * @param yAxisLabel label for the y-axis
-   * @param title label for the title of the chart
+   * @param title      label for the title of the chart
    */
   public CellStateLineGraph(String xAxisLabel, String yAxisLabel, String title) {
     stateSeriesMap = new HashMap<>();
     timeTracker = 0;
     initLineChart(xAxisLabel, yAxisLabel, title);
   }
+
   /**
    * initializes a new Line Graph with two axes
    *
@@ -52,7 +53,13 @@ public class CellStateLineGraph {
     lineChart.setTitle(title);
   }
 
-  public Pane createDisplayBox(String themeColor, SimulationView simView) {
+  /**
+   * create the cell State Line Graph Display Box
+   *
+   * @param themeColor theme color of the simulation
+   * @return new Pane containing the line chart
+   */
+  public Pane createDisplayBox(String themeColor) {
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
     vbox.getChildren().add(lineChart);
@@ -66,9 +73,9 @@ public class CellStateLineGraph {
    *
    * @param stateCounts a map between the state interface value and the number of cells in that
    *                    state at the given iteration
-   * @param iteration   the iteration the simulation is on
    */
-  public void updateLineChart(Map<StateInterface, Double> stateCounts, Map<StateInterface, String> colorMap, int iteration) {
+  public void updateLineChart(Map<StateInterface, Double> stateCounts,
+      Map<StateInterface, String> colorMap) {
 
     for (Map.Entry<StateInterface, Double> entry : stateCounts.entrySet()) {
       StateInterface state = entry.getKey();

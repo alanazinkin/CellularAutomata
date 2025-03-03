@@ -99,8 +99,8 @@ public class SimulationView {
   , Map<StateInterface, String> colorMap) {
     myCellStateLineGraph = new CellStateLineGraph(myResources.getString("Time"), myResources.getString("PopulationCount"),
         myResources.getString("CellStatesOverTime"));
-    Pane vbox = myCellStateLineGraph.createDisplayBox(themeColor, simView);
-    myCellStateLineGraph.updateLineChart(simulation.getStateCounts(), colorMap, simulation.retrieveIterationCount());
+    Pane vbox = myCellStateLineGraph.createDisplayBox(themeColor);
+    myCellStateLineGraph.updateLineChart(simulation.getStateCounts(), colorMap);
     return vbox;
   }
 
@@ -229,7 +229,7 @@ public class SimulationView {
    */
   public void updateCellPopulationChart(Map<StateInterface, Double> stateCounts,
       Map<StateInterface, String> colorMap) {
-    myCellStateLineGraph.updateLineChart(stateCounts, colorMap, myController.getIterationCount());
+    myCellStateLineGraph.updateLineChart(stateCounts, colorMap);
   }
 
   /**
