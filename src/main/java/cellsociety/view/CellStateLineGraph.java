@@ -1,16 +1,11 @@
 package cellsociety.view;
 
 import cellsociety.model.StateInterface;
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 /**
  * class for creating a new CellStateLineGraph, which is used to display changes in cell populations
@@ -18,9 +13,9 @@ import javafx.scene.layout.VBox;
  *
  * @author Alana Zinkin
  */
-public class CellStateLineGraph {
+public class CellStateLineGraph extends CellChart {
 
-  private LineChart<Number, Number> lineChart;
+  private XYChart<Number, Number> lineChart;
   private Map<StateInterface, XYChart.Series<Number, Number>> stateSeriesMap;
   private int timeTracker;
 
@@ -34,7 +29,7 @@ public class CellStateLineGraph {
   public CellStateLineGraph(String xAxisLabel, String yAxisLabel, String title) {
     stateSeriesMap = new HashMap<>();
     timeTracker = 0;
-    initLineChart(xAxisLabel, yAxisLabel, title);
+    initChart(xAxisLabel, yAxisLabel, title);
   }
 
   /**
@@ -44,7 +39,8 @@ public class CellStateLineGraph {
    * @param yAxisLabel y-axis label
    * @param title      title of the graph
    */
-  public void initLineChart(String xAxisLabel, String yAxisLabel, String title) {
+  @Override
+  public void initChart(String xAxisLabel, String yAxisLabel, String title) {
     NumberAxis xAxis = new NumberAxis();
     xAxis.setLabel(xAxisLabel);
     NumberAxis yAxis = new NumberAxis();
@@ -54,37 +50,20 @@ public class CellStateLineGraph {
   }
 
   /**
-   * create the cell State Line Graph Display Box
-   *
-   * @param themeColor theme color of the simulation
-   * @return new Pane containing the line chart
-   */
-  public Pane createDisplayBox(String themeColor) {
-    VBox vbox = new VBox();
-    vbox.setAlignment(Pos.CENTER);
-    vbox.getChildren().add(lineChart);
-    lineChart.getStyleClass().add(themeColor);
-    return vbox;
-  }
-
-  /**
    * updates the line chart according to the counts of each of the states and the iteration the
    * simulation is currently on
    *
    * @param stateCounts a map between the state interface value and the number of cells in that
    *                    state at the given iteration
    */
-  public void updateLineChart(Map<StateInterface, Double> stateCounts,
+  @Override
+  public void updateChart(Map<StateInterface, Double> stateCounts,
       Map<StateInterface, String> colorMap) {
-
-    for (Map.Entry<StateInterface, Double> entry : stateCounts.entrySet()) {
-      StateInterface state = entry.getKey();
-      double count = entry.getValue();
-
+    for (StateInterface state : stateCounts.keySet()) {
+      double populationCount = stateCounts.get(state);
       // If state is not already in the chart, create a new series
       if (!stateSeriesMap.containsKey(state)) {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        //style the graph
         series.setName(state.toString());
         stateSeriesMap.put(state, series);
         lineChart.getData().add(series);
@@ -92,8 +71,15 @@ public class CellStateLineGraph {
       // Add the new data point to the corresponding series
       XYChart.Series<Number, Number> series = stateSeriesMap.get(state);
       series.nodeProperty().get().setStyle("-fx-stroke: " + colorMap.get(state));
-      series.getData().add(new XYChart.Data<>(timeTracker, count));
+      series.getData().add(new XYChart.Data<>(timeTracker, populationCount));
     }
     timeTracker++;
+  }
+
+  /**
+   * @return linechart instance variable
+   */
+  public XYChart<Number, Number> getGraph() {
+    return lineChart;
   }
 }
