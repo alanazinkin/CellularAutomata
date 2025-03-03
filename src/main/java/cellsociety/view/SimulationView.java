@@ -10,7 +10,7 @@ import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.StateInterface;
 import cellsociety.view.gridview.GridViewFactory;
-import cellsociety.view.shapefactory.CellShapeFactory;
+
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

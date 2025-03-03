@@ -6,27 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cellsociety.controller.SimulationUI;
 import java.util.List;
-import org.testfx.util.WaitForAsyncUtils;
 
 import cellsociety.controller.SimulationConfig;
 import cellsociety.controller.SimulationController;
 import cellsociety.model.Grid;
 import cellsociety.model.state.GameOfLifeState;
 import cellsociety.view.gridview.GridView;
-import java.io.FileNotFoundException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobot;
 import util.DukeApplicationTest;
 
 class SimulationSelectorTest extends DukeApplicationTest {

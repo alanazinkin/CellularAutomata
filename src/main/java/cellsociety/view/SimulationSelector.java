@@ -2,11 +2,13 @@ package cellsociety.view;
 
 import cellsociety.controller.FileRetriever;
 import cellsociety.controller.SimulationController;
-import cellsociety.controller.SimulationUI;
+
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import cellsociety.controller.SimulationUI;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
@@ -96,7 +98,7 @@ public class SimulationSelector {
       String simulationType = simulationTypes.getValue();
       if (simulationType != null && fileName != null) {
         try {
-          myController.selectSimulation(simulationType, fileName, stage, myController);
+          myController.selectSimulation(simulationType, fileName, null, stage, myController);
         } catch (Exception ex) {
           SimulationUI.displayAlert(resources.getString("Error"),
               resources.getString("SimOrFileNOtSelected"));
