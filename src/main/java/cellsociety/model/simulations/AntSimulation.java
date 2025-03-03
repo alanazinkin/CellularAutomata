@@ -73,6 +73,19 @@ public class AntSimulation extends Simulation {
   }
 
   /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(new AntState(true, false, false, 0, 0, 0), 0.0);
+    stateCounts.put(new AntState(false, true, false, 0, 0, 0), 0.0);
+    stateCounts.put(new AntState(false, false, true, 0, 0, 0), 0.0);
+    stateCounts.put(new AntState(false, false, false, 0, 0, 0), 0.0);
+    setStateCounts(stateCounts);
+  }
+
+  /**
    * {@inheritDoc}
    * <p>
    * Initializes state mappings for grid configuration:

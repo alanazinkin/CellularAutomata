@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.PercolationState;
 import cellsociety.model.StateInterface;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +91,18 @@ public class Percolation extends Simulation {
         PercolationState.PERCOLATED, "percolation-state-percolated",
         PercolationState.BLOCKED, "percolation-state-blocked"
     );
+  }
+
+  /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(PercolationState.OPEN, 0.0);
+    stateCounts.put(PercolationState.PERCOLATED, 0.0);
+    stateCounts.put(PercolationState.BLOCKED, 0.0);
+    setStateCounts(stateCounts);
   }
 
   /**

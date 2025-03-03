@@ -177,6 +177,20 @@ public class SugarScape extends Simulation {
   }
 
   /**
+   * Initializes state counts for all states to 0.0
+   *
+   * @return initialized stateCounts map with 0s for each state, meaning no cells are in this state
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(SugarScapeState.EMPTY, 0.0);
+    stateCounts.put(SugarScapeState.SUGAR, 0.0);
+    stateCounts.put(SugarScapeState.AGENT, 0.0);
+    setStateCounts(stateCounts);
+  }
+
+  /**
    * Initializes the state mapping for the simulation.
    * <p>
    * The returned map associates integer values with their corresponding {@link StateInterface} states.

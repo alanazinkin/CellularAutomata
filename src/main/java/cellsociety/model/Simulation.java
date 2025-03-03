@@ -2,6 +2,7 @@ package cellsociety.model;
 
 import cellsociety.controller.SimulationConfig;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,7 +33,10 @@ public abstract class Simulation {
    */
   private final Map<Integer, StateInterface> stateMap;
 
+  private Map<StateInterface, Double> stateCounts;
+
   private int iterationCount;
+
   /**
    * Constructs a new Simulation instance with specified configuration and grid.
    *
@@ -46,7 +50,10 @@ public abstract class Simulation {
     this.grid = grid;
     this.colorMap = initializeColorMap();
     this.stateMap = initializeStateMap();
+    this.stateCounts = new HashMap<>();
+    initializeStateCounts();
     initializeGrid(simulationConfig);
+    updateStateCountsMap();
     resetIterationCount();
   }
 
@@ -73,7 +80,6 @@ public abstract class Simulation {
   private void initializeGrid(SimulationConfig simulationConfig) {
     int[] initialStates = simulationConfig.getInitialStates();
     validateInitialStates(initialStates);
-
     int cellCount = 0;
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
@@ -85,18 +91,19 @@ public abstract class Simulation {
   }
 
   /**
-   * Reinitializes the grid states based on the provided simulation configuration.
-   * This method assigns new states to each cell in the grid according to the initial states
-   * specified in the {@code simulationConfig}. It ensures that all required data structures
-   * (grid cells and state mappings) are properly initialized before proceeding.
+   * Reinitializes the grid states based on the provided simulation configuration. This method
+   * assigns new states to each cell in the grid according to the initial states specified in the
+   * {@code simulationConfig}. It ensures that all required data structures (grid cells and state
+   * mappings) are properly initialized before proceeding.
    *
    * @param simulationConfig the configuration containing the initial states for the grid
-   * @throws NullPointerException if the initial states array is empty, a grid cell is null,
-   *                              or the state map is null
+   * @throws NullPointerException if the initial states array is empty, a grid cell is null, or the
+   *                              state map is null
    */
   public void reinitializeGridStates(SimulationConfig simulationConfig) {
     int cellCount = 0;
     resetIterationCount();
+    initializeStateCounts();
     if (simulationConfig.getInitialStates().length == 0) {
       throw new NullPointerException("Initial states array is empty");
     }
@@ -171,16 +178,19 @@ public abstract class Simulation {
   public void step() {
     applyRules();
     grid.applyNextStates();
+    updateStateCountsMap();
     iterationCount++;
   }
 
-  public void stepBackOnce() {
+  public boolean stepBackOnce() {
+    boolean applied = false;
     if (iterationCount > 0) {
-      boolean applied = grid.applyPreviousStates();
+      applied = grid.applyPreviousStates();
       if (applied) {
         iterationCount--;
       }
     }
+    return applied;
   }
 
   /**
@@ -196,6 +206,41 @@ public abstract class Simulation {
    * @return Complete mapping of integer values to simulation states
    */
   protected abstract Map<Integer, StateInterface> initializeStateMap();
+
+  /**
+   * Template method for initializing state-cell count mappings.
+   */
+  protected abstract void initializeStateCounts();
+
+  /**
+   * updates the numerical counts of each state for all cells
+   */
+  private void updateStateCountsMap() {
+    initializeStateCounts();
+    for (int r = 0; r < grid.getRows(); r++) {
+      for (int c = 0; c < grid.getCols(); c++) {
+        StateInterface currentState = grid.getCell(r, c).getCurrentState();
+        updateStateCountValue(currentState);
+      }
+    }
+    System.out.println(stateCounts);
+  }
+
+  /**
+   * updates the state count for a given state value by 1 (for a specific cell)
+   * <p>
+   * method is called for each cell
+   * </p>
+   *
+   * @param state the state to be updated by 1
+   */
+  public void updateStateCountValue(StateInterface state) {
+    if (stateCounts.containsKey(state)) {
+      stateCounts.put(state, stateCounts.get(state) + 1);
+    } else {
+      stateCounts.put(state, 0.0);
+    }
+  }
 
   /**
    * Applies simulation-specific rules to calculate next cell states.
@@ -230,8 +275,17 @@ public abstract class Simulation {
   }
 
   /**
-   * retrieves the iterationCount variables representing the number of iterations
-   * of the simulation that have passed
+   * Retrieves state-cell count mappings.
+   *
+   * @return map of state values to numerical cell counts
+   */
+  public Map<StateInterface, Double> getStateCounts() {
+    return stateCounts;
+  }
+
+  /**
+   * retrieves the iterationCount variables representing the number of iterations of the simulation
+   * that have passed
    *
    * @return iterationCount instance variable
    */
@@ -241,6 +295,14 @@ public abstract class Simulation {
 
   private void resetIterationCount() {
     iterationCount = 0;
+  }
+
+  /**
+   * sets the stateCounts instance variable to the parameter
+   * @param stateCounts map of state interface values to cell counts
+   */
+  protected void setStateCounts(Map<StateInterface, Double> stateCounts) {
+    this.stateCounts = stateCounts;
   }
 
 }

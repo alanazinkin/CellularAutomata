@@ -6,6 +6,7 @@ import cellsociety.model.Cell;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.GameOfLifeState;
 import cellsociety.model.StateInterface;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,17 @@ public class RuleBasedGameOfLife extends Simulation {
         GameOfLifeState.ALIVE, "gameoflife-state-alive",
         GameOfLifeState.DEAD, "gameoflife-state-dead"
     );
+  }
+
+  /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(GameOfLifeState.ALIVE, 0.0);
+    stateCounts.put(GameOfLifeState.DEAD, 0.0);
+    setStateCounts(stateCounts);
   }
 
   /**

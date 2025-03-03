@@ -57,7 +57,7 @@ public class WaTorWorld extends Simulation {
    * @param sharkInitialEnergy initial energy for a shark when created
    * @param sharkEnergyGain    energy a shark gains by eating a fish
    * @throws IllegalArgumentException if fishBreedTime or sharkBreedTime is less than or equal to 0
-   * author Tatum McKinnis
+   *                                  author Tatum McKinnis
    */
   public WaTorWorld(SimulationConfig simulationConfig, Grid grid, double fishBreedTime,
       double sharkBreedTime, double sharkInitialEnergy, double sharkEnergyGain) {
@@ -117,6 +117,18 @@ public class WaTorWorld extends Simulation {
         WaTorWorldState.SHARK, "watorworld-state-shark",
         WaTorWorldState.EMPTY, "watorworld-state-empty"
     );
+  }
+
+  /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(WaTorWorldState.FISH, 0.0);
+    stateCounts.put(WaTorWorldState.SHARK, 0.0);
+    stateCounts.put(WaTorWorldState.EMPTY, 0.0);
+    setStateCounts(stateCounts);
   }
 
   /**
