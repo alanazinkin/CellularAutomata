@@ -170,10 +170,11 @@ public class SimulationUI {
    *
    * @param colorMap the mapping of states to colors.
    */
-  public void updateView(Map<StateInterface, String> colorMap)
+  public void updateView(Map<StateInterface, String> colorMap, Map<StateInterface, Double> stateCountsMap)
       throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     simulationView.updateGrid(colorMap);
     simulationView.updateIterationCounter();
+    simulationView.updateCellPopulationChart(stateCountsMap, colorMap);
   }
 
   /**

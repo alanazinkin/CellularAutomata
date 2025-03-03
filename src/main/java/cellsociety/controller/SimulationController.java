@@ -120,7 +120,7 @@ public class SimulationController {
   public void resetGrid() {
     try {
       engine.resetGrid();
-      ui.updateView(engine.getSimulation().getColorMap());
+      ui.updateView(engine.getSimulation().getColorMap(), engine.getSimulation().getStateCounts());
     } catch (Exception e) {
       ui.handleError("ResetError", e);
     }
