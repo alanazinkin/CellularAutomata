@@ -81,7 +81,7 @@ public class SimulationView {
   private void createRightSideDisplayBox(Simulation simulation, SimulationView simView,
       Map<StateInterface, String> colorMap, String themeColor) throws FileNotFoundException {
     VBox rightSideBox = new VBox();
-    rightSideBox.setPadding(new Insets(50, 50, 50, 0));  // Adds 20px padding inside the VBox
+    rightSideBox.setPadding(new Insets(30, 20, 20, 0));  // Adds 20px padding inside the VBox
     simView.getRoot().setRight(rightSideBox);
     Pane simInfoDisplay = createSimulationInfoDisplay(simulation, simView, themeColor);
     Pane cellPopChart = createCellPopulationsBarChart(themeColor, simulation, colorMap);
