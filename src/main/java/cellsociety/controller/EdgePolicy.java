@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 /**
  * Possible edge policies for the grid.
- * @author angelapredolac 
+ * @author angelapredolac
  */
 public enum EdgePolicy {
     FINITE,     // Cells at the edge have fewer neighbors
