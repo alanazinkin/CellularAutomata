@@ -74,7 +74,7 @@ public class XMLStyleParser {
      * @throws ConfigurationException If validation or parsing errors occur.
      */
     private SimulationStyle parseStyleDocument(Document document) throws ConfigurationException {
-        structureValidator.validateStyleXMLStructure(document);
+        structureValidator.validateXMLStructure(document);
 
         SimulationStyle style = new SimulationStyle();
 

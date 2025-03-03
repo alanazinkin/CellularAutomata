@@ -2,6 +2,7 @@ package cellsociety.model;
 
 import cellsociety.controller.SimulationConfig;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ public abstract class Simulation {
   /**
    * Immutable mapping of states to their visual representations
    */
-  private final Map<StateInterface, String> colorMap;
+  private Map<StateInterface, String> colorMap;
   /**
    * Immutable mapping of integer values to simulation states
    */
@@ -241,6 +242,15 @@ public abstract class Simulation {
 
   private void resetIterationCount() {
     iterationCount = 0;
+  }
+
+  /**
+   * Sets the color mapping for different cell states in the simulation.
+   *
+   * @param colorMap a map from state interfaces to color or image path strings
+   */
+  public void setColorMap(Map<StateInterface, String> colorMap) {
+    this.colorMap = new HashMap<>(colorMap);
   }
 
 }
