@@ -192,4 +192,22 @@ public class XMLStyleParser {
             style.setAnimationSpeed(animationSpeed);
         }
     }
+
+    /**
+     * Validates the structure of a style XML document.
+     *
+     * @param document The XML document to validate.
+     * @throws ConfigurationException If the document structure is invalid.
+     */
+    public void validateStyleXMLStructure(Document document) throws ConfigurationException {
+        Element root = document.getDocumentElement();
+        if (!root.getNodeName().equals("style")) {
+            throw new ConfigurationException("Root element must be <style>");
+        }
+
+        NodeList idNodes = document.getElementsByTagName("id");
+        if (idNodes.getLength() == 0) {
+            throw new ConfigurationException("Style must have an id element");
+        }
+    }
 }

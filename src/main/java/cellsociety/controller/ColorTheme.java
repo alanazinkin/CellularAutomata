@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 /**
  * Possible color themes for the display.
- * @author angelapredolac 
+ * @author angelapredolac
  */
 public enum ColorTheme {
     LIGHT,  // Light mode (white background, dark cells)
