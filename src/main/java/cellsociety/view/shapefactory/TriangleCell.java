@@ -5,6 +5,7 @@ import javafx.scene.shape.Shape;
 
 /**
  * concrete TriangleCell class for creating a cell in the shape of a Triangle
+ * @author Alana Zinkin
  */
 public class TriangleCell implements CellShape {
 

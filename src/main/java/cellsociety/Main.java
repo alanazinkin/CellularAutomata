@@ -4,6 +4,10 @@ import cellsociety.controller.SimulationMaker;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * main class where application is run from
+ * @author Alana Zinkin, Tatum Mckinnis, Angela Predolac
+ */
 public class Main extends Application {
 
   /**

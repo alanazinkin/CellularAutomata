@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 
 /**
  * Default Grid View Factory creates a DefaultGridView object
+ * @author Alana Zinkin
  */
 public class DefaultGridViewFactory extends GridViewFactory {
 

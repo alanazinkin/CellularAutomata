@@ -22,6 +22,8 @@ import javafx.scene.layout.Pane;
 /**
  * UserController class allows the user to create new buttons, selectors, and other widgets for
  * interacting with the simulation
+ *
+ * @author Alana Zinkin
  */
 public class UserController {
 

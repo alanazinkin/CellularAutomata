@@ -40,6 +40,7 @@ import javafx.util.Duration;
 /**
  * abstract class for creating a GridView, which holds all teh cells and updates the visual display
  * of their states
+ * @author Alana Zinkin
  */
 public abstract class GridView {
 

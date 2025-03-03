@@ -26,6 +26,8 @@ import javafx.stage.Stage;
 /**
  * SimulationView class is the high level class for creating a new simulation view with the relative
  * control panels, buttons, grid views etc.
+ *
+ * @author Alana Zinkin
  */
 public class SimulationView {
 

@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 
 /**
  * class for generating a HexagonalGridView from a Factory class
+ * @author Alana Zinkin
  */
 public class HexagonGridViewFactory extends GridViewFactory {
 

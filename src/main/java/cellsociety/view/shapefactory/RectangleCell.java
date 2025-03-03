@@ -8,6 +8,7 @@ import javafx.scene.shape.Shape;
  * <p>
  *   implements the CellShape class
  * </p>
+ * @author Alana Zinkin
  */
 public class RectangleCell implements CellShape {
   private Rectangle rectangle;

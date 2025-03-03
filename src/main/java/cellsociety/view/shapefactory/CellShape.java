@@ -4,6 +4,7 @@ import javafx.scene.shape.Shape;
 
 /**
  * interface for creating the visual display of a cell
+ * @author Alana Zinkin
  */
 public interface CellShape {
 

@@ -19,6 +19,7 @@ import javafx.scene.shape.Shape;
 
 /**
  * class for creating a HexagonGridView: a grid with Hexagonal tiling
+ * @author Alana Zinkin
  */
 public class HexagonGridView extends GridView {
 

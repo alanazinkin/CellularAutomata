@@ -2,6 +2,7 @@ package cellsociety.view.shapefactory;
 
 /**
  * Abstract class for creating a CellShapeFactory which can create Cell Shapes
+ * @author Alana Zinkin
  */
 public abstract class CellShapeFactory {
 

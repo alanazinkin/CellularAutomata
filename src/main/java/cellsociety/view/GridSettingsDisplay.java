@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 /**
  * This class creates a settings display which had buttons for selecting the specific type of grid
  * neighborhood, edge type, and cell shape
+ *
+ * @author Alana Zinkin
  */
 public class GridSettingsDisplay {
 

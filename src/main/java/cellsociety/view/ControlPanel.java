@@ -28,6 +28,8 @@ import javafx.stage.Stage;
  * This class creates the buttons and components of the control panel, which allows the user to
  * control the type, speed, start, and stop of the simulation. It also creates a button to save an
  * XML file of the current state of the simulation.
+ *
+ * @author Alana Zinkin
  */
 public class ControlPanel {
 
@@ -95,7 +97,8 @@ public class ControlPanel {
       makeANewSim();
     });
     addSimButton.setId("addSimButton");
-    List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, stepBackwardButton, resetButton,
+    List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, stepBackwardButton,
+        resetButton,
         saveButton, addSimButton);
     addButtonsToPane(buttons);
     List<String> simulationTypes = myFileRetriever.getSimulationTypes();
@@ -160,10 +163,13 @@ public class ControlPanel {
     Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
         myResources.getString("ToggleGrid"), myGridView);
     gridLinesToggle.setId("gridLinesToggle");
-    Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"), myGridView);
+    Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"),
+        myGridView);
     flipGridButton.setId("flipGridButton");
-    Button gridSettings = myUserControl.makeButton(myResources.getString("GridSettings"), e -> myGridSettingsDisplay.openWindow()) ;
-    List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton, gridSettings);
+    Button gridSettings = myUserControl.makeButton(myResources.getString("GridSettings"),
+        e -> myGridSettingsDisplay.openWindow());
+    List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton,
+        gridSettings);
     myCustomizationBar.getChildren().addAll(elements);
   }
 
@@ -176,8 +182,11 @@ public class ControlPanel {
   public void makeLowerBar(BorderPane root) {
     myLowerBar = new VBox(parseInt(myConfigBundle.getOrDefault("lower.bar.spacing", "10")));
     myLowerBar.setId("lowerBar");
-    myLowerBar.setPadding(new Insets(0, 0, parseInt(myConfigBundle.getOrDefault("lower.bar.bottom.padding", "10")), 0));
-    myLowerBar.setPrefHeight(parseInt(myConfigBundle.getOrDefault("control.bar.height", "60")) * .3);
+    myLowerBar.setPadding(
+        new Insets(0, 0, parseInt(myConfigBundle.getOrDefault("lower.bar.bottom.padding", "10")),
+            0));
+    myLowerBar.setPrefHeight(
+        parseInt(myConfigBundle.getOrDefault("control.bar.height", "60")) * .3);
     myLowerBar.setAlignment(Pos.CENTER);
     myLowerBar.setPrefWidth(Double.MAX_VALUE);
     root.setBottom(myLowerBar);
@@ -242,7 +251,8 @@ public class ControlPanel {
   }
 
   private void makeCustomizationBar() {
-    myCustomizationBar = new HBox(parseInt(myConfigBundle.getOrDefault("customization.bar.spacing", "100")));
+    myCustomizationBar = new HBox(
+        parseInt(myConfigBundle.getOrDefault("customization.bar.spacing", "100")));
     myCustomizationBar.setId("customizationBar");
     myCustomizationBar.setAlignment(Pos.CENTER);
     addCustomizationBarToLowerBar();
