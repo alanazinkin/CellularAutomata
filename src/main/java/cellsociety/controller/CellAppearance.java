@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 /**
  * Represents the appearance of a cell state.
- * @author angelapredolac 
+ * @author angelapredolac
  */
 public class CellAppearance {
     private String color;
