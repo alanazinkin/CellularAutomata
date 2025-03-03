@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 /**
  * Possible cell shapes for the grid.
- * @author angelapredolac 
+ * @author angelapredolac
  */
 public enum CellShape {
     SQUARE,    // Traditional square cells
