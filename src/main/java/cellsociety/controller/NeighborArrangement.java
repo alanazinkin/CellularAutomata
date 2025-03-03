@@ -2,7 +2,7 @@ package cellsociety.controller;
 
 /**
  * Possible neighbor arrangements for the grid.
- * @author angelapredolac 
+ * @author angelapredolac
  */
 public enum NeighborArrangement {
     MOORE,          // All 8 surrounding cells for square grid
