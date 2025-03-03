@@ -6,6 +6,7 @@ import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.FireState;
 import cellsociety.model.StateInterface;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -96,6 +97,19 @@ public class Fire extends Simulation {
         BURNING_STATE_KEY, FireState.BURNING,
         BURNT_STATE_KEY, FireState.BURNT
     );
+  }
+
+  /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(FireState.TREE, 0.0);
+    stateCounts.put(FireState.BURNING, 0.0);
+    stateCounts.put(FireState.BURNT, 0.0);
+    stateCounts.put(FireState.EMPTY, 0.0);
+    setStateCounts(stateCounts);
   }
 
   /**

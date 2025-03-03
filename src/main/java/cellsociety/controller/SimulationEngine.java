@@ -89,7 +89,7 @@ public class SimulationEngine {
     public void step()
         throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         simulation.step();
-        simulationUI.updateView(getSimulation().getColorMap());
+        simulationUI.updateView(getSimulation().getColorMap(), getSimulation().getStateCounts());
     }
 
     /**
@@ -103,8 +103,10 @@ public class SimulationEngine {
      */
     public void stepBackOnce()
         throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-        simulation.stepBackOnce();
-        simulationUI.updateView(getSimulation().getColorMap());
+        boolean applied = simulation.stepBackOnce();
+        if (applied) {
+            simulationUI.updateView(getSimulation().getColorMap(), getSimulation().getStateCounts());
+        }
     }
 
     public void resetGrid() {

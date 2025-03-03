@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -145,21 +146,19 @@ public class SimulationInfoDisplay {
    * create a new display window to present relevant simulation information to user such as type of
    * simulation, title, description, author, parameters, and state color mappings
    *
-   * @param stage JavaFX stage for holding all the elements
-   * @param title title of the border pane (what's displayed at the top of the window)
+   * @param themeColor the theme of the view (Dark or Light) used to style the display
+   * @param simView the simulation view object that the display is being added to
    * @return a new Scene the size of SCREEN_WIDTH and SCREEN_HEIGHT static constants with a
    * BorderPane root as the root element
    */
-  public void createDisplayBox(String themeColor, SimulationView simView)
+  public Pane createDisplayBox(String themeColor, SimulationView simView)
       throws FileNotFoundException {
     VBox vbox = new VBox();
     vbox.setAlignment(Pos.CENTER);
-    simView.getRoot().setRight(vbox);
-    vbox.setPadding(new Insets(0, 100, 0, 0));  // Adds 20px padding inside the VBox
-
     // create display box to hold relevant information
     // add relevant text to scene
     addSimulationInformationToScene(vbox, themeColor);
+    return vbox;
   }
 
   /**

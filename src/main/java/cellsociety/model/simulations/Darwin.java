@@ -110,6 +110,17 @@ public class Darwin extends Simulation {
   }
 
   /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(DarwinState.EMPTY, 0.0);
+    stateCounts.put(DarwinState.CREATURE, 0.0);
+    setStateCounts(stateCounts);
+  }
+
+  /**
    * Applies the rules of the Darwin model for one iteration of the simulation.
    * Each creature executes its program until performing an action.
    */

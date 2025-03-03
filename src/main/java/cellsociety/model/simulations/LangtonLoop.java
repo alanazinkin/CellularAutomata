@@ -424,6 +424,23 @@ public class LangtonLoop extends Simulation {
   }
 
   /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(LangtonState.EMPTY, 0.0);
+    stateCounts.put(LangtonState.SHEATH, 0.0);
+    stateCounts.put(LangtonState.CORE, 0.0);
+    stateCounts.put(LangtonState.TEMP, 0.0);
+    stateCounts.put(LangtonState.TURN, 0.0);
+    stateCounts.put(LangtonState.EXTEND, 0.0);
+    stateCounts.put(LangtonState.INIT, 0.0);
+    stateCounts.put(LangtonState.ADVANCE, 0.0);
+    setStateCounts(stateCounts);
+  }
+
+  /**
    * Initializes a mapping of integer values to their corresponding Langton's Loop states. This map
    * is used to associate numerical representations with specific states, which can be useful for
    * grid-based simulations and file I/O operations.

@@ -8,6 +8,7 @@ import cellsociety.model.Simulation;
 import cellsociety.model.state.SchellingState;
 import cellsociety.model.StateInterface;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -107,6 +108,17 @@ public class Schelling extends Simulation {
         SchellingState.AGENT, "schelling-state-agent",
         SchellingState.EMPTY_CELL, "schelling-state-empty"
     );
+  }
+
+  /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(SchellingState.AGENT, 0.0);
+    stateCounts.put(SchellingState.EMPTY_CELL, 0.0);
+    setStateCounts(stateCounts);
   }
 
   /**

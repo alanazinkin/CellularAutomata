@@ -75,6 +75,18 @@ public class BacteriaColoniesSimulation extends Simulation {
   }
 
   /**
+   * Initializes state counts for all states to 0.0
+   */
+  @Override
+  public void initializeStateCounts() {
+    Map<StateInterface, Double> stateCounts = getStateCounts();
+    stateCounts.put(BacteriaState.ROCK, 0.0);
+    stateCounts.put(BacteriaState.PAPER, 0.0);
+    stateCounts.put(BacteriaState.SCISSORS, 0.0);
+    setStateCounts(stateCounts);
+  }
+
+  /**
    * Initializes the mapping between integer values and simulation states. This mapping is used to
    * convert between the numeric representation in the configuration and the actual state objects.
    *
@@ -115,7 +127,6 @@ public class BacteriaColoniesSimulation extends Simulation {
   private void updateCellState(int row, int col) {
     Cell currentCell = getGrid().getCell(row, col);
     BacteriaState currentState = (BacteriaState) currentCell.getCurrentState();
-
     List<Cell> neighbors = getGrid().getNeighbors(row, col);
     Map<BacteriaState, Integer> neighborCounts = countNeighborStates(neighbors);
 

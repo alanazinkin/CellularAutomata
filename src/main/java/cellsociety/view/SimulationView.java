@@ -18,8 +18,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import cellsociety.view.gridview.GridView;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -40,6 +43,7 @@ public class SimulationView {
   private String myThemeColor;
   private Map<String, String> mySimulationResourceMap;
   private Text iterationCounter;
+  private CellStateLineGraph myCellStateLineGraph;
 
   /**
    * @param simulationConfig  the simulation configuration containing all information about the
@@ -70,10 +74,37 @@ public class SimulationView {
     setTheme(themeColor, myScene);
     createGridView(simView, colorMap, grid);
     createControlPanel(primaryStage, simView);
-    createSimulationInfoDisplay(simulation, simView, themeColor);
+    createRightSideDisplayBox(simulation, simView, colorMap, themeColor);
   }
 
-  private void createSimulationInfoDisplay(Simulation simulation, SimulationView simView,
+  private void createRightSideDisplayBox(Simulation simulation, SimulationView simView,
+      Map<StateInterface, String> colorMap, String themeColor) throws FileNotFoundException {
+    VBox rightSideBox = new VBox();
+    rightSideBox.setPadding(new Insets(50, 50, 50, 0));  // Adds 20px padding inside the VBox
+    simView.getRoot().setRight(rightSideBox);
+    Pane simInfoDisplay = createSimulationInfoDisplay(simulation, simView, themeColor);
+    Pane cellPopChart = createCellPopulationsOverTimeChart(simView, themeColor, simulation, colorMap);
+    rightSideBox.getChildren().addAll(simInfoDisplay, cellPopChart);
+  }
+
+  /**
+   * initializes the cell populations over time chart
+   *
+   * @param simView the simulation view object
+   * @param themeColor CSS theme style color
+   * @param simulation simulation currently running
+   * @param colorMap map of state interface values to the CSS identifier for that given state
+   */
+  public Pane createCellPopulationsOverTimeChart(SimulationView simView, String themeColor, Simulation simulation
+  , Map<StateInterface, String> colorMap) {
+    myCellStateLineGraph = new CellStateLineGraph(myResources.getString("Time"), myResources.getString("PopulationCount"),
+        myResources.getString("CellStatesOverTime"));
+    Pane vbox = myCellStateLineGraph.createDisplayBox(themeColor, simView);
+    myCellStateLineGraph.updateLineChart(simulation.getStateCounts(), colorMap, simulation.retrieveIterationCount());
+    return vbox;
+  }
+
+  private Pane createSimulationInfoDisplay(Simulation simulation, SimulationView simView,
       String themeColor)
       throws FileNotFoundException {
     SimulationInfoDisplay mySimInfoDisplay = new SimulationInfoDisplay(myConfig.getType(),
@@ -82,7 +113,7 @@ public class SimulationView {
         simulation.getColorMap(),
         myResources
     );
-    mySimInfoDisplay.createDisplayBox(themeColor, simView);
+    return mySimInfoDisplay.createDisplayBox(themeColor, simView);
   }
 
   private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
@@ -188,6 +219,17 @@ public class SimulationView {
       SimulationUI.displayAlert(myResources.getString("Error"),
           myResources.getString("GridViewNull"));
     }
+  }
+
+  /**
+   * updates the cell population chart according to the number of cells in a given state
+   *
+   * @param stateCounts a map between cell states and the number of cells in that given state
+   * @param colorMap    map of cell states to colors for styling purposes
+   */
+  public void updateCellPopulationChart(Map<StateInterface, Double> stateCounts,
+      Map<StateInterface, String> colorMap) {
+    myCellStateLineGraph.updateLineChart(stateCounts, colorMap, myController.getIterationCount());
   }
 
   /**
