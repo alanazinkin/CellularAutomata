@@ -1,4 +1,4 @@
-package cellsociety.view.cellchart;
+package cellsociety.view;
 
 import cellsociety.model.StateInterface;
 import java.util.Map;

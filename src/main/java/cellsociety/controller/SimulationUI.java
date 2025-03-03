@@ -68,7 +68,7 @@ public class SimulationUI {
       throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     simulationView.updateGrid(colorMap);
     simulationView.updateIterationCounter();
-    simulationView.updateCellPopulationChart(stateCountsMap, colorMap);
+    simulationView.updateCellCharts(stateCountsMap, colorMap);
   }
 
     /**

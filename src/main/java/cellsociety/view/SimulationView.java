@@ -44,6 +44,7 @@ public class SimulationView {
   private Map<String, String> mySimulationResourceMap;
   private Text iterationCounter;
   private CellStateLineGraph myCellStateLineGraph;
+  private CellStateBarGraph myCellStateBarGraph;
 
   /**
    * @param simulationConfig  the simulation configuration containing all information about the
@@ -83,24 +84,33 @@ public class SimulationView {
     rightSideBox.setPadding(new Insets(50, 50, 50, 0));  // Adds 20px padding inside the VBox
     simView.getRoot().setRight(rightSideBox);
     Pane simInfoDisplay = createSimulationInfoDisplay(simulation, simView, themeColor);
-    Pane cellPopChart = createCellPopulationsOverTimeChart(simView, themeColor, simulation, colorMap);
-    rightSideBox.getChildren().addAll(simInfoDisplay, cellPopChart);
+    Pane cellPopChart = createCellPopulationsBarChart(themeColor, simulation, colorMap);
+    Pane cellStateBarGraph = createCellPopChangesPerStepChart(themeColor, simulation, colorMap);
+    rightSideBox.getChildren().addAll(simInfoDisplay, cellPopChart, cellStateBarGraph);
   }
 
   /**
    * initializes the cell populations over time chart
    *
-   * @param simView the simulation view object
    * @param themeColor CSS theme style color
    * @param simulation simulation currently running
    * @param colorMap map of state interface values to the CSS identifier for that given state
    */
-  public Pane createCellPopulationsOverTimeChart(SimulationView simView, String themeColor, Simulation simulation
+  public Pane createCellPopulationsBarChart(String themeColor, Simulation simulation
   , Map<StateInterface, String> colorMap) {
     myCellStateLineGraph = new CellStateLineGraph(myResources.getString("Time"), myResources.getString("PopulationCount"),
         myResources.getString("CellStatesOverTime"));
-    Pane vbox = myCellStateLineGraph.createDisplayBox(themeColor);
-    myCellStateLineGraph.updateLineChart(simulation.getStateCounts(), colorMap);
+    Pane vbox = myCellStateLineGraph.createDisplayBox(themeColor, myCellStateLineGraph.getGraph());
+    myCellStateLineGraph.updateChart(simulation.getStateCounts(), colorMap);
+    return vbox;
+  }
+
+  public Pane createCellPopChangesPerStepChart(String themeColor, Simulation simulation
+      , Map<StateInterface, String> colorMap) {
+    myCellStateBarGraph = new CellStateBarGraph(myResources.getString("CellState"), myResources.getString("PopulationChange"),
+        myResources.getString("ChangeInPopSincePrevStep"));
+    Pane vbox = myCellStateBarGraph.createDisplayBox(themeColor, myCellStateBarGraph.getGraph());
+    myCellStateBarGraph.updateChart(simulation.getStateCounts(), colorMap);
     return vbox;
   }
 
@@ -227,9 +237,10 @@ public class SimulationView {
    * @param stateCounts a map between cell states and the number of cells in that given state
    * @param colorMap    map of cell states to colors for styling purposes
    */
-  public void updateCellPopulationChart(Map<StateInterface, Double> stateCounts,
+  public void updateCellCharts(Map<StateInterface, Double> stateCounts,
       Map<StateInterface, String> colorMap) {
-    myCellStateLineGraph.updateLineChart(stateCounts, colorMap);
+    myCellStateLineGraph.updateChart(stateCounts, colorMap);
+    myCellStateBarGraph.updateChart(stateCounts, colorMap);
   }
 
   /**
