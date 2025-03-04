@@ -554,28 +554,4 @@ public class AntSimulation extends Simulation {
       }
     }
   }
-
-  /**
-   * Returns an unmodifiable map of states to their corresponding color representations. This map
-   * provides a way to associate each state with a specific color for visualization purposes.
-   *
-   * @return An unmodifiable {@code Map} where keys are {@code StateInterface} objects and values
-   * are color strings.
-   */
-  @Override
-  public Map<StateInterface, String> getColorMap() {
-    return Collections.unmodifiableMap(super.getColorMap());
-  }
-
-  /**
-   * Returns an unmodifiable map of state IDs to their corresponding {@code StateInterface} objects.
-   * This map allows for efficient retrieval of states based on their unique integer identifiers.
-   *
-   * @return An unmodifiable {@code Map} where keys are integer state IDs and values are
-   * {@code StateInterface} objects.
-   */
-  @Override
-  public Map<Integer, StateInterface> getStateMap() {
-    return Collections.unmodifiableMap(super.getStateMap());
-  }
 }
