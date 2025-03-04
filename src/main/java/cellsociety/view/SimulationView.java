@@ -257,11 +257,11 @@ public class SimulationView {
    * the simulation
    */
   public void updateIterationCounter() {
-    iterationCounter.setText("Iteration Count: " + myController.getIterationCount());
+    iterationCounter.setText(myResources.getString("IterCount") + ": " + myController.getIterationCount());
   }
 
   private void makeIterationCounter() {
-    iterationCounter = new Text("Iteration Count: " + myController.getIterationCount());
+    iterationCounter = new Text(myResources.getString("IterCount") + ": " + myController.getIterationCount());
   }
 
   private GridView makeGridViewFromTiling(SimulationConfig simulationConfig, Grid grid)
