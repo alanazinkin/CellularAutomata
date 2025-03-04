@@ -1,5 +1,12 @@
 package cellsociety.view.gridview;
 
+import cellsociety.model.StateInterface;
+import cellsociety.model.state.PercolationState;
+import cellsociety.view.ControlPanel;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import java.util.List;
+import javafx.scene.layout.Pane;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.controller.SimulationConfig;
@@ -32,7 +39,7 @@ class GridViewTest extends DukeApplicationTest {
   private int[] myInitialStates = new int[]{0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1};
   private SimulationConfig mySimulationConfig;
   private ResourceBundle DEFAULT_LANGUAGE_BUNDLE = ResourceBundle.getBundle("cellsociety.controller.English");
-  private Map<String, String> mySimulationResourceMap;
+  private Map<String, String> mySimulationResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
   private SimulationController myController;
   private Simulation mySimulation;
   private UserController myUserController;
@@ -47,10 +54,10 @@ class GridViewTest extends DukeApplicationTest {
   public void start (Stage stage) {
     mySimulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
         5, 5, myInitialStates, myParameters,"Default");
-    myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, new SimulationController());
     myGrid = new Grid(5, 5, GameOfLifeState.ALIVE);
     mySimulation = new GameOfLife(mySimulationConfig, myGrid);
     myController = new SimulationController();
+    myUserController = new UserController(DEFAULT_LANGUAGE_BUNDLE, myController);
     mySimulationView = new SimulationView(mySimulationConfig, myController, DEFAULT_LANGUAGE_BUNDLE);
     mySimulationView.createSimulationWindow(stage);
     myRoot = mySimulationView.getRoot();
@@ -60,7 +67,8 @@ class GridViewTest extends DukeApplicationTest {
   @Test
   public void makeGridLinesToggleButton_makeButton_ButtonDisplayed() {
     GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
-    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
+    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines");
+    myUserController.setGridLinesButtonAction(gridView, gridLinesToggleButton);
     assertTrue(gridLinesToggleButton.isVisible());
   }
 
@@ -70,7 +78,8 @@ class GridViewTest extends DukeApplicationTest {
         5, 5, myInitialStates, myParameters,"Default");
     myController = new SimulationController();
     GridView gridView = new DefaultGridView(myController, simulationConfig, myGrid);
-    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
+    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines");
+    myUserController.setGridLinesButtonAction(gridView, gridLinesToggleButton);
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
       try {
@@ -93,10 +102,12 @@ class GridViewTest extends DukeApplicationTest {
     }
   }
 
+
   @Test
   public void makeGridLinesToggleButton_clickButtonTwice_GridLinesPresent() {
     GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
-    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines", gridView);
+    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines");
+    myUserController.setGridLinesButtonAction(gridView, gridLinesToggleButton);
     interact(() -> {
       myRoot.getChildren().add(gridLinesToggleButton);
       try {
@@ -115,50 +126,121 @@ class GridViewTest extends DukeApplicationTest {
 
 
   @Test
-  void renderGridFlippedVertically_ClickButtonTwice_GridFlipsVerticallyAndBack() {
-    GridView gridView = new DefaultGridView(myController, mySimulationConfig, myGrid);
+  public void createGridView_HexagonViewSelected_GridNotNull()
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+    int[] initialStates = new int[]{2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1};
+    Map<String, Double> parameter = new HashMap<>();
+    parameter.put("percolationProb", 0.7);
+    mySimulationConfig = new SimulationConfig("Percolation", "Basic Percolation", "Alana", "Description",
+        6, 6, initialStates, parameter, "Hexagon");
+    myGrid = new Grid(6, 6, PercolationState.PERCOLATED);
+    int numCols = myGrid.getCols();
+    int numRows = myGrid.getRows();
+    double expectedCellWidth = (0.7 * 800 / numCols);
+    double expectedCellHeight = (0.7 * 600 / numRows);
     runAsJFXAction(() -> {
+      GridView gridView = new HexagonGridView(myController, mySimulationConfig, myGrid);
       try {
         gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
-      } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
-               InstantiationException | IllegalAccessException e) {
+        assertEquals(expectedCellWidth, gridView.getCellWidth());
+        assertEquals(expectedCellHeight, gridView.getCellHeight());
+        List<Shape> cells =  gridView.getImmutableCellsList();
+        assertEquals(36, cells.size());
+        Pane pane = gridView.getGridPane();
+        for (Shape shape : cells) {
+          assert(pane.getChildren().contains(shape));
+        }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException(e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
     });
-    Button flipGridButton = myUserController.makeFlipGridButton("Flip Grid", gridView);
-    runAsJFXAction(() -> myUserController.addElementToPane(flipGridButton, myRoot));
-    runAsJFXAction(() -> clickOn(flipGridButton));
-    // Capture flipped positions
-    boolean isFlippedCorrectly = true;
-    int numRows = myGrid.getRows();
+  }
+
+  @Test
+  public void createGridView_ParallelogramViewSelected_GridNotNull()
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    int[] initialStates = new int[]{2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1};
+    Map<String, Double> parameter = new HashMap<>();
+    parameter.put("percolationProb", 0.7);
+    mySimulationConfig = new SimulationConfig("Percolation", "Basic Percolation", "Alana", "Description",
+        6, 6, initialStates, parameter, "Parallelogram");
+    myGrid = new Grid(6, 6, PercolationState.PERCOLATED);
     int numCols = myGrid.getCols();
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        int expectedRow = numRows - i - 1;
-        Shape cell = gridView.getImmutableCellsList().get(i * numCols + j);
-        Integer actualRow = GridPane.getRowIndex(cell);
-        Integer actualCol = GridPane.getColumnIndex(cell);
-        if (actualRow == null || actualCol == null || actualRow != expectedRow || actualCol != j) {
-          isFlippedCorrectly = false;
-          break;
+    int numRows = myGrid.getRows();
+    double expectedCellWidth = (0.7 * 800 / numCols);
+    double expectedCellHeight = (0.7 * 600 / numRows);
+    runAsJFXAction(() -> {
+      GridView gridView = new ParallelogramGridView(myController, mySimulationConfig, myGrid);
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
+        assertEquals(expectedCellWidth, gridView.getCellWidth());
+        assertEquals(expectedCellHeight, gridView.getCellHeight());
+        List<Shape> cells =  gridView.getImmutableCellsList();
+        assertEquals(36, cells.size());
+        Pane pane = gridView.getGridPane();
+        for (Shape shape : cells) {
+          assert(pane.getChildren().contains(shape));
         }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException(e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
       }
-    }
-    assertTrue(isFlippedCorrectly, "Grid should be flipped vertically");
-    runAsJFXAction(() -> clickOn(flipGridButton));
-    boolean isFlippedBack = true;
-    for (int i = 0; i < numRows; i++) {
-      for (int j = 0; j < numCols; j++) {
-        Shape cell = gridView.getImmutableCellsList().get(i * numCols + j);
-        Integer actualRow = GridPane.getRowIndex(cell);
-        Integer actualCol = GridPane.getColumnIndex(cell);
-        if (actualRow == null || actualCol == null || actualRow != i || actualCol != j) {
-          isFlippedBack = false;
-          break;
+    });
+  }
+
+  @Test
+  public void createGridView_TriangleViewSelected_GridNotNull()
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    int[] initialStates = new int[]{2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1};
+    Map<String, Double> parameter = new HashMap<>();
+    parameter.put("percolationProb", 0.7);
+    mySimulationConfig = new SimulationConfig("Percolation", "Basic Percolation", "Alana", "Description",
+        6, 6, initialStates, parameter, "Triangle");
+    myGrid = new Grid(6, 6, PercolationState.PERCOLATED);
+    int numCols = myGrid.getCols();
+    int numRows = myGrid.getRows();
+    double expectedCellWidth = ((double) 800 / numCols);
+    double expectedCellHeight = ((double) 600 / numRows);
+    runAsJFXAction(() -> {
+      GridView gridView = new TriangleGridView(myController, mySimulationConfig, myGrid);
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
+        assertEquals(expectedCellWidth, gridView.getCellWidth());
+        assertEquals(expectedCellHeight, gridView.getCellHeight());
+        List<Shape> cells =  gridView.getImmutableCellsList();
+        assertEquals(36, cells.size());
+        Pane pane = gridView.getGridPane();
+        for (Shape shape : cells) {
+          assert(pane.getChildren().contains(shape));
         }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException(e);
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
       }
-    }
-    assertTrue(isFlippedBack, "Grid should be flipped back to its original position");
+    });
   }
 
 }
