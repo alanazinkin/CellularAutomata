@@ -328,4 +328,8 @@ public class SimulationUI {
             }
         }
     }
+
+    public SimulationView getView() {
+        return simulationView;
+    }
 }

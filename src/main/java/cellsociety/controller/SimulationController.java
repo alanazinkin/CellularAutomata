@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -23,9 +25,9 @@ import javafx.stage.Stage;
  */
 public class SimulationController {
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
-      SimulationController.class.getPackageName() + ".Simulation");
+          SimulationController.class.getPackageName() + ".Simulation");
   public static final String DEFAULT_RESOURCE_PACKAGE =
-      SimulationController.class.getPackageName() + ".";
+          SimulationController.class.getPackageName() + ".";
   private static final String DEFAULT_STYLE_FILE = "default.xml";
 
   /**
@@ -48,6 +50,7 @@ public class SimulationController {
 
     /**
      * Constructs a SimulationType with a specified display name.
+     *
      * @param displayName the display name of the simulation type.
      */
     SimulationType(String displayName) {
@@ -56,13 +59,14 @@ public class SimulationController {
 
     /**
      * Retrieves a SimulationType from a string representation.
+     *
      * @param text the display name of the simulation type.
      * @return an Optional containing the corresponding SimulationType, if found.
      */
     public static Optional<SimulationType> fromString(String text) {
       return Arrays.stream(SimulationType.values())
-          .filter(type -> type.displayName.equals(text))
-          .findFirst();
+              .filter(type -> type.displayName.equals(text))
+              .findFirst();
     }
   }
 
@@ -90,10 +94,10 @@ public class SimulationController {
    * Selects and loads a simulation with an optional style file.
    *
    * @param simulationType the type of simulation to load
-   * @param fileName the name of the simulation configuration file
-   * @param styleFileName the name of the style file (can be null for default style)
-   * @param stage the primary stage for the application
-   * @param controller the simulation controller
+   * @param fileName       the name of the simulation configuration file
+   * @param styleFileName  the name of the style file (can be null for default style)
+   * @param stage          the primary stage for the application
+   * @param controller     the simulation controller
    * @throws Exception if there's an error loading the simulation or style
    */
   public void selectSimulation(String simulationType, String fileName, String styleFileName, Stage stage,
@@ -107,10 +111,30 @@ public class SimulationController {
     // If no style file is provided, try to find a default style for this simulation type
     if (styleFileName == null || styleFileName.isEmpty()) {
       try {
+        // Get the default style path
         String defaultStylePath = getDefaultStylePath(simulationType);
-        this.currentStyle = styleParser.parseStyleFile(defaultStylePath);
-      } catch (ConfigurationException e) {
-        // If default style fails, create a new default style
+
+        // More verbose logging
+        System.out.println("Attempting to load default style from: " + defaultStylePath);
+
+        if (defaultStylePath != null) {
+          // Attempt to read the file contents
+          try {
+            String fileContents = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(defaultStylePath)));
+            System.out.println("Default Style File Contents:\n" + fileContents);
+          } catch (Exception e) {
+            System.err.println("Could not read file contents: " + e.getMessage());
+          }
+
+          this.currentStyle = styleParser.parseStyleFile(defaultStylePath);
+          System.out.println("Successfully loaded default style");
+        } else {
+          System.out.println("No default style file found");
+          this.currentStyle = new SimulationStyle();
+        }
+      } catch (Exception e) {
+        System.err.println("Error loading default style: " + e.getMessage());
+        e.printStackTrace();
         this.currentStyle = new SimulationStyle();
       }
     } else {
@@ -118,7 +142,6 @@ public class SimulationController {
       try {
         this.currentStyle = styleParser.parseStyleFile(styleFileName);
       } catch (ConfigurationException e) {
-        // If provided style fails, handle the error and use default
         ui.handleError("StyleLoadError", e);
         this.currentStyle = new SimulationStyle();
       }
@@ -136,15 +159,34 @@ public class SimulationController {
    */
   private String getDefaultStylePath(String simulationType) {
     String formattedType = simulationType.toLowerCase()
-            .replace(" ", "_")
+            .replace(" ", "")
             .replace("of", "");
-    return "styles/" + formattedType + "_default.xml";
+
+    // Try multiple possible paths
+    String[] possiblePaths = {
+            "data/" + formattedType + "/" + formattedType + "_default.xml",
+            "styles/" + formattedType + "_default.xml",
+            formattedType + "_default.xml"
+    };
+
+    for (String path : possiblePaths) {
+      File file = new File(path);
+      System.out.println("Checking style file path: " + file.getAbsolutePath());
+      if (file.exists()) {
+        System.out.println("Found style file at: " + file.getAbsolutePath());
+        return path;
+      }
+    }
+
+    System.err.println("No default style file found for simulation type: " + simulationType);
+    return null;
+
   }
 
   /**
    * Initializes the simulation with the current configuration and style.
    *
-   * @param stage the primary stage for the application
+   * @param stage      the primary stage for the application
    * @param controller the simulation controller
    * @throws Exception if there's an error initializing the simulation
    */
@@ -177,28 +219,30 @@ public class SimulationController {
   private void applyCellStateAppearances(SimulationStyle style) {
     Simulation simulation = engine.getSimulation();
     Map<String, CellAppearance> appearances = style.getCellAppearances();
+    System.out.println("appearances: " + appearances);
     Map<StateInterface, String> colorMap = new HashMap<>();
 
-    // Default color if no specific color is found
+    String simulationType = ui.getView().getSimulationConfig().getType().toLowerCase().replace(" ", "");
     String defaultColor = "#808080"; // Gray as a default
 
     for (Map.Entry<Integer, StateInterface> stateEntry : simulation.getStateMap().entrySet()) {
       StateInterface state = stateEntry.getValue();
-      String stateName = state.getStateValue();
+      String stateName = state.getStateValue().toLowerCase();
 
       if (appearances.containsKey(stateName)) {
         CellAppearance appearance = appearances.get(stateName);
         String color = appearance.usesImage() ? appearance.getImagePath() :
                 (appearance.getColor() != null ? appearance.getColor() : defaultColor);
-        colorMap.put(state, color);
+
+        String cssSelector = "#" + simulationType + "-state-" + stateName;
+        System.out.println(cssSelector);
+        String cssStyle = cssSelector + " { -fx-fill: " + color + "; -fx-stroke: black; }";
+
+        ui.getView().getRoot().setStyle(ui.getView().getRoot().getStyle() + cssStyle);
       } else {
-        // If no specific style found, use default color
-        colorMap.put(state, defaultColor);
         System.out.println("No style found for state: " + stateName + ". Using default color.");
       }
     }
-
-    simulation.setColorMap(colorMap);
   }
 
   private StateInterface getStateByName(Simulation simulation, String stateName) {

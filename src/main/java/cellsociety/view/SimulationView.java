@@ -288,4 +288,8 @@ public class SimulationView {
     // Construct the factory class name
     return tiling + "GridViewFactory";
   }
+
+  public SimulationConfig getSimulationConfig() {
+    return myConfig;
+  }
 }
