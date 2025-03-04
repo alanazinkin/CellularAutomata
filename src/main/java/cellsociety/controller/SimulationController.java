@@ -419,4 +419,17 @@ public class SimulationController {
     return engine.getSimulation().retrieveIterationCount();
   }
 
+  public void setGridTiling(String newTiling, Map<StateInterface, String> colorMap, Grid grid)
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    getSimulationConfig().setTiling(newTiling);
+    ui.createGridViewFromTiling(colorMap, grid);
+  }
+  public void setEdgeStrategy(String type) {
+    engine.setEdgeStrategy(type);
+  }
+
+  public void setNeighborhoodStrategy(String type) {
+    engine.setNeighborhoodStrategy(type);
+  }
+
 }

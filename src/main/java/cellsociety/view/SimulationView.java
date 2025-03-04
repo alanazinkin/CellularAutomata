@@ -126,7 +126,20 @@ public class SimulationView {
     return mySimInfoDisplay.createDisplayBox(themeColor, simView);
   }
 
-  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
+  /**
+   * initializes a new grid view object according to the simulation cofniguration tiling instance
+   * variable and then renders the grid according to the cell states.
+   *
+   * @param simView simulation view object
+   * @param colorMap color map of states to CSS identifiers
+   * @param grid the grid representation holding the cells and their states
+   * @throws ClassNotFoundException if the grid factory cannot be found
+   * @throws InvocationTargetException
+   * @throws NoSuchMethodException if there's no method for creating a given grid
+   * @throws InstantiationException if the grid could not be instantiated
+   * @throws IllegalAccessException if we dont have access to the grid class
+   */
+  public void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
       Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
