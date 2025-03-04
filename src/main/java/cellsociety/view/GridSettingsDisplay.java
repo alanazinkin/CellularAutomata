@@ -3,8 +3,10 @@ package cellsociety.view;
 import static java.lang.Double.parseDouble;
 
 import cellsociety.controller.SimulationController;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -21,13 +23,13 @@ import javafx.stage.Modality;
  */
 public class GridSettingsDisplay {
 
-  private static final List<String> NEIGHBORHOOD_TYPES = List.of("Moore", "Von Neumann",
-      "Extended Moore");
-  private static final List<String> EDGE_TYPES = List.of("Toroidal", "Mirror", "Infinite");
-  private static final List<String> CELL_SHAPE_TYPES = List.of("Rectangle", "Triangle", "Circle",
-      "Pentagon", "Hexagon");
+  private static final List<String> NEIGHBORHOOD_TYPES = List.of("MOORE", "VON_NEUMANN",
+      "EXTENDED_MOORE_", "MULTIPLE");
+  private static final List<String> EDGE_TYPES = List.of("BOUNDED", "TOROIDAL", "MIRROR", "INFINITE");
+  private static final List<String> CELL_TILING_TYPES = List.of("Default", "Triangle", "Parallelogram", "Hexagon");
   private DialogPane myDialogPane;
   private Pane myContainer;
+  private SimulationController myController;
   private UserController myUserController;
   private ResourceBundle myResources;
   private static final ResourceBundle myGridSettingsResources = ResourceBundle.getBundle(
@@ -47,6 +49,7 @@ public class GridSettingsDisplay {
     myDialogPane.setContent(myContainer);
     myResources = resources;
     myUserController = new UserController(myResources, simulationController);
+    myController = simulationController;
   }
 
   /**
@@ -59,11 +62,32 @@ public class GridSettingsDisplay {
     ComboBox<String> edgeSelector = myUserController.makeComboBox(
         myResources.getString("SelectEdgeType"),
         EDGE_TYPES);
-    ComboBox<String> cellShapeSelector = myUserController.makeComboBox(
-        myResources.getString("SelectCellShape"),
-        CELL_SHAPE_TYPES);
-    myContainer.getChildren().addAll(neighborhoodSelector, edgeSelector, cellShapeSelector);
+    ComboBox<String> tilingSelector = myUserController.makeComboBox(
+        myResources.getString("SelectTilingType"),
+        CELL_TILING_TYPES);
+    myContainer.getChildren().addAll(neighborhoodSelector, edgeSelector, tilingSelector);
     myDialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+    Button okButton = (Button) myDialogPane.lookupButton(ButtonType.OK);
+    okButton.setOnAction(event -> {
+      String neighborhoodType = neighborhoodSelector.getValue();
+      String edgeType = edgeSelector.getValue();
+      String tilingType = tilingSelector.getValue();
+      if (neighborhoodType != null) {
+        myController.setNeighborhoodStrategy(neighborhoodType);
+      }
+      if (edgeType != null) {
+        myController.setEdgeStrategy(edgeType);
+      }
+      if (tilingType != null) {
+        try {
+          myController.setGridTiling(tilingType, myController.getSimulation().getColorMap(), myController.getGrid());
+        } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+                 InstantiationException | IllegalAccessException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+
   }
 
   /**

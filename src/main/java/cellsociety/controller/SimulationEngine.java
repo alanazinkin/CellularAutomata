@@ -1,6 +1,8 @@
 package cellsociety.controller;
 
+import cellsociety.model.EdgeStrategyFactory;
 import cellsociety.model.Grid;
+import cellsociety.model.NeighborhoodFactory;
 import cellsociety.model.Simulation;
 import cellsociety.model.state.MockState;
 import java.lang.reflect.InvocationTargetException;
@@ -131,6 +133,17 @@ public class SimulationEngine {
         double maxSpeed = Double.parseDouble(config.getString("max.speed"));
         double clampedSpeed = Math.max(minSpeed, Math.min(maxSpeed, speed));
         timeline.setRate(clampedSpeed);
+    }
+
+
+    public void setEdgeStrategy(String type) {
+        //no checking for validation here
+        grid.setEdgeStrategy(EdgeStrategyFactory.createEdgeStrategy(type));
+    }
+
+    public void setNeighborhoodStrategy(String type) {
+        //no checking for validation here
+        grid.setNeighborhoodStrategy(NeighborhoodFactory.createNeighborhoodStrategy(type));
     }
 
     // Getters

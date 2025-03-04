@@ -222,6 +222,7 @@ public class Fire extends Simulation {
   public void step() {
     applyRules();
     commitNextStates();
+    updateStateCountsMap();
   }
 
   /**

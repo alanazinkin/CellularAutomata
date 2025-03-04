@@ -321,4 +321,20 @@ public class SimulationUI {
             }
         }
     }
+
+  /**
+   *
+   * @param colorMap map of state interface values to CSS identifiers
+   * @param grid grid holding the cell information
+   * @throws ClassNotFoundException    if there is no factory class for creating the grid view
+   * @throws InvocationTargetException if a new grid view cannot be made
+   * @throws NoSuchMethodException     if there is no constructor for creating the gridview
+   * @throws InstantiationException    if a new gridview cannot be instantiated
+   * @throws IllegalAccessException    if user attempts to access a method that should not be
+   *                                   accessed
+   */
+    public void createGridViewFromTiling(Map<StateInterface, String> colorMap, Grid grid)
+        throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+      simulationView.createGridView(simulationView, colorMap, grid);
+    }
 }

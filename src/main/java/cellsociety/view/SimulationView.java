@@ -126,7 +126,20 @@ public class SimulationView {
     return mySimInfoDisplay.createDisplayBox(themeColor, simView);
   }
 
-  private void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
+  /**
+   * initializes a new grid view object according to the simulation cofniguration tiling instance
+   * variable and then renders the grid according to the cell states.
+   *
+   * @param simView simulation view object
+   * @param colorMap color map of states to CSS identifiers
+   * @param grid the grid representation holding the cells and their states
+   * @throws ClassNotFoundException if the grid factory cannot be found
+   * @throws InvocationTargetException
+   * @throws NoSuchMethodException if there's no method for creating a given grid
+   * @throws InstantiationException if the grid could not be instantiated
+   * @throws IllegalAccessException if we don't have access to the grid class
+   */
+  public void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
       Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
@@ -257,11 +270,11 @@ public class SimulationView {
    * the simulation
    */
   public void updateIterationCounter() {
-    iterationCounter.setText("Iteration Count: " + myController.getIterationCount());
+    iterationCounter.setText(myResources.getString("IterCount") + ": " + myController.getIterationCount());
   }
 
   private void makeIterationCounter() {
-    iterationCounter = new Text("Iteration Count: " + myController.getIterationCount());
+    iterationCounter = new Text(myResources.getString("IterCount") + ": " + myController.getIterationCount());
   }
 
   private GridView makeGridViewFromTiling(SimulationConfig simulationConfig, Grid grid)

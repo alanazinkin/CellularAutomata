@@ -200,7 +200,6 @@ public class SimulationInfoDisplay {
     infoText.setTextAlignment(TextAlignment.CENTER);
     infoText.setFont(Font.font("Verdana", FontWeight.BOLD, parseInt(CONFIG.getString("text.size"))));
     infoText.setWrappingWidth(Double.parseDouble(CONFIG.getString("sim.info.display.width")) * .4);
-    System.out.println(text);
     String myId = text.replace(": ", "");
     myId = myId.replace(" ", "");
     infoText.setId(myId);

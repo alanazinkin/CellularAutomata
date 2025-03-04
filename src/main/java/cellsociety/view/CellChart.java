@@ -41,4 +41,4 @@ public abstract class CellChart {
     return vbox;
   }
 
-}/**/
+}
