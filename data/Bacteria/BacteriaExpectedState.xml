@@ -7,6 +7,7 @@
   <width>10</width>
   <height>10</height>
   <parameter name="neighborThreshold" value="2"/>
+  <cell_state state="0" shape="Hexagon"/>
   <!-- 0 : ROCK      1 : PAPER      2 : SCISSORS   -->
   <initial_states>
     1 2 1 1 0 1 2 1 0 2
