@@ -321,4 +321,9 @@ public class SimulationUI {
             }
         }
     }
+
+    public void createGridViewFromTiling(Map<StateInterface, String> colorMap, Grid grid)
+        throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+      simulationView.createGridView(simulationView, colorMap, grid);
+    }
 }
