@@ -48,6 +48,19 @@ public class Loan {
     this.interest = interest;
   }
 
+  /**
+   * Validates the parameters for loan-related constructor methods.
+   * <p>
+   * Ensures that the lender and borrower are valid, the loan amount is positive, and the interest
+   * rate is non-negative. Throws an {@code IllegalArgumentException} if any condition is violated.
+   * </p>
+   *
+   * @param lender   the agent providing the loan
+   * @param borrower the agent receiving the loan
+   * @param amount   the amount of the loan, must be positive
+   * @param interest the interest rate, must be non-negative
+   * @throws IllegalArgumentException if any validation check fails
+   */
   private void validateConstructorParams(Agent lender, Agent borrower, int amount,
       double interest) {
     if (lender == null) {
@@ -66,6 +79,7 @@ public class Loan {
       throw new IllegalArgumentException("Interest rate cannot be negative");
     }
   }
+
 
   /**
    * Updates the loan amount.

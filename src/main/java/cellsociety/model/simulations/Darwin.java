@@ -31,6 +31,7 @@ import java.util.Random;
  *   <li>Conditional program execution based on environment sensing</li>
  * </ul>
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class Darwin extends Simulation {
@@ -76,7 +77,8 @@ public class Darwin extends Simulation {
             }
           }
 
-          CreatureCell creatureCell = new CreatureCell(cell.getCurrentState(), species, orientation);
+          CreatureCell creatureCell = new CreatureCell(cell.getCurrentState(), species,
+              orientation);
           grid.setCellAt(r, c, creatureCell);
         }
       }
@@ -121,8 +123,8 @@ public class Darwin extends Simulation {
   }
 
   /**
-   * Applies the rules of the Darwin model for one iteration of the simulation.
-   * Each creature executes its program until performing an action.
+   * Applies the rules of the Darwin model for one iteration of the simulation. Each creature
+   * executes its program until performing an action.
    */
   @Override
   public void applyRules() {
@@ -290,7 +292,6 @@ public class Darwin extends Simulation {
     Species originalSpecies = cell.getOriginalSpecies();
     int infectionSteps = cell.getInfectionStepsRemaining();
 
-
     cell.setNextState(DarwinState.EMPTY);
     cell.setSpecies(null);
     cell.setOrientation(0);
@@ -449,7 +450,7 @@ public class Darwin extends Simulation {
         break;
     }
 
-    return new int[] {newRow, newCol};
+    return new int[]{newRow, newCol};
   }
 
   /**
@@ -472,9 +473,9 @@ public class Darwin extends Simulation {
   /**
    * Adds a creature to the simulation at the specified position.
    *
-   * @param row       The row position
-   * @param col       The column position
-   * @param species   The species of the creature
+   * @param row         The row position
+   * @param col         The column position
+   * @param species     The species of the creature
    * @param orientation The initial orientation
    * @return True if the creature was added, false if the position is invalid or occupied
    */

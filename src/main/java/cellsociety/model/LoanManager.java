@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Manages loan transactions between agents in the SugarScape simulation.
- * Agents can lend and borrow sugar based on their financial needs and availability.
- * The LoanManager facilitates loan creation, repayment, and updates active loans over time.
+ * Manages loan transactions between agents in the SugarScape simulation. Agents can lend and borrow
+ * sugar based on their financial needs and availability. The LoanManager facilitates loan creation,
+ * repayment, and updates active loans over time.
+ *
+ * @author Tatum McKinnis
  */
 public class LoanManager {
+
   private final SugarScape simulation;
   private static final double LOAN_INTEREST_RATE = 0.1;
   private static final int LOAN_DURATION = 10;
@@ -26,8 +29,8 @@ public class LoanManager {
   }
 
   /**
-   * Applies lending logic where agents who can lend provide loans to agents in need.
-   * Ensures that loans are only issued if they do not already exist between the lender and borrower.
+   * Applies lending logic where agents who can lend provide loans to agents in need. Ensures that
+   * loans are only issued if they do not already exist between the lender and borrower.
    *
    * @param agents the list of agents participating in the lending process
    * @throws IllegalArgumentException if the provided agent list is null
@@ -59,7 +62,7 @@ public class LoanManager {
   /**
    * Checks whether a loan already exists between the specified lender and borrower.
    *
-   * @param lender the lending agent
+   * @param lender   the lending agent
    * @param borrower the borrowing agent
    * @return true if a loan already exists between them, false otherwise
    */
@@ -73,7 +76,7 @@ public class LoanManager {
   /**
    * Creates a new loan agreement between a lender and a borrower.
    *
-   * @param lender the agent providing the loan
+   * @param lender   the agent providing the loan
    * @param borrower the agent receiving the loan
    * @return a newly created Loan instance
    */
@@ -93,8 +96,8 @@ public class LoanManager {
   }
 
   /**
-   * Updates the status of active loans based on the current tick of the simulation.
-   * Removes loans that have reached maturity and processes repayments.
+   * Updates the status of active loans based on the current tick of the simulation. Removes loans
+   * that have reached maturity and processes repayments.
    *
    * @param currentTick the current tick in the simulation
    * @throws IllegalArgumentException if the current tick is negative
@@ -125,8 +128,8 @@ public class LoanManager {
   }
 
   /**
-   * Processes loan repayment when a loan reaches maturity.
-   * If the borrower cannot fully repay the loan, a new loan is created with the remaining debt.
+   * Processes loan repayment when a loan reaches maturity. If the borrower cannot fully repay the
+   * loan, a new loan is created with the remaining debt.
    *
    * @param loan the loan being processed for repayment
    * @return a new loan with the remaining debt if full payment is not possible, otherwise null
@@ -145,7 +148,8 @@ public class LoanManager {
       borrower.removeSugar(partialPayment);
       lender.addSugar(partialPayment);
       double remainingDebt = (paymentDue - partialPayment) * (1 + LOAN_INTEREST_RATE);
-      return new Loan(lender, borrower, (int) remainingDebt, simulation.getCurrentTick(), LOAN_INTEREST_RATE);
+      return new Loan(lender, borrower, (int) remainingDebt, simulation.getCurrentTick(),
+          LOAN_INTEREST_RATE);
     }
   }
 }

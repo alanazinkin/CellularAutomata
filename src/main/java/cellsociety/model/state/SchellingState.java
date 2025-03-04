@@ -12,6 +12,7 @@ import cellsociety.model.StateInterface;
  * <p>
  * This enum implements the {@link StateInterface} interface to ensure consistency across different
  * state enums in grid-based simulations.
+ *
  * @author Tatum McKinnis
  * </p>
  */

@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Abstract base class for self-replicating loop cellular automata simulations.
- * Provides common functionality for both Langton's Loop and Tempesti's Loop simulations.
+ * Abstract base class for self-replicating loop cellular automata simulations. Provides common
+ * functionality for both Langton's Loop and Tempesti's Loop simulations.
+ *
  * @author Tatum McKinnis
  */
 public abstract class AbstractLoopSimulation extends Simulation {
@@ -136,8 +137,8 @@ public abstract class AbstractLoopSimulation extends Simulation {
   }
 
   /**
-   * Retrieves the states of the von Neumann neighborhood (4 adjacent cells).
-   * Handles non-LangtonState neighbors gracefully.
+   * Retrieves the states of the von Neumann neighborhood (4 adjacent cells). Handles
+   * non-LangtonState neighbors gracefully.
    */
   protected LangtonState[] getVonNeumannNeighborStates(int row, int col) {
     LangtonState[] neighbors = new LangtonState[4];
@@ -167,7 +168,8 @@ public abstract class AbstractLoopSimulation extends Simulation {
   /**
    * Determines the next state of a cell based on specific simulation rules.
    */
-  protected abstract LangtonState determineNextState(LangtonState currentState, LangtonState[] neighbors);
+  protected abstract LangtonState determineNextState(LangtonState currentState,
+      LangtonState[] neighbors);
 
   /**
    * Validates that the grid meets the minimum size requirements.

@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link Grid} functionality.
  * <p>
  * This class verifies grid operations such as cell retrieval, neighbor determination, state
- * transitions, grid reset, grid printing, and the new edge and neighborhood strategy functionality.
+ * transitions, grid reset, grid printing, and the new edge and neighborhood strategy
+ * functionality.
  * </p>
  *
  * @author Tatum McKinnis
@@ -303,7 +304,8 @@ class GridTest {
   /**
    * Tests the default edge and neighborhood strategies.
    * <p>
-   * Verifies that a grid created without explicit strategies uses bounded edge and Moore neighborhood.
+   * Verifies that a grid created without explicit strategies uses bounded edge and Moore
+   * neighborhood.
    * </p>
    */
   @Test

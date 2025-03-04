@@ -10,9 +10,11 @@ import cellsociety.model.state.LangtonState;
  * Simulates Langton's Loop cellular automaton, a self-replicating pattern that demonstrates
  * emergent behavior in cellular automata. The simulation uses 8 states and operates on a von
  * Neumann neighborhood (4 adjacent cells).
+ *
  * @author Tatum McKinnis
  */
 public class LangtonLoop extends AbstractLoopSimulation {
+
   private final RuleStrategy ruleStrategy;
 
   /**

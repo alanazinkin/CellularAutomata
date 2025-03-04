@@ -104,7 +104,7 @@ public class Cell {
   public void applyPrevState() {
     this.nextState = this.currentState;
     this.currentState = this.prevState;
-    this.prevState =  StepBackState.STEP_BACK_STATE;
+    this.prevState = StepBackState.STEP_BACK_STATE;
   }
 
   /**

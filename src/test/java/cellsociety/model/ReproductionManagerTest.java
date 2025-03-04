@@ -12,8 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for ReproductionManager.
- * Tests the agent reproduction functionality in the SugarScape simulation.
+ * Test class for ReproductionManager. Tests the agent reproduction functionality in the SugarScape
+ * simulation.
  */
 public class ReproductionManagerTest {
 

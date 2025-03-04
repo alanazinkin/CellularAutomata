@@ -2,6 +2,7 @@ package cellsociety.model;
 
 /**
  * Represents a direction with associated degree values.
+ *
  * @author Tatum McKinnis
  */
 public enum Direction {

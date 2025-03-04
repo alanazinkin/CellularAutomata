@@ -4,8 +4,9 @@ import cellsociety.model.state.LangtonState;
 import java.util.List;
 
 /**
- * Implementation of rule strategy for Langton's Loop.
- * Defines the transition rules using a collection of TransitionRule records.
+ * Implementation of rule strategy for Langton's Loop. Defines the transition rules using a
+ * collection of TransitionRule records.
+ *
  * @author Tatum McKinnis
  */
 public class LangtonLoopRules implements RuleStrategy {
@@ -18,11 +19,12 @@ public class LangtonLoopRules implements RuleStrategy {
       LangtonState nextState,
       NeighborPredicate neighborTest
   ) {
+
     public LangtonState apply(LangtonState[] neighbors) {
       if (neighborTest.test(neighbors)) {
         if (Math.random() < 0.005) {
           LangtonState[] states = LangtonState.values();
-          return states[(int)(Math.random() * states.length)];
+          return states[(int) (Math.random() * states.length)];
         }
         return nextState;
       }
@@ -35,6 +37,7 @@ public class LangtonLoopRules implements RuleStrategy {
    */
   @FunctionalInterface
   private interface NeighborPredicate {
+
     boolean test(LangtonState[] neighbors);
   }
 
@@ -113,8 +116,7 @@ public class LangtonLoopRules implements RuleStrategy {
     if (Math.random() < 0.001) {
       if (currentState == LangtonState.EMPTY) {
         return LangtonState.INIT;
-      }
-      else if (currentState == LangtonState.SHEATH) {
+      } else if (currentState == LangtonState.SHEATH) {
         return LangtonState.EXTEND;
       }
     }

@@ -11,9 +11,11 @@ import java.util.List;
  * selecting valid moves based on available sugar and distance, updating cell states, and triggering
  * agents' metabolism. After processing the agents, pending grid state changes are applied.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public class MovementManager {
+
   private final SugarScape simulation;
 
   /**
@@ -47,7 +49,8 @@ public class MovementManager {
    * </p>
    *
    * @param agents the list of agents to move.
-   * @throws IllegalArgumentException if the agents list is {@code null} or if any agent's position is {@code null}.
+   * @throws IllegalArgumentException if the agents list is {@code null} or if any agent's position
+   *                                  is {@code null}.
    */
   public void applyMovement(List<Agent> agents) {
     if (agents == null) {

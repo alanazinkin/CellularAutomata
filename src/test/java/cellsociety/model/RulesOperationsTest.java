@@ -8,11 +8,12 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 /**
- * Test class for RulesOperations.
- * Tests reproduction and trading functionality between agents.
+ * Test class for RulesOperations. Tests reproduction and trading functionality between agents.
+ *
  * @author Tatum McKinnis
  */
 public class RulesOperationsTest {
+
   private Agent agent1;
   private Agent agent2;
   private Cell cell;
@@ -31,8 +32,7 @@ public class RulesOperationsTest {
   }
 
   /**
-   * Tests reproduction conditions when all criteria are met.
-   * Expected behavior: Returns true.
+   * Tests reproduction conditions when all criteria are met. Expected behavior: Returns true.
    */
   @Test
   void canReproduce_AllConditionsMet_ReturnsTrue() {
@@ -43,8 +43,8 @@ public class RulesOperationsTest {
   }
 
   /**
-   * Tests reproduction conditions when agents have insufficient sugar.
-   * Expected behavior: Returns false.
+   * Tests reproduction conditions when agents have insufficient sugar. Expected behavior: Returns
+   * false.
    */
   @Test
   void canReproduce_InsufficientSugar_ReturnsFalse() {
@@ -56,8 +56,8 @@ public class RulesOperationsTest {
   }
 
   /**
-   * Tests child creation with valid parent attributes.
-   * Expected behavior: Creates child with averaged attributes.
+   * Tests child creation with valid parent attributes. Expected behavior: Creates child with
+   * averaged attributes.
    */
   @Test
   void reproduce_ValidParents_CreatesChildWithCorrectAttributes() {
@@ -74,8 +74,7 @@ public class RulesOperationsTest {
    * Expected behavior: Throws IllegalArgumentException.
    */
   /**
-   * Tests reproduction with null parent.
-   * Expected behavior: Throws NullPointerException.
+   * Tests reproduction with null parent. Expected behavior: Throws NullPointerException.
    */
   @Test
   void reproduce_NullParent_ThrowsException() {
@@ -85,8 +84,7 @@ public class RulesOperationsTest {
   }
 
   /**
-   * Tests trading conditions with valid MRS differences.
-   * Expected behavior: Returns true.
+   * Tests trading conditions with valid MRS differences. Expected behavior: Returns true.
    */
   @Test
   void canTrade_ValidMRSDifference_ReturnsTrue() {
@@ -97,8 +95,7 @@ public class RulesOperationsTest {
   }
 
   /**
-   * Tests trade execution with valid resources.
-   * Expected behavior: Correctly transfers resources.
+   * Tests trade execution with valid resources. Expected behavior: Correctly transfers resources.
    */
   @Test
   void executeTrade_ValidResources_TransfersResourcesCorrectly() {

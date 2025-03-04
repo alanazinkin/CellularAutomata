@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -43,12 +44,14 @@ class NeighborhoodFactoryTest {
   /**
    * Tests creating an extended Moore neighborhood strategy.
    * <p>
-   * Verifies that the factory correctly creates an extended Moore neighborhood strategy with the specified radius.
+   * Verifies that the factory correctly creates an extended Moore neighborhood strategy with the
+   * specified radius.
    * </p>
    */
   @Test
   void createNeighborhoodStrategy_ExtendedMooreType_ReturnsExtendedMooreStrategy() {
-    NeighborhoodStrategy strategy = NeighborhoodFactory.createNeighborhoodStrategy("EXTENDED_MOORE_2");
+    NeighborhoodStrategy strategy = NeighborhoodFactory.createNeighborhoodStrategy(
+        "EXTENDED_MOORE_2");
     assertTrue(strategy instanceof ExtendedMooreNeighborhood);
     assertEquals("EXTENDED_MOORE_2", strategy.getType());
   }

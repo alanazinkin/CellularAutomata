@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Von Neumann neighborhood strategy - considers only the 4 orthogonally adjacent cells (up, down, left, right).
- * Example:
- * Given a cell at (r, c), its neighbors are:
- *   (r-1, c)  -> Above
- *   (r+1, c)  -> Below
- *   (r, c-1)  -> Left
- *   (r, c+1)  -> Right
+ * Von Neumann neighborhood strategy - considers only the 4 orthogonally adjacent cells (up, down,
+ * left, right). Example: Given a cell at (r, c), its neighbors are: (r-1, c)  -> Above (r+1, c)  ->
+ * Below (r, c-1)  -> Left (r, c+1)  -> Right
  *
  * @author Tatum McKinnis
  */
@@ -27,7 +23,8 @@ public class VonNeumannNeighborhood implements NeighborhoodStrategy {
    *
    * @param row The row index of the current cell
    * @param col The column index of the current cell
-   * @return A list of integer arrays, where each array represents the [row, col] of a neighboring cell
+   * @return A list of integer arrays, where each array represents the [row, col] of a neighboring
+   * cell
    */
   @Override
   public List<int[]> getNeighborCoordinates(int row, int col) {

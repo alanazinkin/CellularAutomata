@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Test class for Instruction. Tests the functionality of the Instruction class,
- * which represents a single instruction in a species program in the Darwin simulation.
+ * Test class for Instruction. Tests the functionality of the Instruction class, which represents a
+ * single instruction in a species program in the Darwin simulation.
  *
  * <p>These tests verify that:
  * <ul>
@@ -99,7 +99,8 @@ public class InstructionTest {
     assertEquals(Instruction.Type.IFWALL, new Instruction(Instruction.Type.IFWALL, 7).getType());
     assertEquals(Instruction.Type.IFSAME, new Instruction(Instruction.Type.IFSAME, 2).getType());
     assertEquals(Instruction.Type.IFENEMY, new Instruction(Instruction.Type.IFENEMY, 4).getType());
-    assertEquals(Instruction.Type.IFRANDOM, new Instruction(Instruction.Type.IFRANDOM, 6).getType());
+    assertEquals(Instruction.Type.IFRANDOM,
+        new Instruction(Instruction.Type.IFRANDOM, 6).getType());
     assertEquals(Instruction.Type.GO, new Instruction(Instruction.Type.GO, 1).getType());
   }
 

@@ -16,6 +16,7 @@ import cellsociety.model.StateInterface;
  * This enum implements the {@link StateInterface} interface to maintain consistency across
  * various state enums used in grid-based simulations.
  * </p>
+ * @author Tatum McKinnis
  */
 public enum PercolationState implements StateInterface {
 
@@ -33,7 +34,7 @@ public enum PercolationState implements StateInterface {
    * Represents a cell that has been percolated. This cell was open and now indicates that fluid has
    * percolated through it.
    */
-  PERCOLATED("Percolated",2);
+  PERCOLATED("Percolated", 2);
 
   private final String stateValue;
   private final int numericValue;

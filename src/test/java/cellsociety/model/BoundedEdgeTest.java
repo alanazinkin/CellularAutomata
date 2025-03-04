@@ -1,14 +1,15 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import cellsociety.model.state.MockState;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@link BoundedEdge} implementation.
  * <p>
- * This class verifies the behavior of the bounded edge strategy, which treats cells outside the grid
- * bounds as invalid and inaccessible.
+ * This class verifies the behavior of the bounded edge strategy, which treats cells outside the
+ * grid bounds as invalid and inaccessible.
  * </p>
  *
  * @author Tatum McKinnis

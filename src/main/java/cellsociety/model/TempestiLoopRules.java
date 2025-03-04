@@ -3,8 +3,9 @@ package cellsociety.model;
 import cellsociety.model.state.LangtonState;
 
 /**
- * Implementation of rule strategy for Tempesti's Loop.
- * Defines the transition rules using state-specific handler methods.
+ * Implementation of rule strategy for Tempesti's Loop. Defines the transition rules using
+ * state-specific handler methods.
+ *
  * @author Tatum McKinnis
  */
 public class TempestiLoopRules implements RuleStrategy {

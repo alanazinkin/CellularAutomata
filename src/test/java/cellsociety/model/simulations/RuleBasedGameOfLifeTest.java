@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for RuleBasedGameOfLife.
  * <p>
- * Verifies rule application for different Game of Life variants with both
- * numeric and B/S notation formats.
+ * Verifies rule application for different Game of Life variants with both numeric and B/S notation
+ * formats.
  * </p>
  *
  * @author Tatum McKinnis
@@ -237,7 +237,7 @@ class RuleBasedGameOfLifeTest {
   @SuppressWarnings("unchecked")
   private void configureSimulationWithStringRule(String ruleCode) {
     Map<String, Double> params = new HashMap<>();
-    ((Map)params).put("ruleCode", ruleCode);
+    ((Map) params).put("ruleCode", ruleCode);
     when(mockConfig.getParameters()).thenReturn(params);
   }
 }

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for GrowthManager.
- * Tests the sugar growth and regrowth functionality in the SugarScape simulation.
+ * Test class for GrowthManager. Tests the sugar growth and regrowth functionality in the SugarScape
+ * simulation.
  */
 public class GrowthManagerTest {
 

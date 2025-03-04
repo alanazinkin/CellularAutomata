@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory class for creating neighborhood strategies from configuration.
- * This simplified version supports Moore, Von Neumann, Extended Moore, and Multiple neighborhoods.
+ * Factory class for creating neighborhood strategies from configuration. This simplified version
+ * supports Moore, Von Neumann, Extended Moore, and Multiple neighborhoods.
+ *
  * @author Tatum McKinnis
  */
 public class NeighborhoodFactory {
+
   /**
    * Creates an appropriate neighborhood strategy based on a type string.
    *

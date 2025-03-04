@@ -74,14 +74,13 @@ class DiseaseTest {
   }
 
   /**
-   * Verifies that cloning a disease creates a new instance with potential mutations.
-   * Given the mutation rate of 0.1, each bit has a 10% chance of flipping during cloning.
-   * For an 8-bit pattern, we expect to typically see 0-2 mutations, though up to 3 is
-   * acceptable to avoid flaky tests.
+   * Verifies that cloning a disease creates a new instance with potential mutations. Given the
+   * mutation rate of 0.1, each bit has a 10% chance of flipping during cloning. For an 8-bit
+   * pattern, we expect to typically see 0-2 mutations, though up to 3 is acceptable to avoid flaky
+   * tests.
    * <p>
-   * This mutation behavior is a key part of the disease transmission mechanics in the
-   * SugarScape simulation, allowing diseases to evolve as they spread between agents.
-   * The test verifies that:
+   * This mutation behavior is a key part of the disease transmission mechanics in the SugarScape
+   * simulation, allowing diseases to evolve as they spread between agents. The test verifies that:
    * <ul>
    *   <li>The cloned disease is a different object instance</li>
    *   <li>The cloned pattern contains a reasonable number of mutations</li>

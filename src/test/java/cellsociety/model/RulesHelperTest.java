@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 /**
- * Test class for RulesHelper utility class.
- * Tests the helper methods used in the SugarScape simulation.
+ * Test class for RulesHelper utility class. Tests the helper methods used in the SugarScape
+ * simulation.
+ *
  * @author Tatum McKinnis
  */
 public class RulesHelperTest {
+
   private Grid grid;
   private Cell cell;
   private Random random;
@@ -27,8 +29,8 @@ public class RulesHelperTest {
   }
 
   /**
-   * Tests getting coordinates of an existing cell in the grid.
-   * Expected behavior: Returns correct coordinates.
+   * Tests getting coordinates of an existing cell in the grid. Expected behavior: Returns correct
+   * coordinates.
    */
   @Test
   void getCellCoordinates_ExistingCell_ReturnsCorrectCoordinates() {
@@ -39,8 +41,7 @@ public class RulesHelperTest {
   }
 
   /**
-   * Tests getting coordinates of a cell not in the grid.
-   * Expected behavior: Returns {-1, -1}.
+   * Tests getting coordinates of a cell not in the grid. Expected behavior: Returns {-1, -1}.
    */
   @Test
   void getCellCoordinates_NonexistentCell_ReturnsNegativeCoordinates() {
@@ -51,8 +52,8 @@ public class RulesHelperTest {
   }
 
   /**
-   * Tests creating an agent with random attributes within valid ranges.
-   * Expected behavior: Creates agent with attributes in expected ranges.
+   * Tests creating an agent with random attributes within valid ranges. Expected behavior: Creates
+   * agent with attributes in expected ranges.
    */
   @Test
   void createAgent_ValidParameters_CreatesAgentWithValidRanges() {
@@ -65,8 +66,7 @@ public class RulesHelperTest {
   }
 
   /**
-   * Tests creating agent with null cell.
-   * Expected behavior: Throws IllegalArgumentException.
+   * Tests creating agent with null cell. Expected behavior: Throws IllegalArgumentException.
    */
   @Test
   void createAgent_NullCell_ThrowsException() {
@@ -76,8 +76,7 @@ public class RulesHelperTest {
   }
 
   /**
-   * Tests creating agent with null random.
-   * Expected behavior: Throws IllegalArgumentException.
+   * Tests creating agent with null random. Expected behavior: Throws IllegalArgumentException.
    */
   @Test
   void createAgent_NullRandom_ThrowsException() {

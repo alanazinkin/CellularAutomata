@@ -9,10 +9,11 @@ import cellsociety.model.StateInterface;
  * different simulations. Each state represents a different condition of a cell in the SugarScape
  * grid.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public enum SugarScapeState implements StateInterface {
-  EMPTY("Empty",  0),      // Cell contains no sugar and no agent
+  EMPTY("Empty", 0),      // Cell contains no sugar and no agent
   SUGAR("Sugar", 1),      // Cell contains sugar but no agent
   AGENT("Agent", 2);      // Cell contains an agent
 

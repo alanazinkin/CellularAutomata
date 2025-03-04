@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Multiple neighborhoods combined - allows custom combinations of neighborhood patterns.
- * This class enables flexible neighborhood definitions by merging multiple strategies.
- * For example, it can combine Moore and Von Neumann neighborhoods.
- *
+ * Multiple neighborhoods combined - allows custom combinations of neighborhood patterns. This class
+ * enables flexible neighborhood definitions by merging multiple strategies. For example, it can
+ * combine Moore and Von Neumann neighborhoods.
+ * <p>
  * Example usage:
  * <pre>
  * List<NeighborhoodStrategy> strategies = List.of(new MooreNeighborhood(), new VonNeumannNeighborhood());
@@ -17,6 +17,7 @@ import java.util.List;
  * @author Tatum McKinnis
  */
 public class MultipleNeighborhoods implements NeighborhoodStrategy {
+
   private final List<NeighborhoodStrategy> neighborhoods;
 
   /**

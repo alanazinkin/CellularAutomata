@@ -5,8 +5,8 @@ import cellsociety.model.StateInterface;
 /**
  * Represents the possible states in the Bacteria Colonies simulation.
  * <p>
- * Each state corresponds to a type of bacteria that competes in a rock-paper-scissors fashion.
- * The states defined are:
+ * Each state corresponds to a type of bacteria that competes in a rock-paper-scissors fashion. The
+ * states defined are:
  * <ul>
  *   <li>{@code ROCK} – beats {@code SCISSORS}</li>
  *   <li>{@code PAPER} – beats {@code ROCK}</li>

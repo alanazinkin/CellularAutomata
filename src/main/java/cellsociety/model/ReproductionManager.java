@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Manages reproduction within the SugarScape simulation.
- * This includes determining which agents can reproduce,
- * selecting suitable mates, and placing offspring in empty grid cells.
+ * Manages reproduction within the SugarScape simulation. This includes determining which agents can
+ * reproduce, selecting suitable mates, and placing offspring in empty grid cells.
+ *
  * @author Tatum McKinnis
  */
 public class ReproductionManager {
@@ -26,8 +26,9 @@ public class ReproductionManager {
   }
 
   /**
-   * Applies reproduction rules to a list of agents. Fertile agents seek mates among their neighbors,
-   * and if conditions allow, they reproduce and place offspring in an adjacent empty cell.
+   * Applies reproduction rules to a list of agents. Fertile agents seek mates among their
+   * neighbors, and if conditions allow, they reproduce and place offspring in an adjacent empty
+   * cell.
    *
    * @param agents the list of agents in the simulation to apply reproduction rules to
    */
@@ -35,7 +36,9 @@ public class ReproductionManager {
     List<Agent> newAgents = new ArrayList<>();
 
     for (Agent agent : agents) {
-      if (!agent.isFertile()) continue;
+      if (!agent.isFertile()) {
+        continue;
+      }
 
       List<Agent> neighbors = GridOperations.getAgentNeighbors(agent, simulation);
       Collections.shuffle(neighbors, simulation.getRandom());
@@ -44,7 +47,8 @@ public class ReproductionManager {
         if (RulesOperations.canReproduce(agent, neighbor)) {
           Cell emptyCell = GridOperations.findAdjacentEmptyCell(agent, simulation);
           if (emptyCell != null) {
-            Agent child = RulesOperations.reproduce(agent, neighbor, emptyCell, simulation.getRandom());
+            Agent child = RulesOperations.reproduce(agent, neighbor, emptyCell,
+                simulation.getRandom());
             newAgents.add(child);
             emptyCell.setNextState(SugarScapeState.AGENT);
             break;

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for LoanManager.
- * Tests the lending and loan management functionality in the SugarScape simulation.
+ * Test class for LoanManager. Tests the lending and loan management functionality in the SugarScape
+ * simulation.
  */
 public class LoanManagerTest {
 
@@ -39,8 +39,8 @@ public class LoanManagerTest {
   }
 
   /**
-   * Tests that a loan is successfully created between a lender and borrower
-   * when all conditions are met.
+   * Tests that a loan is successfully created between a lender and borrower when all conditions are
+   * met.
    */
   @Test
   void applyLending_ValidLenderAndBorrower_CreatesLoan() {
@@ -88,8 +88,7 @@ public class LoanManagerTest {
   }
 
   /**
-   * Tests that a loan payment is processed correctly when the borrower
-   * has sufficient funds.
+   * Tests that a loan payment is processed correctly when the borrower has sufficient funds.
    */
   @Test
   void updateLoans_LoanDueWithSufficientFunds_ProcessesPayment() {
@@ -105,8 +104,7 @@ public class LoanManagerTest {
   }
 
   /**
-   * Tests that a new loan is created with increased debt when the borrower
-   * cannot fully repay.
+   * Tests that a new loan is created with increased debt when the borrower cannot fully repay.
    */
   @Test
   void updateLoans_InsufficientFundsForRepayment_CreatesNewLoan() {
@@ -122,8 +120,8 @@ public class LoanManagerTest {
   }
 
   /**
-   * Tests that an IllegalArgumentException is thrown when trying to
-   * process a loan with null agents.
+   * Tests that an IllegalArgumentException is thrown when trying to process a loan with null
+   * agents.
    */
   @Test
   void applyLending_NullAgentList_ThrowsException() {
@@ -132,8 +130,8 @@ public class LoanManagerTest {
   }
 
   /**
-   * Tests that an IllegalArgumentException is thrown when trying to
-   * update loans with a negative tick value.
+   * Tests that an IllegalArgumentException is thrown when trying to update loans with a negative
+   * tick value.
    */
   @Test
   void updateLoans_NegativeTick_ThrowsException() {

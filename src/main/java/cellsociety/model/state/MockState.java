@@ -4,6 +4,7 @@ import cellsociety.model.StateInterface;
 
 /**
  * Mock state implementation used for testing purposes. Implements the StateInterface.
+ *
  * @author Tatum McKinnis
  */
 public enum MockState implements StateInterface {
@@ -17,7 +18,7 @@ public enum MockState implements StateInterface {
   /**
    * Constructs a new MockState with the specified state value and numeric value.
    *
-   * @param stateValue the string representation of the state.
+   * @param stateValue   the string representation of the state.
    * @param numericValue the numeric identifier for the state.
    */
   MockState(String stateValue, int numericValue) {

@@ -2,6 +2,7 @@ package cellsociety.model;
 
 /**
  * Factory class for creating edge strategies from configuration strings.
+ *
  * @author Tatum McKinnis
  */
 public class EdgeStrategyFactory {

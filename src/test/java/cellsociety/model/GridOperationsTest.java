@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import cellsociety.model.simulations.SugarScape;
@@ -10,11 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Test class for GridOperations.
- * Tests grid-related operations including movement, distance calculations, and neighbor finding.
+ * Test class for GridOperations. Tests grid-related operations including movement, distance
+ * calculations, and neighbor finding.
+ *
  * @author Tatum McKinnis
  */
 public class GridOperationsTest {
+
   private SugarScape simulation;
   private Grid grid;
   private Agent agent;
@@ -24,7 +27,7 @@ public class GridOperationsTest {
   @BeforeEach
   void setUp() {
     int[] initialStates = new int[GRID_SIZE * GRID_SIZE];
-    for(int i = 0; i < initialStates.length; i++) {
+    for (int i = 0; i < initialStates.length; i++) {
       initialStates[i] = 0;
     }
 
@@ -43,8 +46,8 @@ public class GridOperationsTest {
     StateInterface defaultState = SugarScapeState.EMPTY;
     grid = new Grid(GRID_SIZE, GRID_SIZE, defaultState);
 
-    for(int r = 0; r < GRID_SIZE; r++) {
-      for(int c = 0; c < GRID_SIZE; c++) {
+    for (int r = 0; r < GRID_SIZE; r++) {
+      for (int c = 0; c < GRID_SIZE; c++) {
         SugarCell sugarCell = new SugarCell(r, c, SugarScapeState.EMPTY);
         sugarCell.setMaxSugar(10);
         sugarCell.setSugar(10);
@@ -61,8 +64,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests finding valid moves for an agent with empty neighboring cells.
-   * Expected behavior: Returns list of valid empty cells.
+   * Tests finding valid moves for an agent with empty neighboring cells. Expected behavior: Returns
+   * list of valid empty cells.
    */
   @Test
   void findValidMoves_EmptyNeighbors_ReturnsValidMoves() {
@@ -76,8 +79,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests finding valid moves when surrounded by occupied cells.
-   * Expected behavior: Returns empty list.
+   * Tests finding valid moves when surrounded by occupied cells. Expected behavior: Returns empty
+   * list.
    */
   @Test
   void findValidMoves_NoValidMoves_ReturnsEmptyList() {
@@ -96,8 +99,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests finding best move among valid moves with different sugar levels.
-   * Expected behavior: Returns cell with highest sugar.
+   * Tests finding best move among valid moves with different sugar levels. Expected behavior:
+   * Returns cell with highest sugar.
    */
   @Test
   void findBestMove_DifferentSugarLevels_ReturnsHighestSugar() {
@@ -118,8 +121,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests calculating Manhattan distance between two cells.
-   * Expected behavior: Returns correct distance.
+   * Tests calculating Manhattan distance between two cells. Expected behavior: Returns correct
+   * distance.
    */
   @Test
   void calculateDistance_ValidCells_ReturnsCorrectDistance() {
@@ -134,8 +137,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests calculating distance with invalid cells.
-   * Expected behavior: Returns -1 or handles gracefully.
+   * Tests calculating distance with invalid cells. Expected behavior: Returns -1 or handles
+   * gracefully.
    */
   @Test
   void calculateDistance_InvalidCells_HandlesGracefully() {
@@ -144,12 +147,13 @@ public class GridOperationsTest {
     grid.setCellAt(1, 1, cell1);
 
     int distance = GridOperations.calculateDistance(cell1, invalidCell, simulation);
-    assertEquals(4, distance); // |3-1| + |3-1| = 4, implementation calculates Manhattan distance regardless
+    assertEquals(4,
+        distance); // |3-1| + |3-1| = 4, implementation calculates Manhattan distance regardless
   }
 
   /**
-   * Tests getting agent neighbors for an agent with adjacent agents.
-   * Expected behavior: Returns list of adjacent agents.
+   * Tests getting agent neighbors for an agent with adjacent agents. Expected behavior: Returns
+   * list of adjacent agents.
    */
   @Test
   void getAgentNeighbors_AdjacentAgents_ReturnsCorrectNeighbors() {
@@ -165,8 +169,7 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests getting agent neighbors with null agent.
-   * Expected behavior: Throws NullPointerException.
+   * Tests getting agent neighbors with null agent. Expected behavior: Throws NullPointerException.
    */
   @Test
   void getAgentNeighbors_NullAgent_ThrowsException() {
@@ -179,8 +182,8 @@ public class GridOperationsTest {
   }
 
   /**
-   * Tests getting agent neighbors with null simulation.
-   * Expected behavior: Throws NullPointerException.
+   * Tests getting agent neighbors with null simulation. Expected behavior: Throws
+   * NullPointerException.
    */
   @Test
   void getAgentNeighbors_NullSimulation_ThrowsException() {

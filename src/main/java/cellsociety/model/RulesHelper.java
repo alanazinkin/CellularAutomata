@@ -1,11 +1,13 @@
 package cellsociety.model;
+
 import java.util.Random;
 
 /**
  * Provides helper methods for common operations in the SugarScape simulation.
  * <p>
- * This class includes utility functions to locate cell coordinates in the grid and to create
- * agents with randomized attributes.
+ * This class includes utility functions to locate cell coordinates in the grid and to create agents
+ * with randomized attributes.
+ *
  * @author Tatum McKinnis
  * </p>
  */
@@ -15,8 +17,9 @@ public class RulesHelper {
    * Finds the coordinates of the target cell within a grid.
    *
    * @param targetCell the cell to locate
-   * @param grid the Grid instance to search within
-   * @return an int array where index 0 is the row and index 1 is the column, or {-1, -1} if not found
+   * @param grid       the Grid instance to search within
+   * @return an int array where index 0 is the row and index 1 is the column, or {-1, -1} if not
+   * found
    */
   public static int[] getCellCoordinates(Cell targetCell, Grid grid) {
     for (int r = 0; r < grid.getRows(); r++) {
@@ -30,11 +33,11 @@ public class RulesHelper {
   }
 
   /**
-   * Creates a new agent with random attributes for vision, metabolism, and initial sugar.
-   * The agent's sex is chosen randomly and its fertility status is randomly assigned.
+   * Creates a new agent with random attributes for vision, metabolism, and initial sugar. The
+   * agent's sex is chosen randomly and its fertility status is randomly assigned.
    *
    * @param position the initial position (cell) for the agent
-   * @param random a Random instance used for attribute generation
+   * @param random   a Random instance used for attribute generation
    * @return a new Agent instance with random attributes
    */
   public static Agent createAgent(Cell position, Random random) {

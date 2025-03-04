@@ -4,8 +4,9 @@ import cellsociety.model.simulations.SugarScape;
 import java.util.List;
 
 /**
- * Manages the spread and effects of diseases within the SugarScape simulation.
- * This includes updating agents' immune systems and transmitting diseases to neighboring agents.
+ * Manages the spread and effects of diseases within the SugarScape simulation. This includes
+ * updating agents' immune systems and transmitting diseases to neighboring agents.
+ *
  * @author Tatum McKinnis
  */
 public class DiseaseManager {
@@ -22,8 +23,8 @@ public class DiseaseManager {
   }
 
   /**
-   * Applies disease rules to a list of agents. This includes updating their immune systems
-   * if they have diseases and transmitting diseases to neighboring agents.
+   * Applies disease rules to a list of agents. This includes updating their immune systems if they
+   * have diseases and transmitting diseases to neighboring agents.
    *
    * @param agents the list of agents in the simulation to apply disease rules to
    */
@@ -58,7 +59,9 @@ public class DiseaseManager {
    */
   private Disease selectRandomDisease(Agent agent) {
     List<Disease> diseases = agent.getDiseases();
-    if (diseases.isEmpty()) return null;
+    if (diseases.isEmpty()) {
+      return null;
+    }
     return diseases.get(simulation.getRandom().nextInt(diseases.size()));
   }
 }

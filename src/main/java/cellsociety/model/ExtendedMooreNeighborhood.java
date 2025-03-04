@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implements an extended Moore neighborhood where all cells within a specified radius
- * around a central cell are considered neighbors.
+ * Implements an extended Moore neighborhood where all cells within a specified radius around a
+ * central cell are considered neighbors.
  *
  * <p>The neighborhood extends in all directions (including diagonals) within the given radius.
  *
  * @author Tatum McKinnis
  */
 public class ExtendedMooreNeighborhood implements NeighborhoodStrategy {
+
   private final int radius;
 
   /**
@@ -38,11 +39,11 @@ public class ExtendedMooreNeighborhood implements NeighborhoodStrategy {
   public List<int[]> getNeighborCoordinates(int row, int col) {
     List<int[]> neighbors = new ArrayList<>();
 
-    // Add all cells within the specified radius (square pattern)
     for (int dr = -radius; dr <= radius; dr++) {
       for (int dc = -radius; dc <= radius; dc++) {
-        // Skip the cell itself
-        if (dr == 0 && dc == 0) continue;
+        if (dr == 0 && dc == 0) {
+          continue;
+        }
 
         neighbors.add(new int[]{row + dr, col + dc});
       }

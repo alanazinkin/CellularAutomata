@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * Test class for {@link VonNeumannNeighborhood} implementation.
  * <p>
- * This class verifies that the Von Neumann neighborhood strategy correctly identifies
- * the 4 orthogonally adjacent cells as neighbors.
+ * This class verifies that the Von Neumann neighborhood strategy correctly identifies the 4
+ * orthogonally adjacent cells as neighbors.
  * </p>
  *
  * @author Tatum McKinnis

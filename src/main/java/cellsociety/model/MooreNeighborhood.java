@@ -4,27 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Moore neighborhood - considers all 8 surrounding cells in a square pattern.
- * It provides direct access to adjacent cells, including diagonals.
- *
+ * Moore neighborhood - considers all 8 surrounding cells in a square pattern. It provides direct
+ * access to adjacent cells, including diagonals.
+ * <p>
  * This is the original behavior from the Grid class.
- *
- * Example:
- * Given a cell (C) at (row, col):
- *   [X] [X] [X]
- *   [X] [C] [X]
- *   [X] [X] [X]
- *
+ * <p>
+ * Example: Given a cell (C) at (row, col): [X] [X] [X] [X] [C] [X] [X] [X] [X]
+ * <p>
  * The Moore neighborhood includes all X cells.
  *
  * @author Tatum McKinnis
  */
 public class MooreNeighborhood implements NeighborhoodStrategy {
+
   // Moore neighborhood offsets - all 8 surrounding cells
   private static final int[][] NEIGHBOR_OFFSETS = {
       {-1, -1}, {-1, 0}, {-1, 1},
-      {0, -1},           {0, 1},
-      {1, -1},  {1, 0},  {1, 1}
+      {0, -1}, {0, 1},
+      {1, -1}, {1, 0}, {1, 1}
   };
 
   /**

@@ -1,7 +1,8 @@
 package cellsociety.model;
 
 /**
- * Implements a mirror edge strategy where coordinates outside the grid are mirrored from the edges.
+ * Implements a mirror edge strategy where coordinates outside the grid are mirrored from the
+ * edges.
  *
  * <p>This strategy ensures that out-of-bounds positions reflect back into the grid, effectively
  * creating a continuous mirrored surface at the boundaries.
@@ -14,8 +15,8 @@ public class MirrorEdge implements EdgeStrategy {
    * Determines whether a position is valid within a mirrored grid.
    *
    * @param grid The grid instance
-   * @param row The row index to check
-   * @param col The column index to check
+   * @param row  The row index to check
+   * @param col  The column index to check
    * @return Always returns true since all positions are conceptually valid in a mirrored space
    */
   @Override
@@ -27,8 +28,8 @@ public class MirrorEdge implements EdgeStrategy {
    * Retrieves the cell at the specified position, mirroring coordinates if out of bounds.
    *
    * @param grid The grid instance
-   * @param row The row index of the desired cell
-   * @param col The column index of the desired cell
+   * @param row  The row index of the desired cell
+   * @param col  The column index of the desired cell
    * @return The cell at the mirrored position within the grid
    */
   @Override

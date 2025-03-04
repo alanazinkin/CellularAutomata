@@ -2,14 +2,15 @@ package cellsociety.model;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@link MooreNeighborhood} implementation.
  * <p>
- * This class verifies that the Moore neighborhood strategy correctly identifies
- * all 8 surrounding cells as neighbors.
+ * This class verifies that the Moore neighborhood strategy correctly identifies all 8 surrounding
+ * cells as neighbors.
  * </p>
  *
  * @author Tatum McKinnis

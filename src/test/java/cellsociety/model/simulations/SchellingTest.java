@@ -164,7 +164,7 @@ public class SchellingTest {
         "Regular Cell should be converted to AgentCell");
     assertEquals(SchellingState.AGENT, convertedCell.getCurrentState(),
         "Converted cell should maintain AGENT state");
-    assertTrue(((AgentCell)convertedCell).getAgentGroup() > 0,
+    assertTrue(((AgentCell) convertedCell).getAgentGroup() > 0,
         "Converted cell should have a valid agent group");
   }
 

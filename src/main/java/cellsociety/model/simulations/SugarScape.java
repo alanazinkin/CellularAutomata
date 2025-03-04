@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Represents the SugarScape simulation, a grid-based simulation where agents interact
- * with sugar resources and engage in various activities such as movement, growth, reproduction,
- * trading, lending, and disease management.
+ * Represents the SugarScape simulation, a grid-based simulation where agents interact with sugar
+ * resources and engage in various activities such as movement, growth, reproduction, trading,
+ * lending, and disease management.
  * <p>
  * This class extends the {@link Simulation} class and ties together multiple rule managers to
  * simulate the behavior of agents and sugar resources over discrete time steps.
@@ -56,9 +56,9 @@ public class SugarScape extends Simulation {
   /**
    * Constructs a new SugarScape simulation with the specified configuration and grid.
    * <p>
-   * The constructor converts the provided grid cells to {@link SugarCell} objects, initializes
-   * the agent list and active loans, and sets up various managers responsible for simulation rules.
-   * It also initializes the growth patterns and sets the initial states based on the grid.
+   * The constructor converts the provided grid cells to {@link SugarCell} objects, initializes the
+   * agent list and active loans, and sets up various managers responsible for simulation rules. It
+   * also initializes the growth patterns and sets the initial states based on the grid.
    * </p>
    *
    * @param simulationConfig the configuration parameters for the simulation
@@ -86,10 +86,11 @@ public class SugarScape extends Simulation {
   }
 
   /**
-   * Initializes agents on the grid by creating an {@link Agent} for each cell with the AGENT state.
+   * Initializes agents on the grid by creating an {@link Agent} for each cell with the AGENT
+   * state.
    * <p>
-   * For each cell in the grid that is in the {@link SugarScapeState#AGENT} state, an agent is created,
-   * added to the agent list, and its next state is set to AGENT.
+   * For each cell in the grid that is in the {@link SugarScapeState#AGENT} state, an agent is
+   * created, added to the agent list, and its next state is set to AGENT.
    * </p>
    */
   private void initializeFromStates() {
@@ -131,9 +132,9 @@ public class SugarScape extends Simulation {
   /**
    * Initializes the sugar growth patterns across the grid.
    * <p>
-   * The sugar capacity for each cell is determined based on its distance from the grid edges.
-   * Cells closer to the center tend to have a higher maximum sugar capacity. The sugar levels are
-   * set accordingly, and non-agent cells are set to the SUGAR state.
+   * The sugar capacity for each cell is determined based on its distance from the grid edges. Cells
+   * closer to the center tend to have a higher maximum sugar capacity. The sugar levels are set
+   * accordingly, and non-agent cells are set to the SUGAR state.
    * </p>
    */
   private void initializeGrowthPatterns() {
@@ -161,8 +162,8 @@ public class SugarScape extends Simulation {
   /**
    * Initializes the color mapping for different simulation states.
    * <p>
-   * The returned map associates each {@link StateInterface} instance with a CSS class name to be used
-   * for rendering the grid cells.
+   * The returned map associates each {@link StateInterface} instance with a CSS class name to be
+   * used for rendering the grid cells.
    * </p>
    *
    * @return a map linking states to their respective CSS class names
@@ -193,7 +194,8 @@ public class SugarScape extends Simulation {
   /**
    * Initializes the state mapping for the simulation.
    * <p>
-   * The returned map associates integer values with their corresponding {@link StateInterface} states.
+   * The returned map associates integer values with their corresponding {@link StateInterface}
+   * states.
    * </p>
    *
    * @return a map linking numeric values to simulation states
@@ -210,9 +212,9 @@ public class SugarScape extends Simulation {
   /**
    * Applies the simulation rules for the current tick.
    * <p>
-   * The method shuffles the list of agents and then sequentially applies rules for movement, sugar growth,
-   * reproduction, trading, lending, and disease. It also removes dead agents and updates active loans,
-   * incrementing the simulation tick at the end.
+   * The method shuffles the list of agents and then sequentially applies rules for movement, sugar
+   * growth, reproduction, trading, lending, and disease. It also removes dead agents and updates
+   * active loans, incrementing the simulation tick at the end.
    * </p>
    */
   @Override
@@ -235,8 +237,8 @@ public class SugarScape extends Simulation {
   /**
    * Removes agents that are dead from the simulation.
    * <p>
-   * For each agent that is determined to be dead, its position is set to the EMPTY state, and it is removed
-   * from the active agent list. The grid is then updated to reflect these changes.
+   * For each agent that is determined to be dead, its position is set to the EMPTY state, and it is
+   * removed from the active agent list. The grid is then updated to reflect these changes.
    * </p>
    */
   private void removeDeadAgents() {
@@ -283,8 +285,8 @@ public class SugarScape extends Simulation {
   /**
    * Returns the modifiable list of active loans.
    * <p>
-   * This package-private method is intended for use by manager classes that need to update
-   * the active loans during the simulation.
+   * This package-private method is intended for use by manager classes that need to update the
+   * active loans during the simulation.
    * </p>
    *
    * @return a modifiable list of active loans

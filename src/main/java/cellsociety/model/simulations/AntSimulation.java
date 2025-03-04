@@ -375,7 +375,7 @@ public class AntSimulation extends Simulation {
     }
 
     if (totalWeight <= 0) {
-      return possiblePositions.get((int)(Math.random() * possiblePositions.size()));
+      return possiblePositions.get((int) (Math.random() * possiblePositions.size()));
     }
 
     double rand = Math.random() * totalWeight;

@@ -11,9 +11,11 @@ import cellsociety.model.StateInterface;
 /**
  * Simulates Tempesti's Loop cellular automaton, a self-replicating structure with distinct
  * transition rules from Langton's Loop.
+ *
  * @author Tatum McKinnis
  */
 public class TempestiLoop extends AbstractLoopSimulation {
+
   private final RuleStrategy ruleStrategy;
 
   /**
@@ -29,8 +31,8 @@ public class TempestiLoop extends AbstractLoopSimulation {
   }
 
   /**
-   * Applies the rules of the simulation to update the states of cells in the grid.
-   * This method is specifically overridden to match the behavior expected by tests.
+   * Applies the rules of the simulation to update the states of cells in the grid. This method is
+   * specifically overridden to match the behavior expected by tests.
    */
   @Override
   protected void applyRules() {
@@ -54,8 +56,8 @@ public class TempestiLoop extends AbstractLoopSimulation {
   }
 
   /**
-   * Applies special case rules for specific cell positions.
-   * Handles potential class cast issues gracefully.
+   * Applies special case rules for specific cell positions. Handles potential class cast issues
+   * gracefully.
    */
   private void applySpecialCaseRules(Grid grid) {
     // Special case 1: Advance to Sheath transformation
@@ -95,16 +97,22 @@ public class TempestiLoop extends AbstractLoopSimulation {
   }
 
   /**
-   * Helper method to check if a cell has a specific state.
-   * Returns false if cell is null or state doesn't match expected type.
+   * Helper method to check if a cell has a specific state. Returns false if cell is null or state
+   * doesn't match expected type.
    */
   private boolean isState(Cell cell, LangtonState expectedState) {
-    if (cell == null) return false;
+    if (cell == null) {
+      return false;
+    }
 
     StateInterface currentState = cell.getCurrentState();
-    if (currentState == null) return false;
+    if (currentState == null) {
+      return false;
+    }
 
-    if (!(currentState instanceof LangtonState)) return false;
+    if (!(currentState instanceof LangtonState)) {
+      return false;
+    }
 
     return currentState == expectedState;
   }
@@ -118,14 +126,17 @@ public class TempestiLoop extends AbstractLoopSimulation {
 
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        if (row == 1 && col == 1) continue;
+        if (row == 1 && col == 1) {
+          continue;
+        }
 
         Cell cell = grid.getCell(row, col);
         if (cell != null) {
           try {
             updateCellState(row, col);
           } catch (Exception e) {
-            System.err.println("Error updating cell at (" + row + "," + col + "): " + e.getMessage());
+            System.err.println(
+                "Error updating cell at (" + row + "," + col + "): " + e.getMessage());
             cell.setNextState(cell.getCurrentState());
           }
         }
