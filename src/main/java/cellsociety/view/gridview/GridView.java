@@ -40,6 +40,7 @@ import javafx.util.Duration;
 /**
  * abstract class for creating a GridView, which holds all teh cells and updates the visual display
  * of their states
+ *
  * @author Alana Zinkin
  */
 public abstract class GridView {
@@ -139,14 +140,21 @@ public abstract class GridView {
   }
 
   /**
-   * Abstract method for creating the visual display of grid cells
-   * based on the Grid object and organizes them in the view
+   * Abstract method for creating the visual display of grid cells based on the Grid object and
+   * organizes them in the view
    *
    * @param colorMap         mapping of state interfaces to colors to visually render each cell
    *                         according to its state value
    * @param simulationConfig the object representation of the simulation configuration
+   * @throws ClassNotFoundException    if there is no factory class for creating the grid view
+   * @throws InvocationTargetException if a new grid view cannot be made
+   * @throws NoSuchMethodException     if there is no constructor for creating the gridview
+   * @throws InstantiationException    if a new gridview cannot be instantiated
+   * @throws IllegalAccessException    if user attempts to access a method that should not be
+   *                                   accessed
    */
-  public abstract void renderGrid(Map<StateInterface, String> colorMap, SimulationConfig simulationConfig)
+  public abstract void renderGrid(Map<StateInterface, String> colorMap,
+      SimulationConfig simulationConfig)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
 
   /**

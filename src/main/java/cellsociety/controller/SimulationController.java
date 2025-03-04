@@ -24,6 +24,7 @@ import javafx.stage.Stage;
  * @author Angela Predolac
  */
 public class SimulationController {
+
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
       SimulationController.class.getPackageName() + ".Simulation");
   public static final String DEFAULT_RESOURCE_PACKAGE =
@@ -34,22 +35,17 @@ public class SimulationController {
    * Enum representing the different types of simulations available.
    */
   public enum SimulationType {
-    GAME_OF_LIFE("Game of Life"),
-    SPREADING_FIRE("Spreading of Fire"),
-    PERCOLATION("Percolation"),
-    SCHELLING("Schelling Segregation"),
-    WATOR_WORLD("Wa-Tor World"),
-    LANGTON_LOOP("Langton Loop"),
-    SUGAR_SCAPE("Sugar Scape"),
-    BACTERIA("Bacteria"),
-    ANT("Foraging Ants"),
-    TEMPESTI_LOOP("Tempesti Loop"),
-    RULES_GAME_OF_LIFE("Rules-Based Game of Life");
+    GAME_OF_LIFE("Game of Life"), SPREADING_FIRE("Spreading of Fire"), PERCOLATION(
+        "Percolation"), SCHELLING("Schelling Segregation"), WATOR_WORLD(
+        "Wa-Tor World"), LANGTON_LOOP("Langton Loop"), SUGAR_SCAPE("Sugar Scape"), BACTERIA(
+        "Bacteria"), ANT("Foraging Ants"), TEMPESTI_LOOP("Tempesti Loop"), RULES_GAME_OF_LIFE(
+        "Rules-Based Game of Life");
 
     private final String displayName;
 
     /**
      * Constructs a SimulationType with a specified display name.
+     *
      * @param displayName the display name of the simulation type.
      */
     SimulationType(String displayName) {
@@ -58,12 +54,12 @@ public class SimulationController {
 
     /**
      * Retrieves a SimulationType from a string representation.
+     *
      * @param text the display name of the simulation type.
      * @return an Optional containing the corresponding SimulationType, if found.
      */
     public static Optional<SimulationType> fromString(String text) {
-      return Arrays.stream(SimulationType.values())
-          .filter(type -> type.displayName.equals(text))
+      return Arrays.stream(SimulationType.values()).filter(type -> type.displayName.equals(text))
           .findFirst();
     }
   }
@@ -92,14 +88,14 @@ public class SimulationController {
    * Selects and loads a simulation with an optional style file.
    *
    * @param simulationType the type of simulation to load
-   * @param fileName the name of the simulation configuration file
-   * @param styleFileName the name of the style file (can be null for default style)
-   * @param stage the primary stage for the application
-   * @param controller the simulation controller
+   * @param fileName       the name of the simulation configuration file
+   * @param styleFileName  the name of the style file (can be null for default style)
+   * @param stage          the primary stage for the application
+   * @param controller     the simulation controller
    * @throws Exception if there's an error loading the simulation or style
    */
-  public void selectSimulation(String simulationType, String fileName, String styleFileName, Stage stage,
-                               SimulationController controller) throws Exception {
+  public void selectSimulation(String simulationType, String fileName, String styleFileName,
+      Stage stage, SimulationController controller) throws Exception {
     this.stage = stage;
     engine.pause();
     fileManager.loadFile(simulationType, fileName);
@@ -135,7 +131,7 @@ public class SimulationController {
   /**
    * Initializes the simulation with the current configuration and style.
    *
-   * @param stage the primary stage for the application
+   * @param stage      the primary stage for the application
    * @param controller the simulation controller
    * @throws Exception if there's an error initializing the simulation
    */
@@ -153,7 +149,8 @@ public class SimulationController {
    *
    * @param style the style to apply
    */
-  public void applyStyle(SimulationStyle style) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+  public void applyStyle(SimulationStyle style)
+      throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     //applyCellStateAppearances(style);
 
     //applyGridProperties(style);
@@ -179,7 +176,8 @@ public class SimulationController {
       StateInterface stateInterface = getStateByName(simulation, stateName);
 
       if (stateInterface != null) {
-        colorMap.put(stateInterface, appearance.usesImage() ? appearance.getImagePath() : appearance.getColor());
+        colorMap.put(stateInterface,
+            appearance.usesImage() ? appearance.getImagePath() : appearance.getColor());
       }
     }
 
@@ -228,7 +226,7 @@ public class SimulationController {
   /**
    * Updates the grid's edge policy based on the style setting
    *
-   * @param grid the grid to update
+   * @param grid           the grid to update
    * @param edgePolicyName the name of the edge policy to apply
    */
   private void updateGridEdgePolicy(Grid grid, String edgePolicyName) {
@@ -248,7 +246,7 @@ public class SimulationController {
   /**
    * Updates the grid's cell shape based on the style setting
    *
-   * @param grid the grid to update
+   * @param grid          the grid to update
    * @param cellShapeName the name of the cell shape to apply
    */
   private void updateGridCellShape(Grid grid, String cellShapeName) {
@@ -257,7 +255,8 @@ public class SimulationController {
       setCellShapeMethod.invoke(grid, cellShapeName);
     } catch (Exception e) {
       try {
-        Method configureCellShapeMethod = grid.getClass().getMethod("configureCellShape", String.class);
+        Method configureCellShapeMethod = grid.getClass()
+            .getMethod("configureCellShape", String.class);
         configureCellShapeMethod.invoke(grid, cellShapeName);
       } catch (Exception ex) {
         System.err.println("Could not set cell shape: " + ex.getMessage());
@@ -268,16 +267,18 @@ public class SimulationController {
   /**
    * Updates the grid's neighbor arrangement based on the style setting
    *
-   * @param grid the grid to update
+   * @param grid                    the grid to update
    * @param neighborArrangementName the name of the neighbor arrangement to apply
    */
   private void updateGridNeighborArrangement(Grid grid, String neighborArrangementName) {
     try {
-      Method setNeighborArrangementMethod = grid.getClass().getMethod("setNeighborArrangement", String.class);
+      Method setNeighborArrangementMethod = grid.getClass()
+          .getMethod("setNeighborArrangement", String.class);
       setNeighborArrangementMethod.invoke(grid, neighborArrangementName);
     } catch (Exception e) {
       try {
-        Method configureNeighborsMethod = grid.getClass().getMethod("configureNeighbors", String.class);
+        Method configureNeighborsMethod = grid.getClass()
+            .getMethod("configureNeighbors", String.class);
         configureNeighborsMethod.invoke(grid, neighborArrangementName);
       } catch (Exception ex) {
         System.err.println("Could not set neighbor arrangement: " + ex.getMessage());
@@ -314,8 +315,8 @@ public class SimulationController {
       SimulationStyle style = styleParser.parseStyleFile(styleFilePath);
       this.currentStyle = style;
       applyStyle(style);
-    } catch (ConfigurationException | ClassNotFoundException | InvocationTargetException | InstantiationException |
-             IllegalAccessException | NoSuchMethodException e) {
+    } catch (ConfigurationException | ClassNotFoundException | InvocationTargetException |
+             InstantiationException | IllegalAccessException | NoSuchMethodException e) {
       ui.handleError("StyleLoadError", e);
     }
   }
@@ -326,8 +327,7 @@ public class SimulationController {
   public void chooseAndLoadStyle() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Style File");
-    fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
 
     File selectedFile = fileChooser.showOpenDialog(stage);
     if (selectedFile != null) {
@@ -342,6 +342,9 @@ public class SimulationController {
     fileManager.saveStyle(stage, ui.getResources(), currentStyle);
   }
 
+  /**
+   * advance the simulation one step
+   */
   public void stepSimulation() {
     try {
       engine.step();
@@ -351,24 +354,37 @@ public class SimulationController {
     }
   }
 
+  /**
+   * allows user to go back one "step" in time to view previous cell states, but will not allow this
+   * action if it is the zeroth iteration. Will also prevent user from stepping backward more than
+   * once in a row
+   */
   public void stepBackSimulation() {
     try {
       engine.stepBackOnce();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       ui.handleError("StepError", e);
       pauseSimulation();
     }
   }
 
+  /**
+   * start running the simulation
+   */
   public void startSimulation() {
     engine.start();
   }
 
+  /**
+   * pause the simulation
+   */
   public void pauseSimulation() {
     engine.pause();
   }
 
+  /**
+   * resets the grid to its initial configuration state
+   */
   public void resetGrid() {
     try {
       engine.resetGrid();
@@ -378,15 +394,29 @@ public class SimulationController {
     }
   }
 
+  /**
+   * sets the simulation speed according to the slider adjusted value from the front-end display
+   *
+   * @param speed the new speed with which to update the timeline
+   */
   public void setSimulationSpeed(double speed) {
     engine.setSpeed(speed);
     currentStyle.setAnimationSpeed(speed);
   }
 
+  /**
+   * saves the current simulation state as a new configuration file
+   */
   public void saveSimulation() {
     fileManager.saveSimulation(stage, ui.getResources(), engine.getConfig(), engine.getGrid());
   }
 
+  /**
+   * static method for retrieving an immutable version of the simulation configuration resource
+   * bundle which holds constants, whcih are used for setting up the simulation
+   *
+   * @return Map<String, String> where keys are used to retrieve the string values
+   */
   public static Map<String, String> retrieveImmutableConfigResourceBundle() {
     return convertResourceBundletoImmutableMap(CONFIG);
   }
@@ -399,35 +429,74 @@ public class SimulationController {
     return Collections.unmodifiableMap(copy);
   }
 
+  /**
+   * @return the simulation object
+   */
   public Simulation getSimulation() {
     return engine.getSimulation();
   }
 
+  /**
+   * @return the grid object that holds the cells of the simulation
+   */
   public Grid getGrid() {
     return engine.getGrid();
   }
 
+  /**
+   * @return the simulation configuration object that controls the initialization of the simulation
+   */
   public SimulationConfig getSimulationConfig() {
     return engine.getConfig();
   }
 
+  /**
+   * @return the UI object responsible for rendering the front-end of the simulation
+   */
   public SimulationUI getUI() {
     return ui;
   }
 
+  /**
+   * @return number of iterations that have passed of the simulation
+   */
   public int getIterationCount() {
     return engine.getSimulation().retrieveIterationCount();
   }
 
+  /**
+   * sets the grid tiling to the new tiling by updating the grid view
+   *
+   * @param newTiling the new tiling selected
+   * @param colorMap  map of state interface values to CSS identifiers
+   * @param grid      the grid holding the underlying cell objects
+   * @throws ClassNotFoundException    if there is no factory class for creating the grid view
+   * @throws InvocationTargetException if a new grid view cannot be made
+   * @throws NoSuchMethodException     if there is no constructor for creating the gridview
+   * @throws InstantiationException    if a new gridview cannot be instantiated
+   * @throws IllegalAccessException    if user attempts to access a method that should not be
+   *                                   accessed
+   */
   public void setGridTiling(String newTiling, Map<StateInterface, String> colorMap, Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     getSimulationConfig().setTiling(newTiling);
     ui.createGridViewFromTiling(colorMap, grid);
   }
+
+  /**
+   * sets the edge strategy of the simulation
+   *
+   * @param type the type of edge strategy selected
+   */
   public void setEdgeStrategy(String type) {
     engine.setEdgeStrategy(type);
   }
 
+  /**
+   * sets the neighborhood strategy of the simulation
+   *
+   * @param type the type of neighborhood strategy selected
+   */
   public void setNeighborhoodStrategy(String type) {
     engine.setNeighborhoodStrategy(type);
   }
