@@ -26,7 +26,7 @@ public class GridSettingsDisplay {
   private static final List<String> NEIGHBORHOOD_TYPES = List.of("MOORE", "VON_NEUMANN",
       "EXTENDED_MOORE_", "MULTIPLE");
   private static final List<String> EDGE_TYPES = List.of("BOUNDED", "TOROIDAL", "MIRROR", "INFINITE");
-  private static final List<String> CELL_SHAPE_TYPES = List.of("Rectangle", "Triangle", "Parallelogram", "Hexagon");
+  private static final List<String> CELL_TILING_TYPES = List.of("Default", "Triangle", "Parallelogram", "Hexagon");
   private DialogPane myDialogPane;
   private Pane myContainer;
   private SimulationController myController;
@@ -62,25 +62,25 @@ public class GridSettingsDisplay {
     ComboBox<String> edgeSelector = myUserController.makeComboBox(
         myResources.getString("SelectEdgeType"),
         EDGE_TYPES);
-    ComboBox<String> cellShapeSelector = myUserController.makeComboBox(
-        myResources.getString("SelectCellShape"),
-        CELL_SHAPE_TYPES);
-    myContainer.getChildren().addAll(neighborhoodSelector, edgeSelector, cellShapeSelector);
+    ComboBox<String> tilingSelector = myUserController.makeComboBox(
+        myResources.getString("SelectTilingType"),
+        CELL_TILING_TYPES);
+    myContainer.getChildren().addAll(neighborhoodSelector, edgeSelector, tilingSelector);
     myDialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
     Button okButton = (Button) myDialogPane.lookupButton(ButtonType.OK);
     okButton.setOnAction(event -> {
       String neighborhoodType = neighborhoodSelector.getValue();
       String edgeType = edgeSelector.getValue();
-      String cellShapeType = cellShapeSelector.getValue();
+      String tilingType = tilingSelector.getValue();
       if (neighborhoodType != null) {
         myController.setNeighborhoodStrategy(neighborhoodType);
       }
       if (edgeType != null) {
         myController.setEdgeStrategy(edgeType);
       }
-      if (cellShapeType != null) {
+      if (tilingType != null) {
         try {
-          myController.setGridTiling(cellShapeType, myController.getSimulation().getColorMap(), myController.getGrid());
+          myController.setGridTiling(tilingType, myController.getSimulation().getColorMap(), myController.getGrid());
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
                  InstantiationException | IllegalAccessException e) {
           throw new RuntimeException(e);
