@@ -118,16 +118,22 @@ public class AntSimulation extends Simulation {
     Map<String, Double> params = config.getParameters();
     int numAnts = params.containsKey("numAnts") ? params.get("numAnts").intValue() : 10;
 
+    int totalNests = 0;
+    int totalAntsCreated = 0;
+
     for (int r = 0; r < getGrid().getRows(); r++) {
       for (int c = 0; c < getGrid().getCols(); c++) {
         AntState state = (AntState) getGrid().getCell(r, c).getCurrentState();
         if (state.isNest()) {
+          totalNests++;
           for (int i = 0; i < numAnts; i++) {
             ants.add(new Ant(r, c, Orientation.N, false));
+            totalAntsCreated++;
           }
         }
       }
     }
+
     return ants;
   }
 
@@ -146,7 +152,9 @@ public class AntSimulation extends Simulation {
   @Override
   public void applyRules() {
     initializeNextStates();
+
     ants.forEach(this::processAntMovement);
+
     applyEvaporationAndDiffusion();
     getGrid().applyNextStates();
   }
@@ -282,6 +290,7 @@ public class AntSimulation extends Simulation {
    */
   private void executeMovement(Ant ant) {
     List<int[]> possibleMoves = getPossibleMoves(ant);
+
     if (!possibleMoves.isEmpty()) {
       int[] selectedMove = selectMove(possibleMoves, ant.hasFood());
       if (selectedMove != null) {
@@ -356,19 +365,34 @@ public class AntSimulation extends Simulation {
       return null;
     }
 
-    double totalWeight = possiblePositions.stream()
-        .mapToDouble(pos -> getPheromoneWeight(pos[0], pos[1], hasFood))
-        .sum();
+    // Calculate all weights
+    double[] weights = new double[possiblePositions.size()];
+    double totalWeight = 0;
 
+    for (int i = 0; i < possiblePositions.size(); i++) {
+      int[] pos = possiblePositions.get(i);
+      weights[i] = getPheromoneWeight(pos[0], pos[1], hasFood);
+      totalWeight += weights[i];
+    }
+
+    // Ensure there's some weight (avoid division by zero)
+    if (totalWeight <= 0) {
+      // If all weights are zero, pick randomly
+      return possiblePositions.get((int)(Math.random() * possiblePositions.size()));
+    }
+
+    // Use weighted random selection
     double rand = Math.random() * totalWeight;
     double sum = 0;
 
-    for (int[] pos : possiblePositions) {
-      sum += getPheromoneWeight(pos[0], pos[1], hasFood);
+    for (int i = 0; i < weights.length; i++) {
+      sum += weights[i];
       if (sum >= rand) {
-        return pos;
+        return possiblePositions.get(i);
       }
     }
+
+    // Fallback
     return possiblePositions.get(possiblePositions.size() - 1);
   }
 
@@ -383,7 +407,14 @@ public class AntSimulation extends Simulation {
   private double getPheromoneWeight(int row, int col, boolean hasFood) {
     Cell cell = getGrid().getCell(row, col);
     AntState state = (AntState) cell.getCurrentState();
-    return (hasFood ? state.getHomePheromone() : state.getFoodPheromone()) + 1;
+
+    double baseWeight = 1.0; // Every cell has at least some chance
+    double pheromoneWeight = hasFood ? state.getHomePheromone() : state.getFoodPheromone();
+
+    // Add a small random factor to break ties and encourage exploration
+    double randomFactor = Math.random() * 0.5;
+
+    return baseWeight + pheromoneWeight + randomFactor;
   }
 
   /**
@@ -401,6 +432,12 @@ public class AntSimulation extends Simulation {
       int dr = newRow - oldRow;
       int dc = newCol - oldCol;
       ant.setOrientation(Orientation.fromDrDc(dr, dc));
+
+      // Update tracking properties
+      ant.setLastRow(oldRow);
+      ant.setLastCol(oldCol);
+      ant.setSteps(ant.getSteps() + 1);
+
     }
 
     updateAntCount(oldRow, oldCol, -1);
@@ -419,7 +456,13 @@ public class AntSimulation extends Simulation {
   private void updateAntCount(int row, int col, int delta) {
     Cell cell = getGrid().getCell(row, col);
     AntState nextState = (AntState) cell.getNextState();
-    cell.setNextState(nextState.withAntCount(nextState.getAntCount() + delta));
+    int newCount = nextState.getAntCount() + delta;
+
+    // Make sure the count doesn't go negative
+    newCount = Math.max(0, newCount);
+
+    // Set the updated state
+    cell.setNextState(nextState.withAntCount(newCount));
   }
 
   /**
@@ -545,4 +588,28 @@ public class AntSimulation extends Simulation {
     return Collections.unmodifiableMap(super.getStateMap());
   }
 
+  /**
+   * Test method to manually validate simulation logic
+   */
+  public void testSimulationStep() {
+    // Record initial positions
+    Map<Integer, int[]> initialPositions = new HashMap<>();
+    for (int i = 0; i < ants.size(); i++) {
+      Ant ant = ants.get(i);
+      initialPositions.put(i, new int[]{ant.getRow(), ant.getCol()});
+    }
+
+    // Run a step
+    applyRules();
+
+    // Check if positions changed
+    int movedCount = 0;
+    for (int i = 0; i < ants.size(); i++) {
+      Ant ant = ants.get(i);
+      int[] initial = initialPositions.get(i);
+      if (initial[0] != ant.getRow() || initial[1] != ant.getCol()) {
+        movedCount++;
+      }
+    }
+  }
 }
