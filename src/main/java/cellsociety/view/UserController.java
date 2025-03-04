@@ -136,13 +136,20 @@ public class UserController {
    * creates toggle button that switches on/off the grid lines
    *
    * @param label    label of the button
-   * @param gridView GridView object
    * @return a new GridLines toggle button
    */
-  public Button makeGridLinesToggleButton(String label, GridView gridView) {
-    Button toggleButton = new Button(label);
+  public Button makeGridLinesToggleButton(String label) {
+    return  new Button(label);
+  }
+
+  /**
+   * sets the action of the grid lines button when a user clicks on it
+   *
+   * @param gridView the gridview to update the lines of
+   * @param toggleButton the button which changes the lines
+   */
+  public void setGridLinesButtonAction(GridView gridView, Button toggleButton) {
     gridView.setGridLinesToggleButtonAction(toggleButton);
-    return toggleButton;
   }
 
   /**
@@ -153,7 +160,16 @@ public class UserController {
    * @return newly created flip grid button
    */
   public Button makeFlipGridButton(String label, GridView gridView) {
-    Button flipGrid = new Button(label);
+    return new Button(label);
+  }
+
+  /**
+   * sets the action of the flip grid button when a user clicks on it
+   *
+   * @param gridView gridview to flip
+   * @param flipGrid button that flips the grid
+   */
+  public void setGridFlipButtonAction(GridView gridView, Button flipGrid) {
     flipGrid.setOnAction(e -> {
       try {
         gridView.renderGridFlippedVertically(myController.getSimulation().getColorMap());
@@ -162,9 +178,15 @@ public class UserController {
         throw new RuntimeException(ex);
       }
     });
-    return flipGrid;
   }
 
+  /**
+   * makes a comboBox object according to the label and the list of options
+   *
+   * @param label prompt of the combo box
+   * @param options list of options to chose from
+   * @return new ComboBox object
+   */
   public ComboBox<String> makeComboBox(String label, List<String> options) {
     ComboBox<String> comboBox = new ComboBox<>();
     comboBox.setPromptText(label);
