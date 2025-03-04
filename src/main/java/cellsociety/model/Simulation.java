@@ -215,7 +215,7 @@ public abstract class Simulation {
   /**
    * updates the numerical counts of each state for all cells
    */
-  private void updateStateCountsMap() {
+  protected void updateStateCountsMap() {
     initializeStateCounts();
     for (int r = 0; r < grid.getRows(); r++) {
       for (int c = 0; c < grid.getCols(); c++) {
@@ -223,7 +223,6 @@ public abstract class Simulation {
         updateStateCountValue(currentState);
       }
     }
-    System.out.println(stateCounts);
   }
 
   /**
@@ -238,7 +237,7 @@ public abstract class Simulation {
     if (stateCounts.containsKey(state)) {
       stateCounts.put(state, stateCounts.get(state) + 1);
     } else {
-      stateCounts.put(state, 0.0);
+      return;
     }
   }
 
