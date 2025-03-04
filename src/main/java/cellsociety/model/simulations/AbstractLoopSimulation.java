@@ -1,6 +1,5 @@
 package cellsociety.model.simulations;
 
-
 import cellsociety.controller.SimulationConfig;
 import cellsociety.model.Cell;
 import cellsociety.model.Grid;
@@ -13,12 +12,7 @@ import java.util.Map;
 /**
  * Abstract base class for self-replicating loop cellular automata simulations.
  * Provides common functionality for both Langton's Loop and Tempesti's Loop simulations.
- * <p>
- * This class handles the common state management, grid operations, and neighborhood
- * calculations while leaving specific rule implementation to subclasses.
- * </p>
- *
- * @author [Your Name]
+ * @author Tatum McKinnis
  */
 public abstract class AbstractLoopSimulation extends Simulation {
 
@@ -37,9 +31,6 @@ public abstract class AbstractLoopSimulation extends Simulation {
 
   /**
    * Constructs a new loop simulation with specified configuration.
-   *
-   * @param simulationConfig Contains initial simulation parameters and grid dimensions
-   * @param grid The grid to run the simulation on
    */
   public AbstractLoopSimulation(SimulationConfig simulationConfig, Grid grid) {
     super(simulationConfig, grid);
@@ -47,9 +38,6 @@ public abstract class AbstractLoopSimulation extends Simulation {
 
   /**
    * Initializes a mapping of states to their corresponding color representations.
-   * This map is used for visualization purposes, assigning a unique color to each state.
-   *
-   * @return A map where keys are {@code StateInterface} values and values are CSS class names
    */
   @Override
   protected Map<StateInterface, String> initializeColorMap() {
@@ -84,8 +72,6 @@ public abstract class AbstractLoopSimulation extends Simulation {
 
   /**
    * Initializes a mapping of integer values to their corresponding states.
-   *
-   * @return A map where keys are integer values and values are {@code StateInterface} objects
    */
   @Override
   protected Map<Integer, StateInterface> initializeStateMap() {
@@ -123,11 +109,7 @@ public abstract class AbstractLoopSimulation extends Simulation {
   }
 
   /**
-   * Updates the state of a single cell based on its neighborhood configuration and the
-   * transition rules.
-   *
-   * @param row The row index of the cell
-   * @param col The column index of the cell
+   * Updates the state of a single cell based on its neighborhood configuration.
    */
   protected void updateCellState(int row, int col) {
     Cell currentCell = getGrid().getCell(row, col);
@@ -142,7 +124,7 @@ public abstract class AbstractLoopSimulation extends Simulation {
     }
 
     if (!(stateInterface instanceof LangtonState)) {
-      currentCell.setNextState(DEFAULT_STATE);
+      currentCell.setNextState(stateInterface);
       return;
     }
 
@@ -155,10 +137,7 @@ public abstract class AbstractLoopSimulation extends Simulation {
 
   /**
    * Retrieves the states of the von Neumann neighborhood (4 adjacent cells).
-   *
-   * @param row The row index of the center cell
-   * @param col The column index of the center cell
-   * @return Array of states in order: North, East, South, West
+   * Handles non-LangtonState neighbors gracefully.
    */
   protected LangtonState[] getVonNeumannNeighborStates(int row, int col) {
     LangtonState[] neighbors = new LangtonState[4];
@@ -169,7 +148,14 @@ public abstract class AbstractLoopSimulation extends Simulation {
       int newCol = col + VON_NEUMANN_OFFSETS[i][1];
 
       if (grid.isValidPosition(newRow, newCol)) {
-        neighbors[i] = (LangtonState) grid.getCell(newRow, newCol).getCurrentState();
+        Cell neighborCell = grid.getCell(newRow, newCol);
+        StateInterface neighborState = neighborCell.getCurrentState();
+
+        if (neighborState instanceof LangtonState) {
+          neighbors[i] = (LangtonState) neighborState;
+        } else {
+          neighbors[i] = DEFAULT_STATE;
+        }
       } else {
         neighbors[i] = DEFAULT_STATE;
       }
@@ -180,55 +166,18 @@ public abstract class AbstractLoopSimulation extends Simulation {
 
   /**
    * Determines the next state of a cell based on specific simulation rules.
-   * This method must be implemented by subclasses to define their specific rules.
-   *
-   * @param currentState The current state of the cell
-   * @param neighbors Array of neighbor states in von Neumann neighborhood
-   * @return The next state for the cell
    */
   protected abstract LangtonState determineNextState(LangtonState currentState, LangtonState[] neighbors);
 
   /**
-   * Counts how many cells in the neighborhood match a specific state.
-   *
-   * @param neighbors Array of neighbor states to check
-   * @param state The state to count occurrences of
-   * @return The number of neighboring cells in the specified state
+   * Validates that the grid meets the minimum size requirements.
    */
-  protected static int countNeighborType(LangtonState[] neighbors, LangtonState state) {
-    int count = 0;
-    for (LangtonState neighbor : neighbors) {
-      if (neighbor == state) {
-        count++;
-      }
+  protected void validateGridSize(Grid grid) {
+    if (grid.getRows() < MINIMUM_GRID_SIZE || grid.getCols() < MINIMUM_GRID_SIZE) {
+      throw new IllegalArgumentException(
+          String.format("Grid must be at least %dx%d for loop simulation",
+              MINIMUM_GRID_SIZE, MINIMUM_GRID_SIZE)
+      );
     }
-    return count;
-  }
-
-  /**
-   * Sets the state of a cell at the specified coordinates.
-   *
-   * @param x The x-coordinate of the cell
-   * @param y The y-coordinate of the cell
-   * @param state The state to set
-   */
-  protected void setState(int x, int y, LangtonState state) {
-    Grid grid = getGrid();
-    if (grid.isValidPosition(x, y)) {
-      Cell cell = grid.getCell(x, y);
-      if (cell != null) {
-        cell.setCurrentState(state);
-        cell.setNextState(state);
-      }
-    }
-  }
-
-  /**
-   * Returns the default state used by this simulation.
-   *
-   * @return The default state
-   */
-  public StateInterface getDefaultState() {
-    return DEFAULT_STATE;
   }
 }
