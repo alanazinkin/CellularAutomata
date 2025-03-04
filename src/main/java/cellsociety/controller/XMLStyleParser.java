@@ -210,4 +210,6 @@ public class XMLStyleParser {
             throw new ConfigurationException("Style must have an id element");
         }
     }
+
+
 }

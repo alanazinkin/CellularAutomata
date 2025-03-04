@@ -28,6 +28,23 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
     super(rows, cols, defaultState, new InfiniteEdge(), new MooreNeighborhood());
   }
 
+  public InfiniteGrid(Grid originalGrid) {
+    super(originalGrid.getRows(),
+            originalGrid.getCols(),
+            originalGrid.getDefaultState(),
+            new InfiniteEdge(),
+            originalGrid.getNeighborhoodStrategy());
+
+    Cell[][] copiedCells = new Cell[originalGrid.getRows()][originalGrid.getCols()];
+    for (int r = 0; r < originalGrid.getRows(); r++) {
+      for (int c = 0; c < originalGrid.getCols(); c++) {
+        copiedCells[r][c] = new Cell(originalGrid.getCellDirect(r, c).getCurrentState());
+      }
+    }
+    setCells(copiedCells);
+  }
+
+
   /**
    * Constructs a new InfiniteGrid with the specified dimensions, state, and neighborhood strategy.
    * Always uses InfiniteEdge strategy for edge handling.
@@ -42,7 +59,7 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
     super(rows, cols, defaultState, new InfiniteEdge(), neighborhoodStrategy);
   }
 
-  /**
+    /**
    * Gets the row offset of this grid.
    * The offset is used to map between the original coordinate system and
    * the expanded grid's internal coordinates.
