@@ -34,12 +34,15 @@ public class SplashScreen {
   public Stage showSplashScreen(Stage stage, String title, double width, double height) {
     stage.setTitle(title);
     Text titleText = new Text("Cell Society Simulator");
+    titleText.setId("TitleText");
     layout = new VBox();
+    layout.setId("Layout");
     layout.getChildren().add(titleText);
 
     Scene scene = new Scene(layout, width, height);
     stage.setScene(scene);
     stage.show();
+    scene.getStylesheets().add("cellsociety/CSS/SplashScreen.css");
     return stage;
   }
 
