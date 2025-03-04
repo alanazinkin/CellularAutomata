@@ -12,8 +12,11 @@ public class Ant {
 
   private int row;
   private int col;
+  private int lastRow;
+  private int lastCol;
   private Orientation orientation;
   private boolean hasFood;
+  private int steps;
 
   /**
    * Constructs an ant at a specific grid location.
@@ -28,6 +31,9 @@ public class Ant {
     this.row = row;
     this.col = col;
     this.hasFood = hasFood;
+    lastRow = -1;
+    lastCol = -1;
+    steps = 0;
   }
 
   /**
@@ -101,4 +107,59 @@ public class Ant {
   public void setHasFood(boolean hasFood) {
     this.hasFood = hasFood;
   }
+
+  /**
+   * Retrieves the last row index.
+   *
+   * @return the last row index as an integer.
+   */
+  public int getLastRow() {
+    return lastRow;
+  }
+
+  /**
+   * Retrieves the last column index.
+   *
+   * @return the last column index as an integer.
+   */
+  public int getLastCol() {
+    return lastCol;
+  }
+  /**
+   * Sets the last row index.
+   *
+   * @param lastRow the last row index to set.
+   */
+  public void setLastRow(int lastRow) {
+    this.lastRow = lastRow;
+  }
+
+  /**
+   * Sets the last column index.
+   *
+   * @param lastCol the last column index to set.
+   */
+  public void setLastCol(int lastCol) {
+    this.lastCol = lastCol;
+  }
+
+  /**
+   * Retrieves the number of steps.
+   *
+   * @return the number of steps as an integer.
+   */
+  public int getSteps() {
+    return steps;
+  }
+
+  /**
+   * Sets the number of steps.
+   *
+   * @param steps the number of steps to set.
+   */
+  public void setSteps(int steps) {
+    this.steps = steps;
+  }
+
+
 }

@@ -172,9 +172,19 @@ public class AntState implements StateInterface {
       return false;
     }
     AntState other = (AntState) o;
-    return isNest == other.isNest &&
+
+    boolean sameType = isNest == other.isNest &&
         isFood == other.isFood &&
         isObstacle == other.isObstacle;
+
+    if (sameType) {
+      boolean antsPresent = antCount > 0;
+      boolean otherAntsPresent = other.antCount > 0;
+
+      return antsPresent == otherAntsPresent;
+    }
+
+    return false;
   }
 
   /**
