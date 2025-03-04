@@ -11,8 +11,7 @@ This project implements a cellular automata simulator.
 
  * Finish Date: 3/4/25
 
- * Hours Spent: 200 hours
-
+ * Hours Spent: 250 hours
 
 
 ### Attributions
@@ -22,6 +21,7 @@ This project implements a cellular automata simulator.
  * Resources used directly (including AI assistance)
    * ChatGPT used to assist with writing JavaDoc comments
    * ChatGPT used to assist with debugging 
+   * ChatGPT used to assist with generating JavaFX charts and styling them
 
 ### Running the Program
 
@@ -47,17 +47,24 @@ This project implements a cellular automata simulator.
  * Assumptions or Simplifications:
 
  * Known Bugs:
+   * Langton Loop Reset does not reset to original state, but rather a different original state
+   * Ant Simulation is not working properly
 
  * Features implemented:
    * CELL-01 through CELL-16
    * CELL-26A, CELL-26C, CELL-26D, CELL-26E, CELL-26F
    * CELL-27, CELL-28, CELL-29, CELL-30, CELL-31
    * CELL-35, CELL-36, CELL-37, CELL-38, CELL-40, CELL-42, CELL-43, CELL-45C, CELL45D
-   * CELL-52, CELL-53A, CELL-53E
+   * CELL-50A, CELL-50B, CELL-50X
+   * CELL-52, CELL-53A, CELL-53B, CELL-53C, CELL-53E
 
  * Features unimplemented:
+   * CELL-50C, CELL-51D, CELL-51X, CELL-53X 
 
  * Noteworthy Features:
+   * Users can dynamically update the grid tiling structure and change the theme of the entire view
+   * Users can also see different graphs for each simulation to see total cell populations over time
+   * Users can run multiple simulations simultaneously
 
  * Running multiple simulations simultaneously:
    * All simulations run independently and are created by 
@@ -66,5 +73,12 @@ This project implements a cellular automata simulator.
 
 
 ### Assignment Impressions
+* This assignment was an intellectually stimulating challenge that forced our team to
+learn SOLID design principles, new ways of instantiating objects, such as reflection, how to test both the back-end and
+the front-end using J-unit and TestFX, and new design patterns that we can incorporate into our projects for a stramlined design.
+* This project appeared very difficult upon first reading the feature requirements, but our team was able to work really well together
+to integrate the front-end and back-end components to create a fully-functional project.
+* The project taught us that well-designed code makes future development significantly easier. For example, we were ale to create over 10 different
+simulations with different rules, yet use the same front-end code for all of them.
 
 
