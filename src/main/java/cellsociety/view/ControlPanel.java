@@ -47,6 +47,8 @@ public class ControlPanel {
   private UserController myUserControl;
   private GridView myGridView;
   private GridSettingsDisplay myGridSettingsDisplay;
+  private Button gridLinesToggle;
+  private Button flipGridButton;
 
   /**
    * construct a new Control Panel. Initializes the controller object by default. This prevents a
@@ -66,6 +68,13 @@ public class ControlPanel {
     initalizeGridSettingsDisplay();
   }
 
+  public Button getGridLinesToggleButton() {
+    return gridLinesToggle;
+  }
+
+  public Button getGridFlipButton() {
+    return flipGridButton;
+  }
   /**
    * create control bar GUI to allow users to start, pause, save, and select the type of simulation
    *
@@ -160,11 +169,13 @@ public class ControlPanel {
     ComboBox<String> themeSelector = myUserControl.makeThemeComboBox(mySimView, myScene);
     themeSelector.setId("themeSelector");
     myUserControl.selectTheme(mySimView, myScene, themeSelector);
-    Button gridLinesToggle = myUserControl.makeGridLinesToggleButton(
-        myResources.getString("ToggleGrid"), myGridView);
+    gridLinesToggle = myUserControl.makeGridLinesToggleButton(
+        myResources.getString("ToggleGrid"));
+    myUserControl.setGridLinesButtonAction(myGridView, gridLinesToggle);
     gridLinesToggle.setId("gridLinesToggle");
-    Button flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"),
+    flipGridButton = myUserControl.makeFlipGridButton(myResources.getString("FlipGrid"),
         myGridView);
+    myUserControl.setGridFlipButtonAction(myGridView, flipGridButton);
     flipGridButton.setId("flipGridButton");
     Button gridSettings = myUserControl.makeButton(myResources.getString("GridSettings"),
         e -> myGridSettingsDisplay.openWindow());
@@ -201,7 +212,7 @@ public class ControlPanel {
   }
 
   private void initalizeGridSettingsDisplay() {
-    myGridSettingsDisplay = new GridSettingsDisplay(myResources, myController);
+    myGridSettingsDisplay = new GridSettingsDisplay(myResources, myController, this);
     myGridSettingsDisplay.makeGridSettingsDisplay();
   }
 

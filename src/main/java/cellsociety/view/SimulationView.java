@@ -139,12 +139,13 @@ public class SimulationView {
    * @throws InstantiationException if the grid could not be instantiated
    * @throws IllegalAccessException if we don't have access to the grid class
    */
-  public void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
+  public GridView createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
       Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
     myGridView = makeGridViewFromTiling(myConfig, grid);
     myGridView.createGridDisplay(simView.getRoot(), colorMap, myConfig);
+    return myGridView;
   }
 
   private void createControlPanel(Stage primaryStage, SimulationView simView) {

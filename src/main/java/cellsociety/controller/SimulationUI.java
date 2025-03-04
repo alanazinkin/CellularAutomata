@@ -7,6 +7,7 @@ import cellsociety.view.SimulationSelector;
 import cellsociety.view.SimulationView;
 import cellsociety.view.SplashScreen;
 
+import cellsociety.view.gridview.GridView;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import javafx.application.Platform;
@@ -333,8 +334,8 @@ public class SimulationUI {
    * @throws IllegalAccessException    if user attempts to access a method that should not be
    *                                   accessed
    */
-    public void createGridViewFromTiling(Map<StateInterface, String> colorMap, Grid grid)
+    public GridView createGridViewFromTiling(Map<StateInterface, String> colorMap, Grid grid)
         throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-      simulationView.createGridView(simulationView, colorMap, grid);
+      return simulationView.createGridView(simulationView, colorMap, grid);
     }
 }

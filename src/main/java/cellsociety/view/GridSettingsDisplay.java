@@ -1,5 +1,6 @@
 package cellsociety.view;
 
+import cellsociety.view.gridview.GridView;
 import static java.lang.Double.parseDouble;
 
 import cellsociety.controller.SimulationController;
@@ -32,6 +33,7 @@ public class GridSettingsDisplay {
   private SimulationController myController;
   private UserController myUserController;
   private ResourceBundle myResources;
+  private ControlPanel myControlPanel;
   private static final ResourceBundle myGridSettingsResources = ResourceBundle.getBundle(
       GridSettingsDisplay.class.getPackageName() + ".GridSettings");
 
@@ -41,7 +43,7 @@ public class GridSettingsDisplay {
    * @param resources            language resource bundle for displaying button/combobox text
    * @param simulationController simulation controller that manages the simulation
    */
-  public GridSettingsDisplay(ResourceBundle resources, SimulationController simulationController) {
+  public GridSettingsDisplay(ResourceBundle resources, SimulationController simulationController, ControlPanel controlPanel) {
     myDialogPane = new DialogPane();
     myDialogPane.setMinWidth(parseDouble(myGridSettingsResources.getString("dialog.pane.width")));
     myDialogPane.setMinHeight(parseDouble(myGridSettingsResources.getString("dialog.pane.height")));
@@ -50,6 +52,7 @@ public class GridSettingsDisplay {
     myResources = resources;
     myUserController = new UserController(myResources, simulationController);
     myController = simulationController;
+    myControlPanel = controlPanel;
   }
 
   /**
@@ -80,7 +83,13 @@ public class GridSettingsDisplay {
       }
       if (tilingType != null) {
         try {
-          myController.setGridTiling(tilingType, myController.getSimulation().getColorMap(), myController.getGrid());
+          GridView newGridView = myController.setGridTiling(tilingType, myController.getSimulation().getColorMap(), myController.getGrid());
+
+          Button gridLinesButton = myControlPanel.getGridLinesToggleButton();
+          myUserController.setGridLinesButtonAction(newGridView, gridLinesButton);
+
+          Button gridFlipButton = myControlPanel.getGridFlipButton();
+          myUserController.setGridFlipButtonAction(newGridView, gridFlipButton);
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
                  InstantiationException | IllegalAccessException e) {
           throw new RuntimeException(e);

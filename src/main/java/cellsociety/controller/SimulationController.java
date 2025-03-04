@@ -3,6 +3,7 @@ package cellsociety.controller;
 import cellsociety.model.Grid;
 import cellsociety.model.Simulation;
 
+import cellsociety.view.gridview.GridView;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -477,10 +478,10 @@ public class SimulationController {
    * @throws IllegalAccessException    if user attempts to access a method that should not be
    *                                   accessed
    */
-  public void setGridTiling(String newTiling, Map<StateInterface, String> colorMap, Grid grid)
+  public GridView setGridTiling(String newTiling, Map<StateInterface, String> colorMap, Grid grid)
       throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     getSimulationConfig().setTiling(newTiling);
-    ui.createGridViewFromTiling(colorMap, grid);
+    return ui.createGridViewFromTiling(colorMap, grid);
   }
 
   /**

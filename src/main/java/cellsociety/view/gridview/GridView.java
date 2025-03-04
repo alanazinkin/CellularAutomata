@@ -85,6 +85,7 @@ public abstract class GridView {
     myConfigResourceMap = SimulationController.retrieveImmutableConfigResourceBundle();
     myGrid = grid;
     zoomPane = new StackPane();
+    zoomPane.setId("zoomPane");
     numRows = simulationConfig.getWidth();
     numCols = simulationConfig.getHeight();
   }
