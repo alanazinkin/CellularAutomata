@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 class XMLCellShapeParser {
-    private static final Set<String> VALID_SHAPES = Set.of("Rectangle", "Triangle");
+    private static final Set<String> VALID_SHAPES = Set.of("Rectangle", "Triangle", "Hexagon", "Parallelogram");
 
     /**
      * Parses cell shapes from the given XML document and validates them.
