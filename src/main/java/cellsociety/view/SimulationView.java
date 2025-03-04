@@ -137,7 +137,7 @@ public class SimulationView {
    * @throws InvocationTargetException
    * @throws NoSuchMethodException if there's no method for creating a given grid
    * @throws InstantiationException if the grid could not be instantiated
-   * @throws IllegalAccessException if we dont have access to the grid class
+   * @throws IllegalAccessException if we don't have access to the grid class
    */
   public void createGridView(SimulationView simView, Map<StateInterface, String> colorMap,
       Grid grid)
