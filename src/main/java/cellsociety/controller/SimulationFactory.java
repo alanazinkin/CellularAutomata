@@ -22,22 +22,13 @@ public class SimulationFactory {
                 case SPREADING_FIRE -> new Fire(config, grid,
                         parameters.get("fireProb"),
                         parameters.get("treeProb"));
-                case PERCOLATION -> createViaReflection(
-                        "Percolation",
-                        new Class<?>[]{SimulationConfig.class, Grid.class, double.class},
-                        new Object[]{config, grid, parameters.get("percolationProb")});
-                case SCHELLING -> createViaReflection(
-                        "Schelling",
-                        new Class<?>[]{SimulationConfig.class, Grid.class, double.class},
-                        new Object[]{config, grid, parameters.get("satisfaction")});
-                case WATOR_WORLD -> createViaReflection(
-                        "WaTorWorld",
-                        new Class<?>[]{SimulationConfig.class, Grid.class, double.class, double.class, double.class, double.class},
-                        new Object[]{config, grid,
+                case PERCOLATION -> new Percolation(config, grid, parameters.get("percolationProb"));
+                case SCHELLING -> new Schelling(config, grid, parameters.get("satisfaction"));
+                case WATOR_WORLD -> new WaTorWorld(config, grid,
                                 parameters.get("fishBreedTime"),
                                 parameters.get("sharkBreedTime"),
                                 parameters.get("sharkInitialEnergy"),
-                                parameters.get("sharkEnergyGain")});
+                                parameters.get("sharkEnergyGain"));
                 case LANGTON_LOOP -> new LangtonLoop(config, grid);
                 case SUGAR_SCAPE -> new SugarScape(config, grid);
                 case BACTERIA -> new BacteriaColoniesSimulation(config, grid);
