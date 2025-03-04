@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link InfiniteGrid} implementation.
  * <p>
- * This class verifies the behavior of the infinite grid, which can dynamically
- * expand to accommodate cells outside the original boundaries.
+ * This class verifies the behavior of the infinite grid, which can dynamically expand to
+ * accommodate cells outside the original boundaries.
  * </p>
  *
  * @author Tatum McKinnis
@@ -19,7 +19,8 @@ class InfiniteGridTest {
   /**
    * Tests infinite grid initialization.
    * <p>
-   * Verifies that an infinite grid is correctly initialized with the specified dimensions and state.
+   * Verifies that an infinite grid is correctly initialized with the specified dimensions and
+   * state.
    * </p>
    */
   @Test
@@ -70,10 +71,12 @@ class InfiniteGridTest {
   @Test
   void getCell_WithOffsets_AdjustsCoordinates() {
     class TestableInfiniteGrid extends InfiniteGrid {
+
       private final int rowOffset;
       private final int colOffset;
 
-      public TestableInfiniteGrid(int rows, int cols, StateInterface state, int rowOffset, int colOffset) {
+      public TestableInfiniteGrid(int rows, int cols, StateInterface state, int rowOffset,
+          int colOffset) {
         super(rows, cols, state);
         this.rowOffset = rowOffset;
         this.colOffset = colOffset;
@@ -113,6 +116,7 @@ class InfiniteGridTest {
     // this test is illustrative of what should be tested
 
     class TestableInfiniteGrid extends InfiniteGrid {
+
       private boolean expandCalled = false;
       private int newRowStart;
       private int newRowEnd;
@@ -176,6 +180,7 @@ class InfiniteGridTest {
   @Test
   void expandToInclude_NegativeCoordinates_GridExpands() {
     class TestableInfiniteGrid extends InfiniteGrid {
+
       private boolean expandCalled = false;
       private int newRowStart;
       private int newRowEnd;

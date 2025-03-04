@@ -13,6 +13,7 @@ import cellsociety.model.StateInterface;
  * This enum implements the {@link StateInterface} interface to maintain consistency across various
  * state enums used in grid-based simulations.
  * </p>
+ *
  * @author Tatum McKinnis
  */
 public enum WaTorWorldState implements StateInterface {

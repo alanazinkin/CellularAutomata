@@ -11,8 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for DiseaseManager.
- * Tests the disease transmission and immune system interaction functionality.
+ * Test class for DiseaseManager. Tests the disease transmission and immune system interaction
+ * functionality.
+ *
  * @author Tatum McKinnis
  */
 public class DiseaseManagerTest {

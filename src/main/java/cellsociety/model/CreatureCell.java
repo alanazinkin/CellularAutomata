@@ -1,11 +1,13 @@
 package cellsociety.model;
 
 /**
- * Represents a cell in the Darwin simulation that can contain a creature.
- * Extends the basic Cell class with creature-specific properties like species and orientation.
+ * Represents a cell in the Darwin simulation that can contain a creature. Extends the basic Cell
+ * class with creature-specific properties like species and orientation.
+ *
  * @author Tatum McKinnis
  */
 public class CreatureCell extends Cell {
+
   private Species species;
   private Species originalSpecies;
   private int orientation; // 0=north, 90=east, 180=south, 270=west
@@ -15,8 +17,8 @@ public class CreatureCell extends Cell {
   /**
    * Creates a new creature cell with the specified state, species, and orientation.
    *
-   * @param state The initial state of the cell
-   * @param species The species of the creature (null for empty cells)
+   * @param state       The initial state of the cell
+   * @param species     The species of the creature (null for empty cells)
    * @param orientation The orientation in degrees
    */
   public CreatureCell(StateInterface state, Species species, int orientation) {
@@ -129,7 +131,7 @@ public class CreatureCell extends Cell {
    * Infects this creature with a new species for a specified number of steps.
    *
    * @param newSpecies The infecting species
-   * @param steps The number of steps the infection lasts
+   * @param steps      The number of steps the infection lasts
    */
   public void setInfection(Species newSpecies, int steps) {
     if (!isInfected()) {

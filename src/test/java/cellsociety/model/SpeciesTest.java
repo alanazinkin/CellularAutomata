@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Test class for Species. Tests the functionality of the Species class,
- * which represents a species in the Darwin simulation with a name, color, and program.
+ * Test class for Species. Tests the functionality of the Species class, which represents a species
+ * in the Darwin simulation with a name, color, and program.
  *
  * <p>These tests verify that:
  * <ul>

@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Test class for Agent in the SugarScape simulation. Tests initialization, resource management,
  * trades, loans, and disease handling.
+ *
  * @author Tatum McKinnis
  */
 class AgentTest {

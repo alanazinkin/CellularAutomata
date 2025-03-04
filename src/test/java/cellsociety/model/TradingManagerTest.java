@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import cellsociety.model.simulations.SugarScape;
@@ -11,11 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Test class for TradingManager.
- * Tests the management and execution of trades between agents.
+ * Test class for TradingManager. Tests the management and execution of trades between agents.
+ *
  * @author Tatum McKinnis
  */
 public class TradingManagerTest {
+
   private TradingManager tradingManager;
   private SugarScape simulation;
   private List<Agent> agents;
@@ -28,7 +30,7 @@ public class TradingManagerTest {
   @BeforeEach
   void setUp() {
     int[] initialStates = new int[GRID_SIZE * GRID_SIZE];
-    for(int i = 0; i < initialStates.length; i++) {
+    for (int i = 0; i < initialStates.length; i++) {
       initialStates[i] = 0;
     }
 
@@ -46,8 +48,8 @@ public class TradingManagerTest {
 
     grid = new Grid(GRID_SIZE, GRID_SIZE, defaultState);
 
-    for(int r = 0; r < GRID_SIZE; r++) {
-      for(int c = 0; c < GRID_SIZE; c++) {
+    for (int r = 0; r < GRID_SIZE; r++) {
+      for (int c = 0; c < GRID_SIZE; c++) {
         SugarCell sugarCell = new SugarCell(r, c, SugarScapeState.EMPTY);
         sugarCell.setMaxSugar(10);
         sugarCell.setSugar(10);
@@ -74,8 +76,8 @@ public class TradingManagerTest {
   }
 
   /**
-   * Tests applying trading to agents with valid trading conditions.
-   * Expected behavior: Executes trades between eligible agents.
+   * Tests applying trading to agents with valid trading conditions. Expected behavior: Executes
+   * trades between eligible agents.
    */
   @Test
   void applyTrading_ValidAgents_ExecutesTradesBetweenEligible() {
@@ -107,8 +109,7 @@ public class TradingManagerTest {
   }
 
   /**
-   * Tests applying trading with empty agent list.
-   * Expected behavior: Completes without error.
+   * Tests applying trading with empty agent list. Expected behavior: Completes without error.
    */
   @Test
   void applyTrading_EmptyList_CompletesWithoutError() {
@@ -117,8 +118,7 @@ public class TradingManagerTest {
   }
 
   /**
-   * Tests applying trading with null agent list.
-   * Expected behavior: Throws NullPointerException.
+   * Tests applying trading with null agent list. Expected behavior: Throws NullPointerException.
    */
   @Test
   void applyTrading_NullList_ThrowsException() {
@@ -128,8 +128,8 @@ public class TradingManagerTest {
   }
 
   /**
-   * Tests applying trading with invalid agent positions.
-   * Expected behavior: Handles invalid positions gracefully.
+   * Tests applying trading with invalid agent positions. Expected behavior: Handles invalid
+   * positions gracefully.
    */
   @Test
   void applyTrading_InvalidAgentPositions_HandlesGracefully() {

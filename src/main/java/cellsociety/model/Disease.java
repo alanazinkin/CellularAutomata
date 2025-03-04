@@ -1,3 +1,10 @@
+/**
+ * This package contains core classes for the simulation model in the Cell Society project.
+ * <p>
+ * The classes in this package define the behavior of various simulation components,
+ * including cell states, environmental conditions, and interaction rules.
+ * </p>
+ */
 package cellsociety.model;
 
 import java.util.ArrayList;
@@ -7,8 +14,8 @@ import java.util.Random;
 /**
  * Represents a disease in the SugarScape simulation.
  * <p>
- * A disease is represented as a binary pattern that can interact with agents' immune systems. The
- * disease can:
+ * A disease is modeled as a binary pattern that can interact with agents' immune systems.
+ * The disease can:
  * <ul>
  *   <li>Store and manipulate its genetic pattern</li>
  *   <li>Be transmitted between agents</li>
@@ -28,9 +35,9 @@ public class Disease implements Cloneable {
   private static final Random random = new Random();
 
   /**
-   * Creates a new disease with a random pattern.
+   * Creates a new disease with a random binary pattern.
    * <p>
-   * Initializes the disease with a random binary pattern of default length.
+   * Initializes the disease with a random binary pattern of a default length.
    * </p>
    */
   public Disease() {
@@ -38,13 +45,13 @@ public class Disease implements Cloneable {
   }
 
   /**
-   * Creates a new disease with a specified pattern string.
+   * Creates a new disease with a specified binary pattern.
    * <p>
-   * The pattern string should consist of only 0s and 1s.
+   * The provided pattern string must consist only of 0s and 1s.
    * </p>
    *
    * @param patternString string representation of the binary pattern
-   * @throws IllegalArgumentException if pattern contains invalid characters
+   * @throws IllegalArgumentException if the pattern contains invalid characters
    */
   public Disease(String patternString) {
     validatePatternString(patternString);
@@ -54,6 +61,12 @@ public class Disease implements Cloneable {
     }
   }
 
+  /**
+   * Validates that the given pattern string consists only of 0s and 1s.
+   *
+   * @param patternString the binary pattern string to validate
+   * @throws IllegalArgumentException if the pattern contains invalid characters or is empty
+   */
   private void validatePatternString(String patternString) {
     if (patternString == null || patternString.isEmpty()) {
       throw new IllegalArgumentException("Pattern string cannot be null or empty");
@@ -63,6 +76,12 @@ public class Disease implements Cloneable {
     }
   }
 
+  /**
+   * Generates a random binary pattern of the specified length.
+   *
+   * @param length the length of the binary pattern
+   * @return a list representing the random binary pattern
+   */
   private List<Integer> generateRandomPattern(int length) {
     List<Integer> newPattern = new ArrayList<>(length);
     for (int i = 0; i < length; i++) {
@@ -72,16 +91,16 @@ public class Disease implements Cloneable {
   }
 
   /**
-   * Gets a copy of the disease's pattern.
+   * Gets a copy of the disease's binary pattern.
    *
-   * @return list representing the disease's binary pattern
+   * @return a list representing the disease's binary pattern
    */
   public List<Integer> getPattern() {
     return new ArrayList<>(pattern);
   }
 
   /**
-   * Creates a clone of the disease with possible mutations.
+   * Creates a clone of the disease with potential mutations.
    * <p>
    * Each bit in the pattern has a chance to mutate based on the mutation rate.
    * </p>
@@ -107,12 +126,12 @@ public class Disease implements Cloneable {
   /**
    * Checks if this disease's pattern matches part of another pattern.
    * <p>
-   * The match is considered successful if this disease's pattern appears as a continuous
-   * subsequence in the target pattern.
+   * The match is successful if this disease's pattern appears as a continuous subsequence
+   * in the target pattern.
    * </p>
    *
-   * @param targetPattern pattern to check for matches
-   * @return true if this pattern is found within the target pattern
+   * @param targetPattern the pattern to check for matches
+   * @return {@code true} if this pattern is found within the target pattern, {@code false} otherwise
    */
   public boolean matchesPattern(List<Integer> targetPattern) {
     if (targetPattern == null || targetPattern.size() < pattern.size()) {
@@ -130,7 +149,7 @@ public class Disease implements Cloneable {
   /**
    * Converts the disease's pattern to a string representation.
    *
-   * @return string of 0s and 1s representing the pattern
+   * @return a string of 0s and 1s representing the pattern
    */
   public String patternToString() {
     return pattern.stream()
@@ -138,11 +157,25 @@ public class Disease implements Cloneable {
         .reduce("", String::concat);
   }
 
+  /**
+   * Returns a string representation of the disease.
+   *
+   * @return a formatted string representing the disease's pattern
+   */
   @Override
   public String toString() {
     return String.format("Disease[pattern=%s]", patternToString());
   }
 
+  /**
+   * Checks if this disease is equal to another object.
+   * <p>
+   * Two diseases are considered equal if their binary patterns are identical.
+   * </p>
+   *
+   * @param obj the object to compare
+   * @return {@code true} if the objects are equal, {@code false} otherwise
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -155,6 +188,11 @@ public class Disease implements Cloneable {
     return pattern.equals(other.pattern);
   }
 
+  /**
+   * Computes the hash code for this disease based on its pattern.
+   *
+   * @return the hash code value for this disease
+   */
   @Override
   public int hashCode() {
     return pattern.hashCode();

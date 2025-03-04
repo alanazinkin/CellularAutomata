@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 
 /**
- * Test class for CreatureCell. Tests the functionality of the CreatureCell class,
- * which extends the Cell class to add creature-specific properties for the Darwin simulation.
+ * Test class for CreatureCell. Tests the functionality of the CreatureCell class, which extends the
+ * Cell class to add creature-specific properties for the Darwin simulation.
  *
  * <p>These tests verify that:
  * <ul>

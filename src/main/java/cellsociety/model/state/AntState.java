@@ -7,6 +7,7 @@ import java.util.Objects;
  * Represents the state of a cell in the ant foraging simulation. This includes pheromone levels,
  * ant population, and special cell types (nest, food, obstacle). Unlike enum-based states, this
  * class supports dynamic properties that change during simulation.
+ *
  * @author Tatum McKinnis
  */
 public class AntState implements StateInterface {
@@ -156,9 +157,10 @@ public class AntState implements StateInterface {
   }
 
   /**
-   * Compares this AntState with another object for equality. Two AntStates are considered equal
-   * if they represent the same type of cell (nest, food, obstacle, or empty), regardless of their
-   * pheromone levels or ant count. This allows for proper color mapping while maintaining dynamic state.
+   * Compares this AntState with another object for equality. Two AntStates are considered equal if
+   * they represent the same type of cell (nest, food, obstacle, or empty), regardless of their
+   * pheromone levels or ant count. This allows for proper color mapping while maintaining dynamic
+   * state.
    *
    * @param o the object to compare with
    * @return true if the objects represent the same type of cell
@@ -188,8 +190,8 @@ public class AntState implements StateInterface {
   }
 
   /**
-   * Generates a hash code for this AntState. The hash code is based only on the cell type
-   * flags (nest, food, obstacle) to maintain consistency with equals().
+   * Generates a hash code for this AntState. The hash code is based only on the cell type flags
+   * (nest, food, obstacle) to maintain consistency with equals().
    *
    * @return hash code value for this object
    */

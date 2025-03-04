@@ -37,7 +37,7 @@ public enum LangtonState implements StateInterface {
   /**
    * Constructs a new LangtonState with the specified string representation and numeric value.
    *
-   * @param stateValue the string representation of the state.
+   * @param stateValue   the string representation of the state.
    * @param numericValue the numeric value identifying the state.
    */
   LangtonState(String stateValue, int numericValue) {

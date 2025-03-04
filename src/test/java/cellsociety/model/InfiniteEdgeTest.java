@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link InfiniteEdge} implementation.
  * <p>
- * This class verifies the behavior of the infinite edge strategy, which expands the grid
- * as needed to accommodate cells outside the original boundaries.
+ * This class verifies the behavior of the infinite edge strategy, which expands the grid as needed
+ * to accommodate cells outside the original boundaries.
  * </p>
  *
  * @author Tatum McKinnis

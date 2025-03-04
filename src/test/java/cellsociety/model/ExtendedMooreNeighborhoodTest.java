@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link ExtendedMooreNeighborhood} implementation.
  * <p>
- * This class verifies that the Extended Moore neighborhood strategy correctly identifies
- * all cells within a specified radius as neighbors.
+ * This class verifies that the Extended Moore neighborhood strategy correctly identifies all cells
+ * within a specified radius as neighbors.
  * </p>
  *
  * @author Tatum McKinnis

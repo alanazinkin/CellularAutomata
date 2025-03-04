@@ -40,13 +40,13 @@ public class Grid {
   /**
    * Constructs a new {@code Grid} with the specified dimensions, state, and strategies.
    *
-   * @param rows the number of rows in the grid
-   * @param cols the number of columns in the grid
-   * @param defaultState the initial state assigned to all cells
-   * @param edgeStrategy the strategy for handling grid edges
+   * @param rows                 the number of rows in the grid
+   * @param cols                 the number of columns in the grid
+   * @param defaultState         the initial state assigned to all cells
+   * @param edgeStrategy         the strategy for handling grid edges
    * @param neighborhoodStrategy the strategy for determining cell neighborhoods
    * @throws IllegalArgumentException if either {@code rows} or {@code cols} is negative
-   * @throws NullPointerException if any parameter is {@code null}
+   * @throws NullPointerException     if any parameter is {@code null}
    */
   public Grid(int rows, int cols, StateInterface defaultState,
       EdgeStrategy edgeStrategy, NeighborhoodStrategy neighborhoodStrategy) {
@@ -58,7 +58,8 @@ public class Grid {
     this.cols = cols;
     this.defaultState = Objects.requireNonNull(defaultState, "defaultState cannot be null");
     this.edgeStrategy = Objects.requireNonNull(edgeStrategy, "edgeStrategy cannot be null");
-    this.neighborhoodStrategy = Objects.requireNonNull(neighborhoodStrategy, "neighborhoodStrategy cannot be null");
+    this.neighborhoodStrategy = Objects.requireNonNull(neighborhoodStrategy,
+        "neighborhoodStrategy cannot be null");
 
     cells = new Cell[rows][cols];
     initializeCells(defaultState);
@@ -99,8 +100,8 @@ public class Grid {
   }
 
   /**
-   * Checks if the specified row and column indices are within the actual bounds of the grid.
-   * This method is used internally and by edge strategies.
+   * Checks if the specified row and column indices are within the actual bounds of the grid. This
+   * method is used internally and by edge strategies.
    *
    * @param row the row index
    * @param col the column index
@@ -122,8 +123,8 @@ public class Grid {
   }
 
   /**
-   * Directly accesses a cell without applying edge strategy.
-   * This method is used internally by edge strategies to avoid recursive calls.
+   * Directly accesses a cell without applying edge strategy. This method is used internally by edge
+   * strategies to avoid recursive calls.
    *
    * @param row the row index of the cell
    * @param col the column index of the cell
@@ -139,8 +140,8 @@ public class Grid {
   }
 
   /**
-   * Retrieves the neighboring cells of the specified cell at (row, col).
-   * Neighbors are determined using the current neighborhood strategy.
+   * Retrieves the neighboring cells of the specified cell at (row, col). Neighbors are determined
+   * using the current neighborhood strategy.
    *
    * @param row the row index of the target cell
    * @param col the column index of the target cell
@@ -317,8 +318,8 @@ public class Grid {
 
 
   /**
-   * Updates the cells array with a new array.
-   * This method is protected to allow subclasses like InfiniteGrid to modify the grid structure.
+   * Updates the cells array with a new array. This method is protected to allow subclasses like
+   * InfiniteGrid to modify the grid structure.
    *
    * @param newCells the new cells array to use
    */
@@ -327,8 +328,8 @@ public class Grid {
   }
 
   /**
-   * Updates the dimensions of the grid.
-   * This method is protected to allow subclasses like InfiniteGrid to modify the grid structure.
+   * Updates the dimensions of the grid. This method is protected to allow subclasses like
+   * InfiniteGrid to modify the grid structure.
    *
    * @param newRows the new number of rows
    * @param newCols the new number of columns

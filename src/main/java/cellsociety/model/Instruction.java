@@ -1,12 +1,13 @@
 package cellsociety.model;
 
 /**
- * Represents an instruction in a species program.
- * Instructions can be action instructions (MOVE, LEFT, RIGHT, INFECT)
- * or control instructions (IFEMPTY, IFWALL, IFSAME, IFENEMY, IFRANDOM, GO).
+ * Represents an instruction in a species program. Instructions can be action instructions (MOVE,
+ * LEFT, RIGHT, INFECT) or control instructions (IFEMPTY, IFWALL, IFSAME, IFENEMY, IFRANDOM, GO).
+ *
  * @author Tatum McKinnis
  */
 public class Instruction {
+
   /**
    * The type of instruction.
    */
@@ -30,7 +31,7 @@ public class Instruction {
   /**
    * Creates a new instruction with the specified type and parameter.
    *
-   * @param type The type of instruction
+   * @param type      The type of instruction
    * @param parameter The parameter for this instruction (e.g., steps, degrees, instruction number)
    */
   public Instruction(Type type, int parameter) {

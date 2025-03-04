@@ -4,6 +4,7 @@ import cellsociety.model.StateInterface;
 
 /**
  * Represents the possible states of a cell in the Darwin simulation.
+ *
  * @author Tatum McKinnis
  */
 public enum DarwinState implements StateInterface {

@@ -125,6 +125,7 @@ public class Ant {
   public int getLastCol() {
     return lastCol;
   }
+
   /**
    * Sets the last row index.
    *

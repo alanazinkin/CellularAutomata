@@ -3,11 +3,13 @@ package cellsociety.model;
 import java.util.List;
 
 /**
- * Interface for neighborhood strategies in cellular automata grids.
- * Different implementations define which cells are considered neighbors.
+ * Interface for neighborhood strategies in cellular automata grids. Different implementations
+ * define which cells are considered neighbors.
+ *
  * @author Tatum McKinnis
  */
 public interface NeighborhoodStrategy {
+
   /**
    * Returns the coordinates of neighboring cells for a given cell position.
    *

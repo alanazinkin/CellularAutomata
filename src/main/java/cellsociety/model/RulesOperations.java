@@ -5,8 +5,8 @@ import java.util.Random;
 public class RulesOperations {
 
   /**
-   * Determines if two agents can reproduce.
-   * They must both be fertile, have different sexes, and possess enough sugar.
+   * Determines if two agents can reproduce. They must both be fertile, have different sexes, and
+   * possess enough sugar.
    */
   public static boolean canReproduce(Agent agent1, Agent agent2) {
     return agent1.isFertile() &&
@@ -17,15 +17,14 @@ public class RulesOperations {
   }
 
   /**
-   * Reproduces two parent agents to create a new child agent.
-   * The child's sugar is based on the average of the parents' initial endowments,
-   * and its vision and metabolism are inherited by averaging.
-   * The parents lose half of their initial endowment.
+   * Reproduces two parent agents to create a new child agent. The child's sugar is based on the
+   * average of the parents' initial endowments, and its vision and metabolism are inherited by
+   * averaging. The parents lose half of their initial endowment.
    *
-   * @param parent1 one parent agent.
-   * @param parent2 the other parent agent.
+   * @param parent1  one parent agent.
+   * @param parent2  the other parent agent.
    * @param position the cell where the child will be placed.
-   * @param random a Random instance for generating random attributes.
+   * @param random   a Random instance for generating random attributes.
    * @return the newly created child agent.
    */
   public static Agent reproduce(Agent parent1, Agent parent2, Cell position, Random random) {
@@ -64,10 +63,12 @@ public class RulesOperations {
   }
 
   /**
-   * Executes a trade between two agents based on the geometric mean of their marginal rates of substitution.
+   * Executes a trade between two agents based on the geometric mean of their marginal rates of
+   * substitution.
    */
   public static void executeTrade(Agent agent1, Agent agent2) {
-    double p = Math.sqrt(agent1.getMarginalRateOfSubstitution() * agent2.getMarginalRateOfSubstitution());
+    double p = Math.sqrt(
+        agent1.getMarginalRateOfSubstitution() * agent2.getMarginalRateOfSubstitution());
     if (p >= 1) {
       agent1.tradeSugarForSpice(agent2, 1, p);
     } else {

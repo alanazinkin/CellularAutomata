@@ -1,6 +1,7 @@
 package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -8,8 +9,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for {@link MultipleNeighborhoods} implementation.
  * <p>
- * This class verifies that the multiple neighborhoods strategy correctly combines
- * multiple neighborhood patterns.
+ * This class verifies that the multiple neighborhoods strategy correctly combines multiple
+ * neighborhood patterns.
  * </p>
  *
  * @author Tatum McKinnis
@@ -19,8 +20,8 @@ class MultipleNeighborhoodsTest {
   /**
    * Tests combining Moore and Von Neumann neighborhoods.
    * <p>
-   * Verifies that combining Moore and Von Neumann neighborhoods results in the same
-   * neighbors as Moore alone (since Moore is a superset of Von Neumann).
+   * Verifies that combining Moore and Von Neumann neighborhoods results in the same neighbors as
+   * Moore alone (since Moore is a superset of Von Neumann).
    * </p>
    */
   @Test
@@ -50,8 +51,8 @@ class MultipleNeighborhoodsTest {
   /**
    * Tests combining Moore and Extended Moore neighborhoods.
    * <p>
-   * Verifies that combining Moore with Extended Moore neighborhood
-   * results in the union of both neighborhoods.
+   * Verifies that combining Moore with Extended Moore neighborhood results in the union of both
+   * neighborhoods.
    * </p>
    */
   @Test

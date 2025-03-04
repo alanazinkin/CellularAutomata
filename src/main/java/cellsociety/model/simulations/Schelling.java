@@ -8,7 +8,6 @@ import cellsociety.model.Simulation;
 import cellsociety.model.state.SchellingState;
 import cellsociety.model.StateInterface;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -85,6 +84,7 @@ public class Schelling extends Simulation {
       }
     }
   }
+
   /**
    * Validates the tolerance value to ensure it is within the acceptable range [0.0, 1.0].
    *

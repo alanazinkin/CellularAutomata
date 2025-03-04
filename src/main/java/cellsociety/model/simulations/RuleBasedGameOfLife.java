@@ -145,8 +145,8 @@ public class RuleBasedGameOfLife extends Simulation {
   }
 
   /**
-   * Parses the numeric rule code to determine the birth and survival conditions.
-   * The rule code is split into two parts: one for birth and one for survival conditions.
+   * Parses the numeric rule code to determine the birth and survival conditions. The rule code is
+   * split into two parts: one for birth and one for survival conditions.
    *
    * @param code The rule code (a double value representing a string-based rule).
    * @throws IllegalArgumentException if the rule code format is invalid.
@@ -166,8 +166,8 @@ public class RuleBasedGameOfLife extends Simulation {
   }
 
   /**
-   * Parses a string rule code in B/S format (e.g., "B3/S23") to determine birth and survival conditions.
-   * Supports both B/S and S/B formats.
+   * Parses a string rule code in B/S format (e.g., "B3/S23") to determine birth and survival
+   * conditions. Supports both B/S and S/B formats.
    *
    * @param ruleString The rule string in B/S or S/B format.
    * @throws IllegalArgumentException if the rule string format is invalid.

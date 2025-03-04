@@ -31,6 +31,14 @@ public enum Sex {
     this.displayName = displayName;
   }
 
+  /**
+   * Returns the string representation of this object.
+   * <p>
+   * This method overrides {@code toString()} to return the display name of the object.
+   * </p>
+   *
+   * @return the display name of the object
+   */
   @Override
   public String toString() {
     return displayName;

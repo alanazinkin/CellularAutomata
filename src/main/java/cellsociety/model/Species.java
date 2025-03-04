@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a species in the Darwin simulation.
- * A species is defined by its name, color, and the program it executes.
+ * Represents a species in the Darwin simulation. A species is defined by its name, color, and the
+ * program it executes.
+ *
  * @author Tatum McKinnis
  */
 public class Species {
+
   private final String name;
   private final String color;
   private final List<Instruction> program;
@@ -16,8 +18,8 @@ public class Species {
   /**
    * Creates a new species with the given name, color, and program.
    *
-   * @param name The name of the species
-   * @param color The color used to represent this species in visualizations
+   * @param name    The name of the species
+   * @param color   The color used to represent this species in visualizations
    * @param program The list of instructions that define this species' behavior
    */
   public Species(String name, String color, List<Instruction> program) {

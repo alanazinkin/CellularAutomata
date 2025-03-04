@@ -317,7 +317,9 @@ public class DarwinTest {
     assertEquals(2, registry.size(), "Registry should contain two species");
     assertTrue(registry.containsKey("MoveForward"), "Registry should contain MoveForward species");
     assertTrue(registry.containsKey("Infector"), "Registry should contain Infector species");
-    assertEquals(testSpecies1, registry.get("MoveForward"), "Registry should have correct species object");
-    assertEquals(testSpecies2, registry.get("Infector"), "Registry should have correct species object");
+    assertEquals(testSpecies1, registry.get("MoveForward"),
+        "Registry should have correct species object");
+    assertEquals(testSpecies2, registry.get("Infector"),
+        "Registry should have correct species object");
   }
 }

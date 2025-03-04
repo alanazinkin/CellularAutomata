@@ -12,8 +12,8 @@ public class BoundedEdge implements EdgeStrategy {
    * Checks if the given position is within the valid bounds of the grid.
    *
    * @param grid the grid in which to check the position
-   * @param row the row index
-   * @param col the column index
+   * @param row  the row index
+   * @param col  the column index
    * @return true if the position is within the grid bounds, false otherwise
    */
   @Override
@@ -25,8 +25,8 @@ public class BoundedEdge implements EdgeStrategy {
    * Retrieves the cell at the specified position if it is within bounds.
    *
    * @param grid the grid from which to retrieve the cell
-   * @param row the row index
-   * @param col the column index
+   * @param row  the row index
+   * @param col  the column index
    * @return the cell at the given position, or null if out of bounds
    */
   @Override
