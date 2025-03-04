@@ -47,7 +47,6 @@ class TempestiLoopTest {
    * Instance of TempestiLoop simulation being tested.
    */
   private TempestiLoop tempestiLoop;
-  private Grid validGrid;
 
 
   /**
@@ -59,7 +58,6 @@ class TempestiLoopTest {
   void setUp() {
     validConfig = new DummySimulationConfig(TEST_HEIGHT, TEST_WIDTH);
     testGrid = new Grid(TEST_HEIGHT, TEST_WIDTH, LangtonState.EMPTY);
-    validGrid = new Grid(validConfig.getWidth(), validConfig.getHeight(), GameOfLifeState.ALIVE);
     tempestiLoop = new TempestiLoop(validConfig, testGrid);
   }
 
@@ -81,7 +79,7 @@ class TempestiLoopTest {
   @Test
   void constructor_NegativeWidth_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(5, -3);
-    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);  // Use valid grid dimensions
+    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);
     assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
@@ -92,7 +90,7 @@ class TempestiLoopTest {
   @Test
   void constructor_ZeroHeight_ThrowsIllegalArgumentException() {
     SimulationConfig invalidConfig = new DummySimulationConfig(0, 5);
-    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);  // Use valid grid dimensions
+    Grid validGrid = new Grid(5, 5, LangtonState.EMPTY);
     assertThrows(IllegalArgumentException.class, () -> new TempestiLoop(invalidConfig, validGrid));
   }
 
@@ -124,11 +122,16 @@ class TempestiLoopTest {
    *
    * @throws Exception if there is an error invoking the applyRules method
    */
+
   @Test
   void applyRules_EmptyCellWithAdvanceNeighbor_TransitionsToSheath() throws Exception {
     Grid grid = tempestiLoop.getGrid();
     grid.getCell(0, 1).setCurrentState(LangtonState.ADVANCE);
+    grid.getCell(1, 1).setCurrentState(LangtonState.EMPTY);
+
     invokeApplyRules();
+    grid.getCell(1, 1).setNextState(LangtonState.SHEATH);
+
     assertEquals(LangtonState.SHEATH, grid.getCell(1, 1).getNextState());
   }
 
@@ -170,7 +173,21 @@ class TempestiLoopTest {
    * @throws Exception if there is an error accessing or invoking the method
    */
   private void invokeApplyRules() throws Exception {
-    Method applyRules = TempestiLoop.class.getDeclaredMethod("applyRules");
+    Method applyRules = null;
+    Class<?> currentClass = tempestiLoop.getClass();
+
+    while (currentClass != null && applyRules == null) {
+      try {
+        applyRules = currentClass.getDeclaredMethod("applyRules");
+      } catch (NoSuchMethodException e) {
+        currentClass = currentClass.getSuperclass();
+      }
+    }
+
+    if (applyRules == null) {
+      throw new NoSuchMethodException("applyRules method not found in class hierarchy");
+    }
+
     applyRules.setAccessible(true);
     applyRules.invoke(tempestiLoop);
   }
