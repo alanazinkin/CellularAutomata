@@ -17,6 +17,12 @@ This project implements a cellular automata simulator.
 ### Attributions
 
  * Resources used for learning (including AI assistance)
+   * [Medium Article](https://adam-carroll.medium.com/user-interface-testing-with-testfx-5747ba02b0ec) used
+   to assist with TestFX
+   * [Refactoring Guru](https://refactoring.guru/design-patterns/factory-method) used to learn about design patterns
+   * [Assignment Guideline](https://courses.cs.duke.edu/compsci308/spring25/assign/02_simulation/nifty/scott-wator-world/WatorWorld.htm#Histogram) for graph to assist with JavaFX chart display
+   * [SugarScape Discussion](https://greenteapress.com/complexity/html/thinkcomplexity012.html#fig.notax) used to help with chart display
+   * [Hexagonal Tiling Site](https://mathworld.wolfram.com/HexagonalGrid.html)
  
  * Resources used directly (including AI assistance)
    * ChatGPT used to assist with writing JavaDoc comments
@@ -29,6 +35,7 @@ This project implements a cellular automata simulator.
 
  * Data files needed: 
    * User must select a simulation xml file to load a new simulation
+   * help.html
    * A language properties file
    * Simulation.properties
    * Version.properties
@@ -45,10 +52,12 @@ This project implements a cellular automata simulator.
 ### Notes/Assumptions
 
  * Assumptions or Simplifications:
+   * I assumed that a user is running this simulation on a computer screen wide enough to support all
+   the elements of the simulation. If the user is running this on a small computer, they might not be able to view 
+   all the buttons or components
 
  * Known Bugs:
-   * Langton Loop Reset does not reset to original state, but rather a different original state
-   * Ant Simulation is not working properly
+   * Ant Simulation displays states as memory values, rather than their string value
 
  * Features implemented:
    * CELL-01 through CELL-16
