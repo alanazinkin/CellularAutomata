@@ -45,6 +45,7 @@ public class GridSettingsDisplay {
    */
   public GridSettingsDisplay(ResourceBundle resources, SimulationController simulationController, ControlPanel controlPanel) {
     myDialogPane = new DialogPane();
+    myDialogPane.getStylesheets().add("cellsociety/CSS/SplashScreen.css");
     myDialogPane.setMinWidth(parseDouble(myGridSettingsResources.getString("dialog.pane.width")));
     myDialogPane.setMinHeight(parseDouble(myGridSettingsResources.getString("dialog.pane.height")));
     myContainer = new VBox(parseDouble(myGridSettingsResources.getString("vbox.spacing")));
