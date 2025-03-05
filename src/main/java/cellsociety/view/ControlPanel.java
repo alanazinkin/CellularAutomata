@@ -192,8 +192,10 @@ public class ControlPanel {
     flipGridButton.setId("flipGridButton");
     Button gridSettings = myUserControl.makeButton(myResources.getString("GridSettings"),
         e -> myGridSettingsDisplay.openWindow());
+    Button helpButton = myUserControl.makeButton(myResources.getString("Help"),
+        e -> new HelpView().showHelpWindow());
     List<Control> elements = List.of(speedSlider, themeSelector, gridLinesToggle, flipGridButton,
-        gridSettings);
+        gridSettings, helpButton);
     myCustomizationBar.getChildren().addAll(elements);
   }
 

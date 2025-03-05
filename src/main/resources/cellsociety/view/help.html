@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulation Help</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1, h2 {
+      color: #155a73;
+    }
+
+    .simulation {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+<h1>Simulation Help Documentation</h1>
+
+<div class="simulation">
+  <h2>Game of Life</h2>
+  <p><strong>Description:</strong> Conway's Game of Life is a cellular automaton where cells evolve
+    based on simple survival rules.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>A living cell with 2 or 3 neighbors survives.</li>
+    <li>A dead cell with exactly 3 neighbors is born.</li>
+    <li>All other cells die or remain dead.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Spreading of Fire</h2>
+  <p><strong>Description:</strong> A simulation of forest fire spread based on neighboring trees and
+    wind conditions.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>A tree burns if at least one neighbor is on fire.</li>
+    <li>Empty spaces remain empty.</li>
+    <li>The fire spreads according to wind direction.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Bacteria</h2>
+  <p><strong>Description:</strong> A simulation that models competing bacteria colonies.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>Rock crushes Scissors.</li>
+    <li>Scissors cut Paper.</li>
+    <li>Paper wraps Rock.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Percolation</h2>
+  <p><strong>Description:</strong>Simulates fluid flow through a porous material.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>If current state of a cell in
+      blocked, nothing can change its state.
+    </li>
+    <li>If the current state of the cell is percolated, nothing
+      can change its state.
+    </li>
+    <li>If the current state of
+      the cell is open and there is at least one neighbor with
+      percolated state, then its state will be changed to percolated
+    </li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Langton Loop</h2>
+  <p><strong>Description:</strong> A cellular automaton that simulates a self-replicating loop
+    structure.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>The loop consists of a sequence of states that allow it to grow and eventually replicate
+      itself.
+    </li>
+    <li>Cells transition between states based on predefined rules that control the loop’s extension
+      and replication.
+    </li>
+    <li>The loop must have a closed shape to continue replication successfully.</li>
+    <li>Once the replication phase completes, new loops can begin their own cycle of growth.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Wa-Tor World</h2>
+  <p><strong>Description:</strong> A predator-prey simulation where sharks hunt fish in an ocean
+    ecosystem.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>Fish move randomly to adjacent empty cells and reproduce after a set number of steps.</li>
+    <li>Sharks move towards fish to eat them and gain energy, otherwise, they lose energy over
+      time.
+    </li>
+    <li>Sharks reproduce after accumulating enough energy.</li>
+    <li>Sharks die if their energy reaches zero.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Foraging Ants</h2>
+  <p><strong>Description:</strong> A decentralized system where ants collectively find and retrieve
+    food using pheromone trails.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>Ants start from a nest and explore the environment randomly.</li>
+    <li>When an ant finds food, it carries it back to the nest while leaving a pheromone trail.</li>
+    <li>Other ants are more likely to follow stronger pheromone trails, reinforcing paths to food
+      sources.
+    </li>
+    <li>Pheromones evaporate over time, reducing influence if food sources are exhausted.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Schelling Segregation</h2>
+  <p><strong>Description:</strong> A model that simulates how small individual preferences can lead
+    to large-scale segregation.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>Each cell represents an agent belonging to a group (e.g., red or blue).</li>
+    <li>An agent will move to a new location if a certain percentage of its neighbors are not the
+      same type.
+    </li>
+    <li>If an agent is satisfied with its surroundings, it remains in place.</li>
+    <li>Over time, this behavior results in clusters of like-minded agents forming, leading to
+      segregation.
+    </li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Sugar Scape</h2>
+  <p><strong>Description:</strong> A multi-agent system that models resource consumption,
+    reproduction, and social behaviors.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>The grid contains patches of sugar, which agents consume for survival.</li>
+    <li>Each agent has a metabolism rate and consumes sugar over time.</li>
+    <li>Agents move toward locations with the highest sugar availability.</li>
+    <li>Sugar regenerates over time, allowing for long-term resource sustainability.</li>
+    <li>Some versions include wealth accumulation, trade, and reproduction among agents.</li>
+  </ul>
+</div>
+
+<div class="simulation">
+  <h2>Rules-Based Game of Life</h2>
+  <p><strong>Description:</strong> A cellular automaton where cells evolve based on customized rules
+    beyond the traditional Conway's Game of Life.</p>
+  <p><strong>Rules:</strong></p>
+  <ul>
+    <li>Each cell is either alive or dead.</li>
+    <li>The state of a cell in the next step depends on user-defined rules.</li>
+    <li>Rules may include survival, reproduction, or decay conditions based on neighboring cells.
+    </li>
+    <li>Variations may introduce new states, growth patterns, or environmental influences.</li>
+    <li>Custom rule sets allow for experimentation with different emergent behaviors.</li>
+  </ul>
+</div>
+
+</body>
+</html>
+
