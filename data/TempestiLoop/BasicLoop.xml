@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Tempesti Loop</type>
+  <title>Basic Loop</title>
+  <author>Alana Zinkin</author>
+  <description>A self-replicating automaton, Tempesti Loop demonstrates patterns that can create copies of themselves.</description>
+  <width>22</width>
+  <height>20</height>
+  <!-- 0 : EMPTY      1 : SHEATH      2 : CORE    3 : TEMP    4 : TURN    5 : EXTEND
+   6 : INIT   7: ADVANCE-->
+  <initial_states>
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0
+    0 0 0 0 2 1 7 0 1 4 0 1 4 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 0 2 2 2 2 2 2 0 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 7 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 1 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 0 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 7 2 0 0 0 0 2 1 2 0 0 0 0 0 0 0 0
+    0 0 0 0 2 1 2 2 2 2 2 2 1 2 2 2 2 2 0 0 0 0
+    0 0 0 0 2 0 7 1 0 7 1 0 7 1 1 1 1 1 0 0 0 0
+    0 0 0 0 0 2 2 2 2 2 2 2 2 2 2 2 2 2 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+  </initial_states>
+</simulation>

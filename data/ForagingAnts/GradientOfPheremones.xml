@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Foraging Ants</type>
+  <title>Pheremone Gradient</title>
+  <author>Alana Zinkin</author>
+  <description>A gradient of pheremones</description>
+  <width>15</width>
+  <height>15</height>
+  <!-- 0 : EMPTY      1 : NEST      2 : FOOD    3 : OBSTACLE -->
+  <initial_states>
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 3 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 3 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 3 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 3 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 3 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 3 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 3 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 3 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 3 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 2 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+  </initial_states>
+</simulation>
