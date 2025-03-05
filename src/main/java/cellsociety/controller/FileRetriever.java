@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FileRetriever {
   private static final String BASE_PATH = "data/";
@@ -22,6 +24,7 @@ public class FileRetriever {
       "Tempesti Loop",
       "Wa-Tor World"
   );
+  private static final Logger LOG = LogManager.getLogger();
 
   /**
    * creates list of different simulation types
@@ -99,7 +102,7 @@ public class FileRetriever {
   private List<File> getFilesInFolder(String folderPath) throws FileNotFoundException {
     File folder = new File(folderPath);
     if (!folder.exists() || !folder.isDirectory()) {
-      System.err.println("Folder path: " + folderPath + " does not exist!");
+      LOG.warn("Folder path: {} does not exist!", folderPath);
       throw new FileNotFoundException(folderPath);
     }
     File[] files = folder.listFiles();
