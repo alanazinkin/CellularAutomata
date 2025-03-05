@@ -287,7 +287,7 @@ public class SimulationController {
   private void updateGridEdgePolicy(Grid grid, String edgePolicyName) {
     try {
       if (edgePolicyName.equalsIgnoreCase("INFINITE")) {
-        InfiniteGrid infiniteGrid = new InfiniteGrid(grid);
+        InfiniteGrid infiniteGrid = new InfiniteGrid(grid.getRows(), grid.getCols(), grid.getDefaultState());
         engine.setGrid(infiniteGrid);
         return;
       }
