@@ -2,6 +2,8 @@ package cellsociety.model;
 
 import cellsociety.model.state.LangtonState;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation of rule strategy for Langton's Loop. Defines the transition rules using a
@@ -10,6 +12,13 @@ import java.util.List;
  * @author Tatum McKinnis
  */
 public class LangtonLoopRules implements RuleStrategy {
+
+
+  /**
+   * Logger instance for recording events and debugging information related to LangtonLoopRules.
+   */
+  private static final Logger logger = LogManager.getLogger(LangtonLoopRules.class);
+
 
   /**
    * Represents a single transition rule for the Langton Loop automaton.
@@ -129,7 +138,7 @@ public class LangtonLoopRules implements RuleStrategy {
             return result;
           }
         } catch (Exception e) {
-          System.out.println("Exception while testing rule " + rule + ": " + e.getMessage());
+          logger.warn("Exception while testing rule {}: {}", rule, e.getMessage());
         }
       }
     }

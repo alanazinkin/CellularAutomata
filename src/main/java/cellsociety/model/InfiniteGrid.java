@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Implementation of Grid that supports dynamic expansion for infinite edge behavior.
- * This class works with the InfiniteEdge strategy to allow the grid to grow
- * as needed when cells outside the current bounds are accessed.
+ * Implementation of Grid that supports dynamic expansion for infinite edge behavior. This class
+ * works with the InfiniteEdge strategy to allow the grid to grow as needed when cells outside the
+ * current bounds are accessed.
  *
  * @author Tatum McKinnis
  */
@@ -17,11 +17,11 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   private int colOffset = 0;
 
   /**
-   * Constructs a new InfiniteGrid with the specified dimensions and state.
-   * Uses InfiniteEdge strategy by default.
+   * Constructs a new InfiniteGrid with the specified dimensions and state. Uses InfiniteEdge
+   * strategy by default.
    *
-   * @param rows the initial number of rows
-   * @param cols the initial number of columns
+   * @param rows         the initial number of rows
+   * @param cols         the initial number of columns
    * @param defaultState the initial state for all cells
    */
   public InfiniteGrid(int rows, int cols, StateInterface defaultState) {
@@ -32,9 +32,9 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
    * Constructs a new InfiniteGrid with the specified dimensions, state, and neighborhood strategy.
    * Always uses InfiniteEdge strategy for edge handling.
    *
-   * @param rows the initial number of rows
-   * @param cols the initial number of columns
-   * @param defaultState the initial state for all cells
+   * @param rows                 the initial number of rows
+   * @param cols                 the initial number of columns
+   * @param defaultState         the initial state for all cells
    * @param neighborhoodStrategy the strategy for determining cell neighborhoods
    */
   public InfiniteGrid(int rows, int cols, StateInterface defaultState,
@@ -43,9 +43,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Gets the row offset of this grid.
-   * The offset is used to map between the original coordinate system and
-   * the expanded grid's internal coordinates.
+   * Gets the row offset of this grid. The offset is used to map between the original coordinate
+   * system and the expanded grid's internal coordinates.
    *
    * @return the current row offset
    */
@@ -54,9 +53,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Gets the column offset of this grid.
-   * The offset is used to map between the original coordinate system and
-   * the expanded grid's internal coordinates.
+   * Gets the column offset of this grid. The offset is used to map between the original coordinate
+   * system and the expanded grid's internal coordinates.
    *
    * @return the current column offset
    */
@@ -65,8 +63,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Gets a cell from the grid, adjusting for offsets.
-   * This method overrides the parent class to handle the coordinate mapping.
+   * Gets a cell from the grid, adjusting for offsets. This method overrides the parent class to
+   * handle the coordinate mapping.
    *
    * @param row the row in the original coordinate system
    * @param col the column in the original coordinate system
@@ -79,8 +77,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Gets a cell from the grid directly, bypassing edge strategy.
-   * This method overrides the parent class to handle the coordinate mapping.
+   * Gets a cell from the grid directly, bypassing edge strategy. This method overrides the parent
+   * class to handle the coordinate mapping.
    *
    * @param row the row in the original coordinate system
    * @param col the column in the original coordinate system
@@ -92,7 +90,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
     int adjustedRow = row + rowOffset;
     int adjustedCol = col + colOffset;
 
-    if (adjustedRow < 0 || adjustedRow >= getRows() || adjustedCol < 0 || adjustedCol >= getCols()) {
+    if (adjustedRow < 0 || adjustedRow >= getRows() || adjustedCol < 0
+        || adjustedCol >= getCols()) {
       throw new IndexOutOfBoundsException(
           String.format("Invalid cell indices: row=%d, col=%d", row, col));
     }
@@ -101,14 +100,13 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Expands the grid to include the given range of coordinates.
-   * This is called by the InfiniteEdge strategy when accessing cells
-   * outside the current grid bounds.
+   * Expands the grid to include the given range of coordinates. This is called by the InfiniteEdge
+   * strategy when accessing cells outside the current grid bounds.
    *
    * @param rowStart the minimum row to include
-   * @param rowEnd the maximum row to include
+   * @param rowEnd   the maximum row to include
    * @param colStart the minimum column to include
-   * @param colEnd the maximum column to include
+   * @param colEnd   the maximum column to include
    */
   @Override
   public void expandToInclude(int rowStart, int rowEnd, int colStart, int colEnd) {
@@ -153,8 +151,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Checks if a position is valid in this grid.
-   * For an infinite grid, all positions are considered valid.
+   * Checks if a position is valid in this grid. For an infinite grid, all positions are considered
+   * valid.
    *
    * @param row the row to check
    * @param col the column to check
@@ -212,8 +210,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Applies the next state to all cells in the grid.
-   * This method overrides the parent class to account for the expanded grid size.
+   * Applies the next state to all cells in the grid. This method overrides the parent class to
+   * account for the expanded grid size.
    */
   @Override
   public void applyNextStates() {
@@ -221,8 +219,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Applies previous states to all cells in the grid.
-   * This method overrides the parent class to account for the expanded grid size.
+   * Applies previous states to all cells in the grid. This method overrides the parent class to
+   * account for the expanded grid size.
    *
    * @return true if any cell was reverted to a previous state
    */
@@ -232,8 +230,8 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
   }
 
   /**
-   * Resets the grid with a new state.
-   * This method overrides the parent class to ensure all cells are reset.
+   * Resets the grid with a new state. This method overrides the parent class to ensure all cells
+   * are reset.
    *
    * @param newState the new state for all cells
    */
@@ -242,32 +240,4 @@ public class InfiniteGrid extends Grid implements DynamicGrid {
     super.resetGrid(newState);
   }
 
-  /**
-   * Prints the grid to the console, accounting for the grid offsets.
-   * This method overrides the parent class to show the current grid coordinates.
-   */
-  @Override
-  public void printGrid() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(String.format("Grid with offsets: rowOffset=%d, colOffset=%d%n", rowOffset, colOffset));
-
-    // Add column headers showing logical coordinates
-    sb.append("    ");
-    for (int c = 0; c < getCols(); c++) {
-      sb.append(String.format("%3d ", c - colOffset));
-    }
-    sb.append("\n");
-
-    for (int r = 0; r < getRows(); r++) {
-      // Add row headers showing logical coordinates
-      sb.append(String.format("%3d ", r - rowOffset));
-
-      for (int c = 0; c < getCols(); c++) {
-        // For visualization, we print the first character of the state's string representation.
-        sb.append(String.format("%3s ", getCellDirect(r, c).getCurrentState().toString().charAt(0)));
-      }
-      sb.append(System.lineSeparator());
-    }
-    System.out.print(sb);
-  }
 }

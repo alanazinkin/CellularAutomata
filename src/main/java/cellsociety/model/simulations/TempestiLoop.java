@@ -7,6 +7,8 @@ import cellsociety.model.RuleStrategy;
 import cellsociety.model.TempestiLoopRules;
 import cellsociety.model.state.LangtonState;
 import cellsociety.model.StateInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Simulates Tempesti's Loop cellular automaton, a self-replicating structure with distinct
@@ -17,6 +19,8 @@ import cellsociety.model.StateInterface;
 public class TempestiLoop extends AbstractLoopSimulation {
 
   private final RuleStrategy ruleStrategy;
+  // Add this logger
+  private static final Logger logger = LogManager.getLogger(TempestiLoop.class);
 
   /**
    * Constructs the TempestiLoop simulation with a given configuration.
@@ -45,12 +49,11 @@ public class TempestiLoop extends AbstractLoopSimulation {
 
       grid.applyNextStates();
     } catch (Exception e) {
-      System.err.println("Error applying TempestiLoop rules: " + e.getMessage());
-      e.printStackTrace();
+      logger.error("Error applying TempestiLoop rules: {}", e.getMessage(), e);
       try {
         grid.applyNextStates();
       } catch (Exception ex) {
-        System.err.println("Failed to apply next states after error: " + ex.getMessage());
+        logger.error("Failed to apply next states after error: {}", ex.getMessage(), ex);
       }
     }
   }
@@ -135,8 +138,7 @@ public class TempestiLoop extends AbstractLoopSimulation {
           try {
             updateCellState(row, col);
           } catch (Exception e) {
-            System.err.println(
-                "Error updating cell at (" + row + "," + col + "): " + e.getMessage());
+            logger.warn("Error updating cell at ({},{}): {}", row, col, e.getMessage());
             cell.setNextState(cell.getCurrentState());
           }
         }
