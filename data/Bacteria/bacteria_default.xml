@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<simulation-style>
-    <cell-appearances>
-        <state name="bacteria-state-rock">
-            <color>#800080</color>
-        </state>
-        <state name="bacteria-state-paper">
-            <color>#FFA500</color>
-        </state>
-        <state name="bacteria-state-scissors">
-            <color>#008080</color>
-        </state>
-    </cell-appearances>
+<simulation>
+    <style>
+        <cell-appearances>
+            <state name="bacteria-state-rock">
+                <color>#800080</color>
+            </state>
+            <state name="bacteria-state-paper">
+                <color>#FFA500</color>
+            </state>
+            <state name="bacteria-state-scissors">
+                <color>#008080</color>
+            </state>
+        </cell-appearances>
 
-    <grid-properties>
-        <edge-policy>BOUNDED</edge-policy>
-        <cell-shape>SQUARE</cell-shape>
-        <neighbor-arrangement>MOORE</neighbor-arrangement>
-    </grid-properties>
+        <grid-properties>
+            <edge-policy>BOUNDED</edge-policy>
+            <cell-shape>SQUARE</cell-shape>
+            <neighbor-arrangement>MOORE</neighbor-arrangement>
+        </grid-properties>
 
-    <display-options>
-        <show-grid-outline>true</show-grid-outline>
-        <color-theme>LIGHT</color-theme>
-        <animation-speed>1.0</animation-speed>
-    </display-options>
-</simulation-style>
+        <display-options>
+            <show-grid-outline>true</show-grid-outline>
+            <color-theme>LIGHT</color-theme>
+            <animation-speed>1.0</animation-speed>
+        </display-options>
+    </style>
+</simulation>
