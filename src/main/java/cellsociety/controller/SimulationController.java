@@ -231,8 +231,8 @@ public class SimulationController {
    */
   public void applyStyle(SimulationStyle style) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
     applyCellStateAppearances(style);
-    applyGridProperties(style);
-    applyDisplayOptions(style);
+    //applyGridProperties(style);
+    //applyDisplayOptions(style);
     ui.updateView(engine.getSimulation().getColorMap());
   }
 
