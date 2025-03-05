@@ -246,20 +246,6 @@ public class Grid {
   }
 
   /**
-   * Prints the grid to the console. This is useful for debugging and visualization.
-   */
-  public void printGrid() {
-    StringBuilder sb = new StringBuilder();
-    for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++) {
-        sb.append(cells[r][c].getCurrentState().toString().charAt(0)).append(" ");
-      }
-      sb.append(System.lineSeparator());
-    }
-    System.out.print(sb);
-  }
-
-  /**
    * Returns the number of rows in the grid.
    *
    * @return the number of rows

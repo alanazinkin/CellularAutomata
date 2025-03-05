@@ -112,13 +112,7 @@ class WaTorWorldTest {
     WaTorWorld simulation = new WaTorWorld(simConfig, grid, fishBreedTime, sharkBreedTime,
         sharkInitialEnergy, sharkEnergyGain);
 
-    System.out.println("Initial state:");
-    printGridState();
-
     simulation.step();
-
-    System.out.println("\nFinal state:");
-    printGridState();
 
     int sharkCount = countState(WaTorWorldState.SHARK);
     assertEquals(2, sharkCount, "After eating and reproduction, there should be two sharks");
@@ -126,14 +120,6 @@ class WaTorWorldTest {
         "The fish cell should now contain a shark");
   }
 
-  private void printGridState() {
-    for (int r = 0; r < grid.getRows(); r++) {
-      for (int c = 0; c < grid.getCols(); c++) {
-        System.out.print(grid.getCell(r, c).getCurrentState().getStateValue() + " ");
-      }
-      System.out.println();
-    }
-  }
 
   /**
    * Tests the behavior of the {@code WaTorWorld} constructor when a {@code null} grid is provided.
