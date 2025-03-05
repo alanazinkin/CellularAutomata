@@ -6,12 +6,7 @@ import cellsociety.view.gridview.GridView;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,19 +15,68 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * Class responsible for connecting frontend and backend to make the simulation work as a whole.
+ * Central controller for managing cellular automata simulations,
+ * responsible for coordinating interactions between model, view, and configuration.
  *
- * @author Angela Predolac
+ * <p>Design Goals:
+ * - Provide a clean, decoupled interface for simulation management
+ * - Support dynamic configuration and styling of simulations
+ * - Enable flexible simulation control and state management
+ *
+ * <p>Key Responsibilities:
+ * - Initialize and configure simulations
+ * - Control simulation lifecycle (start, pause, step, reset)
+ * - Apply styles and configuration dynamically
+ * - Manage simulation state and resources
+ *
+ * @version 2.0
+ * @since 2024.03
+ * @author angelapredolac
  */
 public class SimulationController {
 
-  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
-          SimulationController.class.getPackageName() + ".Simulation");
   public static final String DEFAULT_RESOURCE_PACKAGE =
           SimulationController.class.getPackageName() + ".";
-  private static final String DEFAULT_STYLE_FILE = "default.xml";
+
   private static final Logger LOG = LogManager.getLogger();
 
+  /**
+   * Configuration resource bundle for simulation constants.
+   * Provides immutable access to core simulation parameters.
+   */
+  private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
+          SimulationController.class.getPackageName() + ".Simulation");
+
+  // Core simulation components
+  private final SimulationEngine engine;
+  private final SimulationUI ui;
+  private final SimulationFileManager fileManager;
+  private final XMLStyleParser styleParser;
+
+  // Current simulation state
+  private Stage primaryStage;
+  private SimulationStyle currentStyle;
+
+  /**
+   * Creates a new SimulationController with core dependencies.
+   *
+   * @param engine Simulation calculation and state management engine
+   * @param ui User interface for rendering and interaction
+   * @param fileManager Manages file loading and saving operations
+   * @param styleParser Parses XML style configuration files
+   */
+  public SimulationController(
+          SimulationEngine engine,
+          SimulationUI ui,
+          SimulationFileManager fileManager,
+          XMLStyleParser styleParser) {
+    this.engine = Objects.requireNonNull(engine, "SimulationEngine cannot be null");
+    this.ui = Objects.requireNonNull(ui, "SimulationUI cannot be null");
+    this.fileManager = Objects.requireNonNull(fileManager, "SimulationFileManager cannot be null");
+    this.styleParser = Objects.requireNonNull(styleParser, "XMLStyleParser cannot be null");
+
+    this.currentStyle = new SimulationStyle();
+  }
 
   /**
    * Enum representing the different types of simulations available.
@@ -69,14 +113,6 @@ public class SimulationController {
     }
   }
 
-  private final SimulationUI ui;
-  private final SimulationEngine engine;
-  private final SimulationFileManager fileManager;
-  private final XMLStyleParser styleParser;
-  private Stage stage;
-  private SimulationController myController;
-  private SimulationStyle currentStyle;
-
   /**
    * Constructs a SimulationController and initializes key components.
    */
@@ -85,7 +121,6 @@ public class SimulationController {
     this.ui = new SimulationUI(CONFIG);
     this.fileManager = new SimulationFileManager();
     this.styleParser = new XMLStyleParser();
-    this.myController = this;
     this.currentStyle = new SimulationStyle();
   }
 
@@ -101,23 +136,18 @@ public class SimulationController {
    */
   public void selectSimulation(String simulationType, String fileName, String styleFileName,
       Stage stage, SimulationController controller) throws Exception {
-    this.stage = stage;
+    this.primaryStage = stage;
     engine.pause();
 
-    // Load the simulation configuration file
     fileManager.loadFile(simulationType, fileName);
 
-    // If no style file is provided, try to find a default style for this simulation type
     if (styleFileName == null || styleFileName.isEmpty()) {
       try {
-        // Get the default style path
         String defaultStylePath = getDefaultStylePath(simulationType);
 
-        // More verbose logging
         System.out.println("Attempting to load default style from: " + defaultStylePath);
 
         if (defaultStylePath != null) {
-          // Attempt to read the file contents
           try {
             String fileContents = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(defaultStylePath)));
             System.out.println("Default Style File Contents:\n" + fileContents);
@@ -137,7 +167,6 @@ public class SimulationController {
         this.currentStyle = new SimulationStyle();
       }
     } else {
-      // Use the provided style file
       try {
         this.currentStyle = styleParser.parseStyleFile(styleFileName);
       } catch (ConfigurationException e) {
@@ -146,7 +175,6 @@ public class SimulationController {
       }
     }
 
-    // Initialize the simulation with the loaded configuration and style
     init(stage, controller);
   }
 
@@ -161,7 +189,6 @@ public class SimulationController {
             .replace(" ", "")
             .replace("of", "");
 
-    // Try multiple possible paths
     String[] possiblePaths = {
             "data/" + formattedType + "/" + formattedType + "_default.xml",
             "styles/" + formattedType + "_default.xml",
@@ -360,14 +387,9 @@ public class SimulationController {
    * @param style the style containing display option information
    */
   private void applyDisplayOptions(SimulationStyle style) {
-    if (ui != null) {
       ui.setGridOutlineVisible(style.isShowGridOutline());
       ui.setColorTheme(style.getColorTheme().toString());
-    }
-
-    if (engine != null) {
       engine.setSpeed(style.getAnimationSpeed());
-    }
   }
 
   /**
@@ -394,7 +416,7 @@ public class SimulationController {
     fileChooser.setTitle("Open Style File");
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
 
-    File selectedFile = fileChooser.showOpenDialog(stage);
+    File selectedFile = fileChooser.showOpenDialog(primaryStage);
     if (selectedFile != null) {
       loadStyle(selectedFile.getAbsolutePath());
     }
@@ -404,7 +426,7 @@ public class SimulationController {
    * Saves the current style to a file.
    */
   public void saveStyle() {
-    fileManager.saveStyle(stage, ui.getResources(), currentStyle);
+    fileManager.saveStyle(primaryStage, ui.getResources(), currentStyle);
   }
 
   /**
@@ -473,7 +495,7 @@ public class SimulationController {
    * saves the current simulation state as a new configuration file
    */
   public void saveSimulation() {
-    fileManager.saveSimulation(stage, ui.getResources(), engine.getConfig(), engine.getGrid());
+    fileManager.saveSimulation(primaryStage, ui.getResources(), engine.getConfig(), engine.getGrid());
   }
 
   /**
