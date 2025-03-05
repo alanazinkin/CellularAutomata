@@ -149,6 +149,19 @@ ComboBox
 
 ### SIGNIFICANT POSITIVE EVENT:
 
+* Occasionally, a team member would be unable to contribute as much to the project because they were
+  either sick, were out of town, or had other academic obligations. Although these challenges could
+  have
+  set back out timeline, each member of our team was able to pick up extra work to ensure that the
+  project
+  would be completed on time.
+* For example, when Alana had the flu, Tatum and Angela were able to complete more of the design doc
+* When Angela had the flu, Tatum and Alana were able to assist with the XML and controller methods
+* When Angela and Tatum had midterms, Alana was able to help with debugging portions of code that
+  she had not written herself
+* Our team never made other teammates feel bad when they couldn't contribute as much as normal, and
+  we all supported one another.
+
 ### SIGNIFICANT PROBLEM:
 
 * A significant problem our team experienced was surrounding git and merge conflicts
@@ -162,7 +175,30 @@ ComboBox
 
 ### STRONG TEAMWORK/COMMUNICATION:
 
+* Our team worked really well together because we constantly checked in with one another and were
+  willing to solve problems for our other teammates rather than focus on our own features.
+* For example, Alana would send check-in messages over the weekends to make sure everyone was doing
+  ok, both
+  personally and within the context of 308.
+* Another example was when Angela needed assistance debugging a controller method, Alana helped
+  debug the method
+  and discovered that a View method was partially causing the problem.
+* Another example was when Alana needed back-end assistance to display the simulation appropriately,
+  Tatum immediately paused working on another feature to work on Alana's feature
+* Additionally, when Tatum needed configuration files to see if her simulation was running, Angela
+  paused working
+  on her controller portion of the feature requirements and wrote various config files
+* This willingness to help one another and selflessness was what made working together so enjoyable
+
 ### TEAMWORK/COMMUNICATION AREA FOR IMPROVEMENT:
+
+* One area for improvement would be meeting in-person with our team more frequently
+* Our team only met in person approximately once a week or less, but when we did meet in person, we
+  found that it was significantly easier to complete the project
+* This form of collaboration would have made the project easier, and going forward, our team is
+  going to emphasize in-person collaboration
+* In general, we could have communicated more with one another, and even tried to integrate a weekly
+  stand-up meeting
 
 ### Alana Teamwork Improvement
 
@@ -176,12 +212,10 @@ ComboBox
 
 * Going forward, Alana can read her team feedback form from her teammates to see if she is improving
 * Alana can also count the number of merge conflicts she has per week. Merge conflicts typically
-  indicate that
-  team members are not communicating what they are working on, so fewer conflicts shows better
-  teamwork
+  indicate that team members are not communicating what they are working on, so fewer conflicts
+  shows better teamwork
 * Alana can also analyze how frequently she communicates with her team by counting the number of
-  messages
-  sent per week to her team/number of team meetings
+  messages sent per week to her team/number of team meetings
 
 ### TATUM TEAMWORK IMPROVEMENT:
 
