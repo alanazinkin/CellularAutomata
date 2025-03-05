@@ -1,4 +1,30 @@
-## Testing Section
+## DESIGN OVERVIEW
+#### DESIGN 1 (CHANGED) : GridView creation
+**Project Start**
+  * Abstract GridView class with a grid for each type of simulation
+  * No class for each cell shape, assume cells can only be rectangles (BAD ASSUMPTION!)
+
+**Mid-Project Change** 
+  * Keep abstract grid view class and create a concrete class for each tiling pattern
+  * Create factory class to initialize a GridView based on "tiling" configuration pattern
+  * Create CellShape interface and implement it for each type of cell shape
+  * Create a CellShape Factory for each shape to initialize them
+
+**Feature Helped**
+* BENEFITS: 
+  * Developers can easily add new GridViews for each shape
+  * Users can create a default grid view, which integrates various kinds of shapes
+  * Users can select different cell states to be represented by different shapes
+  * Users can override specific cell state setting by selecting a different tiling patter
+
+**Feature Challenged**
+* TRADE-OFFS:
+  * Four classes must be created for each type of tiling pattern because of the use of reflection to 
+  create a new GridView and CellShape (lots of overhead)
+  * Some classes, like hexagon and parallelogram had VERY similar structures and some duplicated code
+
+
+## TESTING OVERVIEW
 
 #### TEST 1:
 #### TEST 2:
@@ -88,3 +114,6 @@
     });
   }
 ```
+
+## TEAMWORK & COMMUNICATION OVERVIEW
+
