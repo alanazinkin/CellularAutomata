@@ -25,7 +25,7 @@ import javafx.stage.Modality;
 public class GridSettingsDisplay {
 
   private static final List<String> NEIGHBORHOOD_TYPES = List.of("MOORE", "VON_NEUMANN",
-      "EXTENDED_MOORE_", "MULTIPLE");
+      "EXTENDED_MOORE_1", "MULTIPLE");
   private static final List<String> EDGE_TYPES = List.of("BOUNDED", "TOROIDAL", "MIRROR", "INFINITE");
   private static final List<String> CELL_TILING_TYPES = List.of("Default", "Triangle", "Parallelogram", "Hexagon");
   private DialogPane myDialogPane;

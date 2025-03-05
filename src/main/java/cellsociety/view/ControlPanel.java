@@ -68,13 +68,26 @@ public class ControlPanel {
     initalizeGridSettingsDisplay();
   }
 
+  /**
+   * retrieves the gridLines Toggle button. Its main purpose is to update the action of the button
+   * if the grid view is updated
+   *
+   * @return gridLinesToggle button
+   */
   public Button getGridLinesToggleButton() {
     return gridLinesToggle;
   }
 
+  /**
+   * retrieves the flipGrid button. Its main purpose is to update the action of the button
+   * if the grid view is updated
+   *
+   * @return flipGridButton button
+   */
   public Button getGridFlipButton() {
     return flipGridButton;
   }
+
   /**
    * create control bar GUI to allow users to start, pause, save, and select the type of simulation
    *

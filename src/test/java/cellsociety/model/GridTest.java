@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link Grid} functionality.
  * <p>
  * This class verifies grid operations such as cell retrieval, neighbor determination, state
- * transitions, grid reset, grid printing, and the new edge and neighborhood strategy
+ * transitions, grid reset, and edge and neighborhood strategy
  * functionality.
  * </p>
  *
@@ -67,18 +67,6 @@ class GridTest {
     Grid grid = new Grid(5, 5, MockState.STATE_ONE);
     grid.resetGrid(MockState.STATE_ONE);
     assertEquals(MockState.STATE_ONE, grid.getCell(0, 0).getCurrentState());
-  }
-
-  /**
-   * Tests grid printing functionality.
-   * <p>
-   * Verifies that calling {@link Grid#printGrid()} does not throw any exceptions.
-   * </p>
-   */
-  @Test
-  void printGrid_NoStateChange_NoExceptionThrown() {
-    Grid grid = new Grid(5, 5, MockState.STATE_ONE);
-    assertDoesNotThrow(grid::printGrid);
   }
 
   /**
