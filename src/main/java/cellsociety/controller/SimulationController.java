@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 import cellsociety.model.StateInterface;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -31,6 +33,8 @@ public class SimulationController {
   public static final String DEFAULT_RESOURCE_PACKAGE =
       SimulationController.class.getPackageName() + ".";
   private static final String DEFAULT_STYLE_FILE = "default.xml";
+  private static final Logger LOG = LogManager.getLogger();
+
 
   /**
    * Enum representing the different types of simulations available.
@@ -143,6 +147,7 @@ public class SimulationController {
     ui.initialize(stage, this);
 
     applyStyle(currentStyle);
+    LOG.debug("test");
   }
 
   /**
@@ -239,7 +244,7 @@ public class SimulationController {
         Method setEdgeMode = grid.getClass().getMethod("setEdgeMode", String.class);
         setEdgeMode.invoke(grid, edgePolicyName);
       } catch (Exception ex) {
-        System.err.println("Could not set edge policy: " + ex.getMessage());
+        LOG.warn("Could not set edge policy: {}", ex.getMessage());
       }
     }
   }
