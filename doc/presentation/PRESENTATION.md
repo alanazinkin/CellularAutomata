@@ -139,31 +139,49 @@ ComboBox
       }
 ```
 
+## API OVERVIEW
+
+### API 1:
+
+### API 2:
+
 ## TEAMWORK & COMMUNICATION OVERVIEW
 
 ### SIGNIFICANT POSITIVE EVENT:
 
 ### SIGNIFICANT PROBLEM:
 
-### TEAMWORK/ COMMUNICATION 1:
+* A significant problem our team experienced was surrounding git and merge conflicts
+* Merge conflicts were common - we often struggled to resolve them, which would break our main
+  branch
+* Our team learned that when you experience a merge conflict, you should either text or meet-up with
+  your teammates
+  to resolve it together
+* We also learned the importance of testing within our own branches before pushing to main
+    * Everything should be fully functional and all tests should pass before merging to main
 
-### TEAMWORK COMMUNICATION 2:
+### STRONG TEAMWORK/COMMUNICATION:
+
+### TEAMWORK/COMMUNICATION AREA FOR IMPROVEMENT:
 
 ### Alana Teamwork Improvement
 
 * Worked to communicate and check-in more frequently with her team.
 * Sent weekly texts highlighting what she was working on for the next few days and overall
-team goals for the week
+  team goals for the week
 * She would communicate when there was a merge conflict and worked harder to not alter her teammates
-code without checking with them first
+  code without checking with them first
 
 #### Alana Evidence To Collect
 
 * Going forward, Alana can read her team feedback form from her teammates to see if she is improving
-* Alana can also count the number of merge conflicts she has per week. Merge conflicts typically indicate that
-team members are not communicating what they are working on, so fewer conflicts shows better teamwork
-* Alana can also analyze how frequently she communicates with her team by counting the number of messages 
-sent per week to her team/number of team meetings
+* Alana can also count the number of merge conflicts she has per week. Merge conflicts typically
+  indicate that
+  team members are not communicating what they are working on, so fewer conflicts shows better
+  teamwork
+* Alana can also analyze how frequently she communicates with her team by counting the number of
+  messages
+  sent per week to her team/number of team meetings
 
 ### TATUM TEAMWORK IMPROVEMENT:
 
