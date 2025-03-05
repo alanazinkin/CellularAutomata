@@ -13,23 +13,24 @@ public abstract class BaseConfigParser implements SimulationConfigParser {
     protected static final Set<String> VALID_SIMULATION_TYPES = Set.of(
             "Game of Life", "Spreading of Fire", "Schelling Segregation",
             "Percolation", "Wa-Tor World", "Langton Loop", "Sugar Scape", "Bacteria", "Foraging Ants",
-        "Tempesti Loop"
+        "Tempesti Loop", "Darwin"
     );
 
     /**
      * Mapping of valid states for each simulation type.
      */
-    protected static final Map<String, Set<Integer>> VALID_STATES = Map.of(
-            "Game of Life", Set.of(0, 1),
-            "Spreading of Fire", Set.of(0, 1, 2),
-            "Schelling Segregation", Set.of(0, 1, 2),
-            "Percolation", Set.of(0, 1, 2),
-            "Wa-Tor World", Set.of(0, 1, 2),
-            "Langton Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7),
-            "Sugar Scape", Set.of(0, 1, 2),
-            "Bacteria", Set.of(0, 1, 2),
-        "Foraging Ants", Set.of(0, 1, 2, 3),
-        "Tempesti Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7)
+    protected static final Map<String, Set<Integer>> VALID_STATES = Map.ofEntries(
+        Map.entry("Game of Life", Set.of(0, 1)),
+        Map.entry("Spreading of Fire", Set.of(0, 1, 2)),
+        Map.entry("Schelling Segregation", Set.of(0, 1, 2)),
+        Map.entry("Percolation", Set.of(0, 1, 2)),
+        Map.entry("Wa-Tor World", Set.of(0, 1, 2)),
+        Map.entry("Langton Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7)),
+        Map.entry("Sugar Scape", Set.of(0, 1, 2)),
+        Map.entry("Bacteria", Set.of(0, 1, 2)),
+        Map.entry("Foraging Ants", Set.of(0, 1, 2, 3)),
+        Map.entry("Tempesti Loop", Set.of(0, 1, 2, 3, 4, 5, 6, 7)),
+        Map.entry("Darwin", Set.of(0, 1))
     );
 
     protected final FileValidator fileValidator;
