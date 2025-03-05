@@ -5,7 +5,8 @@ package cellsociety.controller;
  * @author angelapredolac
  */
 public enum CellShape {
-    SQUARE,    // Traditional square cells
-    HEXAGONAL, // Hexagonal cells
-    TRIANGULAR // Triangular cells
+    Triangle,
+    Parallelogram,
+    Hexagon,
+    Rectangle
 }

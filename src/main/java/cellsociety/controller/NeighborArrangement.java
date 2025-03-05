@@ -5,7 +5,8 @@ package cellsociety.controller;
  * @author angelapredolac
  */
 public enum NeighborArrangement {
-    MOORE,          // All 8 surrounding cells for square grid
-    VON_NEUMANN,    // Only orthogonal neighbors (N, E, S, W)
-    CUSTOM          // Custom neighbor definition
+    MOORE,
+    VON_NEUMANN,
+    EXTENDED_MOORE_,
+    MULTIPLE
 }
