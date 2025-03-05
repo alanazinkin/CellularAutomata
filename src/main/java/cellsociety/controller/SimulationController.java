@@ -145,25 +145,24 @@ public class SimulationController {
       try {
         String defaultStylePath = getDefaultStylePath(simulationType);
 
-        System.out.println("Attempting to load default style from: " + defaultStylePath);
+        LOG.warn("Attempting to load default style from: " + defaultStylePath);
 
         if (defaultStylePath != null) {
           try {
             String fileContents = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(defaultStylePath)));
-            System.out.println("Default Style File Contents:\n" + fileContents);
+            LOG.info("Default Style File Contents:\n" + fileContents);
           } catch (Exception e) {
-            System.err.println("Could not read file contents: " + e.getMessage());
+            LOG.error("Could not read file contents: " + e.getMessage());
           }
 
           this.currentStyle = styleParser.parseStyleFile(defaultStylePath);
-          System.out.println("Successfully loaded default style");
+          LOG.info("Successfully loaded default style");
         } else {
-          System.out.println("No default style file found");
+          LOG.error("No default style file found");
           this.currentStyle = new SimulationStyle();
         }
       } catch (Exception e) {
-        System.err.println("Error loading default style: " + e.getMessage());
-        e.printStackTrace();
+        LOG.error("Error loading default style: " + e.getMessage());
         this.currentStyle = new SimulationStyle();
       }
     } else {
@@ -197,14 +196,14 @@ public class SimulationController {
 
     for (String path : possiblePaths) {
       File file = new File(path);
-      System.out.println("Checking style file path: " + file.getAbsolutePath());
+      LOG.info("Checking style file path: " + file.getAbsolutePath());
       if (file.exists()) {
-        System.out.println("Found style file at: " + file.getAbsolutePath());
+        LOG.info("Found style file at: " + file.getAbsolutePath());
         return path;
       }
     }
 
-    System.err.println("No default style file found for simulation type: " + simulationType);
+    LOG.error("No default style file found for simulation type: " + simulationType);
     return null;
 
   }
@@ -223,7 +222,6 @@ public class SimulationController {
     ui.initialize(stage, this);
 
     applyStyle(currentStyle);
-    LOG.debug("test");
   }
 
   /**
@@ -246,7 +244,7 @@ public class SimulationController {
   private void applyCellStateAppearances(SimulationStyle style) {
     Simulation simulation = engine.getSimulation();
     Map<String, CellAppearance> appearances = style.getCellAppearances();
-    System.out.println("appearances: " + appearances);
+    LOG.info("appearances: " + appearances);
     Map<StateInterface, String> colorMap = new HashMap<>();
 
     String simulationType = ui.getView().getSimulationConfig().getType().toLowerCase().replace(" ", "");
@@ -257,7 +255,7 @@ public class SimulationController {
       String stateName = state.getStateValue().toLowerCase();
 
       String cssSelector = simulationType + "-state-" + stateName;
-      System.out.println(cssSelector);
+      LOG.debug(cssSelector);
 
       if (appearances.containsKey(cssSelector)) {
         CellAppearance appearance = appearances.get(cssSelector);
@@ -266,7 +264,7 @@ public class SimulationController {
 
         ui.getView().getRoot().setStyle(cssStyle);
       } else {
-        System.out.println("No style found for state: " + stateName + ". Using default color.");
+        LOG.error("No style found for state: " + stateName + ". Using default color.");
       }
     }
   }
@@ -322,7 +320,7 @@ public class SimulationController {
       grid.setEdgeStrategy(strategy);
 
     } catch (Exception e) {
-      System.err.println("Error setting edge policy: " + e.getMessage());
+      LOG.warn("Error setting edge policy: " + e.getMessage());
       grid.setEdgeStrategy(EdgeStrategyFactory.createEdgeStrategy("BOUNDED"));
     }
   }
@@ -350,7 +348,7 @@ public class SimulationController {
             .getMethod("configureCellShape", String.class);
         configureCellShapeMethod.invoke(grid, cellShapeName);
       } catch (Exception ex) {
-        System.err.println("Could not set cell shape: " + ex.getMessage());
+        LOG.error("Could not set cell shape: " + ex.getMessage());
       }
     }
   }
@@ -369,7 +367,7 @@ public class SimulationController {
       grid.setNeighborhoodStrategy(neighborhoodStrategy);
 
     } catch (Exception e) {
-      System.err.println("Error setting neighbor arrangement: " + e.getMessage());
+      LOG.error("Error setting neighbor arrangement: " + e.getMessage());
       grid.setNeighborhoodStrategy(new MooreNeighborhood());
     }
   }
