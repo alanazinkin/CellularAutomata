@@ -95,38 +95,77 @@ public class XMLStyleParser {
      * @throws ConfigurationException If parsing errors occur.
      */
     private void parseCellStateAppearances(Document document, SimulationStyle style) throws ConfigurationException {
-        Element cellStatesElement = (Element) document.getElementsByTagName("cell-states").item(0);
-        if (cellStatesElement == null) {
+        // Debug: print out the entire document structure
+        System.out.println("Parsing Cell State Appearances");
+        System.out.println("Document Element: " + document.getDocumentElement().getNodeName());
+
+        // Print all top-level elements
+        NodeList topLevelNodes = document.getDocumentElement().getChildNodes();
+        System.out.println("Top-level nodes count: " + topLevelNodes.getLength());
+        for (int i = 0; i < topLevelNodes.getLength(); i++) {
+            if (topLevelNodes.item(i).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+                System.out.println("Top-level element: " + topLevelNodes.item(i).getNodeName());
+            }
+        }
+
+        // Find cell-states element more carefully
+        NodeList cellStatesNodeList = document.getElementsByTagName("cell-states");
+        System.out.println("cell-states nodes found: " + cellStatesNodeList.getLength());
+
+        if (cellStatesNodeList.getLength() == 0) {
+            System.err.println("NO CELL-STATES ELEMENT FOUND IN XML");
             return;
         }
 
+        Element cellStatesElement = (Element) cellStatesNodeList.item(0);
+
+        // More robust element retrieval
         NodeList stateNodes = cellStatesElement.getElementsByTagName("state");
+        System.out.println("Total state nodes found: " + stateNodes.getLength());
+
         Map<String, CellAppearance> appearances = new HashMap<>();
 
         for (int i = 0; i < stateNodes.getLength(); i++) {
             Element stateElement = (Element) stateNodes.item(i);
-            String stateName = stateElement.getAttribute("name");
 
+            // Debug: print out full state element details
+            System.out.println("\nProcessing State Element:");
+            System.out.println("Attributes:");
+            for (int j = 0; j < stateElement.getAttributes().getLength(); j++) {
+                org.w3c.dom.Node attr = stateElement.getAttributes().item(j);
+                System.out.println(attr.getNodeName() + ": " + attr.getNodeValue());
+            }
+
+            String stateName = stateElement.getAttribute("name");
             if (stateName.isEmpty()) {
-                throw new ConfigurationException("Cell state must have a name attribute");
+                System.err.println("Skipping state with empty name");
+                continue;
             }
 
             CellAppearance appearance = new CellAppearance();
 
+            // Detailed color extraction
             if (stateElement.hasAttribute("color")) {
-                appearance.setColor(stateElement.getAttribute("color"));
+                String color = stateElement.getAttribute("color");
+                System.out.println("Color for " + stateName + ": " + color);
+                appearance.setColor(color);
             }
 
+            // Image path extraction
             NodeList imageNodes = stateElement.getElementsByTagName("image");
             if (imageNodes.getLength() > 0) {
                 Element imageElement = (Element) imageNodes.item(0);
-                appearance.setImagePath(imageElement.getTextContent());
+                String imagePath = imageElement.getTextContent();
+                System.out.println("Image path for " + stateName + ": " + imagePath);
+                appearance.setImagePath(imagePath);
             }
 
             appearances.put(stateName, appearance);
         }
 
         style.setCellAppearances(appearances);
+        System.out.println("Total appearances parsed: " + appearances.size());
+
     }
 
     /**

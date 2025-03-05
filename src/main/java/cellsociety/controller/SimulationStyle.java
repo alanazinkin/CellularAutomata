@@ -7,6 +7,8 @@ import java.util.Map;
  * Holds styling configuration for a simulation.
  * @author angelapredolac
  */
+// SimulationStyle.java
+
 public class SimulationStyle {
     private Map<String, CellAppearance> cellAppearances;
     private EdgePolicy edgePolicy;
@@ -16,9 +18,6 @@ public class SimulationStyle {
     private ColorTheme colorTheme;
     private double animationSpeed;
 
-    /**
-     * Constructs a SimulationStyle with default values.
-     */
     public SimulationStyle() {
         this.cellAppearances = new HashMap<>();
         this.edgePolicy = EdgePolicy.FINITE;
@@ -27,15 +26,6 @@ public class SimulationStyle {
         this.showGridOutline = true;
         this.colorTheme = ColorTheme.LIGHT;
         this.animationSpeed = 1.0;
-    }
-
-
-    public Map<String, CellAppearance> getCellAppearances() {
-        return cellAppearances;
-    }
-
-    public void setCellAppearances(Map<String, CellAppearance> cellAppearances) {
-        this.cellAppearances = cellAppearances;
     }
 
     public EdgePolicy getEdgePolicy() {
@@ -86,13 +76,11 @@ public class SimulationStyle {
         this.animationSpeed = animationSpeed;
     }
 
-    /**
-     * Gets the appearance for a specific cell state.
-     *
-     * @param stateName The name of the cell state.
-     * @return The CellAppearance for the given state, or null if not defined.
-     */
-    public CellAppearance getAppearanceForState(String stateName) {
-        return cellAppearances.get(stateName);
+    public Map<String, CellAppearance> getCellAppearances() {
+        return cellAppearances;
+    }
+
+    public void setCellAppearances(Map<String, CellAppearance> appearances) {
+        this.cellAppearances = appearances;
     }
 }

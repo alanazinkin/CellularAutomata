@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -262,20 +263,26 @@ public class SimulationUI {
      */
     public void setColorTheme(String theme) {
         String cssFile;
-
         if (theme.equalsIgnoreCase("DARK")) {
             cssFile = "Dark.css";
-        }
-        else {
+        } else {
             cssFile = "Light.css";
+        }
+
+        String resourcePath = "/CSS/" + cssFile; // Match your directory name
+        URL cssResource = getClass().getResource(resourcePath);
+
+        if (cssResource == null) {
+            System.err.println("ERROR: CSS file not found at: " + resourcePath);
+            return;
         }
 
         if (stage != null && stage.getScene() != null) {
             Scene scene = stage.getScene();
             scene.getStylesheets().clear();
-            scene.getStylesheets().add(getClass().getResource("/styles/" + cssFile).toExternalForm());
+            scene.getStylesheets().add(cssResource.toExternalForm());
         } else {
-            System.out.println("Cannot apply theme yet - stage or scene is null");
+            System.out.println("Stage or scene not initialized. Theme will be applied later.");
             myThemeColor = theme;
         }
     }
@@ -310,7 +317,7 @@ public class SimulationUI {
      * @param menu the menu to add items to
      */
     private void addPredefinedStyleMenuItems(Menu menu) {
-        File stylesDir = new File("styles");
+        File stylesDir = new File("CSS");
         if (stylesDir.exists() && stylesDir.isDirectory()) {
             File[] styleFiles = stylesDir.listFiles((dir, name) -> name.endsWith(".xml"));
             if (styleFiles != null) {
@@ -322,7 +329,7 @@ public class SimulationUI {
             }
         }
     }
-
+    
   /**
    *
    * @param colorMap map of state interface values to CSS identifiers
@@ -336,6 +343,10 @@ public class SimulationUI {
    */
     public GridView createGridViewFromTiling(Map<StateInterface, String> colorMap, Grid grid)
         throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-      return simulationView.createGridView(simulationView, colorMap, grid);
+        return simulationView.createGridView(simulationView, colorMap, grid);
+    }
+
+    public SimulationView getView() {
+        return simulationView;
     }
 }

@@ -150,4 +150,8 @@ public class SimulationEngine {
     public SimulationConfig getConfig() { return simulationConfig; }
     public Grid getGrid() { return grid; }
     public Simulation getSimulation() { return simulation; }
+
+    public void setGrid(Grid infiniteGrid) {
+        grid = infiniteGrid;
+    }
 }

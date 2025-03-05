@@ -1,7 +1,6 @@
 package cellsociety.controller;
 
-import cellsociety.model.Grid;
-import cellsociety.model.Simulation;
+import cellsociety.model.*;
 
 import cellsociety.view.gridview.GridView;
 import java.io.File;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import cellsociety.model.StateInterface;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -29,9 +27,9 @@ import org.apache.logging.log4j.Logger;
 public class SimulationController {
 
   private static final ResourceBundle CONFIG = ResourceBundle.getBundle(
-      SimulationController.class.getPackageName() + ".Simulation");
+          SimulationController.class.getPackageName() + ".Simulation");
   public static final String DEFAULT_RESOURCE_PACKAGE =
-      SimulationController.class.getPackageName() + ".";
+          SimulationController.class.getPackageName() + ".";
   private static final String DEFAULT_STYLE_FILE = "default.xml";
   private static final Logger LOG = LogManager.getLogger();
 
@@ -64,8 +62,10 @@ public class SimulationController {
      * @return an Optional containing the corresponding SimulationType, if found.
      */
     public static Optional<SimulationType> fromString(String text) {
-      return Arrays.stream(SimulationType.values()).filter(type -> type.displayName.equals(text))
-          .findFirst();
+
+      return Arrays.stream(SimulationType.values())
+              .filter(type -> type.displayName.equals(text))
+              .findFirst();
     }
   }
 
@@ -103,23 +103,50 @@ public class SimulationController {
       Stage stage, SimulationController controller) throws Exception {
     this.stage = stage;
     engine.pause();
+
+    // Load the simulation configuration file
     fileManager.loadFile(simulationType, fileName);
 
-    if (styleFileName != null && !styleFileName.isEmpty()) {
+    // If no style file is provided, try to find a default style for this simulation type
+    if (styleFileName == null || styleFileName.isEmpty()) {
+      try {
+        // Get the default style path
+        String defaultStylePath = getDefaultStylePath(simulationType);
+
+        // More verbose logging
+        System.out.println("Attempting to load default style from: " + defaultStylePath);
+
+        if (defaultStylePath != null) {
+          // Attempt to read the file contents
+          try {
+            String fileContents = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(defaultStylePath)));
+            System.out.println("Default Style File Contents:\n" + fileContents);
+          } catch (Exception e) {
+            System.err.println("Could not read file contents: " + e.getMessage());
+          }
+
+          this.currentStyle = styleParser.parseStyleFile(defaultStylePath);
+          System.out.println("Successfully loaded default style");
+        } else {
+          System.out.println("No default style file found");
+          this.currentStyle = new SimulationStyle();
+        }
+      } catch (Exception e) {
+        System.err.println("Error loading default style: " + e.getMessage());
+        e.printStackTrace();
+        this.currentStyle = new SimulationStyle();
+      }
+    } else {
+      // Use the provided style file
       try {
         this.currentStyle = styleParser.parseStyleFile(styleFileName);
       } catch (ConfigurationException e) {
         ui.handleError("StyleLoadError", e);
         this.currentStyle = new SimulationStyle();
       }
-    } else {
-      try {
-        String defaultStylePath = getDefaultStylePath(simulationType);
-        this.currentStyle = styleParser.parseStyleFile(defaultStylePath);
-      } catch (ConfigurationException e) {
-        this.currentStyle = new SimulationStyle();
-      }
     }
+
+    // Initialize the simulation with the loaded configuration and style
     init(stage, controller);
   }
 
@@ -130,7 +157,29 @@ public class SimulationController {
    * @return the path to the default style file for this simulation type
    */
   private String getDefaultStylePath(String simulationType) {
-    return "styles/" + simulationType.toLowerCase().replace(" ", "_") + "_" + DEFAULT_STYLE_FILE;
+    String formattedType = simulationType.toLowerCase()
+            .replace(" ", "")
+            .replace("of", "");
+
+    // Try multiple possible paths
+    String[] possiblePaths = {
+            "data/" + formattedType + "/" + formattedType + "_default.xml",
+            "styles/" + formattedType + "_default.xml",
+            formattedType + "_default.xml"
+    };
+
+    for (String path : possiblePaths) {
+      File file = new File(path);
+      System.out.println("Checking style file path: " + file.getAbsolutePath());
+      if (file.exists()) {
+        System.out.println("Found style file at: " + file.getAbsolutePath());
+        return path;
+      }
+    }
+
+    System.err.println("No default style file found for simulation type: " + simulationType);
+    return null;
+
   }
 
   /**
@@ -155,14 +204,10 @@ public class SimulationController {
    *
    * @param style the style to apply
    */
-  public void applyStyle(SimulationStyle style)
-      throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-    //applyCellStateAppearances(style);
-
-    //applyGridProperties(style);
-
-    //applyDisplayOptions(style);
-
+  public void applyStyle(SimulationStyle style) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    applyCellStateAppearances(style);
+    applyGridProperties(style);
+    applyDisplayOptions(style);
     ui.updateView(engine.getSimulation().getColorMap());
   }
 
@@ -174,20 +219,30 @@ public class SimulationController {
   private void applyCellStateAppearances(SimulationStyle style) {
     Simulation simulation = engine.getSimulation();
     Map<String, CellAppearance> appearances = style.getCellAppearances();
+    System.out.println("appearances: " + appearances);
     Map<StateInterface, String> colorMap = new HashMap<>();
 
-    for (Map.Entry<String, CellAppearance> entry : appearances.entrySet()) {
-      String stateName = entry.getKey();
-      CellAppearance appearance = entry.getValue();
-      StateInterface stateInterface = getStateByName(simulation, stateName);
+    String simulationType = ui.getView().getSimulationConfig().getType().toLowerCase().replace(" ", "");
+    String defaultColor = "#808080"; // Gray as a default
 
-      if (stateInterface != null) {
-        colorMap.put(stateInterface,
-            appearance.usesImage() ? appearance.getImagePath() : appearance.getColor());
+    for (Map.Entry<Integer, StateInterface> stateEntry : simulation.getStateMap().entrySet()) {
+      StateInterface state = stateEntry.getValue();
+      String stateName = state.getStateValue().toLowerCase();
+
+      if (appearances.containsKey(stateName)) {
+        CellAppearance appearance = appearances.get(stateName);
+        String color = appearance.usesImage() ? appearance.getImagePath() :
+                (appearance.getColor() != null ? appearance.getColor() : defaultColor);
+
+        String cssSelector = "#" + simulationType + "-state-" + stateName;
+        System.out.println(cssSelector);
+        String cssStyle = cssSelector + " { -fx-fill: " + color + "; -fx-stroke: black; }";
+
+        ui.getView().getRoot().setStyle(ui.getView().getRoot().getStyle() + cssStyle);
+      } else {
+        System.out.println("No style found for state: " + stateName + ". Using default color.");
       }
     }
-
-    simulation.setColorMap(colorMap);
   }
 
   private StateInterface getStateByName(Simulation simulation, String stateName) {
@@ -212,31 +267,31 @@ public class SimulationController {
 
     if (style.getEdgePolicy() != null) {
       updateGridEdgePolicy(grid, style.getEdgePolicy().toString());
-    } else {
-      updateGridEdgePolicy(grid, "Finite"); // Default
     }
 
     if (style.getCellShape() != null) {
       updateGridCellShape(grid, style.getCellShape().toString());
-    } else {
-      updateGridCellShape(grid, "Square"); // Default
     }
 
     if (style.getNeighborArrangement() != null) {
       updateGridNeighborArrangement(grid, style.getNeighborArrangement().toString());
-    } else {
-      updateGridNeighborArrangement(grid, "Moore"); // Default
     }
   }
 
   /**
-   * Updates the grid's edge policy based on the style setting
+   * Updates the grid's edge policy based on the style setting.
    *
    * @param grid           the grid to update
    * @param edgePolicyName the name of the edge policy to apply
    */
   private void updateGridEdgePolicy(Grid grid, String edgePolicyName) {
     try {
+      if (edgePolicyName.equalsIgnoreCase("INFINITE")) {
+        InfiniteGrid infiniteGrid = new InfiniteGrid(grid);
+        engine.setGrid(infiniteGrid);
+        return;
+      }
+
       Method configureEdgePolicy = grid.getClass().getMethod("configureEdgePolicy", String.class);
       configureEdgePolicy.invoke(grid, edgePolicyName);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -246,7 +301,23 @@ public class SimulationController {
       } catch (Exception ex) {
         LOG.warn("Could not set edge policy: {}", ex.getMessage());
       }
+
+
+      String edgeType = edgePolicyName.toUpperCase();
+      EdgeStrategy strategy = EdgeStrategyFactory.createEdgeStrategy(edgeType);
+      grid.setEdgeStrategy(strategy);
+
+    } catch (Exception e) {
+      System.err.println("Error setting edge policy: " + e.getMessage());
+      grid.setEdgeStrategy(EdgeStrategyFactory.createEdgeStrategy("BOUNDED"));
     }
+  }
+
+  /**
+   * Converts style names (e.g., "Toroidal") to EdgeStrategyFactory-compatible types.
+   */
+  private String convertEdgePolicyNameToType(String edgePolicyName) {
+    return edgePolicyName.toUpperCase();
   }
 
   /**
@@ -271,27 +342,30 @@ public class SimulationController {
   }
 
   /**
-   * Updates the grid's neighbor arrangement based on the style setting
+   * Updates the grid's neighbor arrangement based on the style setting.
    *
    * @param grid                    the grid to update
    * @param neighborArrangementName the name of the neighbor arrangement to apply
    */
   private void updateGridNeighborArrangement(Grid grid, String neighborArrangementName) {
     try {
-      Method setNeighborArrangementMethod = grid.getClass()
-          .getMethod("setNeighborArrangement", String.class);
-      setNeighborArrangementMethod.invoke(grid, neighborArrangementName);
+      String neighborhoodType = convertNeighborArrangementNameToType(neighborArrangementName);
+      NeighborhoodStrategy neighborhoodStrategy =
+              NeighborhoodFactory.createNeighborhoodStrategy(neighborhoodType);
+      grid.setNeighborhoodStrategy(neighborhoodStrategy);
+
     } catch (Exception e) {
-      try {
-        Method configureNeighborsMethod = grid.getClass()
-            .getMethod("configureNeighbors", String.class);
-        configureNeighborsMethod.invoke(grid, neighborArrangementName);
-      } catch (Exception ex) {
-        System.err.println("Could not set neighbor arrangement: " + ex.getMessage());
-      }
+      System.err.println("Error setting neighbor arrangement: " + e.getMessage());
+      grid.setNeighborhoodStrategy(new MooreNeighborhood());
     }
   }
 
+  /**
+   * Converts style names (e.g., "Moore") to NeighborhoodFactory-compatible types.
+   */
+  private String convertNeighborArrangementNameToType(String neighborArrangementName) {
+    return neighborArrangementName.toUpperCase();
+  }
 
   /**
    * Applies display options from the style.
@@ -301,13 +375,11 @@ public class SimulationController {
   private void applyDisplayOptions(SimulationStyle style) {
     if (ui != null) {
       ui.setGridOutlineVisible(style.isShowGridOutline());
-
-      String theme = (style.getColorTheme() != null) ? style.getColorTheme().toString() : "Light";
-      ui.setColorTheme(theme);
+      ui.setColorTheme(style.getColorTheme().toString());
     }
 
     if (engine != null) {
-      engine.setSpeed(style.getAnimationSpeed() > 0 ? style.getAnimationSpeed() : 1.0);
+      engine.setSpeed(style.getAnimationSpeed());
     }
   }
 

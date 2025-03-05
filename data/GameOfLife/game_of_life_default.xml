@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<style>
+    <cell-states>
+        <state name="0" color="#FFFFFF"/>  <!-- Dead cell -->
+        <state name="1" color="#000000"/>  <!-- Alive cell -->
+    </cell-states>
+    <grid>
+        <edge-policy>FINITE</edge-policy>
+        <cell-shape>SQUARE</cell-shape>
+        <neighbor-arrangement>MOORE</neighbor-arrangement>
+    </grid>
+    <display>
+        <grid-outline>true</grid-outline>
+        <color-theme>LIGHT</color-theme>
+        <animation-speed>1.0</animation-speed>
+    </display>
+</style>
