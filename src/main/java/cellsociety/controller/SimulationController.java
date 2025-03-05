@@ -229,33 +229,21 @@ public class SimulationController {
       StateInterface state = stateEntry.getValue();
       String stateName = state.getStateValue().toLowerCase();
 
-      if (appearances.containsKey(stateName)) {
-        CellAppearance appearance = appearances.get(stateName);
-        String color = appearance.usesImage() ? appearance.getImagePath() :
-                (appearance.getColor() != null ? appearance.getColor() : defaultColor);
+      String cssSelector = simulationType + "-state-" + stateName;
+      System.out.println(cssSelector);
 
-        String cssSelector = "#" + simulationType + "-state-" + stateName;
-        System.out.println(cssSelector);
-        String cssStyle = cssSelector + " { -fx-fill: " + color + "; -fx-stroke: black; }";
+      if (appearances.containsKey(cssSelector)) {
+        CellAppearance appearance = appearances.get(cssSelector);
+        String color = appearance.getColor() != null ? appearance.getColor() : defaultColor;
+        String cssStyle = cssSelector + ":" + color;
 
-        ui.getView().getRoot().setStyle(ui.getView().getRoot().getStyle() + cssStyle);
+        ui.getView().getRoot().setStyle(cssStyle);
       } else {
         System.out.println("No style found for state: " + stateName + ". Using default color.");
       }
     }
   }
 
-  private StateInterface getStateByName(Simulation simulation, String stateName) {
-    Map<Integer, StateInterface> stateMap = simulation.getStateMap(); // Assuming there's a getter
-
-    for (StateInterface state : stateMap.values()) {
-      if (state.getStateValue().equals(stateName)) {
-        return state;
-      }
-    }
-
-    return null;
-  }
 
   /**
    * Applies grid properties from the style.
@@ -287,11 +275,10 @@ public class SimulationController {
   private void updateGridEdgePolicy(Grid grid, String edgePolicyName) {
     try {
       if (edgePolicyName.equalsIgnoreCase("INFINITE")) {
-        InfiniteGrid infiniteGrid = new InfiniteGrid(grid);
+        InfiniteGrid infiniteGrid = new InfiniteGrid(grid.getRows(), grid.getCols(), grid.getDefaultState());
         engine.setGrid(infiniteGrid);
         return;
       }
-
       Method configureEdgePolicy = grid.getClass().getMethod("configureEdgePolicy", String.class);
       configureEdgePolicy.invoke(grid, edgePolicyName);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

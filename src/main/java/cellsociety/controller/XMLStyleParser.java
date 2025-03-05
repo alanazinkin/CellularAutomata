@@ -107,20 +107,7 @@ public class XMLStyleParser {
                 System.out.println("Top-level element: " + topLevelNodes.item(i).getNodeName());
             }
         }
-
-        // Find cell-states element more carefully
-        NodeList cellStatesNodeList = document.getElementsByTagName("cell-states");
-        System.out.println("cell-states nodes found: " + cellStatesNodeList.getLength());
-
-        if (cellStatesNodeList.getLength() == 0) {
-            System.err.println("NO CELL-STATES ELEMENT FOUND IN XML");
-            return;
-        }
-
-        Element cellStatesElement = (Element) cellStatesNodeList.item(0);
-
-        // More robust element retrieval
-        NodeList stateNodes = cellStatesElement.getElementsByTagName("state");
+        NodeList stateNodes = document.getElementsByTagName("state");
         System.out.println("Total state nodes found: " + stateNodes.getLength());
 
         Map<String, CellAppearance> appearances = new HashMap<>();

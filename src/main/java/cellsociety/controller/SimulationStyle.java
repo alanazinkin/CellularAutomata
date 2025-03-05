@@ -20,8 +20,8 @@ public class SimulationStyle {
 
     public SimulationStyle() {
         this.cellAppearances = new HashMap<>();
-        this.edgePolicy = EdgePolicy.FINITE;
-        this.cellShape = CellShape.SQUARE;
+        this.edgePolicy = EdgePolicy.BOUNDED;
+        this.cellShape = CellShape.Rectangle;
         this.neighborArrangement = NeighborArrangement.MOORE;
         this.showGridOutline = true;
         this.colorTheme = ColorTheme.LIGHT;

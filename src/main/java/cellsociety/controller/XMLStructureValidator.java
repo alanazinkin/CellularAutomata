@@ -14,6 +14,8 @@ class XMLStructureValidator {
             "type", "title", "author", "description", "width", "height",
             "cell", "initial_states", "parameter", "random_states", "random_proportions", "cell_state", "tiling"
     );
+    private static final Set<String> VALID_STYLE_CHILDREN = Set.of("style", "cell-appearances", "state", "grid-properties",
+    "edge-policy", "neighbor-arrangement", "display-options", "show-grid-outline", "color-theme", "animation-speed");
 
     /**
      * Validates the structure of the provided XML document.
@@ -36,7 +38,7 @@ class XMLStructureValidator {
         for (int i = 0; i < rootChildren.getLength(); i++) {
             Node child = rootChildren.item(i);
             if (child.getNodeType() == Node.ELEMENT_NODE &&
-                    !VALID_ROOT_CHILDREN.contains(child.getNodeName())) {
+                    !VALID_ROOT_CHILDREN.contains(child.getNodeName()) && !VALID_STYLE_CHILDREN.contains(child.getNodeName())) {
                 throw new ConfigurationException(
                         "Unexpected element in simulation configuration: " + child.getNodeName());
             }
