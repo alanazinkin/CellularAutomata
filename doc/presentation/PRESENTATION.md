@@ -1,0 +1,90 @@
+## Testing Section
+
+#### TEST 1:
+#### TEST 2:
+#### TEST 3:
+#### TEST 4:
+#### TEST 5:
+#### TEST 6:
+
+#### TESTFX TEST 1:
+```angular2html
+@Test
+  public void makeGridLinesToggleButton_clickButtonOnce_GridLinesRemoved() {
+    SimulationConfig simulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
+        5, 5, myInitialStates, myParameters,"Default");
+    myController = new SimulationController();
+    GridView gridView = new DefaultGridView(myController, simulationConfig, myGrid);
+    Button gridLinesToggleButton = myUserController.makeGridLinesToggleButton("Gridlines");
+    myUserController.setGridLinesButtonAction(gridView, gridLinesToggleButton);
+    interact(() -> {
+      myRoot.getChildren().add(gridLinesToggleButton);
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), simulationConfig);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      clickOn(gridLinesToggleButton);
+    });
+    for (Shape cell: gridView.getImmutableCellsList()) {
+      assertEquals(0, cell.getStrokeWidth());
+    }
+  }
+```
+#### TESTFX TEST 2:
+```angular2html
+  @Test
+  public void createGridView_HexagonViewSelected_GridNotNull()
+      throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+    int[] initialStates = new int[]{2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1};
+    Map<String, Double> parameter = new HashMap<>();
+    parameter.put("percolationProb", 0.7);
+    mySimulationConfig = new SimulationConfig("Percolation", "Basic Percolation", "Alana", "Description",
+        6, 6, initialStates, parameter, "Hexagon");
+    myGrid = new Grid(6, 6, PercolationState.PERCOLATED);
+    int numCols = myGrid.getCols();
+    int numRows = myGrid.getRows();
+    double expectedCellWidth = (0.7 * 800 / numCols);
+    double expectedCellHeight = (0.7 * 600 / numRows);
+    runAsJFXAction(() -> {
+      GridView gridView = new HexagonGridView(myController, mySimulationConfig, myGrid);
+      try {
+        gridView.createGridDisplay(myRoot, mySimulation.getColorMap(), mySimulationConfig);
+        assertEquals(expectedCellWidth, gridView.getCellWidth());
+        assertEquals(expectedCellHeight, gridView.getCellHeight());
+        List<Shape> cells =  gridView.getImmutableCellsList();
+        assertEquals(36, cells.size());
+        Pane pane = gridView.getGridPane();
+        for (Shape shape : cells) {
+          assert(pane.getChildren().contains(shape));
+        }
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+    });
+  }
+```
+#### TESTFX TEST 3:
+```angular2html
+  @Test
+  void setupControlBar_ControlBarExists_ControlsAreShown() {
+    ControlPanel testControlPanel = new ControlPanel(myStage, myScene, myController, mySimView, myResources, myGridView);
+    runAsJFXAction(() -> {
+      testControlPanel.setupControlBar(mySimView.getRoot());
+      HBox myControlBar = lookup("#myRoot #controlBar").query();
+
+      Button startButton = lookup("#startButton").query();
+      Button pauseButton = lookup("#pauseButton").query();
+      Button stepForwardButton = lookup("#stepForwardButton").query();
+      Button stepBackwardButton = lookup("#stepBackButton").query();
+      Button resetButton = lookup("#resetButton").query();
+      Button saveButton = lookup("#saveButton").query();
+      Button addSimButton = lookup("#addSimButton").query();
+      ComboBox<String> simTypeComboBox = lookup("#simulationTypesComboBox").query();
+      ComboBox<String> configFileComboBox = lookup("#configFileComboBox").query();
+      List<Button> buttons = List.of(startButton, pauseButton, stepForwardButton, stepBackwardButton, resetButton, saveButton, addSimButton);
+      assertTrue(myControlBar.getChildren().containsAll(buttons), "Not all buttons are in the control bar.");
+      assertTrue(myControlBar.getChildren().contains(simTypeComboBox), "Doesnt contain sim type combo box.");
+      assertTrue(myControlBar.getChildren().contains(configFileComboBox), "Doesnt contain config file combo box.");
+    });
+  }
+```
