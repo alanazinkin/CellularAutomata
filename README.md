@@ -35,7 +35,7 @@ This project implements a cellular automata simulator.
    * GridSettings.properties
    * InfoDisplay.properties
 
- * Interesting data files: bacteria_default.xml, game_of_life_default.xml (implementing the new style changes)
+ * Interesting data files:
 
  * Key/Mouse inputs:
    * Zoom in/out: zooms in/out of the grid pane
@@ -55,7 +55,6 @@ This project implements a cellular automata simulator.
    * CELL-26A, CELL-26C, CELL-26D, CELL-26E, CELL-26F
    * CELL-27, CELL-28, CELL-29, CELL-30, CELL-31
    * CELL-35, CELL-36, CELL-37, CELL-38, CELL-40, CELL-42, CELL-43, CELL-45C, CELL45D
-   * CELL47
    * CELL-50A, CELL-50B, CELL-50X
    * CELL-52, CELL-53A, CELL-53B, CELL-53C, CELL-53E
 
@@ -66,7 +65,6 @@ This project implements a cellular automata simulator.
    * Users can dynamically update the grid tiling structure and change the theme of the entire view
    * Users can also see different graphs for each simulation to see total cell populations over time
    * Users can run multiple simulations simultaneously
-   * XMLWriter and XMLParser were abstracted to support JSON files as well (although not tested on that yet)
 
  * Running multiple simulations simultaneously:
    * All simulations run independently and are created by 
@@ -77,7 +75,7 @@ This project implements a cellular automata simulator.
 ### Assignment Impressions
 * This assignment was an intellectually stimulating challenge that forced our team to
 learn SOLID design principles, new ways of instantiating objects, such as reflection, how to test both the back-end and
-the front-end using J-unit and TestFX, and new design patterns that we can incorporate into our projects for a streamlined design.
+the front-end using J-unit and TestFX, and new design patterns that we can incorporate into our projects for a stramlined design.
 * This project appeared very difficult upon first reading the feature requirements, but our team was able to work really well together
 to integrate the front-end and back-end components to create a fully-functional project.
 * The project taught us that well-designed code makes future development significantly easier. For example, we were ale to create over 10 different
