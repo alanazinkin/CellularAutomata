@@ -63,12 +63,17 @@ This project implements a cellular automata simulator.
    * CELL-01 through CELL-16
    * CELL-26A, CELL-26C, CELL-26D, CELL-26E, CELL-26F
    * CELL-27, CELL-28, CELL-29, CELL-30, CELL-31
-   * CELL-35, CELL-36, CELL-37, CELL-38, CELL-40, CELL-42, CELL-43, CELL-45C, CELL45D
+   * CELL-35, CELL-36, CELL-37, CELL-38, CELL-40, CELL-42, CELL-43, CELL-44, CELL-45C, CELL45D
+   * CELL-48A, CELL-48B, CELL-48C
+   * CELL-49A, CELL-49B, CELL-49C
    * CELL-50A, CELL-50B, CELL-50X
+   * CELL-51A, CELL-51B, CELL-51C
    * CELL-52, CELL-53A, CELL-53B, CELL-53C, CELL-53E
 
 * Features unimplemented:
-   * CELL-50C, CELL-51D, CELL-51X, CELL-53X
+  * CELL-39, CELL-41, CELL-45A, CELL-45B, CELL-45E
+  * CELL-48X, CELL-49X
+  * CELL-50C, CELL-51D, CELL-51X, CELL-53X
 
 * Noteworthy Features:
    * Users can dynamically update the grid tiling structure and change the theme of the entire view
