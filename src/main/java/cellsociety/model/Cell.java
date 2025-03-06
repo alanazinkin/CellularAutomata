@@ -101,11 +101,18 @@ public class Cell {
     this.currentState = this.nextState;
   }
 
+  /**
+   * Reverts the simulation state by applying the previous state.
+   * The current state is replaced with the previous state, and
+   * the next state is updated to reflect the original current state.
+   * The previous state is set to a default step-back state.
+   */
   public void applyPrevState() {
     this.nextState = this.currentState;
     this.currentState = this.prevState;
     this.prevState = StepBackState.STEP_BACK_STATE;
   }
+
 
   /**
    * Resets the next state back to the current state after applying the update.

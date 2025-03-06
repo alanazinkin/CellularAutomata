@@ -182,6 +182,12 @@ public abstract class Simulation {
     iterationCount++;
   }
 
+  /**
+   * Reverts the grid to its previous state, effectively stepping back one iteration in the simulation.
+   * If a previous state exists and is successfully applied, the iteration count is decremented.
+   *
+   * @return {@code true} if the grid was successfully reverted to the previous state, {@code false} otherwise.
+   */
   public boolean stepBackOnce() {
     boolean applied = false;
     if (iterationCount > 0) {
@@ -192,6 +198,7 @@ public abstract class Simulation {
     }
     return applied;
   }
+
 
   /**
    * Template method for initializing state-color mappings.
@@ -292,9 +299,13 @@ public abstract class Simulation {
     return iterationCount;
   }
 
+  /**
+   * Resets the iteration count to zero, effectively restarting the simulation's iteration tracking.
+   */
   private void resetIterationCount() {
     iterationCount = 0;
   }
+
 
   /**
    * sets the stateCounts instance variable to the parameter
