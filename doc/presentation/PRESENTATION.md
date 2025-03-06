@@ -417,6 +417,9 @@ Percolation
   team goals for the week
 * She would communicate when there was a merge conflict and worked harder to not alter her teammates
   code without checking with them first
+* Alana consistently informed her team when one of her features wasn't working and always prioritized 
+debugging her teammates code before her own
+* Alana often went beyond her own responsibilities to help teammates or explain code
 
 #### Alana Evidence To Collect
 
