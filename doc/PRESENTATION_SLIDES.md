@@ -306,7 +306,9 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## USE CASE TO SHOW EFFECTIVENESS:
+## USE CASE TO SHOW EFFECTIVENESS: Main
+
+}
 
 ---
 
