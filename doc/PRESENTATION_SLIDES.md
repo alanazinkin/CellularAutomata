@@ -1,8 +1,13 @@
 ## CELL SOCIETY PRESENTATION
+
 #### ALANA ZINKIN, TATUM MCKINNIS, ANGELA PREDOLAC
+
 ---
+
 ## DESIGN OVERVIEW
+
 ---
+
 Our team's major design goals were to create flexible classes, methods, and easy to read code, such that future
 development would be simple and straight-forward. Our main goal was to ensure that new simulations
 could be easily added. We sought to adhere to SOLID design principles, include the Open-Closed principle,
@@ -34,23 +39,42 @@ Finally, we sought to use common design patterns like Strategy and Factory to st
 
 ## FEATURE HELPED
 
-  * Developers can easily add new GridViews for each shape
-  * Users can create a default grid view, which integrates various kinds of shapes
-  * Users can select different cell states to be represented by different shapes
-  * Users can override specific cell state setting by selecting a different tiling patter
+* Developers can easily add new GridViews for each shape
+* Users can create a default grid view, which integrates various kinds of shapes
+* Users can select different cell states to be represented by different shapes
+* Users can override specific cell state setting by selecting a different tiling patter
 
 ---
 
 ## FEATURE CHALLENGED
-  * Four classes must be created for each type of tiling pattern because of the use of reflection
-    to
-    create a new GridView and CellShape (lots of overhead)
-  * Some classes, like hexagon and parallelogram had VERY similar structures and some duplicated
-    code
+
+* Four classes must be created for each type of tiling pattern because of the use of reflection
+  to
+  create a new GridView and CellShape (lots of overhead)
+* Some classes, like hexagon and parallelogram had VERY similar structures and some duplicated
+  code
 
 ---
 
+## DESIGN 2 (Stable) : GridView creation
+
+### Original Idea (From Our Design Plan):
+
+"An abstract class that handles the simulation's core logic, including rules. Different simulations will inherit from this class and implement their specific behavior."
+
+### Implementation:
+
+A core abstraction that provided a shared structure for different types of simulations.
+
+Implementing this from the beginning allowed us to:
+
+* Prevent **code duplication** by sharing common functionality
+* Ensure **scalability** for adding new simulation types easily
+* Maintain **flexibility** in modifying and extending simulations
+* **Encapsulate** specific simulation behavior within subclasses
+
 ## TESTING OVERVIEW
+
 ---
 
 ## TEST 1:
@@ -112,6 +136,7 @@ createGridView\_HexagonViewSelected\_GridNotNull() in GridViewTest
 ---
 
 ## TESTFX TEST 3:
+
 setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 1. Verifies all the elements of the control bar are non-null and added correctly
@@ -129,25 +154,25 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ## KEY ABSTRACTIONS AND PUBLIC METHODS
 
-1. Simulation: Abstract base class that manages cellular automata simulations by controlling state transitions, applying rules, and tracking statistics across a grid of cells.
-2. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates using configurable strategies for boundaries and neighborhood patterns.
-3. Cell: Fundamental unit that maintains its current, next, and previous states while providing methods to transition between them during simulation steps.
-4. StateInterface: An interface that defines the common behavior for all possible cell states, requiring implementations to provide string and numeric representations.
-5. Edge Strategy: An interface that defines different ways to handle grid boundaries by determining valid positions and providing cell access methods with appropriate edge behavior.
-6. Neighborhood Strategy: An interface that defines which cells are considered neighbors by providing methods to determine the coordinates of neighboring cells for a given position.
+1. Simulation: Abstract base class that manages cellular automata simulations
+2. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates
+3. Cell: Fundamental unit that maintains its current, next, and previous states
+4. StateInterface: An interface that defines the common behavior for all possible cell states
+5. Edge Strategy: An interface that defines different ways to handle grid boundaries
+6. Neighborhood Strategy: An interface that defines which cells are considered neighbors
 
 ---
 
 ## OPEN FOR EXTENSION
 
-1. Template Method Pattern:
-2. Strategy Pattern:
-3. State Pattern:
+1. Template Method Pattern (Simulation)
+2. Strategy Pattern (EdgeStrategy and NeighborhoodStrategy)
+3. State Pattern (StateInterface)
 4. Composition
 
 ---
 
-## SUPPORT FOR READABLE, WELL-DESIGNED CODE FOR USERS AND TEAMMATES 
+## SUPPORT FOR READABLE, WELL-DESIGNED CODE FOR USERS AND TEAMMATES
 
 1. Strong encapsulation
 2. Error Prevention
@@ -161,37 +186,38 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## Cell State transition mechanism - internal state management of Cells is hidden from external code
+## Cell State Transition Mechanism
 
-   1. Private state variables
-   2. Hidden history mechanism with clean public interface
-      1. When stepping back, the code uses a special marker to indicate that a previous state has already been applied.
-      2. API exposes a simple boolean method to indicate success/failure of stepping back (stepBackOnce())
+1. Private State Variables
+2. Hidden History Mechanism with Clean Public Interface
 
 ---
 
-## Grid internals - internal structure of the Grid is protected from external manipulations
+## Internal Grid Structure
 
-   1. Protected cell array (private and never directly exposed)
-   2. Hidden initialization - Cell creation is completely encapsulated in a private method (initializeCells(StateInteface state))
-
----
-
-## Validation logic - validation mechanics are hidden from public view
-
-   1. Validation logic encapsulated in private methods and error messages are defined as private constants
+1. Protected Cell Array
+2. Hidden Cell Creation
 
 ---
 
-## Simulation iteration management - Details of how the simulation tracks progress are hidden
+## Validation Mechanics
 
-   1. Iteration counter is private, reset functionality (resetIterationCount()) is private
+1. Validation logic encapsulated in private methods
+2. Error messages defined as private constants
 
 ---
 
-## State Management - How states are mapped and represented is internal
+## Simulation Iteration Management
 
-   1. State and color maps are private
+1. Private iteration counter
+2. Private reset functionality
+
+---
+
+## State Management 
+
+1. Private State Maps
+2. Private Color Maps
 
 ---
 
@@ -199,61 +225,59 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## Percolation Class and PercolationState Enum each have a single focused responsibility
+## Single Focused Responsibility
 
-   1. Percolation Class: implements only simulation specific rules
-   2. State pattern implementation - PercolatonState Enum: Defines only state values, not behavior
+1. Percolation Class: Simulation specific rules
+2. PercolatonState Enum: Defines state values
 
 ---
 
 ## Extensibility Without Modification
 
-   1. Example: Strategy pattern utilization. The same Percolation Simulation works with different edge strategies and neighborhood strategies (using getNeighbors(), for example).
-
----
-
-## Template Method pattern in action
-
-   1. Implements abstract methods defined in Simulation base class. Shows how the template method pattern enables customization while maintaining structure.
+1. Strategy Pattern Utilization
+2. Template Method Pattern Utilization
 
 ---
 
 ## Well-Encapsulated Extension
 
-   1. Percolation class adds a custom parameter (percolation probability) (in the Percolation constructor) that isn’t part of the base framework, demonstrating how the API allows extensions.
+1. Custom Percolation Probability Parameter
 
 ---
 
 ## Clear Simulation Rule Implementation
 
-   1. API enables clean implementation of complex simulation rules via applyRules() method
+1. Clean implementation of rules via applyRules()
 
 ---
 
-## Framework integration
+## Framework Integration
 
-   1. Percolation implementation demonstrates seamless integration with the framework’s core features
- 2. Example: Using getNeighbors() from Grid and setNextState(state) from Cell, and implementing  applyRules() from Simulation  (which works with the Simulation’s step() method)
+1. Seamless integration with framework's core features (Grid, Cell, Simulation)
 
 ---
 
 ## API 2: CONFIGURATION
 
 ---
+
 ## KEY ABSTRACTIONS AND PUBLIC METHODS
- - SimulationController: Serves as the central controller for managing cellular automata simulations in the cell society application.
-- SimulationController(), SimulationController(SimulationEngine, SimulationUI, SimulationFileManager, XMLStyleParser), selectSimulation(String, String, String, Stage, SimulationController), init(Stage, SimulationController), applyStyle(SimulationStyle), startSimulation(), pauseSimulation(), stepSimulation(), stepBackSimulation() , resetGrid(), setSimulationSpeed(double), loadStyle(String), chooseAndLoadStyle(), saveStyle(), 
- saveSimulation(), setGridTiling(String, Map, Grid), setEdgeStrategy(String), setNeighborhoodStrategy(String), getSimulation(), getGrid(), getSimulationConfig(), getUI(), getIterationCount(), retrieveImmutableConfigResourceBundle()
+
+- SimulationController: Serves as the central controller for managing cellular automata simulations in the cell society application.
+- SimulationController(), SimulationController(SimulationEngine, SimulationUI, SimulationFileManager, XMLStyleParser), selectSimulation(String, String, String, Stage, SimulationController), init(Stage, SimulationController), applyStyle(SimulationStyle), startSimulation(), pauseSimulation(), stepSimulation(), stepBackSimulation() , resetGrid(), setSimulationSpeed(double), loadStyle(String), chooseAndLoadStyle(), saveStyle(),
+  saveSimulation(), setGridTiling(String, Map, Grid), setEdgeStrategy(String), setNeighborhoodStrategy(String), getSimulation(), getGrid(), getSimulationConfig(), getUI(), getIterationCount(), retrieveImmutableConfigResourceBundle()
 
 ---
 
 ## OPEN FOR EXTENSION
+
 1. Simulation Types: The SimulationType enum in SimulationController allows for easily adding new simulation types. The fromString method provides a clean way to convert between display names and enum values.
 2. Style Properties: The style system appears to be designed to support different visual aspects (cell appearances, grid properties, display options) that can be extended without modifying existing code.
 3. Factory Pattern Usage: The code uses factory patterns to create various components, making it easy to add new edge handling or neighborhood strategies.
 4. Reflection-Based Component Creation: The SimulationFactory uses reflection to dynamically create simulation instances, allowing new simulation types to be added without modifying the factory class itself.
 
 ---
+
 ## SUPPORT FOR READABLE, WELL-DESIGNED CODE FOR USERS AND TEAMMATES
 
 1. Clear Separation of Concerns
@@ -263,6 +287,7 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 5. Encapsulation of Complex Operations
 
 ---
+
 ## KEY IMPLEMENTATION DETAILS IT HIDES
 
 1. File Format and Parsing
@@ -273,7 +298,7 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## USE CASE TO SHOW EFFECTIVENESS: 
+## USE CASE TO SHOW EFFECTIVENESS:
 
 ---
 
@@ -323,8 +348,8 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
   team goals for the week
 * Communicated when there was a merge conflict and worked harder to not alter her teammates
   code without checking with them first
-* Consistently informed her team when one of her features wasn't working and always prioritized 
-debugging her teammates code before her own
+* Consistently informed her team when one of her features wasn't working and always prioritized
+  debugging her teammates code before her own
 * Went beyond her own responsibilities to help teammates, explain code, or document code
 
 ---
@@ -340,15 +365,10 @@ debugging her teammates code before her own
 ## TATUM TEAMWORK IMPROVEMENT:
 
 - Tatum made sure all of her backend features were implemented early on so that files could be made for them and frontend features could be implemented for them without delays.
-
 - Tatum responded regularly in group text about updates and progress to keep everyone informed about her work.
-
 - Tatum asked questions about other people's implementations if she didn't understand them to ensure clear communication across the team.
-
 - Tatum worked to attend all group meetings so she could contribute to discussions and stay aligned with team goals.
-
 - Tatum set aside developing features to help with overall project when needed, prioritizing team success over individual tasks.
-
 - Tatum reached out for others’ opinions on development before developing big aspects to incorporate diverse perspectives into the design.
 
 ---
@@ -356,19 +376,12 @@ debugging her teammates code before her own
 ### TATUM EVIDENCE TO COLLECT
 
 - Tatum can track her completion rate of tasks to see if it was enough time for teammates to do their part based on her implementation and improve her timing estimates.
-
 - Tatum can request specific feedback on her communication clarity and responsiveness from teammates to identify areas for improvement.
-
 - Tatum can track the number of messages sent to group text each week to ensure consistent communication with her team.
-
 - Tatum can document instances where she identified potential issues before they became problems to demonstrate proactive problem-solving.
-
 - Tatum can measure how quickly teammates were able to build on her backend features to gauge the quality of her documentation and implementation.
-
 - Tatum can count how many clarification questions she needs to answer after delivering features as an indicator of communication effectiveness.
-
 - Tatum can compare estimated vs. actual completion times for her components to improve her planning and estimation skills.
-
 - Tatum can analyze how often her early input prevents later redesigns to quantify the value of her upfront contributions.
 
 ---
