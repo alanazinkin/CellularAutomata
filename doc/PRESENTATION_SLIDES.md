@@ -1,5 +1,5 @@
-##CELL SOCIETY PRESENTATION
-### ALANA ZINKIN, TATUM MCKINNIS, ANGELA PREDOLAC
+## CELL SOCIETY PRESENTATION
+#### ALANA ZINKIN, TATUM MCKINNIS, ANGELA PREDOLAC
 ---
 ## DESIGN OVERVIEW
 ---
@@ -119,11 +119,11 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## API 1
+## API 1: MODEL
 
 ---
 
-#KEY ABSTRACTIONS AND PUBLIC METHODS
+## KEY ABSTRACTIONS AND PUBLIC METHODS
 
 1. Simulation: Abstract base class that manages cellular automata simulations by controlling state transitions, applying rules, and tracking statistics across a grid of cells.
 2. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates using configurable strategies for boundaries and neighborhood patterns.
@@ -134,7 +134,7 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-##OPEN FOR EXTENSION
+## OPEN FOR EXTENSION
 
 1. Template Method Pattern:
 2. Strategy Pattern:
@@ -233,11 +233,48 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## API 2:
+## API 2: CONFIGURATION
+
+---
+## KEY ABSTRACTIONS AND PUBLIC METHODS
+ - SimulationController: Serves as the central controller for managing cellular automata simulations in the cell society application.
+- SimulationController(), SimulationController(SimulationEngine, SimulationUI, SimulationFileManager, XMLStyleParser), selectSimulation(String, String, String, Stage, SimulationController), init(Stage, SimulationController), applyStyle(SimulationStyle), startSimulation(), pauseSimulation(), stepSimulation(), stepBackSimulation() , resetGrid(), setSimulationSpeed(double), loadStyle(String), chooseAndLoadStyle(), saveStyle(), 
+ saveSimulation(), setGridTiling(String, Map, Grid), setEdgeStrategy(String), setNeighborhoodStrategy(String), getSimulation(), getGrid(), getSimulationConfig(), getUI(), getIterationCount(), retrieveImmutableConfigResourceBundle()
+
+---
+
+## OPEN FOR EXTENSION
+1. Simulation Types: The SimulationType enum in SimulationController allows for easily adding new simulation types. The fromString method provides a clean way to convert between display names and enum values.
+2. Style Properties: The style system appears to be designed to support different visual aspects (cell appearances, grid properties, display options) that can be extended without modifying existing code.
+3. Factory Pattern Usage: The code uses factory patterns to create various components, making it easy to add new edge handling or neighborhood strategies.
+4. Reflection-Based Component Creation: The SimulationFactory uses reflection to dynamically create simulation instances, allowing new simulation types to be added without modifying the factory class itself.
+
+---
+## SUPPORT FOR READABLE, WELL-DESIGNED CODE FOR USERS AND TEAMMATES
+
+1. Clear Separation of Concerns
+2. Comprehensive Error Handling
+3. Resource Bundling
+4. Immutable Configuration Access
+5. Encapsulation of Complex Operations
+
+---
+## KEY IMPLEMENTATION DETAILS IT HIDES
+
+1. File Format and Parsing
+2. Resource Management
+3. Style Application Logic
+4. Default Value Handling
+5. Error Recovery
+
+---
+
+## USE CASE TO SHOW EFFECTIVENESS: 
 
 ---
 
 ## TEAMWORK & COMMUNICATION OVERVIEW
+
 ---
 
 ## SIGNIFICANT POSITIVE EVENT
