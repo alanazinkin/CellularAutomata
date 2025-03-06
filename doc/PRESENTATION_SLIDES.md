@@ -56,7 +56,7 @@ Finally, we sought to use common design patterns like Strategy and Factory to st
 
 ---
 
-## DESIGN 2 (Stable) : GridView creation
+## DESIGN 2 (Stable) : Simulation creation
 
 ### Original Idea (From Our Design Plan):
 
