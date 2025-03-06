@@ -31,7 +31,7 @@ We wanted to ensure that our API made sense and could be used by other teams if 
 We made significant refactoring efforts to ensure that our classes and methods were relatively short. For example,
 SimulationController was broken down into over 20 different classes. We also made an effort to add JavaDoc comments
 to all public and protected methods and classes to ensure that other developers would be able to understand our API.
-Finally, we sh=ought to use common design patterns like Strategy and Factory to streamline development and allow for more flexibility.
+Finally, we sought to use common design patterns like Strategy and Factory to streamline development and allow for more flexibility.
 #### What Features are Easy to Add
 #### Model:
 * 

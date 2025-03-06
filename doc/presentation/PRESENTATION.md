@@ -1,4 +1,10 @@
 ## DESIGN OVERVIEW
+Our team's major design goals were to create flexible classes, methods, and easy to read code, such that future
+development would be simple and straight-forward. Our main goal was to ensure that new simulations
+could be easily added. We sought to adhere to SOLID design principles, include the Open-Closed principle,
+Single-Responsibility principle, and reducing code redundancies. Our team wanted to make our code as clear and readable as possible
+by using informative names and design patterns to ensure that future developers would be able to understand our classes and methods.
+Finally, we sought to use common design patterns like Strategy and Factory to streamline development and allow for more flexibility.
 
 #### DESIGN 1 (CHANGED) : GridView creation
 
