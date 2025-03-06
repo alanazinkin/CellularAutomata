@@ -34,7 +34,7 @@ Single-Responsibility principle, and reducing code redundancies
 
 ---
 
-![Fit](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
+![Fit](../images/UI_design.png "A UI display prototype for Cellular Automata simulation")
 
 ---
 
