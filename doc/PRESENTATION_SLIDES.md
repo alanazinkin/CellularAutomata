@@ -33,6 +33,10 @@ Finally, we sought to use common design patterns like Strategy and Factory to st
 
 ---
 
+![Fit](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
+
+---
+
 ## FEATURE HELPED
 
 * Developers can easily add new GridViews for each shape
