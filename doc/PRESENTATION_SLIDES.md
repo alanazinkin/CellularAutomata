@@ -8,12 +8,13 @@
 
 ---
 
-Our team's major design goals were to create flexible classes, methods, and easy to read code, such that future
-development would be simple and straight-forward. Our main goal was to ensure that new simulations
-could be easily added. We sought to adhere to SOLID design principles, include the Open-Closed principle,
-Single-Responsibility principle, and reducing code redundancies. Our team wanted to make our code as clear and readable as possible
-by using informative names and design patterns to ensure that future developers would be able to understand our classes and methods.
-Finally, we sought to use common design patterns like Strategy and Factory to streamline development and allow for more flexibility.
+Major design goal: Create flexible classes, methods, and easy to read code, such that future development would be simple and straight-forward
+1. Ensure that new simulations and new features could be easily added
+2. We sought to adhere to SOLID design principles, include the Open-Closed principle,
+Single-Responsibility principle, and reducing code redundancies
+3. Our team wanted to make our code as clear and readable as possible
+4. Used informative names and design patterns to ensure that future developers would be able to understand our classes and methods
+5. Used common design patterns like Strategy and Factory to streamline development
 
 ---
 
