@@ -81,8 +81,7 @@ Implementing this from the beginning allowed us to:
 
 applyRules\_OpenCellWithPercolatedNeighbor\_BecomesPercolated() in PercolationTest
 
-1. Verifies that when a percolation probability is set to 1 (100%), all OPEN cells adjacent to a PERCOLATED cell will become PERCOLATED after one simulation step.
-2. Chose a percolation probability of 1 (100%) because this guarantees that percolation will occur, making it easier to verify the specific behavior where open cells next to percolated cells become percolated themselves
+1. Verifies Percolation logic
 
 ---
 
@@ -90,8 +89,8 @@ applyRules\_OpenCellWithPercolatedNeighbor\_BecomesPercolated() in PercolationTe
 
 setCurrentState\_NullValue\_ThrowsIllegalArgumentException() in CellTest
 
-1. Specifically checks that the setCurrentState() method properly validates its input by attempting to set the cell’s current state to null and verifies that this attempt throws an IllegalArgumentException
-2. Chose to test with null because the class manages multiple states (current, next, previous) and these states must be maintained throughout state transitions to protect the cell’s transition logic. Null values would compromise this system, especially during operations like applyNextState() that rely on valid states.
+1. Checks that setCurrentState() properly validates its input
+3. Essential for transition logic
 
 ---
 
@@ -99,8 +98,8 @@ setCurrentState\_NullValue\_ThrowsIllegalArgumentException() in CellTest
 
 applyRules\_LiveCellWithTwoLiveNeighbors\_Survives() in GameOfLifeTest
 
-1. Verifies one of the core rules of Conway’s Game of Life: a live cell with exactly 2 live neighbors should survive to the next generation
-2. Chose to test with exactly two neighbors because this is a key survival rule. It is one of the specific conditions where a live cell should continue living, making it a critical functionality to verify.
+1. Verifies core Conway's Game of Life Rule
+2. Critical functionality
 
 ---
 
@@ -214,7 +213,7 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## State Management 
+## State Management
 
 1. Private State Maps
 2. Private Color Maps
