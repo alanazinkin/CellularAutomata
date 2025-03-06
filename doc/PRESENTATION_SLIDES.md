@@ -27,9 +27,8 @@ Finally, we sought to use common design patterns like Strategy and Factory to st
 * Create a CellShape Factory for each shape to initialize them
 
 ---
-## ORIGINAL PROTOTYPE
 
-![Cellular Automata Simulation Display UI Prototype](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
+![Fit](images/UI_design.png "A UI display prototype for Cellular Automata simulation")
 
 ---
 
