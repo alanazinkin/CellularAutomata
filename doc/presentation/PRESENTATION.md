@@ -223,27 +223,26 @@ Key Abstractions and Public Methods:
    1. step(): Executes one simulation iteration
    2. stepBackOnce(): Reverts to previous state (if available)
    3. applyRules(): Implement simulation-specific logic
-2. Loop Simulation
-3. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates using configurable strategies for boundaries and neighborhood patterns.
+2. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates using configurable strategies for boundaries and neighborhood patterns.
 
    1. getCell(int row, int col): Access cells with edge strategy applies
    2. getNeighbors(int row, int col): Get neighbors based on neighborhood strategy
    3. applyNextStates() / applyPreviousStates(): Update all cells to their next states / Revert cells to previous states if available
    4. setEdgeStrategy(EdgeStrategy) / setNeighborhoodStrategy(NeighborhoodStrategy): Change edge handling behavior / neighborhood pattern
-4. Cell: Fundamental unit that maintains its current, next, and previous states while providing methods to transition between them during simulation steps.
+3. Cell: Fundamental unit that maintains its current, next, and previous states while providing methods to transition between them during simulation steps.
 
    1. getCurrentState() / setCurrentState(StateInterface), getNextState() / setNextState(StateInterface), getPrevState() : State accessors and mutators
    2. applyNextState() / applyPrevState(): Transition to next state / Revert to previous state
-5. StateInterface: An interface that defines the common behavior for all possible cell states, requiring implementations to provide string and numeric representations.
+4. StateInterface: An interface that defines the common behavior for all possible cell states, requiring implementations to provide string and numeric representations.
 
    1. getStateValue(): String representation of state
    2. getNumericValue(): Integer representation of state
-6. Edge Strategy: An interface that defines different ways to handle grid boundaries by determining valid positions and providing cell access methods with appropriate edge behavior.
+5. Edge Strategy: An interface that defines different ways to handle grid boundaries by determining valid positions and providing cell access methods with appropriate edge behavior.
 
    1. isValidPosition(Grid, int, int): Checks if the given coordinates are valid according to this edge strategy’s rules
    2. getCell(Grid, int, int): Retrieves the cell at specified coordinates, applying appropriate boundary handling
    3. getType(): Returns a unique string identifier for the edge strategy
-7. Neighborhood Strategy: An interface that defines which cells are considered neighbors by providing methods to determine the coordinates of neighboring cells for a given position.
+6. Neighborhood Strategy: An interface that defines which cells are considered neighbors by providing methods to determine the coordinates of neighboring cells for a given position.
 
    1. getNeighborCoordinates(int, int): Returns a list of coordinate pairs representing all neighbors of a cell
    2. getType(): Returns a unique string identifier for the neighborhood strategy
