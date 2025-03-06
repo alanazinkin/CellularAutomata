@@ -163,12 +163,12 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ## KEY ABSTRACTIONS AND PUBLIC METHODS
 
-1. Simulation: Abstract base class that manages cellular automata simulations
-2. Grid: 2D container of cells that handles neighbor relationships, edge behaviors, and state updates
-3. Cell: Fundamental unit that maintains its current, next, and previous states
-4. StateInterface: An interface that defines the common behavior for all possible cell states
-5. Edge Strategy: An interface that defines different ways to handle grid boundaries
-6. Neighborhood Strategy: An interface that defines which cells are considered neighbors
+1. Simulation
+2. Grid
+3. Cell
+4. StateInterface
+5. Edge Strategy
+6. Neighborhood Strategy
 
 ---
 
@@ -307,9 +307,13 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 
 ---
 
-## USE CASE TO SHOW EFFECTIVENESS: Main
+## USE CASE TO SHOW EFFECTIVENESS: 
+### MAIN
 
-}
+### VIEW - CONTROLPANEL
+
+- When a user clicks "start" button --> SimultionController start() method is called
+- When a user clicks "save" button --> SimulationController saveSimulation() method is called
 
 ---
 
@@ -320,6 +324,7 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 ## SIGNIFICANT POSITIVE EVENT
 
 * Occasionally, a team member would be unable to contribute as much to the project, but each member of our team was able to pick up extra work to ensure that the project would be completed on time
+* Ex: Angela and Alana had the flu :(
 * Our team never made other teammates feel bad when they couldn't contribute as much as normal, and we all supported one another.
 
 ---
