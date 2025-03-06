@@ -37,6 +37,13 @@ Finally, we sought to use common design patterns like Strategy and Factory to st
   * Some classes, like hexagon and parallelogram had VERY similar structures and some duplicated
     code
 
+#### DESIGN 2 (STABLE) : SimulationController
+
+**Feature Helped**
+
+* BENEFITS:
+    * 
+
 ## TESTING OVERVIEW
 
 #### TEST 1:
@@ -118,12 +125,43 @@ applyRules\_LiveCellWithTwoLiveNeighbors\_Survives() in GameOfLifeTest
   }
 ```
 
-#### TEST 4:
+#### TEST 4: testInvalidRuleString in RuleStringParserTest
+1. Verifies that the RuleStringParser throws an IllegalArgumentException when the rule string is invalid (missing a separator, containing a digit beyond 0-8, or just contains invalid characters)
+2. Chose to test with invalid rule strings that could potentially “break” the simulation and make sure the appropriate exception would be thrown instead of setting up the simulation incorrectly or causing bugs in the program.
+```
+@Test
+void testInvalidRuleString() {
+assertThrows(IllegalArgumentException.class, () -> new RuleStringParser("B39/S23")); // 9 is invalid
+assertThrows(IllegalArgumentException.class, () -> new RuleStringParser("B3S23")); // Missing separator
+assertThrows(IllegalArgumentException.class, () -> new RuleStringParser("Hello")); // Invalid format
+}
+```
 
-#### TEST 5:
+#### TEST 5: testParseXMLFile_MissingRequiredFields in XMLParserTest
+1. Verifies that a ConfigurationException is thrown when an XML file with missing required fields is passed into the parser.
+2. Chose to test with missing required fields to make sure that the parser recognizes that a required field is missing to correctly set up the simulation; this also depends on which fields are required for each simulation type.
+```
+@Test
+void testParseXMLFile_MissingRequiredFields(@TempDir Path tempDir) throws IOException, ConfigurationException {
+File incompleteXmlFile = createIncompleteXmlFile(tempDir);
 
-#### TEST 6:
+        doNothing().when(mockFileValidator).validateFile(incompleteXmlFile.getAbsolutePath());
 
+        assertThrows(ConfigurationException.class, () -> {
+            xmlParser.parseXMLFile(incompleteXmlFile.getAbsolutePath());
+        });
+    }
+```
+#### TEST 6: testValidateStyleXMLStructure_valid in XMLStyleParserTest
+1. Verifies that an exception is not thrown when a valid XML style file is being parsed.
+2. Chose to test to make sure that valid files correctly pass the validation stage before being parsed.
+```
+@Test
+void testValidateStyleXMLStructure_valid() throws Exception {
+Document document = loadDocument(validXMLFile);
+assertDoesNotThrow(() -> parser.validateStyleXMLStructure(document));
+}
+```
 #### TESTFX TEST 1:
 
 ```
