@@ -468,6 +468,25 @@ debugging her teammates code before her own
 
 - Tatum can analyze how often her early input prevents later redesigns to quantify the value of her upfront contributions.
 
-### ANGELA TEAMWORK IMPROVEMENT:
+### ANGELA TEAMWORK IMPROVEMENT
+- Angela can work on branching with git and making sure everything is working perfectly on her personal branch before pushing to main, since controller edits can mess up the entire simulation.
+
+- Angela can communicate better with her teammates about when certain configuration features will be working properly since these can impact the testing of simulations to make sure they are working properly.
+
+- Angela can document the API of the controller classes better so that other teammates can test and call it properly from main methods.
+
+- Angela can communicate when refactoring the controller or configuration classes so that other teammates know to refrain from pushing to avoid merge conflicts.
+
+- Angela can offer to assist other teammates with certain features or  testing or javadoc on weeks when there were less configuration elements to implement.
 
 #### ANGELA EVIDENCE TO COLLECT:
+
+- Angela can track how many messages she sends in our group chat about updating her team members with her progress or known bugs.
+
+- Angela can track how often she pushes to Git as well as which commits are tagged and how many files are edited/lines are edited.
+
+- Angela can track how many of her classes have JUnit tests and how many lines are covered.
+
+- Angela can count how many questions she created for her mentor TA or for the group chat or for office hours.
+
+- Angela can count how many files she edited outside of the controller to account for helping teammates.

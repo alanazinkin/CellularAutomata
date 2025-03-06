@@ -103,15 +103,24 @@ applyRules\_LiveCellWithTwoLiveNeighbors\_Survives() in GameOfLifeTest
 
 ---
 
-## TEST 4:
+## TEST 4:testInvalidRuleString in RuleStringParserTest
+1. Verifies that the RuleStringParser throws an IllegalArgumentException when the rule string is invalid (missing a separator, containing a digit beyond 0-8, or just contains invalid characters)
+2. Chose to test with invalid rule strings that could potentially “break” the simulation and make sure the appropriate exception would be thrown instead of setting up the simulation incorrectly or causing bugs in the program.
+
 
 ---
 
-## TEST 5:
+## TEST 5: testParseXMLFile_MissingRequiredFields in XMLParserTest
+1. Verifies that a ConfigurationException is thrown when an XML file with missing required fields is passed into the parser.
+2. Chose to test with missing required fields to make sure that the parser recognizes that a required field is missing to correctly set up the simulation; this also depends on which fields are required for each simulation type.
+
 
 ---
 
-## TEST 6:
+## TEST 6: testValidateStyleXMLStructure_valid in XMLStyleParserTest
+1. Verifies that an exception is not thrown when a valid XML style file is being parsed.
+2. Chose to test to make sure that valid files correctly pass the validation stage before being parsed.
+
 
 ---
 
@@ -386,7 +395,17 @@ setupControlBar/_ControlBarExists/_ControlsAreShown() in ControlBarTest
 ---
 
 ### ANGELA TEAMWORK IMPROVEMENT:
+- Angela can work on branching with git and making sure everything is working perfectly on her personal branch before pushing to main, since controller edits can mess up the entire simulation.
+- Angela can communicate better with her teammates about when certain configuration features will be working properly since these can impact the testing of simulations to make sure they are working properly.
+- Angela can document the API of the controller classes better so that other teammates can test and call it properly from main methods.
+- Angela can communicate when refactoring the controller or configuration classes so that other teammates know to refrain from pushing to avoid merge conflicts.
+- Angela can offer to assist other teammates with certain features or  testing or javadoc on weeks when there were less configuration elements to implement.
 
 ---
 
 ### ANGELA EVIDENCE TO COLLECT:
+- Angela can track how many messages she sends in our group chat about updating her team members with her progress or known bugs.
+- Angela can track how often she pushes to Git as well as which commits are tagged and how many files are edited/lines are edited.
+- Angela can track how many of her classes have JUnit tests and how many lines are covered.
+- Angela can count how many questions she created for her mentor TA or for the group chat or for office hours.
+- Angela can count how many files she edited outside of the controller to account for helping teammates.
