@@ -120,7 +120,7 @@ applyRules\_LiveCellWithTwoLiveNeighbors\_Survives() in GameOfLifeTest
 
 #### TESTFX TEST 1:
 
-```angular2html
+```
 @Test
 public void makeGridLinesToggleButton_clickButtonOnce_GridLinesRemoved() {
 SimulationConfig simulationConfig = new SimulationConfig("Game of Life", "title", "Alana Zinkin", "Description",
@@ -145,7 +145,7 @@ assertEquals(0, cell.getStrokeWidth());
 
 #### TESTFX TEST 2:
 
-```angular2html
+```
   @Test
 public void createGridView_HexagonViewSelected_GridNotNull()
 throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -180,7 +180,7 @@ throw new RuntimeException(e);
 
 #### TESTFX TEST 3:
 
-```angular2html
+```
   @Test
 void setupControlBar_ControlBarExists_ControlsAreShown() {
 ControlPanel testControlPanel = new ControlPanel(myStage, myScene, myController, mySimView, myResources, myGridView);
