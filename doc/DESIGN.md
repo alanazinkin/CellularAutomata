@@ -260,41 +260,6 @@ represented a shift toward a more modular and robust architecture than was initi
 
 ## New Features HowTo
 
-**App Preferences:** Although we never implemented app preferences, it is relatively
-straight-forward to do:
-
-1. Create an XML file called "AppPreferences.xml" with tags such as <theme>, <language>, etc.
-2. Create a Preferences XML parser modeled off of our XML Parser that looks for the theme tag and
-   language tag
-3. Save it in a preferences map of <key, value> pairs with the keys as the type of preference (
-   theme, language, etc.) and the values as the specific preferences
-   for a user.
-4. Create a front-end component called "Set Preferences" that opens a dialog similar to the Grid
-   Settings and allows the user to select their default
-   preferences from combo-boxes.
-5. When the user presses the "Enter" button, a call should be made to the simulation controller,
-   which makes a call to the XML
-   Writer class. This class will overwrite the values of the "AppPreferences.xml" file to the new
-   preferences that were selected
-   in the ComboBoxes (if they were not null). This can be done similar to how a configuration file
-   is saved by a user.
-6. When the simulation is started, a splash screen appears with language drop down combo boxes and
-   theme combo boxes. We can set the default values in
-   these combo boxes to be pulled from the app preferences map so that the user does not need to
-   update them each time, but has the flexibility
-   to change them if desired.
-
-**Pentagonal Tiling**:
-
-1. Create a new PentagonGridViewFactory class, PentagonGridView class, PentagonCell, and
-   PentagonCellFactory
-2. Construct the classes similar to the Hexagon classes. The main difference will be how the
-   setDimensions method is overridden.
-    1. Pentagons should set 5 points within the set dimensions class.
-3. Update the XMLTilingParser class list of valid tilings to include "Pentagon" and update the list
-   of valid tilings within the GridSettingsDisplay class (these should be consolidated within a
-   properties file)
-
 ##### Model
 
 ###### 1. Adding a New Simulation Type
@@ -388,5 +353,69 @@ straight-forward to do:
        (these two lists should be consolidated in a properties file)
 
 #### Easy to Add Features
+**App Preferences:** Although we never implemented app preferences, it is relatively
+straight-forward to do:
+
+1. Create an XML file called "AppPreferences.xml" with tags such as <theme>, <language>, etc.
+2. Create a Preferences XML parser modeled off of our XML Parser that looks for the theme tag and
+   language tag
+3. Save it in a preferences map of <key, value> pairs with the keys as the type of preference (
+   theme, language, etc.) and the values as the specific preferences
+   for a user.
+4. Create a front-end component called "Set Preferences" that opens a dialog similar to the Grid
+   Settings and allows the user to select their default
+   preferences from combo-boxes.
+5. When the user presses the "Enter" button, a call should be made to the simulation controller,
+   which makes a call to the XML
+   Writer class. This class will overwrite the values of the "AppPreferences.xml" file to the new
+   preferences that were selected
+   in the ComboBoxes (if they were not null). This can be done similar to how a configuration file
+   is saved by a user.
+6. When the simulation is started, a splash screen appears with language drop down combo boxes and
+   theme combo boxes. We can set the default values in
+   these combo boxes to be pulled from the app preferences map so that the user does not need to
+   update them each time, but has the flexibility
+   to change them if desired.
+
+**CELL-50C	Cell Shape: Pentagonal Tiling**:
+
+1. Create a new PentagonGridViewFactory class, PentagonGridView class, PentagonCell, and
+   PentagonCellFactory
+2. Construct the classes similar to the Hexagon classes. The main difference will be how the
+   setDimensions method is overridden.
+    1. Pentagons should set 5 points within the set dimensions class.
+3. Update the XMLTilingParser class list of valid tilings to include "Pentagon" and update the list
+   of valid tilings within the GridSettingsDisplay class (these should be consolidated within a
+   properties file)
+
+**CELL-47: Simulation Styles**
+1. This feature is nearly updated, but it has not been completed because the parser of the preferences files is incomplete
+   2. Debugging the parser would ensure that app preferences can be correctly updated
+
+**CELL-43 Step Simulation**
+1. Step Forward is complete, but upon further inspection of the feature requirement, we need to add a stack data structure to each Cell object to maintain its previous history of states
+   2. We originally believed - based on the specifications - that step back was only one step back, but we now understand it should be able to progress as many steps back as possible (this can be done with a stack data structure rather than a prev instance variable)
+   3. When a user clicks "step back" button, it should pop the previous state value off each Cell's stack. when next state is adopted -> add this value to stack (continue updating as needed) 
+
+**CELL-45A Dynamic Updates: Simulation Parameters**
+1. Create a ParametersDisplay abstract class
+   1. Using a dialog pane similar to the grid settings class, we can open a dialog displaying various text boxes to update each parameter.
+   2. This will be done by writing a method called displayParameterUpdaters, which iterates through the parameters
+   map from the simulation configuration and creates a display box for each parameter by calling the method makeParameterUpdater. If the map is empty -> display the text
+   "SIMULATION_TYPE has no parameters to update" (which is pulled in from a resource file).
+   3. When a user clicks the enter button on the dialog pane -> the backend will check to make sure the value entered is valid (since the map is <String, Double>) and each parameter can take different values, and non-null. If
+   the value is valid -> update call the updateParameter(String parameter, Double value) method of the SimulationController class for each parameter,
+   which will change the SimulationConfig parameter mapping and the Simulation's instance variables using reflection.
+2. Create a ParametersControl concrete class
+   1. Create a method called makeParameterUpdater which takes in a string value representing the parameter to be updated
+   and outputs a TextBox with the string as the label for the box.
+
 
 #### Other Features not yet Done
+1. CELL-26B: Falling Sand/Water
+2. CELL-34	Simulation State
+3. CELL-41	Insert Pattern
+1. CELL-51D	Dynamic Updates: Undo
+2. CELL-46: Darwin: is mostly complete but was never fully implemented due to lack of data files needed for running the sim
+3. CELL-49B/C: unclear if neighborhoods are correctly working - need more tests
+4. CELL-48B: Mirror edges may require new GridView
