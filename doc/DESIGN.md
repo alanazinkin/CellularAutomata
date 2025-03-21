@@ -165,7 +165,11 @@ the Grid handling any special conditions related to boundaries or topology.
 #### View:
 
 The core of the View portion is the SimulationView class, which is responsible for initializing and
-updating each component of the view (ex: Grid, Control Panel, and Charts)
+updating each component of the view, including the GridView, ControlPanel, Charts, HelpView, and
+various components and buttons to control the simulation. The SimulationView class holds all the
+JavaFX elements and the root of the scene is the BorderPane root instance variable of the
+SimulationView class. The initView method within the SimulationView class initializes all the basic
+view elements within 5 helper methods.
 
 ## Assumptions that Affect the Design
 
@@ -218,7 +222,7 @@ updating each component of the view (ex: Grid, Control Panel, and Charts)
   of different shapes within a non-default tiling. However, a developer may be confused as to why a
   certain type of tiling is being implemented if they defined shapes based on states.
 * There is an assumption that the user can select the language without the buttons being in their
-  prefered language on the initial splash screen. I could have dynamically updated the button text
+  preferred language on the initial splash screen. I could have dynamically updated the button text
   when the user selected a language, but since there were only 2 other buttons, this felt
   unnecessary as it would have required a dynamic update.
 
@@ -248,13 +252,17 @@ represented a shift toward a more modular and robust architecture than was initi
 
 #### View
 
-* Most of hte original plan remained, but we did not define clear abstractions within our original
+* Most of the original plan remained, but we did not define clear abstractions within our original
   plan, which meant that new abstraction hierarchies were added
     * For example, we originally assumed rectangles were the only cell shape, so when new change
-      specifications were created, I made a CellShape class
-    * GridView became an abstract class with multiple classes extending it
-    * CellChart classes were added with the change specifications
-    * A GridSettingsDisplay and HelpView class was added
+      specifications were created, I made a CellShape class which was used to define different
+      shapes
+    * GridView became an abstract class with multiple classes extending it to allow for different
+      tilings and custom shapes for each state
+    * CellChart classes were added with the change specifications to allow for graphs showing
+      changes in cell populations
+    * A GridSettingsDisplay class was allow for dynamic updates of edges, neighborhoods, and tilings
+    * A HelpView class was added for the new HelpView specification
     * A ShapeStrategy Interface with multiple implementations was created as well to account for the
       different spacings and orientations of shapes within the gridview
 
@@ -310,7 +318,7 @@ represented a shift toward a more modular and robust architecture than was initi
 
 ##### View
 
-###### 1. GridView
+###### 1. Adding a new GridView
 
 1. Within the view/gridview folder:
     1. Create 2 new classes: one called GRID_VIEW_TYPEGridView that extends GridView and
@@ -321,7 +329,7 @@ represented a shift toward a more modular and robust architecture than was initi
         2. Define the constructor
         3. Use the Default renderGrid method for default tiling or override if necessary.
 
-###### 2. Shape
+###### 2. Adding a new Shape
 
 1. Within the view/shapefactory folder:
     1. Create 2 new classes: one called SHAPE_TYPECell that implements CellShape and another called
@@ -353,6 +361,7 @@ represented a shift toward a more modular and robust architecture than was initi
        (these two lists should be consolidated in a properties file)
 
 #### Easy to Add Features
+
 **App Preferences:** Although we never implemented app preferences, it is relatively
 straight-forward to do:
 
@@ -377,7 +386,7 @@ straight-forward to do:
    update them each time, but has the flexibility
    to change them if desired.
 
-**CELL-50C	Cell Shape: Pentagonal Tiling**:
+**CELL-50C Cell Shape: Pentagonal Tiling**:
 
 1. Create a new PentagonGridViewFactory class, PentagonGridView class, PentagonCell, and
    PentagonCellFactory
@@ -389,33 +398,50 @@ straight-forward to do:
    properties file)
 
 **CELL-47: Simulation Styles**
-1. This feature is nearly updated, but it has not been completed because the parser of the preferences files is incomplete
-   2. Debugging the parser would ensure that app preferences can be correctly updated
+
+1. This feature is nearly updated, but it has not been completed because the parser of the
+   preferences files is incomplete
+    2. Debugging the parser would ensure that app preferences can be correctly updated
 
 **CELL-43 Step Simulation**
-1. Step Forward is complete, but upon further inspection of the feature requirement, we need to add a stack data structure to each Cell object to maintain its previous history of states
-   2. We originally believed - based on the specifications - that step back was only one step back, but we now understand it should be able to progress as many steps back as possible (this can be done with a stack data structure rather than a prev instance variable)
-   3. When a user clicks "step back" button, it should pop the previous state value off each Cell's stack. when next state is adopted -> add this value to stack (continue updating as needed) 
+
+1. Step Forward is complete, but upon further inspection of the feature requirement, we need to add
+   a stack data structure to each Cell object to maintain its previous history of states
+    2. We originally believed - based on the specifications - that step back was only one step back,
+       but we now understand it should be able to progress as many steps back as possible (this can
+       be done with a stack data structure rather than a prev instance variable)
+    3. When a user clicks "step back" button, it should pop the previous state value off each Cell's
+       stack. when next state is adopted -> add this value to stack (continue updating as needed)
 
 **CELL-45A Dynamic Updates: Simulation Parameters**
-1. Create a ParametersDisplay abstract class
-   1. Using a dialog pane similar to the grid settings class, we can open a dialog displaying various text boxes to update each parameter.
-   2. This will be done by writing a method called displayParameterUpdaters, which iterates through the parameters
-   map from the simulation configuration and creates a display box for each parameter by calling the method makeParameterUpdater. If the map is empty -> display the text
-   "SIMULATION_TYPE has no parameters to update" (which is pulled in from a resource file).
-   3. When a user clicks the enter button on the dialog pane -> the backend will check to make sure the value entered is valid (since the map is <String, Double>) and each parameter can take different values, and non-null. If
-   the value is valid -> update call the updateParameter(String parameter, Double value) method of the SimulationController class for each parameter,
-   which will change the SimulationConfig parameter mapping and the Simulation's instance variables using reflection.
-2. Create a ParametersControl concrete class
-   1. Create a method called makeParameterUpdater which takes in a string value representing the parameter to be updated
-   and outputs a TextBox with the string as the label for the box.
 
+1. Create a ParametersDisplay abstract class
+    1. Using a dialog pane similar to the grid settings class, we can open a dialog displaying
+       various text boxes to update each parameter.
+    2. This will be done by writing a method called displayParameterUpdaters, which iterates through
+       the parameters
+       map from the simulation configuration and creates a display box for each parameter by calling
+       the method makeParameterUpdater. If the map is empty -> display the text
+       "SIMULATION_TYPE has no parameters to update" (which is pulled in from a resource file).
+    3. When a user clicks the enter button on the dialog pane -> the backend will check to make sure
+       the value entered is valid (since the map is <String, Double>) and each parameter can take
+       different values, and non-null. If
+       the value is valid -> update call the updateParameter(String parameter, Double value) method
+       of the SimulationController class for each parameter,
+       which will change the SimulationConfig parameter mapping and the Simulation's instance
+       variables using reflection.
+2. Create a ParametersControl concrete class
+    1. Create a method called makeParameterUpdater which takes in a string value representing the
+       parameter to be updated
+       and outputs a TextBox with the string as the label for the box.
 
 #### Other Features not yet Done
+
 1. CELL-26B: Falling Sand/Water
-2. CELL-34	Simulation State
-3. CELL-41	Insert Pattern
-1. CELL-51D	Dynamic Updates: Undo
-2. CELL-46: Darwin: is mostly complete but was never fully implemented due to lack of data files needed for running the sim
+2. CELL-34 Simulation State
+3. CELL-41 Insert Pattern
+1. CELL-51D Dynamic Updates: Undo
+2. CELL-46: Darwin: is mostly complete but was never fully implemented due to lack of data files
+   needed for running the sim
 3. CELL-49B/C: unclear if neighborhoods are correctly working - need more tests
 4. CELL-48B: Mirror edges may require new GridView

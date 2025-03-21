@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+  <type>Percolation</type>
+  <title>Large Percolation</title>
+  <author>Alana Zinkin</author>
+  <description>Complex Percolation</description>
+  <width>14</width>
+  <height>12</height>
+  <parameter name="percolationProb" value="0.7"/>
+  <!-- 0 : BLOCKED      1 : OPEN      2 : FULL (Water) -->
+  <initial_states>
+    2 1 1 1 1 1 1 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 0 0 0 0 0 1
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1
+    0 1 0 0 0 0 0 0 0 0 0 0 0 0
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 0 0 0 0 0 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 0 0 0 0 0 0 0 0 0 0 0 0 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 0
+    0 0 0 0 0 0 0 0 0 0 0 0 1 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+  </initial_states>
+</simulation>
