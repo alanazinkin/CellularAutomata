@@ -1,5 +1,5 @@
-# cell society
-## 5
+# Cell Society
+## Team 5
 ## Alana Zinkin, Tatum McKinnis, Angela Predolac
 
 
@@ -41,8 +41,6 @@ This project implements a cellular automata simulator.
    * Version.properties
    * GridSettings.properties
    * InfoDisplay.properties
-
- * Interesting data files:
 
  * Key/Mouse inputs:
    * Zoom in/out: zooms in/out of the grid pane
